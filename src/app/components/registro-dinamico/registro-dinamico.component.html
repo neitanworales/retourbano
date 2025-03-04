@@ -1,0 +1,19 @@
+
+<div class="row" *ngIf="step==1">
+  <div class="col-lg-6 align-center">
+    <label class="botonsote" (click)="setTutor(false)"><span class="text-into-botonsote">Yo me voy a inscribir</span></label>
+  </div>
+  <div class="col-lg-6 align-center">
+    <label class="botonsote" (click)="setTutor(true)"><span class="text-into-botonsote">Inscribiré a varios</span></label>
+  </div>
+</div>
+
+<div *ngIf="step>1 || tutor">
+    <app-registro-form [saveInMemory]="tutor"></app-registro-form>
+</div>
+  
+
+  
+
+
+  

@@ -1,0 +1,17 @@
+.cover-container{
+    color: white;
+    background: white;
+}
+
+.section{
+    margin-top: 5em;
+}
+
+p {
+    padding-left: 2em;
+}
+
+mat-icon{
+    vertical-align: middle;
+    padding-right: 1.2em;
+}

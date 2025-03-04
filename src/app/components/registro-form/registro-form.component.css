@@ -1,0 +1,24 @@
+.section {
+    margin-top: 8em;
+}
+
+.form-group {
+    margin-bottom: 1em;
+}
+
+label {
+    text-align: left;
+}
+
+.fade {
+    transition: opacity .15s linear;
+}
+
+.right {
+    position: absolute;
+    right: 5px;
+}
+
+.lista-memory {
+    margin-bottom: 2em;
+}

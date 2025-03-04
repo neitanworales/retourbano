@@ -1,0 +1,31 @@
+<div class="progress text-center">
+    <div class="progress-bar bg-success" role="progressbar" aria-valuemin="0" aria-valuemax="100" [style]=avanceStyle></div>
+</div>
+
+<div *ngIf="abiertas; else abiertasTmpl">
+    <h2 class="text-center">Inscripciones abiertas desde {{avance?.fecha_apertura | date:'fullDate'}}</h2>
+</div>
+
+<ng-template #abiertasTmpl>
+    <h2 class="text-center">Fecha de inicio de inscripciones: {{avance?.fecha_apertura | date:'fullDate'}}</h2>
+</ng-template>
+
+<div *ngIf="cerradas && abiertas; else fechaVencida">
+    <h2 class="text-center">Las inscripciones se cerrarón el {{avance?.fecha_maxima | date:'fullDate'}} :(</h2>
+</div>
+
+<ng-template #fechaVencida>
+    <div *ngIf="abiertas">
+        <h2 class="text-center">Último día para inscribirte: {{avance?.fecha_maxima | date:'fullDate'}} </h2>
+        <div *ngIf="showForm && lugaresDisponibles">
+            <hr>
+            <div class="section row">
+                <div class="col-lg-12 col-md-12">
+                    <app-registro-dinamico></app-registro-dinamico>
+                </div>
+            </div>
+        </div>
+    </div>
+</ng-template>
+
+<h1 *ngIf="!lugaresDisponibles" class="text-center">Ya no hay lugares lugares disponibles</h1>

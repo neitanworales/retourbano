@@ -1,0 +1,11 @@
+header {
+    background-color: azure;
+}
+
+hr {
+    margin: 0rem 0 !important;
+    color: inherit;
+    border: 0;
+    border-top: var(--bs-border-width) solid;
+    opacity:.25
+}

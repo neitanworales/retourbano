@@ -1,0 +1,46 @@
+<app-navbar-seguimiento></app-navbar-seguimiento>
+
+<div class="container">
+    <div class="row">
+        <h1>Asistencia Reto</h1>
+
+        <!--table mat-table [dataSource]="dataSource!" multiTemplateDataRows class="mat-elevation-z8">
+
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="dia_llegada">
+                <th mat-header-cell *matHeaderCellDef> Día </th>
+                <td mat-cell *matCellDef="let element">
+                    <button type="button" class="btn btn-{{(element.dia_llegada=='v' || element.dia_llegada=='s') ?'success':'danger '}} btn-sm">
+                        {{element.dia_llegada}}
+                    </button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="hora_llegada">
+                <th mat-header-cell *matHeaderCellDef> Hora </th>
+                <td mat-cell *matCellDef="let element"> {{element.hora_llegada}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="confirmacion">
+                <th mat-header-cell *matHeaderCellDef> Asistencia </th>
+                <td mat-cell *matCellDef="let element">
+                    <button type="button" class="btn btn-{{element.asistencia?'success':'secondary'}} btn-sm"
+                        (click)="asistir(element, !element.asistencia)">
+                        <mat-icon aria-hidden="false">
+                            {{element.asistencia?'task_alt':'pending'}}</mat-icon>
+                        Asistencia
+                    </button>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table-->
+    </div>
+</div>
+
+<app-footer-seguimiento></app-footer-seguimiento>

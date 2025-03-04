@@ -1,0 +1,46 @@
+<div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
+    <app-navbar></app-navbar>
+</div>
+<hr>
+<div class="container section">
+    <div class="row">
+        <div class="col-md-6 col-lg-6">
+            <h1>Seguimiento - LogIn</h1>
+            <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
+                <div class="mb-3">
+                    <label for="exampleInputEmail1" class="form-label">Email address</label>
+                    <input type="email" class="form-control" formControlName="username" [(ngModel)]="username"
+                        [ngClass]="{'is-invalid': form['username'].errors }">
+                    <div *ngIf="form['username'].errors" class="invalid-feedback">
+                        <div *ngIf="form['username'].errors">El username es obligatorio</div>
+                    </div>
+                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                </div>
+                <div class="mb-3">
+                    <label for="exampleInputPassword1" class="form-label">Password</label>
+                    <input type="password" class="form-control" formControlName="password" [(ngModel)]="password"
+                        [ngClass]="{'is-invalid': form['password'].errors }">
+                    <div *ngIf="form['username'].errors" class="invalid-feedback">
+                        <div *ngIf="form['username'].errors">El password es obligatorio</div>
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col">
+                        <button type="submit" class="btn btn-primary">Entrar</button>
+                        <div *ngIf="loginError">
+                            Usuario y/o contraseña son incorrectos
+                        </div>
+                    </div>
+                    <div class="col">
+                        <p class="text-right">
+                            <a routerLink="/recovery-password">He olvidado mi contraseña...</a>
+                        </p>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<app-footer></app-footer>

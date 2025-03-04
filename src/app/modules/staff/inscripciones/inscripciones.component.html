@@ -1,0 +1,443 @@
+<app-navbar-seguimiento></app-navbar-seguimiento>
+<div class="container">
+    <h1>Inscripciones RU</h1>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {{pageResumenActive?'active':''}}" (click)="activarPageResumen()"><i class="bi bi-pie-chart-fill"></i> Resumen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageInscritosActive?'active':''}}" (click)="activarPageInscritos()"><i class="bi bi-person-fill-check"></i> Inscritos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageStaffActive?'active':''}}" (click)="activarPageStaff()"><i class="bi bi-person-raised-hand"></i> Staff</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageAdminsActive?'active':''}}" (click)="activarPageAdmins()"><i class="bi bi-person-video3"></i> Administradores</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageBajasActive?'active':''}}" (click)="activarPageBajas()"><i class="bi bi-person-fill-dash"></i> Bajas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageSeguimientoActive?'active':''}}" (click)="activarPageSeguimiento()"><i class="bi bi-person-fill-up"></i> Seguimiento</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageHistoricoActive?'active':''}}" (click)="activarPageHistorico()"><i class="bi bi-clock-history"></i> Historico</a>
+        </li>
+    </ul>
+
+    <div class="row" [ngStyle]="{'display':chartsDisplayStyle}">
+        <div class="col-md-6">
+            <!--app-pie-chart [opcion]="4"></app-pie-chart-->
+        </div>
+        <div class="col-md-6">
+            <!--app-pie-chart [opcion]="5"></app-pie-chart-->
+        </div>
+        <div class="col-md-6">
+            <!--app-pie-chart [opcion]="6"></app-pie-chart-->
+        </div>
+        <div class="col-md-6">
+            <!--app-pie-chart [opcion]="7"></app-pie-chart-->
+        </div>
+        <div class="col-md-6">
+            <!--app-pie-chart [opcion]="8"></app-pie-chart-->
+        </div>
+    </div>
+
+    <div [ngStyle]="{'display':displayStyle}">
+
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSource?.length}}</p>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                        <i class="bi bi-arrow-clockwise"></i> Cargar todos
+                    </button>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel()">
+                        <i class="bi bi-cloud-download"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="this.pageHistoricoActive" class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Año: {{year}} - Registros {{dataSource?.length}}</p>
+                </div>
+                <div class="col elevado">
+
+                    <div class="btn-group me-2" role="group" aria-label="First group">
+                        <button *ngFor="let y of years; let i = index" type="button" class="btn btn-{{y==year?'success':'light'}}"
+                            (click)="changeYear(y)">{{y}}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSource!" multiTemplateDataRows class="mat-elevation-z8" id="excel-table">
+
+            <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="numero">
+                <th mat-header-cell *matHeaderCellDef> # </th>
+                <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef>
+                    Nombre
+                    <div class="input-group input-group-sm mb-3">
+                        <input type="text" class="form-control form-control-sm" [(ngModel)]="searchByName"
+                            placeholder="Buscar por nombre">
+                        <div class="input-group-append">
+                            <button class="btn btn-outline-secondary btn-sm" type="button" (click)="search()">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nick">
+                <th mat-header-cell *matHeaderCellDef> Gafete </th>
+                <td mat-cell *matCellDef="let element"> {{element.nick}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="edad">
+                <th mat-header-cell *matHeaderCellDef> Edad </th>
+                <td mat-cell *matCellDef="let element"> {{element.edad}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="sexo">
+                <th mat-header-cell *matHeaderCellDef> Sexo </th>
+                <td mat-cell *matCellDef="let element"> {{element.sexo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="talla">
+                <th mat-header-cell *matHeaderCellDef> Talla </th>
+                <td mat-cell *matCellDef="let element"> {{element.talla}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="confirmado">
+                <th mat-header-cell *matHeaderCellDef> Confirmación </th>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.confirmado; else confirmado">
+                        <i class="bi bi-patch-check-fill" class="green"></i>
+                    </div>
+                    <ng-template #confirmado>
+                        <i class="bi bi-patch-check" class="red"></i>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="asistencia">
+                <th mat-header-cell *matHeaderCellDef> Asistencia </th>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.asistencia; else asistencia">
+                        <i class="bi bi-check-circle-fill" class="green"></i>
+                    </div>
+                    <ng-template #asistencia>
+                        <i class="bi bi-check-circle" class="red"></i>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="pagado">
+                <th mat-header-cell *matHeaderCellDef> Pagado </th>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.pagado>=1950; else pagocompletado">
+                        <i class="bi bi-cash" class="green"></i> {{element.pagado | currency:"$ "}}
+                    </div>
+                    <ng-template #pagocompletado>
+                        <i class="bi bi-currency-dollar" class="red"></i> {{element.pagado | currency:"$ "}}
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="emailenviado">
+                <th mat-header-cell *matHeaderCellDef> <i class="bi bi-envelope"></i> </th>
+                <td mat-cell *matCellDef="let element">
+                    <div *ngIf="element.emailEnviado; else emailEnviado">
+                        <i class="bi bi-send" class="green"></i>
+                    </div>
+                    <ng-template #emailEnviado>
+                        <i class="bi bi-x-octagon" class="red"></i>
+                    </ng-template>
+                    <div *ngIf="element.emailConfirmado; else emailConfirmado">
+                        <i class="bi bi-envelope-check" class="green"></i>
+                    </div>
+                    <ng-template #emailConfirmado>
+                        <i class="bi bi-envelope-check" class="red"></i>
+                    </ng-template>
+                </td>
+            </ng-container>
+
+            <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
+            <ng-container matColumnDef="expandedDetail">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                    <div class="example-element-detail"
+                        [@detailExpand]="element == expandedGuerrero ? 'expanded' : 'collapsed'">
+                        <div *ngIf="!this.pageHistoricoActive" class="row">
+                            <div class="col">
+                                <div class="list-group">
+                                    <div class="list-group-item">
+                                        <div class="d-flex w-100 justify-content-between">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button"
+                                                    class="btn btn-{{element.emailEnviado?'success':'secondary'}} btn-sm"
+                                                    (click)="enviarConfirmarEmail(element, !element.emailEnviado, element.emailConfirmado)">
+                                                    <i class="bi-envelope-{{element.emailEnviado?'check':'x'}}"></i>
+                                                    {{element.emailEnviado?'Email Enviado':'No enviado'}}
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-{{element.emailConfirmado?'success':'secondary'}} btn-sm"
+                                                    (click)="enviarConfirmarEmail(element, element.emailEnviado, !element.emailConfirmado)">
+                                                    <i class="bi-envelope-{{element.emailConfirmado?'check':'x'}}"></i>
+                                                    {{element.emailConfirmado?'Email Confirmado':'Sin confirmar'}}
+                                                </button>
+                                            </div>
+
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button"
+                                                    class="btn btn-{{element.confirmado?'success':'secondary'}} btn-sm"
+                                                    (click)="confirmar(element, !element.confirmado)">
+                                                    <i class="bi-{{element.confirmado?'check':'x'}}"></i>
+                                                    Confirmado
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-{{element.asistencia?'success':'secondary'}} btn-sm"
+                                                    (click)="asistir(element, !element.asistencia)">
+                                                    <i class="bi-{{element.asistencia?'check-all':'x'}}"></i>
+                                                    Asistencia
+                                                </button>
+                                                <button type="button"
+                                                    class="btn btn-{{element.seguimiento?'success':'secondary'}} btn-sm"
+                                                    (click)="seguimiento(element, !element.seguimiento)">
+                                                    <i
+                                                        class="bi bi-bookmark-{{element.asistencia?'bi bi-bookmark-':'plus'}}"></i>
+                                                    Seguimiento
+                                                </button>
+                                            </div>
+
+                                            <div *ngIf="element.staff; else campero">
+                                                <div *ngIf="!element.admin">
+                                                    <button type="button" class="btn btn-sm btn-success"
+                                                        (click)="actualizarStaff(false,element.id);">Camp</button>
+                                                </div>
+                                                <div *ngIf="element.admin; else admins">
+                                                    <button type="button" class="btn btn-sm btn-success"
+                                                        (click)="actualizarAdmin(false,element.id);">No-admin</button>
+                                                </div>
+
+                                                <ng-template #admins>
+                                                    <button type="button" class="btn btn-sm btn-primary"
+                                                        (click)="actualizarAdmin(true,element.id);">Admin</button>
+                                                </ng-template>
+                                            </div>
+
+                                            <ng-template #campero>
+                                                <button type="button" class="btn btn-sm btn-primary"
+                                                    (click)="actualizarStaff(true,element.id);">Staff</button>
+                                            </ng-template>
+
+
+                                            <div *ngIf="element.status==='A'; else bajarActivar">
+                                                <button type="button" class="btn btn-sm btn-warning"
+                                                    (click)="actualizarStatus(false,element.id);"><i
+                                                        class="bi bi-person-dash"></i></button>
+                                            </div>
+
+                                            <ng-template #bajarActivar>
+                                                <button type="button" class="btn btn-sm btn-success"
+                                                    (click)="actualizarStatus(true,element.id);"><i
+                                                        class="bi bi-person-add"></i></button>
+                                                <button type="button" class="btn btn-danger"><i
+                                                        class="bi bi-trash-fill"></i></button>
+                                            </ng-template>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row list-group">
+                            <!--Profile Card 3-->
+                            <div class="col-md-12">
+                                <div class="card profile-card-3">
+                                    <div class="card-content">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h2>{{element.nombre}}</h2>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h1>{{element.nick}}</h1>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-2">
+                                                <h2><small>Sexo:</small> {{element.sexo}} <small>Edad:</small>
+                                                    {{element.edad}} <small>Talla:</small> {{element.talla}}</h2>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="icon-block">
+                                                    <p><i class="bi bi-envelope-at"></i>{{element.email}}</p>
+                                                    <p><i class="bi bi-balloon"></i>{{element.fechaNac}}</p>
+                                                    <p><i class="bi bi-facebook"></i>{{element.facebook}}</p>
+                                                    <p><i class="bi bi-instagram"></i>{{element.instagram}}</p>
+                                                    <p><i class="bi bi-whatsapp"></i>{{element.whatsapp}}</p>
+                                                    <p><i class="bi bi-telephone"></i>{{element.telefono}}</p>
+                                                    <p><i class="bi bi-geo-alt"></i>{{element.vienesDe}}</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="icon-block">
+                                                    <p><i class="bi bi-chat-left-quote"></i>{{element.razones}}</p>
+                                                    <p><i class="bi bi-house-door"></i>{{element.iglesia}}</p>
+                                                    <p><i class="bi bi-exclamation-diamond"></i>{{element.alergias}}</p>
+                                                    <p><i class="bi bi-capsule"></i>{{element.medicamentos}}</p>
+                                                    <h5>Datos del tutor</h5>
+                                                    <p><i class="bi bi-person-check"></i>{{element.tutorNombre}}</p>
+                                                    <p><i class="bi bi-phone"></i>{{element.tutorTelefono}}</p>
+                                                    <div class="row">
+                                                        <div *ngIf="element.updatePassword; else updatePasss">
+                                                            <div class="input-group input-group-sm mb-3">
+                                                                <input type="text" class="form-control"
+                                                                    [(ngModel)]="element.password"
+                                                                    placeholder="Password" aria-label="Password"
+                                                                    aria-describedby="button-addon2">
+                                                                <button class="btn btn-warning" type="button"
+                                                                    id="button-addon2"
+                                                                    (click)="cambiarContrasena(element);"><i
+                                                                        class="bi bi-sd-card"></i></button>
+                                                                <button class="btn btn-danger" type="button"
+                                                                    id="button-addon2"
+                                                                    (click)="cancelarContrasena(element);"><i
+                                                                        class="bi bi-x-square-fill"></i></button>
+                                                            </div>
+                                                        </div>
+                                                        <ng-template #updatePasss>
+                                                            <div class="input-group input-group-sm mb-3">
+                                                                <button class="btn btn-info" type="button"
+                                                                    id="button-addon1"
+                                                                    (click)="editarContrasena(element);"><i
+                                                                        class="bi bi-pen"></i></button>
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Password" value="{{element.password}}"
+                                                                    disabled readonly>
+                                                            </div>
+                                                        </ng-template>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!this.pageHistoricoActive" class="row">
+                            <div class="col">
+                                <table class="table tabla-pagos">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Descripción
+                                            </th>
+                                            <th>
+                                                Cantidad
+                                            </th>
+                                            <th>
+                                                Divisa
+                                            </th>
+                                            <th>
+                                                No. Ticket
+                                            </th>
+                                            <th>
+
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let pago of element.pagos">
+                                            <td>
+                                                <div *ngIf="pago.nuevo; else elseCol1">
+                                                    <input type="text" class="form-control"
+                                                        [(ngModel)]="pago.descripcion">
+                                                </div>
+                                                <ng-template #elseCol1>
+                                                    {{pago.descripcion}}
+                                                </ng-template>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="pago.nuevo; else elseCol2">
+                                                    <input type="number" class="form-control"
+                                                        [(ngModel)]="pago.cantidad">
+                                                </div>
+                                                <ng-template #elseCol2>
+                                                    {{pago.cantidad | currency:"$ "}}
+                                                </ng-template>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="pago.nuevo; else elseCol3">
+                                                    <input type="text" class="form-control" [(ngModel)]="pago.divisa">
+                                                </div>
+                                                <ng-template #elseCol3>
+                                                    {{pago.divisa}}
+                                                </ng-template>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="pago.nuevo; else elseCol4">
+                                                    <input type="text" class="form-control"
+                                                        [(ngModel)]="pago.no_ticket">
+                                                </div>
+                                                <ng-template #elseCol4>
+                                                    {{pago.no_ticket}}
+                                                </ng-template>
+                                            </td>
+                                            <td>
+                                                <div *ngIf="pago.nuevo; else elseCol5">
+                                                    <button type="button" class="btn btn-success btn-sm"
+                                                        (click)="guardarPago(pago, element)">
+                                                        <i class="bi bi-floppy-fill"></i> Guardar
+                                                    </button>
+                                                </div>
+                                                <ng-template #elseCol5>
+                                                    <!--button type="button" class="btn"><mat-icon aria-hidden="false" class="green">edit_square</mat-icon></button>
+                                                    <button type="button" class="btn"><mat-icon aria-hidden="false" class="red">delete</mat-icon></button-->
+                                                </ng-template>
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <button type="button" (click)="agregarPago(element.pagos)" class="btn">
+                                                    <i class="bi bi-plus-circle"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+                [class.example-expanded-row]="expandedGuerrero === element"
+                (click)="expandedGuerrero    = expandedGuerrero === element ? null : element">
+            </tr>
+            <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+        </table>
+    </div>
+</div>
+<app-footer-seguimiento></app-footer-seguimiento>

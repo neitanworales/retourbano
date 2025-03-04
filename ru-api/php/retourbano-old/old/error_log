@@ -1,0 +1,18 @@
+[31-Jul-2018 18:30:56 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_connect() in /home5/ywampach/public_html/php/db/Db.class.php:52
+Stack trace:
+#0 /home5/ywampach/public_html/php/db/Db.class.php(26): Db->conectar()
+#1 /home5/ywampach/public_html/php/db/Db.class.php(45): Db->__construct(1)
+#2 /home5/ywampach/public_html/php/db/Datos.class.php(21): Db::getInstance(1)
+#3 /home5/ywampach/public_html/php/db/Datos.class.php(27): Datos->__construct()
+#4 /home5/ywampach/public_html/php/retourbano/cuentaInscritos.php(3): Datos::getInstance()
+#5 {main}
+  thrown in /home5/ywampach/public_html/php/db/Db.class.php on line 52
+[31-Jul-2018 21:49:25 America/Chicago] PHP Fatal error:  Uncaught Error: Call to undefined function mysql_connect() in /home5/ywampach/public_html/php/db/Db.class.php:52
+Stack trace:
+#0 /home5/ywampach/public_html/php/db/Db.class.php(26): Db->conectar()
+#1 /home5/ywampach/public_html/php/db/Db.class.php(45): Db->__construct(1)
+#2 /home5/ywampach/public_html/php/db/Datos.class.php(21): Db::getInstance(1)
+#3 /home5/ywampach/public_html/php/db/Datos.class.php(27): Datos->__construct()
+#4 /home5/ywampach/public_html/php/retourbano/cuentaInscritos.php(3): Datos::getInstance()
+#5 {main}
+  thrown in /home5/ywampach/public_html/php/db/Db.class.php on line 52

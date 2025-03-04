@@ -1,0 +1,98 @@
+<app-navbar-seguimiento></app-navbar-seguimiento>
+
+<div class="container">
+    <div class="row">
+        <div class="alert alert-info" role="alert">
+            Hola {{session.nombre}}
+        </div>
+        <div class="col-lg-6">
+            <a class="btn btn-info" href="/inscripciones">Ir a Inscripciones de RU</a>
+        </div>
+        
+        <!--div class="col-lg-6">
+            <div class="list-group">
+                <div *ngFor="let item of seguimientos">
+                    <div class="list-group-item list-group-item-action flex-column align-items-start">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h3>{{item.titulo}}</h3>
+                            <small>Fecha de reto :{{item.fecha_inicio}}</small>
+
+                        </div>
+
+                        <div class="d-flex w-100 justify-content-between">
+                            <p>{{item.texto_fecha}}</p>
+                            <div *ngIf="item.confirmacion!=null && item.confirmacion!=false; else registroAsistencia">
+                                <small><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                        fill="currentColor" class="bi bi-bookmark-check" viewBox="0 0 16 16">
+                                        <path fill-rule="evenodd"
+                                            d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                        <path
+                                            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z" />
+                                    </svg></small>
+                            </div>
+
+                            <ng-template #registroAsistencia>
+                                <small>Asistencia :{{item.confirmacion}}</small>
+                            </ng-template>
+
+                        </div>
+
+
+                        <div *ngIf="item.activo==true ; else sinBotones">
+                            <div class="row">
+                                <div class="col mb-3">
+                                    <div class="btn-group" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-{{diaSelected=='v'?'success':'secondary'}}"
+                                            (click)="diaLlegada('v')">Viernes</button>
+                                        <button type="button" class="btn btn-{{diaSelected=='s'?'success':'secondary'}}"
+                                            (click)="diaLlegada('s')">Sábado</button>
+                                        <button type="button" class="btn btn-{{diaSelected=='x'?'danger':'secondary'}}"
+                                            (click)="diaLlegada('x')">No
+                                            iré :(</button>
+                                    </div>
+                                </div>
+                                <div class="col mb-3">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text" for="inputGroupSelect01">Selecciona hora de
+                                                llegada</label>
+                                        </div>
+                                        <select class="form-control" (change)="horaLlegada()"
+                                            [(ngModel)]="horaSelected">
+                                            <option [ngValue]="horario" *ngFor="let horario of horarios; ">{{horario}}
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <ng-template #sinBotones>
+
+                            <div *ngIf="item.estudiante_id==null; else registroAsistencia">
+                                <small>No hay registro de confirmación</small>
+                            </div>
+
+                            <ng-template #registroAsistencia>
+                                <small>Día de llegada {{item.dia_llegada}}</small>
+                                <small>Hora de llegada {{item.hora_llegada}}</small>
+                            </ng-template>
+
+                        </ng-template>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-12">
+            <div class="alert alert-success" role="alert">
+                Ya estás inscrito a Reto Urbano 2022, solo valida tus datos aquí!!
+            </div>
+            <app-registro-form [guerreroToEdit]="session.guerrero!"></app-registro-form>
+        </div-->
+        <div class="col-lg-12">
+            
+        </div>
+    </div>
+</div>
+<app-footer-seguimiento></app-footer-seguimiento>

@@ -1,0 +1,59 @@
+<app-navbar-seguimiento></app-navbar-seguimiento>
+<div class="container">
+    <h1>Campamentos</h1>
+    <div class="title-table mat-elevation-z8">
+        <div class="row d-flex">
+            <div class="col elevado">
+                <p>Registros {{dataSource?.length}}</p>
+            </div>
+        </div>
+    </div>
+
+    <table mat-table [dataSource]="dataSource!" class="mat-elevation-z8">
+
+        <ng-container matColumnDef="id_campamento">
+            <th mat-header-cell *matHeaderCellDef> ID </th>
+            <td mat-cell *matCellDef="let element"> {{element.id_campamento}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="titulo">
+            <th mat-header-cell *matHeaderCellDef> Titulo </th>
+            <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="activo">
+            <th mat-header-cell *matHeaderCellDef> Activo </th>
+            <td mat-cell *matCellDef="let element">
+                <i class="bi bi-toggle-{{element.activo==1?'on':'off'}}"></i>
+            </td>
+        </ng-container>
+
+        <ng-container matColumnDef="maximo_inscr">
+            <th mat-header-cell *matHeaderCellDef> Máximo Inscrito </th>
+            <td mat-cell *matCellDef="let element"> {{element.maximo_inscr}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="umbral">
+            <th mat-header-cell *matHeaderCellDef> Umbral </th>
+            <td mat-cell *matCellDef="let element"> {{element.umbral}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha_apertura">
+            <th mat-header-cell *matHeaderCellDef> Fecha de Apertura </th>
+            <td mat-cell *matCellDef="let element"> {{element.fecha_apertura}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="fecha_maxima">
+            <th mat-header-cell *matHeaderCellDef> Fecha Máxima </th>
+            <td mat-cell *matCellDef="let element"> {{element.fecha_maxima}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="costo">
+            <th mat-header-cell *matHeaderCellDef> Costo </th>
+            <td mat-cell *matCellDef="let element"> {{element.costo | currency:"$ "}} </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+        <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+    </table>
+</div>

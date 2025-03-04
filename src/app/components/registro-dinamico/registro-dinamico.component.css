@@ -1,0 +1,26 @@
+.align-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.botonsote {
+    font-size:15px;
+    font-family:Verdana,Helvetica;
+    font-weight:bold;
+    color:white;
+    background:#638cb5;
+    border:0px;
+    width:30em;
+    height:10em;
+    text-align: center;
+    border-radius: 5%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.botonsote:hover {
+    background:#638;
+    cursor: pointer;
+}

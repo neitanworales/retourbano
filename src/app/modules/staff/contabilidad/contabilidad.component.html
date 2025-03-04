@@ -1,0 +1,128 @@
+<app-navbar-seguimiento></app-navbar-seguimiento>
+<div class="container">
+    <h1>Contabilidad RU</h1>
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link {{pageResumenActive?'active':''}}" (click)="activarPageResumen()"><i class="bi bi-coin"></i> Resumen</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageEntradasActive?'active':''}}" (click)="activarPageEntradas()"><i class="bi bi-piggy-bank-fill"></i> Entradas</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pagePrCamperoActive?'active':''}}" (click)="activarPagePorGuerrero()"><i class="bi bi-wallet-fill"></i> Por guerrero</a>
+        </li>
+    </ul>
+
+    <div class="row" [ngStyle]="{'display':chartsDisplayStyle}">
+        <div class="col-md-6">
+            <table>
+                <tr>
+                    <th>Concepto</th>
+                    <th>Cantidad</th>
+                </tr>
+                <tr *ngFor="let indicador of indicadores">
+                    <td>{{indicador.valor}}</td>
+                    <td>{{indicador.count | currency:"$ "}}</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div [ngStyle]="{'display':displayStyle}">
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSource?.length}}</p>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                        <i class="bi bi-arrow-clockwise"></i> Actualizar
+                    </button>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel(false)">
+                        <i class="bi bi-cloud-download"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSource!" class="mat-elevation-z8">
+            <ng-container matColumnDef="ID">
+                <th mat-header-cell *matHeaderCellDef> # </th>
+                <td mat-cell *matCellDef="let element"> {{element.id_pago}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef> Descripcion </th>
+                <td mat-cell *matCellDef="let element"> {{element.descripcion}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                <td mat-cell *matCellDef="let element"> {{element.cantidad | currency:"$ "}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="divisa">
+                <th mat-header-cell *matHeaderCellDef> Divisa </th>
+                <td mat-cell *matCellDef="let element"> {{element.divisa}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="no_ticket">
+                <th mat-header-cell *matHeaderCellDef> Ticket </th>
+                <td mat-cell *matCellDef="let element"> {{element.no_ticket}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay"></tr>
+        </table>
+    </div>
+
+    <div [ngStyle]="{'display':displayStylePorGuerrero}">
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSourcePorGuerrero?.length}}</p>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                        <i class="bi bi-arrow-clockwise"></i> Actualizar
+                    </button>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel(true)">
+                        <i class="bi bi-arrow-clockwise" class="green"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSourcePorGuerrero!" class="mat-elevation-z8">
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            </ng-container>
+            <ng-container matColumnDef="descripcion">
+                <th mat-header-cell *matHeaderCellDef> Typo </th>
+                <td mat-cell *matCellDef="let element"> {{element.descripcion==1?'Staff':''}} </td>
+            </ng-container>
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef> Cantidad </th>
+                <td mat-cell *matCellDef="let element"> {{element.cantidad | currency:"$ "}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pagos">
+                <th mat-header-cell *matHeaderCellDef> Pagos </th>
+                <td mat-cell *matCellDef="let element"> {{element.pagos}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayPorGuerrero"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplayPorGuerrero"></tr>
+        </table>
+    </div>
+</div>
+<app-footer-seguimiento></app-footer-seguimiento>
