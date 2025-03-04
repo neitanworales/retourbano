@@ -1,3 +1,11 @@
-.nav-link{
+.nav-link-tittle {
     color: white;
+}
+
+.nav-link{
+    color: orange;
+}
+
+.nav-link-dark{
+    font-size: large;
 }
