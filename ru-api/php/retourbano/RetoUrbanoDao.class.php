@@ -370,14 +370,16 @@ class RetoUrbanoDao
         switch($opcion){
             case 4:
                 $que = "SELECT 'Disponibles' valor ,maximo_inscr-(SELECT COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A') 'count' FROM campamentos c
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE c.activo=1 AND cm.activo=true
+                AND cm.activo=true
+                WHERE `status`= 'A' ) 'count' FROM campamentos c
+                WHERE c.activo=1 
                 UNION
                 SELECT 'Inscritos', COUNT(*) FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND cm.activo=true ";
+                WHERE `status`= 'A' AND cm.activo=true";
             break;
             case 5:
                 $que = "SELECT 'Guerreros' valor, COUNT(*) 'count' FROM guerreros g 
