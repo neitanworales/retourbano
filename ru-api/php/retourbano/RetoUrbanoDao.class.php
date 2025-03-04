@@ -354,7 +354,8 @@ class RetoUrbanoDao
         ",(SELECT SUM(p.cantidad) FROM pagos p WHERE p.id_campamento_guerrero=cg.id) as pagado"
         .($isAdmin?",password":"").
         " FROM guerreros g 
-        INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero ".
+        INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+        INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento AND cm.activo=true".
         ($status=='T'?" WHERE ":" WHERE status = '$status' ".($status!='B'?" AND ":"")).
         ($status!='B'?" staff ".($staff=='T'?"in(0,1)":("=".$staff))." AND admin=$admin ":'');
         if(!empty($byname)){
@@ -370,44 +371,65 @@ class RetoUrbanoDao
             case 4:
                 $que = "SELECT 'Disponibles' valor ,maximo_inscr-(SELECT COUNT(*) FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A') 'count' FROM campamentos c
-                WHERE c.activo=1
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE c.activo=1 AND cm.activo=true
                 UNION
                 SELECT 'Inscritos', COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A'";
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND cm.activo=true ";
             break;
             case 5:
                 $que = "SELECT 'Guerreros' valor, COUNT(*) 'count' FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND staff=0 
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND staff=0 AND cm.activo=true 
                 UNION
                 SELECT 'Staff', COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND staff=1
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND staff=1 AND cm.activo=true 
                 UNION
                 SELECT 'Admins', COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND admin=1
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND admin=1 AND cm.activo=true 
                 UNION
                 SELECT 'Bajas', COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'B';";
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'B' AND cm.activo=true ";
                 break;
 
             case 6:
                 $que = "SELECT 'Hombres' valor, COUNT(*) 'count' FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND staff=0 AND sexo='M'
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND staff=0 AND sexo='M' AND cm.activo=true
                 UNION
                 SELECT 'Mujeres', COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND staff=0 AND sexo='F'";
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND staff=0 AND sexo='F' AND cm.activo=true";
                 break;
 
             case 7:
                 $que = "SELECT 'Hombres_Staff' valor, COUNT(*) 'count' FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND staff=1 AND sexo='M'
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento 
+                WHERE `status`= 'A' AND staff=1 AND sexo='M' AND cm.activo=true
                 UNION
                 SELECT 'Mujeres_Staff', COUNT(*) FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' AND staff=1 AND sexo='F'";
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND staff=1 AND sexo='F' AND cm.activo=true";
                 break;
 
             case 8:
                 $que="SELECT Talla valor, COUNT(*) 'count' FROM guerreros g 
-                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero WHERE `status`= 'A' GROUP BY talla";
+                INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+                INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+                WHERE `status`= 'A' AND cm.activo=true GROUP BY talla";
                 break;
         }
 

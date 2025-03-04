@@ -1,9 +1,8 @@
 import { NgModule } from '@angular/core';
-
+import { AppComponent } from './app.component';
 import { AuthGuardService } from './services/guards/auth-guard.service';
 import { AuthService } from './services/guards/auth.service';
 import { RoleGuardService } from './services/guards/role-guard.service';
-
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './modules/home/home.component';
 import { RegistroComponent } from './modules/registro/registro.component';
@@ -40,14 +39,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 //import { MatNativeDateModule } from '@angular/material/core';
 //import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table' 
-//import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
+import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { Router } from '@angular/router';
 import { PieChartComponent } from "./components/pie-chart/pie-chart.component";
-//import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CampamentosComponent } from './modules/staff/campamentos/campamentos.component';
 import { CampamentoDao } from './api/dao/CampamentoDao';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AppComponent } from './app.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -78,7 +76,7 @@ import { AppComponent } from './app.component';
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
-        //PieChartComponent,
+        PieChartComponent,
         MatTableModule,
         BrowserAnimationsModule], providers: [
         {
@@ -87,7 +85,7 @@ import { AppComponent } from './app.component';
             }
         },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
-        //provideCharts(withDefaultRegisterables()),
+        provideCharts(withDefaultRegisterables()),
         LoadingService,
         Utils,
         RegistroDao,
@@ -99,7 +97,7 @@ import { AppComponent } from './app.component';
         AuthService,
         RoleGuardService,
         HorarioDao,
-        //provideAnimationsAsync(),
+        provideAnimationsAsync(),
         provideHttpClient(withInterceptorsFromDi())
     ] })
 export class AppModule { }

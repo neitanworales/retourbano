@@ -1,20 +1,19 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
-//import DatalabelsPlugin from 'chartjs-plugin-datalabels';
-//import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
+import DatalabelsPlugin from 'chartjs-plugin-datalabels';
+import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
 import { Indicador } from 'src/app/models/registro/Indicador';
 import { RegistroDao } from 'src/app/api/dao/RegistroDao';
-//import { BaseChartDirective } from 'ng2-charts';
+import { BaseChartDirective } from 'ng2-charts';
 
 @Component({
     selector: 'app-pie-chart',
-    //imports: [BaseChartDirective],
+    imports: [BaseChartDirective],
     templateUrl: './pie-chart.component.html',
-    styleUrls: ['./pie-chart.component.css'],
-    standalone: false
+    styleUrls: ['./pie-chart.component.css']
 })
 export class PieChartComponent implements OnInit {
 
-  //@ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
+  @ViewChild(BaseChartDirective) chart: BaseChartDirective | undefined;
 
   @Input()
   opcion?: number;
@@ -24,10 +23,10 @@ export class PieChartComponent implements OnInit {
   etiquetas?: string[];
   datos?: number[];
 
-  //public pieChartType: ChartType = 'pie';
-  //public pieChartPlugins = [DatalabelsPlugin];
+  public pieChartType: ChartType = 'pie';
+  public pieChartPlugins = [DatalabelsPlugin];
 
-  //public pieChartData?: ChartData<'pie', number[], string | string[]>;
+  public pieChartData?: ChartData<'pie', number[], string | string[]>;
 
   constructor(public registroDao: RegistroDao) {
 
@@ -50,33 +49,33 @@ export class PieChartComponent implements OnInit {
             this.datos?.push(this.indicadores[i].count!);
           }
           console.log(this.datos);
-          /*this.pieChartData = {
+          this.pieChartData = {
             labels: this.etiquetas,
             datasets: [{
               data: this.datos!
             }]
-          };*/
+          };
         }
       }
     );
   }
 
-  /*public pieChartOptions: ChartConfiguration['options'] = {
+  public pieChartOptions: ChartConfiguration['options'] = {
     responsive: true,
     plugins: {
       legend: {
         display: true,
         position: 'top',
       },
-      datalabels: {*/
+      datalabels: {
         /*formatter: (value!, ctx!) => {
           if (ctx.chart.data.labels) {
             return ctx.chart.data.labels[ctx.dataIndex];
           }
-        }
+        }*/
       },
     }
-  };*/
+  };
 
 
 }
