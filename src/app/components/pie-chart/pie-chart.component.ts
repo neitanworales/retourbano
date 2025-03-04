@@ -9,7 +9,8 @@ import { RegistroDao } from 'src/app/api/dao/RegistroDao';
     selector: 'app-pie-chart',
     //imports: [BaseChartDirective],
     templateUrl: './pie-chart.component.html',
-    styleUrls: ['./pie-chart.component.css']
+    styleUrls: ['./pie-chart.component.css'],
+    standalone: false
 })
 export class PieChartComponent implements OnInit {
 
