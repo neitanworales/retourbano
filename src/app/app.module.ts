@@ -73,7 +73,8 @@ import { AppComponent } from './app.component';
         HorarioComponent,
         CampamentosComponent
     ],
-    bootstrap: [AppComponent], imports: [BrowserModule,
+    bootstrap: [AppComponent], 
+    imports: [BrowserModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
