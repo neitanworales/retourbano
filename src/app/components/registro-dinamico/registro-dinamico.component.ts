@@ -1,62 +1,48 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
-    selector: 'app-registro-dinamico',
-    templateUrl: './registro-dinamico.component.html',
-    styleUrls: ['./registro-dinamico.component.css'],
-    standalone: false
+  selector: 'app-registro-dinamico',
+  templateUrl: './registro-dinamico.component.html',
+  styleUrls: ['./registro-dinamico.component.css'],
+  standalone: false
 })
-export class RegistroDinamicoComponent {
+export class RegistroDinamicoComponent implements OnInit {
+
+  registerForm!: FormGroup;
+  step: number = 1;
+  tutor: boolean = false;
+  email!: string;
+  activarInscripcion: boolean = false;
+  activarReinscripcion: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder) {
-     
-    }
+  }
 
-  step: number =1;
-  tutor: boolean = false;
-  mayorEdad: Boolean = false;
+  ngOnInit(): void {
+    this.registerForm = this.formBuilder.group({
+      email: ["", Validators.required]
+    });
+  }
 
-  setStep(step : number){
+  setStep(step: number) {
     this.step = step;
   }
 
-  setTutor(t:boolean){
-    this.tutor  = t;
-    this.step = this.step+1;
+  setActivacion(t: boolean, reinscripcion: boolean) {
+    this.tutor = t;
+    this.step = this.step + 1;
+    this.activarInscripcion = !reinscripcion;
+    this.activarReinscripcion = reinscripcion;
   }
 
-  setMayorEdad(mayor:boolean){
-    this.mayorEdad = mayor;
-    this.step = this.step+1;
+  validarEmail() {
+    console.log("se validará email");
   }
 
-  components : FormGroup[] = [this.createRegisterForm()];
-
-  addComponent(){
-    this.components.push(this.createRegisterForm());
-  }
-
-  createRegisterForm(){
-    return this.formBuilder.group({
-      nombre: ["", Validators.required],
-      nick: ["", Validators.required],
-      sexo: ["", Validators.required],
-
-      year: [0, Validators.min(1)],
-      month: [0, Validators.min(1)],
-      day: [0, Validators.min(1)],
-
-      talla: ["", Validators.required],
-      vienesDe: ["", Validators.required],
-      razones: ["", Validators.required],
-      tutorNombre: ["", Validators.required],
-      tutorTelefono: ["", Validators.required],
-      email: ["", Validators.required],
-      whatsapp: ["", Validators.required],
-      aceptaPoliticas: [false, Validators.requiredTrue],
-    });
+  get form() {
+    return this.registerForm?.controls;
   }
 }

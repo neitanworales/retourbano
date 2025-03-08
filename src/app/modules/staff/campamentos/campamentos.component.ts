@@ -13,6 +13,7 @@ export class CampamentosComponent implements OnInit {
   constructor(public campaDao: CampamentoDao){}
 
   columnsToDisplay = [
+    'botonera',
     'id_campamento',
     'titulo',
     'activo',
@@ -20,7 +21,7 @@ export class CampamentosComponent implements OnInit {
     'umbral',
     'fecha_apertura',
     'fecha_maxima',
-    'costo',
+    'costo'
   ];
 
   dataSource?: Campamento[];

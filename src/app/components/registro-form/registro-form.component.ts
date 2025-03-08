@@ -86,6 +86,7 @@ export class RegistroFormComponent implements OnInit {
       tutorNombre: ["", Validators.required],
       tutorTelefono: ["", Validators.required],
       email: ["", Validators.required],
+      whatsapp: [""],
       telefono: ["", Validators.required],
       aceptaPoliticas: [false, Validators.requiredTrue],
     });
