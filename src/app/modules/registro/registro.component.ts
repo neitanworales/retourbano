@@ -1,5 +1,4 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { APP_BASE_HREF } from '@angular/common';
 
 @Component({
     selector: 'app-registro',

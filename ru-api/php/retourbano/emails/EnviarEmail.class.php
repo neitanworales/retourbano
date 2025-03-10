@@ -42,14 +42,14 @@ class EnviarEmail
         return $template;
     }
 
-    public function enviarEmail($to, $subject, $message)
+    public function enviarEmail($to, $subject, $message, $reenviarStaff)
     {
         $headers = "From: Reto Urbano <reto@ywampachuca.org>\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
         $enviado = mail($to, $subject, $message, $headers);
-        if($enviado){
-            $this->reportarStaff($subject, $message);
+        if($reenviarStaff){
+            $reenviarStaff->reportarStaff($subject, $message);
         }
         return $enviado;
     }

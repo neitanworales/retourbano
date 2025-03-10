@@ -14,21 +14,12 @@ $datos = RetoUrbanoDao::getInstance();
 $emailDao = EnviarEmail::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $email = $_REQUEST['email'];
+    $email = $_REQUEST['codigo'];
     if (!empty($email)) {
-        $busqueda = $datos->getGuerrroRegistradoByEmail($email);
+        $busqueda = $datos->getGuerrroRegistradoByCode($codigo);
         if (!empty($busqueda)) {
-            $campamento = $datos->consultarCampamentoActivo();
-
-            $variables = array();
-            $variables["nick"] = "Nonoalco";
-            $variables["year"] = "2025";
-            $variables["codigo"] = "43fds-243f4-4e244";
-            $variables["basesite"] = "http://ywampachuca.org/retourbano";
-            $templateName = "reinscripcion.html";
-            $template = $emailDao->getTemplate($variables, $templateName);
-            $emailEnviado = $emailDao->enviarEmail($email, 'Reinscripción Reto Urbano', $template, true);
-            $response["mensaje"] = $emailEnviado ? "Se envió correo de verificacion a $email": "Error al enviar correo de verificacion a $email";
+            $response["mensaje"] = "Ok";
+            $response["resultado"] = $busqueda[0];
             $response["code"] = 200;
             http_response_code(200);
             echo json_encode($response);

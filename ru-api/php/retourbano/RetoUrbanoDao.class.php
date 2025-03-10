@@ -244,6 +244,31 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
+    public function getGuerrroRegistradoByCode($code){
+        $que = "SELECT 
+        id,
+        nombre,
+        nick,
+        fechaNac as fechaNac,
+        edad,
+        sexo,
+        talla,
+        vienede as vienesDe,
+        alergias,
+        razones,
+        tutor_nombre as tutorNombre,
+        contacto_tutor as tutorTelefono,
+        iglesia,
+        email,
+        whatsapp,
+        telefono,
+        facebook,
+        instagram,
+        politicas as aceptaPoliticas,
+        medicamentos FROM guerreros WHERE codigo='$code'";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
     public function getGuerreroById($id){
         $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
@@ -800,6 +825,11 @@ class RetoUrbanoDao
 
     public function consultarCampamentos(){
         $que = "SELECT * FROM campamentos ORDER BY id_campamento DESC";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function consultarCampamentoActivo(){
+        $que = "SELECT * FROM campamentos WHERE activo=1 ORDER BY id_campamento DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 }

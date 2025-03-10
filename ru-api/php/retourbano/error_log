@@ -3057,3 +3057,8 @@ Stack trace:
 #1 /home1/ywampach/public_html/php/retourbano/validar-email.php(28): EnviarEmail->enviarEmail('reto@ywampachuc...', Object(EnviarEmail), 'Reinscripci\xC3\xB3n ...', '<html>\n\n<head>\n...')
 #2 {main}
   thrown in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 51
+[10-Mar-2025 13:34:22 America/Boise] PHP Fatal error:  Uncaught Error: Call to a member function reportarStaff() on bool in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php:52
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/guardarGuerrero.php(97): EnviarEmail->enviarEmail('elmoyeras@yopma...', 'Inscripci\xC3\xB3n Re...', '<html>\n\n<head>\n...', false)
+#1 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 52
