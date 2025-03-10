@@ -51,7 +51,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.month = 0;
     this.model.day = 0;
         
-    this.model.nombre = "Jesús de Veracruz";
+    /*this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";
     this.model.sexo = "M";
     this.model.year = 2001;
@@ -69,7 +69,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.aceptaPoliticas = true;
     this.model.facebook = "No tengo brother";
     this.model.instagram = "Para que o que?";
-    this.model.iglesia = "La sagrada familia"
+    this.model.iglesia = "La sagrada familia"*/
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],

@@ -1,6 +1,6 @@
 <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
     <div class="row">
-        <div *ngIf="saveInMemory" class="col-lg-6">
+        <div *ngIf="saveInMemory" class="col">
             <h2 class="text-center">Datos del tutor</h2>
             <div *ngIf="saveInMemory">
                 <div class="form-group">
@@ -51,7 +51,7 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-6">
+        <div class="col">
             <h2 class="text-center">Formulario de Registro</h2>
             <div class="form-group">
                 <label>Nombre completo</label>

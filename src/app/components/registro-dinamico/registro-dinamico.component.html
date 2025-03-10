@@ -16,7 +16,11 @@
 </div>
 
 <div *ngIf="activarInscripcion; else second">
-  <app-registro-form [saveInMemory]="tutor"></app-registro-form>
+  <div class="col-1"></div>
+  <div class="col-10">
+    <app-registro-form [saveInMemory]="tutor"></app-registro-form>
+  </div>
+  <div class="col-1"></div>
 </div>
 <ng-template #second>
   <div *ngIf="activarReinscripcion;">

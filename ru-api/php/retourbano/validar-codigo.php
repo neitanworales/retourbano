@@ -7,6 +7,11 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=utf-8');
 
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    return 0;
+}
+
 require './RetoUrbanoDao.class.php';
 require 'emails/EnviarEmail.class.php';
 
@@ -14,8 +19,8 @@ $datos = RetoUrbanoDao::getInstance();
 $emailDao = EnviarEmail::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $email = $_REQUEST['codigo'];
-    if (!empty($email)) {
+    $codigo = $_REQUEST['codigo'];
+    if (!empty($codigo)) {
         $busqueda = $datos->getGuerrroRegistradoByCode($codigo);
         if (!empty($busqueda)) {
             $response["mensaje"] = "Ok";
@@ -24,13 +29,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             http_response_code(200);
             echo json_encode($response);
         } else {
-            $response["mensaje"] = "Not found $email";
+            $response["mensaje"] = "Not found $codigo";
             $response["code"] = 404;
             http_response_code(404);
             echo json_encode($response);
         }
     } else {
-        $response["mensaje"] = "Bad request - faltan elementos: email";
+        $response["mensaje"] = "Bad request - faltan elementos: codigo";
         $response["code"] = 400;
         http_response_code(400);
         echo json_encode($response);
