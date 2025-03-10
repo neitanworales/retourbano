@@ -230,7 +230,7 @@ class RetoUrbanoDao
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
         WHERE email='$email' AND status='A' ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
-    }  
+    }
 
     public function getGuerreroByEmailToRecovery($email){
         $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
@@ -238,6 +238,11 @@ class RetoUrbanoDao
         WHERE email='$email' AND status='A' AND (staff=1 OR admin=1 OR seguimiento=1) ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
     } 
+
+    public function getGuerrroRegistradoByEmail($email){
+        $que = "SELECT * FROM guerreros WHERE email='$email'";
+        return $this->bd->ObtenerConsulta($que);
+    }
 
     public function getGuerreroById($id){
         $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 

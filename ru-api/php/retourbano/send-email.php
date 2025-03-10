@@ -58,7 +58,7 @@ function enviarEmailInformacion($email){
     $headers .= "MIME-Version: 1.0\r\n";
     $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
     
-    mail($email , 'Jucum Pachuca, INFORMACION - RETO URBANO', getMensajeEmailInformacion($email),$headers);    
+    return mail($email , 'Jucum Pachuca, INFORMACION - RETO URBANO', getMensajeEmailInformacion($email),$headers);    
 }
 
 function getMensajeEmailInformacion($email){

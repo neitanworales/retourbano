@@ -67,17 +67,17 @@ class Db
     /*M todo para obtener una fila de resultados de la sentencia sql*/
     public function obtener_fila($stmt,$fila){
         if ($fila==0){
-            $this->array=mysql_fetch_array($stmt);
+            $this->array=mysqli_fetch_array($stmt);
         }else{
-            mysql_data_seek($stmt,$fila);
-            $this->array=mysql_fetch_array($stmt);
+            mysqli_data_seek($stmt,$fila);
+            $this->array=mysqli_fetch_array($stmt);
         }
         return $this->array;
     }
 
     //Devuelve el  ltimo id del insert introducido
     public function lastID(){
-        return mysql_insert_id($this->link);
+        return mysqli_insert_id($this->link);
     }
 
     public function ObtenerConsulta($query)
@@ -99,7 +99,7 @@ class Db
 
     public function ObtenerConsultaResource($query)
     {
-        $res = mysql_query($query) or die(mysql_error());       
+        $res = mysqli_query($this->link, $query) or die(mysqli_error($this->link));       
         return $res;
     }
 }
