@@ -25,11 +25,11 @@ export class RegistroDao {
     }
 
     public agregarGuerrero(guerrero: Guerrero, tutor: boolean): Observable<RegistroResponse> {
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/guardarGuerrero.php?tutor=' + (tutor ? "1" : "0"), guerrero, { headers: this.utils.getHeaders() });
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/inscribir.php?tutor=' + (tutor ? "1" : "0"), guerrero, { headers: this.utils.getHeaders() });
     }
 
     public updateGuerrero(guerrero: Guerrero): Observable<RegistroResponse> {
-        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/actualizarGuerrero.php', guerrero, { headers: this.utils.getHeaders() });
+        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/reinscribir.php', guerrero, { headers: this.utils.getHeaders() });
     }
 
     public consultarGuerreros(opcion: number, activo: boolean, staff: boolean, admin: boolean, byName: string, seg: boolean): Observable<MantenimientoResponse> {

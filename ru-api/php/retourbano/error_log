@@ -3062,3 +3062,33 @@ Stack trace:
 #0 /home1/ywampach/public_html/php/retourbano/guardarGuerrero.php(97): EnviarEmail->enviarEmail('elmoyeras@yopma...', 'Inscripci\xC3\xB3n Re...', '<html>\n\n<head>\n...', false)
 #1 {main}
   thrown in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 52
+[10-Mar-2025 13:47:47 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'ywampach_retourbano.RETO_SEGUIMIENTO' doesn't exist in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT * FROM R...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(459): Db->ObtenerConsulta('SELECT * FROM R...')
+#2 /home1/ywampach/public_html/php/retourbano/seguimientos-by-guerrero.php(10): RetoUrbanoDao->getSeguimientosById('2024000')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[10-Mar-2025 14:18:51 America/Boise] PHP Warning:  Undefined array key "costo" in /home1/ywampach/public_html/php/retourbano/guardarGuerrero.php on line 94
+[10-Mar-2025 14:29:12 America/Boise] PHP Fatal error:  Uncaught Error: Call to a member function reportarStaff() on bool in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php:52
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/validar-email.php(30): EnviarEmail->enviarEmail('neitan.morales@...', 'Reinscripci\xC3\xB3n ...', '<html>\n\n<head>\n...', true)
+#1 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 52
+[10-Mar-2025 15:24:36 America/Boise] PHP Warning:  Undefined array key "codigo" in /home1/ywampach/public_html/php/retourbano/validar-codigo.php on line 17
+[10-Mar-2025 15:25:30 America/Boise] PHP Warning:  Undefined array key "codigo" in /home1/ywampach/public_html/php/retourbano/validar-codigo.php on line 17
+[10-Mar-2025 15:25:46 America/Boise] PHP Warning:  Undefined array key "codigo" in /home1/ywampach/public_html/php/retourbano/validar-codigo.php on line 17
+[10-Mar-2025 17:19:30 America/Boise] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function RetoUrbanoDao::actualizarGuerrero(), 18 passed in /home1/ywampach/public_html/php/retourbano/actualizarGuerrero.php on line 54 and exactly 19 expected in /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php:638
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/actualizarGuerrero.php(54): RetoUrbanoDao->actualizarGuerrero('2024000', 'Nat\xC3\xA1n Morales', 'Neitan', '29/10/1987', '37', 'M', 'XL', 'CDMX', 'No', 'El rich me obli...', 'Sheila Bonilla', '0000000000', 'Faro', 'neitan.morales@...', '5624242759', 'No tengo', 'No tengo', NULL)
+#1 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php on line 638
+[10-Mar-2025 17:19:48 America/Boise] PHP Fatal error:  Uncaught ArgumentCountError: Too few arguments to function RetoUrbanoDao::actualizarGuerrero(), 18 passed in /home1/ywampach/public_html/php/retourbano/actualizarGuerrero.php on line 54 and exactly 19 expected in /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php:638
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/actualizarGuerrero.php(54): RetoUrbanoDao->actualizarGuerrero('2024000', 'Nat\xC3\xA1n Morales', 'Neitan', '29/10/1987', '37', 'M', 'XL', 'CDMX', 'No', 'El rich me obli...', 'Sheila Bonilla', '0000000000', 'Faro', 'neitan.morales@...', '5624242759', 'No tengo', 'No tengo', NULL)
+#1 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php on line 638
+[10-Mar-2025 17:46:07 America/Boise] PHP Fatal error:  Uncaught Error: Call to undefined function recorrerArray() in /home1/ywampach/public_html/php/retourbano/reinscribir.php:85
+Stack trace:
+#0 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/reinscribir.php on line 85

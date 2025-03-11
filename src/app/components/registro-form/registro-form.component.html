@@ -77,6 +77,7 @@
                     <option value="0" disabled="true" selected="true">Selecciona tu año</option>
 
                     <option value="2011">2011</option>
+                    
                     <option value="2010">2010</option>
                     <option value="2009">2009</option>
                     <option value="2008">2008</option>
@@ -155,7 +156,7 @@
                     <option value="1941">1941</option>
                     <option value="1940">1940</option>
 
-
+                    <option value="1940">1939</option>
                 </select>
                 <div *ngIf="form['year'].errors" class="invalid-feedback">
                     <div *ngIf="form['year'].errors">Tu año de nacimiento es obligatorio</div>
@@ -358,52 +359,48 @@
                     <div *ngIf="form['aceptaPoliticas'].errors">Es necesario aceptar los terminos y condiciones</div>
                 </div>
             </div>
-
-            <div class="btn-group">
-                <div *ngIf="actualizar; else elseBlock">
-                    <button type="submit" class="btn btn-success">Guardar Cambios</button>
+        </div>
+    </div>
+    <div *ngIf="actualizar; else elseBlock" class="row" style="margin-top: 2em; margin-bottom: 2em;">
+        <button type="submit" class="btn btn-success">Guardar y Registrar</button>
+    </div>
+    <ng-template #elseBlock class="row" style="margin-top: 2em; margin-bottom: 2em;">
+        <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">
+            <i class="bi bi-plus-circle"></i>
+            {{saveInMemory?"Agregar":"Inscribirte"}}</button>
+    </ng-template>
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}" aria-modal="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title">{{errorRegistro?'Error al registrar':'Registro correcto'}}</h1>
                 </div>
-                <ng-template #elseBlock>
-                    <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">
-                        <i class="bi bi-plus-circle"></i>
-                        {{saveInMemory?"Agregar":"Inscribirte"}}</button>
-                </ng-template>
-            </div>
-
-            <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}" aria-modal="true">
-                <div class="modal-dialog" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h1 class="modal-title">{{errorRegistro?'Error al registrar':'Registro correcto'}}</h1>
-                        </div>
-                        <div class="modal-body">
-                            <div class="list-group lista-memory">
-                                <a *ngFor="let mr of mensajesRegistros; index as i; first as isFirst"
-                                    class="list-group-item list-group-item-action">
-                                    <div *ngIf="this.errorRegistro; else elseBlock">
-                                        {{i+1}} <i class="bi bi-person-fill"></i> {{mr}}
-                                        <span class="right"><i class="bi bi-x-circle"></i></span>
-                                    </div>
-                                    <ng-template #elseBlock>
-                                        {{i+1}} <i class="bi bi-person-fill"></i> {{mr}}
-                                        <span class="right"><i class="bi bi-person-check-fill"></i></span>
-                                    </ng-template>
-                                </a>
+                <div class="modal-body">
+                    <div class="list-group lista-memory">
+                        <a *ngFor="let mr of mensajesRegistros; index as i; first as isFirst"
+                            class="list-group-item list-group-item-action">
+                            <div *ngIf="this.errorRegistro; else elseBlock">
+                                {{i+1}} <i class="bi bi-person-fill"></i> {{mr}}
+                                <span class="right"><i class="bi bi-x-circle"></i></span>
                             </div>
-                            <h3>
-                                Revisa tu bandeja de correo electrónico (y spam) ya que nos estaremos poniendo en
-                                contacto
-                                contigo
-                                y también te enviamos los datos de pago. La cuenta de correo es
-                                <b>reto&#64;ywampachuca.org</b>
-                            </h3>
-                            <h3>En el correo que te enviamos viene la información de pago para reservar tu lugar!!</h3>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                                (click)="closePopup()">Cerrar/Close</button>
-                        </div>
+                            <ng-template #elseBlock>
+                                {{i+1}} <i class="bi bi-person-fill"></i> {{mr}}
+                                <span class="right"><i class="bi bi-person-check-fill"></i></span>
+                            </ng-template>
+                        </a>
                     </div>
+                    <h3>
+                        Revisa tu bandeja de correo electrónico (y spam) ya que nos estaremos poniendo en
+                        contacto
+                        contigo
+                        y también te enviamos los datos de pago. La cuenta de correo es
+                        <b>reto&#64;ywampachuca.org</b>
+                    </h3>
+                    <h3>En el correo que te enviamos viene la información de pago para reservar tu lugar!!</h3>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        (click)="closePopup()">Cerrar/Close</button>
                 </div>
             </div>
         </div>

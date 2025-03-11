@@ -63,7 +63,7 @@ class RetoUrbanoDao
         IF(email_confirmado= 0, \'false\', \'true\') as emailConfirmado ';
     }
 
-    public function GuardarGuerrero($nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos,$telefono)
+    public function inscribir($nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos,$telefono)
     {
         $insert="INSERT INTO guerreros(id, ";
         $values="VALUES(NULL,";
@@ -225,6 +225,45 @@ class RetoUrbanoDao
         return false; 
     }  
 
+    public function insertarCampamentoGuerreros($id){
+        $insertCampa = "INSERT INTO campamento_guerreros(";
+        $valuesCampa = " VALUES (";
+
+        $insertCampa.="id_campamento, ";
+        $valuesCampa.="(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
+
+        $insertCampa.="id_guerrero, ";
+        $valuesCampa.= $id.", ";
+
+        $insertCampa.="status, ";
+        $valuesCampa.="'A', ";
+    
+        $insertCampa.="confirmado, ";
+        $valuesCampa.="0, ";
+
+        $insertCampa.="asistencia, ";
+        $valuesCampa.="0, ";
+
+        $insertCampa.="staff, ";
+        $valuesCampa.="0, ";
+
+        $insertCampa.="admin, ";
+        $valuesCampa.="0, ";
+
+        $insertCampa.="email_enviado, ";
+        $valuesCampa.="0, ";
+
+        $insertCampa.="email_confirmado, ";
+        $valuesCampa.="0, ";
+
+        $insertCampa.="seguimiento) ";
+        $valuesCampa.="0)";
+
+        $sentenceCampa = $insertCampa.$valuesCampa;
+
+        return $this->bd->ejecutar($sentenceCampa);
+    }
+
     public function getGuerreroByEmail($email){
         $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
@@ -241,6 +280,11 @@ class RetoUrbanoDao
 
     public function getGuerrroRegistradoByEmail($email){
         $que = "SELECT * FROM guerreros WHERE email='$email'";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getGuerrroRegistradoById($id){
+        $que = "SELECT * FROM guerreros WHERE id='$id'";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -635,7 +679,7 @@ class RetoUrbanoDao
     </div>';
     }
 
-    public function actualizarGuerrero($id,$nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos)
+    public function actualizar($id,$nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos,$telefono)
     {
         $insert="UPDATE guerreros SET ";
         
@@ -676,7 +720,10 @@ class RetoUrbanoDao
         if(!empty($whatsapp)){
             $insert.="whatsapp='$whatsapp', ";
         }
-                
+         
+        if(!empty($telefono)){
+            $insert.="telefono='$telefono', ";
+        }
 
         if(!empty($email)){
             $insert.="email='$email', ";
