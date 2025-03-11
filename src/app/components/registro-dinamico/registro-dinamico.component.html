@@ -1,19 +1,40 @@
-
 <div class="row" *ngIf="step==1">
-  <div class="col-lg-6 align-center">
-    <label class="botonsote" (click)="setTutor(false)"><span class="text-into-botonsote">Yo me voy a inscribir</span></label>
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <h3>¿Es tu primera vez en RETO URBANO?</h3>
+    <button class="btn btn-outline-danger" (click)="setActivacion(false, false)" type="button">Yo me voy a
+      inscribir</button>
+    <button class="btn btn-outline-info" (click)="setActivacion(true, false)" type="button">Inscribiré a varios</button>
   </div>
-  <div class="col-lg-6 align-center">
-    <label class="botonsote" (click)="setTutor(true)"><span class="text-into-botonsote">Inscribiré a varios</span></label>
+
+  <div class="d-grid gap-2 col-6 mx-auto">
+    <h3>¿Ya veniste a RETO URBANO?</h3>
+    <button class="btn btn-outline-danger" (click)="setActivacion(false, true)" type="button">Me voy a
+      Reinscribir</button>
+    <button class="btn btn-outline-info" (click)="setActivacion(true, true)" type="button">Reinscribiré a
+      varios</button>
   </div>
 </div>
 
-<div *ngIf="step>1 || tutor">
+<div *ngIf="activarInscripcion; else second">
+  <div class="col-1"></div>
+  <div class="col-10">
     <app-registro-form [saveInMemory]="tutor"></app-registro-form>
+  </div>
+  <div class="col-1"></div>
 </div>
-  
-
-  
-
-
-  
+<ng-template #second>
+  <div *ngIf="activarReinscripcion;">
+    <div class="col">
+      <form (ngSubmit)="validarEmail()" [formGroup]="registerForm">
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" formControlName="email" placeholder="Escribe tu e-mail"
+            [ngClass]="{'is-invalid': form['email'].errors }" [(ngModel)]="email" />
+          <button type="submit" class="btn btn-success">Validar</button>
+        </div>
+        <div *ngIf="form['email'].errors" class="invalid-feedback">
+          <div *ngIf="form['email'].errors">El e-mail es obligatorio</div>
+        </div>
+      </form>
+    </div>
+  </div>
+</ng-template>

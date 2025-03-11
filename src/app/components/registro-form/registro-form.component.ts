@@ -7,10 +7,10 @@ import { ToRegister } from 'src/app/models/registro/ToRegister';
 import { Tutor } from 'src/app/models/registro/Tutor';
 
 @Component({
-    selector: 'app-registro-form',
-    templateUrl: './registro-form.component.html',
-    styleUrls: ['./registro-form.component.css'],
-    standalone: false
+  selector: 'app-registro-form',
+  templateUrl: './registro-form.component.html',
+  styleUrls: ['./registro-form.component.css'],
+  standalone: false
 })
 export class RegistroFormComponent implements OnInit {
 
@@ -41,6 +41,11 @@ export class RegistroFormComponent implements OnInit {
     if (this.guerreroToEdit != undefined) {
       this.actualizar = true;
       this.model = this.guerreroToEdit;
+      const dateString = this.guerreroToEdit.fechaNac + "";
+      this.model.year = Number(dateString?.substring(0, 4));
+      this.model.month = Number(dateString?.substring(5).substring(0, 2));
+      this.model.day = Number(dateString?.substring(8));
+      this.model.aceptaPoliticas = false;
     }
   }
 
@@ -50,7 +55,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.year = 0;
     this.model.month = 0;
     this.model.day = 0;
-        
+
     /*this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";
     this.model.sexo = "M";
@@ -69,7 +74,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.aceptaPoliticas = true;
     this.model.facebook = "No tengo brother";
     this.model.instagram = "Para que o que?";
-    this.model.iglesia = "La sagrada familia";*/
+    this.model.iglesia = "La sagrada familia"*/
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],
@@ -86,6 +91,7 @@ export class RegistroFormComponent implements OnInit {
       tutorNombre: ["", Validators.required],
       tutorTelefono: ["", Validators.required],
       email: ["", Validators.required],
+      whatsapp: [""],
       telefono: ["", Validators.required],
       aceptaPoliticas: [false, Validators.requiredTrue],
     });
@@ -111,7 +117,7 @@ export class RegistroFormComponent implements OnInit {
     }
   }
 
-  limpiarLista(){
+  limpiarLista() {
     var objectRegister = new ToRegister();
     objectRegister.guerreros = new Array();
     localStorage.setItem('toRegister', JSON.stringify(objectRegister));
@@ -177,7 +183,7 @@ export class RegistroFormComponent implements OnInit {
         }
       );
     });
-    if(!this.errorRegistro){
+    if (!this.errorRegistro) {
       this.limpiarLista();
     }
     this.openPopup();
@@ -226,3 +232,7 @@ export class RegistroFormComponent implements OnInit {
     }
   }
 }
+function moment(arg0: any) {
+  throw new Error('Function not implemented.');
+}
+

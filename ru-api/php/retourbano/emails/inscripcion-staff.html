@@ -1,0 +1,136 @@
+<html>
+
+<head>
+    <style>
+        .correoreto {
+            padding: 20px;
+            background-color: whitesmoke;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        h3 {
+            padding: 10px;
+            background-color: lavender;
+        }
+
+        p {
+            color: brown;
+        }
+
+        #deals {
+            display: flex;
+            /* Flex layout so items have equal height  */
+            flex-flow: row wrap;
+            /* Allow items to wrap into multiple lines */
+            margin: 5px;
+        }
+
+        .sale-item {
+            display: flex;
+            /* Lay out each item using flex layout */
+            flex-flow: column;
+            /* Lay out item’s contents vertically  */
+            background: beige;
+            margin-right: 5px;
+            display: block;
+            text-align: center;
+            padding: 5px;
+        }
+
+        .header {
+            font-size: large;
+        }
+
+        .body {
+            font-size: medium;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="correoreto">
+        <h3>Hola, Se ha registrado un nuevo GUERRERO > {{nick}} </h3>
+        <p>Con los siguientes datos:</p>
+        <table class="tabla">
+            <tr>
+                <td>Nombre</td>
+                <td>{{nombre}}</td>
+            </tr>
+            <tr>
+                <td>Gafete</td>
+                <td> {{nick}}</td>
+            </tr>
+            <tr>
+                <td>Fecha de Nac</td>
+                <td>{{fechanac}}</td>
+            </tr>
+            <tr>
+                <td>Edad</td>
+                <td>{{edad}}</td>
+            </tr>
+            <tr>
+                <td>Sexo</td>
+                <td>{{sexo}}</td>
+            </tr>
+            <tr>
+                <td>Talla</td>
+                <td>{{talla}}</td>
+            </tr>
+            <tr>
+                <td>Vienes de</td>
+                <td>{{vienesDe}}</td>
+            </tr>
+            <tr>
+                <td>Alergias</td>
+                <td>{{alergias}}</td>
+            </tr>
+            <tr>
+                <td>Raz&oacute;n de asistir a RU</td>
+                <td>{{razones}}</td>
+            </tr>
+            <tr>
+                <td>Iglesia</td>
+                <td>{{iglesia}}</td>
+            </tr>
+            <tr>
+                <td>email</td>
+                <td>{{email}}</td>
+            </tr>
+            <tr>
+                <td>Whatsapp</td>
+                <td>{{whatsapp}}</td>
+            </tr>
+            <tr>
+                <td>Tel&eacute;fono</td>
+                <td>{{telefono}}</td>
+            </tr>
+            <tr>
+                <td>Facebook</td>
+                <td>{{facebook}}</td>
+            </tr>
+            <tr>
+                <td>Instagram</td>
+                <td>{{instagram}}</td>
+            </tr>
+            <tr>
+                <td>Medicamentos</td>
+                <td>{{medicamentos}}</td>
+            </tr>
+            <tr>
+                <td>Tutor</td>
+                <td>{{tutorNombre}}</td>
+            </tr>
+            <tr>
+                <td>Contacto Tutor</td>
+                <td>{{tutorTelefono}}</td>
+            </tr>
+        </table>
+        <p>Recuerda estar orando por este nuevo guerrero que ha aceptado el reto</p>
+
+        <h2>Informaci&oacute;n de INSCRIPCIONES</h2>
+        {{reporte}}
+        <p>Atentamente: Neitan >D </p>
+    </div>
+</body>
+
+</html>

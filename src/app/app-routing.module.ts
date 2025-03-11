@@ -16,6 +16,7 @@ import { ContabilidadComponent } from './modules/staff/contabilidad/contabilidad
 import { HorarioComponent } from './components/horario/horario.component';
 import { RouterModule, Routes } from '@angular/router';
 import { CampamentosComponent } from './modules/staff/campamentos/campamentos.component';
+import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -31,6 +32,7 @@ const routes: Routes = [
   { path: 'contabilidad', component: ContabilidadComponent },
   { path: 'horario', component: HorarioComponent},
   { path: 'campamentos', component: CampamentosComponent },
+  { path: 'reinscripcion', component: ReinscripcionComponent },
 ];
 
 @NgModule({

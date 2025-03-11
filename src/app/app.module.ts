@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { AppComponent } from './app.component';
+
 import { AuthGuardService } from './services/guards/auth-guard.service';
 import { AuthService } from './services/guards/auth.service';
 import { RoleGuardService } from './services/guards/role-guard.service';
@@ -45,7 +45,9 @@ import { PieChartComponent } from "./components/pie-chart/pie-chart.component";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CampamentosComponent } from './modules/staff/campamentos/campamentos.component';
 import { CampamentoDao } from './api/dao/CampamentoDao';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
+import { AppComponent } from './app.component';
+import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -69,7 +71,8 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
         ContabilidadComponent,
         RegistroDinamicoComponent,
         HorarioComponent,
-        CampamentosComponent
+        CampamentosComponent,
+        ReinscripcionComponent
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,

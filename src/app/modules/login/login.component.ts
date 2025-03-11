@@ -43,7 +43,7 @@ export class LoginComponent implements OnInit {
           console.log(result.session);
           localStorage.setItem('session', JSON.stringify(result.session));
           this.loginError=false;
-          this.router.navigate(['inscripciones']);
+          this.router.navigate(['staff']);
         }else{
           this.loginError=true;
         }

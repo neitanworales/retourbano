@@ -10,6 +10,7 @@ import { IndicadoresResponse } from "src/app/models/registro/IndicadoresResponse
 import { DefaultResponse } from "src/app/models/DefaultResponse";
 import { Pago } from "src/app/models/registro/Pago";
 import { HttpClient } from "@angular/common/http";
+import { GuerreroResponse } from "src/app/models/GuerreroResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -24,11 +25,11 @@ export class RegistroDao {
     }
 
     public agregarGuerrero(guerrero: Guerrero, tutor: boolean): Observable<RegistroResponse> {
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/guardarGuerrero.php?tutor='+(tutor?"1":"0"), guerrero, { headers: this.utils.getHeaders() });
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/inscribir.php?tutor=' + (tutor ? "1" : "0"), guerrero, { headers: this.utils.getHeaders() });
     }
 
     public updateGuerrero(guerrero: Guerrero): Observable<RegistroResponse> {
-        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/actualizarGuerrero.php', guerrero, { headers: this.utils.getHeaders() });
+        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/reinscribir.php', guerrero, { headers: this.utils.getHeaders() });
     }
 
     public consultarGuerreros(opcion: number, activo: boolean, staff: boolean, admin: boolean, byName: string, seg: boolean): Observable<MantenimientoResponse> {
@@ -47,7 +48,7 @@ export class RegistroDao {
 
     public consultarIndicadores(opcion: number): Observable<IndicadoresResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<IndicadoresResponse>(environment.apiUrl 
+        return this.http.get<IndicadoresResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=' + opcion
             + '&user=' + user.id
             + '&token=' + user.token
@@ -56,7 +57,7 @@ export class RegistroDao {
 
     public actualizarStaff(isStaff: boolean, id: number): Observable<DefaultResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<DefaultResponse>(environment.apiUrl 
+        return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=3&id=' + id + '&staff=' + (isStaff ? 1 : 0)
             + '&user=' + user.id
             + '&token=' + user.token
@@ -65,7 +66,7 @@ export class RegistroDao {
 
     public actualizarStatus(isActived: boolean, id: number): Observable<DefaultResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<DefaultResponse>(environment.apiUrl 
+        return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=2&id=' + id + '&status=' + (isActived ? 'A' : 'B')
             + '&user=' + user.id
             + '&token=' + user.token
@@ -74,7 +75,7 @@ export class RegistroDao {
 
     public actualizarAdmin(isAdmin: boolean, id: number): Observable<DefaultResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<DefaultResponse>(environment.apiUrl 
+        return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=9&id=' + id + '&admin=' + (isAdmin ? 1 : 0)
             + '&user=' + user.id
             + '&token=' + user.token
@@ -83,40 +84,40 @@ export class RegistroDao {
 
     public cambiarContrasena(newPassword: String, id: number): Observable<DefaultResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<DefaultResponse>(environment.apiUrl 
-            + 'retourbano/mantenimiento.php?opcion=10&id=' + id 
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=10&id=' + id
             + '&newPassword=' + newPassword
             + '&user=' + user.id
             + '&token=' + user.token
             , { headers: this.utils.getHeaders() });
     }
 
-    public guardarPago(pago: Pago, idGuerrero: number){
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idguerrero='+idGuerrero, pago, { headers: this.utils.getHeaders() });
+    public guardarPago(pago: Pago, idGuerrero: number) {
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idguerrero=' + idGuerrero, pago, { headers: this.utils.getHeaders() });
     }
 
-    public actualizarPago(pago: Pago){
-        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idpago='+pago.id_pago, pago, { headers: this.utils.getHeaders() });
+    public actualizarPago(pago: Pago) {
+        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idpago=' + pago.id_pago, pago, { headers: this.utils.getHeaders() });
     }
 
-    public borrarPago(pago: Pago){
-        return this.http.delete<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idpago='+pago.id_pago, { headers: this.utils.getHeaders() });
+    public borrarPago(pago: Pago) {
+        return this.http.delete<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idpago=' + pago.id_pago, { headers: this.utils.getHeaders() });
     }
 
-    public guardarConfirmacion(valor: boolean, idGuerrero: number){
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/confirmacion-asistencia.php?asistencia=false&idguerrero='+idGuerrero+"&valor="+valor, null, { headers: this.utils.getHeaders() });
+    public guardarConfirmacion(valor: boolean, idGuerrero: number) {
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/confirmacion-asistencia.php?asistencia=false&idguerrero=' + idGuerrero + "&valor=" + valor, null, { headers: this.utils.getHeaders() });
     }
 
-    public guardarAsistencia(valor: boolean, idGuerrero: number){
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/confirmacion-asistencia.php?asistencia=true&idguerrero='+idGuerrero+"&valor="+valor, null, { headers: this.utils.getHeaders() });
+    public guardarAsistencia(valor: boolean, idGuerrero: number) {
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/confirmacion-asistencia.php?asistencia=true&idguerrero=' + idGuerrero + "&valor=" + valor, null, { headers: this.utils.getHeaders() });
     }
 
-    public enviarConfirmarEmail(enviar: boolean, confirmar: boolean, idGuerrero: number){
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/send-email.php?enviado='+enviar+'&idguerrero='+idGuerrero+"&confirmado="+confirmar, null, { headers: this.utils.getHeaders() });
+    public enviarConfirmarEmail(enviar: boolean, confirmar: boolean, idGuerrero: number) {
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/send-email.php?enviado=' + enviar + '&idguerrero=' + idGuerrero + "&confirmado=" + confirmar, null, { headers: this.utils.getHeaders() });
     }
 
-    public guardarSeguimiento(valor: boolean, idGuerrero: number){
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/confirmar-seguimiento.php?idguerrero='+idGuerrero+"&seguimiento="+valor, null, { headers: this.utils.getHeaders() });
+    public guardarSeguimiento(valor: boolean, idGuerrero: number) {
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/confirmar-seguimiento.php?idguerrero=' + idGuerrero + "&seguimiento=" + valor, null, { headers: this.utils.getHeaders() });
     }
 
     public consultarHistorico(year: number): Observable<MantenimientoResponse> {
@@ -127,5 +128,13 @@ export class RegistroDao {
             + '&user=' + user.id
             + '&token=' + user.token
             , { headers: this.utils.getHeaders() });
+    }
+
+    public validarEmail(email: String): Observable<DefaultResponse>{
+        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email='+email, { headers: this.utils.getHeaders() });
+    }
+
+    public validarCodigo(email: String): Observable<GuerreroResponse>{
+        return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo='+email, { headers: this.utils.getHeaders() });
     }
 }

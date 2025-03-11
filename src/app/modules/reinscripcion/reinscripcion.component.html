@@ -1,0 +1,32 @@
+<div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
+    <app-navbar></app-navbar>
+</div>
+<div class="container" style="margin-top: 2em;">
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
+            <h1>Reinscripción!</h1>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
+            <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm">
+                <div class="input-group mb-3">
+                    <input class="form-control form-control-lg" type="text" placeholder="Ingresa el código"
+                        formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
+                        [(ngModel)]="codigo" />
+                    <button type="submit" class="btn btn-success">Validar</button>
+                </div>
+                <div *ngIf="form['codigo'].errors" class="invalid-feedback">
+                    <div *ngIf="form['codigo'].errors">El e-mail es obligatorio</div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-1"></div>
+        <div class="col-10">
+            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="guerrero"></app-registro-form>
+        </div>
+        <div class="col-1"></div>
+    </div>
+</div>
