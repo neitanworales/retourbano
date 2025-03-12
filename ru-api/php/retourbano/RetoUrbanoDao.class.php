@@ -316,7 +316,7 @@ class RetoUrbanoDao
     public function getGuerreroById($id){
         $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
-        INNER JOIN INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
         WHERE g.id='$id' AND status='A' AND cm.activo=1 ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
     }
@@ -637,47 +637,6 @@ class RetoUrbanoDao
     public function updatePassword($email,$contrasena){
         $que = "UPDATE guerreros SET password='$contrasena' WHERE email='$email'" ;
         return $this->bd->ejecutar($que);
-    }   
-    
-    public function enviarEmailSignUp($email, $pwd){
-        $headers = "From: reto@ywampachuca.org\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-        
-        mail($email , 'Jucum Pachuca, RETO SEGUIMIENTO', $this->getMensajeEmailSignUP($email,$pwd),$headers);
-        mail('reto@ywampachuca.org' , 'Nuevo registro', $this->getMensajeEmailSignUP($email,$pwd),$headers);     
-    }
-
-    private function getMensajeEmailSignUP($email,$pwd){
-        return '<div dir="ltr">
-        <font face="arial, helvetica, sans-serif" size="4">Hola!</font>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4">
-                <br></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4"><b>RECUPERACIÓN DE CONTRASEÑA</b></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4"><br></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4">Estos son sus datos de registro:</font>
-        </div>
-        <div><b><font face="arial, helvetica, sans-serif" size="4">Email:&nbsp;</font></b><font face="arial, helvetica, sans-serif"
-                size="4">'.$email.'</font>
-        </div>
-        <div><b><font face="arial, helvetica, sans-serif" size="4">Password:&nbsp;</font></b><font face="arial, helvetica, sans-serif"
-                size="4">'.$pwd.'</font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4"><br></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4">Usa esa cuenta para entrar al portal en www.ywapachuca.org/retourbano/login<br><br><br>Atentamente<br>Webmaster</font>
-                <p><font face="arial, helvetica, sans-serif" size="4">Correo Generado automáticamente.</font></p>
-        </div>
-    </div>';
     }
 
     public function actualizar($id,$nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos,$telefono)

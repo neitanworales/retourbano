@@ -28,14 +28,9 @@ class EnviarEmail
 
     public function getTemplate($variables, $templateName)
     {
-        $templateName="https://ywampachuca.org/php/retourbano/emails/".$templateName;
-        $arrContextOptions = array(
-            "ssl" => array(
-                "verify_peer" => false,
-                "verify_peer_name" => false,
-            ),
-        );
-        $template = file_get_contents($templateName, false, stream_context_create($arrContextOptions));
+        $templateName = "https://ywampachuca.org/php/retourbano/emails/" . $templateName;
+        $context = stream_context_create(array('http' => array('header' => 'Connection: close\r\n')));
+        $template = file_get_contents($templateName, false, $context);
         foreach ($variables as $key => $value) {
             $template = str_replace('{{' . $key . '}}', $value, $template);
         }
@@ -48,17 +43,18 @@ class EnviarEmail
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
         $enviado = mail($to, $subject, $message, $headers);
-        if($reenviarStaff){
-            $reenviarStaff->reportarStaff($subject, $message);
+        if ($reenviarStaff) {
+            $this->reportarStaff($subject, $message);
         }
         return $enviado;
     }
 
-    public function reportarStaff($subject, $message){
+    public function reportarStaff($subject, $message)
+    {
         $headers = "From: Avisos Staff RU <reto@ywampachuca.org>\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
-        $subject = '[REPORTE A STAFF] '.$subject;
+        $subject = '[REPORTE A STAFF] ' . $subject;
         $enviado = mail('reto@ywampachuca.org', $subject, $message, $headers);
         return $enviado;
     }
