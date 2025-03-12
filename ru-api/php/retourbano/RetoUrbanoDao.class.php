@@ -316,7 +316,8 @@ class RetoUrbanoDao
     public function getGuerreroById($id){
         $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
-        WHERE g.id='$id' AND status='A' ORDER BY staff DESC";
+        INNER JOIN INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.id='$id' AND status='A' AND cm.activo=1 ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 

@@ -229,6 +229,8 @@ export class RegistroFormComponent implements OnInit {
     this.mensajesRegistros = new Array();
     if (!this.errorRegistro && !this.actualizar) {
       this.router.navigate(['/']);
+    } else {
+      // ??
     }
   }
 }

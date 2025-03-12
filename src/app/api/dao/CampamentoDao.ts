@@ -21,4 +21,8 @@ export class CampamentoDao {
         + '&token=' + user.token
         , { headers: this.utils.getHeaders() });
     }
+
+    public getCampamentoActivo(): Observable<CampamentoResponse> {
+        return this.http.get<CampamentoResponse>(environment.apiUrl+'retourbano/campamento-activo.php');
+    }
 }

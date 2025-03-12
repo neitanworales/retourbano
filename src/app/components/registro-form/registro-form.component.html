@@ -362,7 +362,7 @@
         </div>
     </div>
     <div *ngIf="actualizar; else elseBlock" class="row" style="margin-top: 2em; margin-bottom: 2em;">
-        <button type="submit" class="btn btn-success">Guardar y Registrar</button>
+        <button type="submit" class="btn btn-success">Guardar y Reinscribir</button>
     </div>
     <ng-template #elseBlock class="row" style="margin-top: 2em; margin-bottom: 2em;">
         <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">
@@ -389,14 +389,14 @@
                             </ng-template>
                         </a>
                     </div>
-                    <h3>
+                    <h5>
                         Revisa tu bandeja de correo electrónico (y spam) ya que nos estaremos poniendo en
                         contacto
                         contigo
                         y también te enviamos los datos de pago. La cuenta de correo es
                         <b>reto&#64;ywampachuca.org</b>
-                    </h3>
-                    <h3>En el correo que te enviamos viene la información de pago para reservar tu lugar!!</h3>
+                    </h5>
+                    <h5>En el correo que te enviamos viene la información de pago para reservar tu lugar!!</h5>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
