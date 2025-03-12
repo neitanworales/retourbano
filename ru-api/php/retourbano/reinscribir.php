@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
 
         $busqueda = $datos->getGuerrroRegistradoById($id);
         if (!empty($busqueda)) {
-            if ($datos->actualizar($id, $nombre, $nick, $fechaNacimiento, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono)) {
+            if ($datos->actualizar($id, $nombre, $nick, $fechaNacimiento, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, NULL)) {
 
                 $busqueda2 = $datos->getGuerreroById($id);
                 if (!empty($busqueda2)) {
