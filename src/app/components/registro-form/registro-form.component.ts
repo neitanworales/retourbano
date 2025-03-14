@@ -33,7 +33,10 @@ export class RegistroFormComponent implements OnInit {
 
   paraRegistrar!: Guerrero[];
 
-  constructor(private formBuilder: FormBuilder, public registroDao: RegistroDao, private router: Router) {
+  constructor(
+    private formBuilder: FormBuilder, 
+    public registroDao: RegistroDao, 
+    private router: Router) {
     this.mensajesRegistros = new Array();
   }
 

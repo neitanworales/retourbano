@@ -18,6 +18,9 @@ export class RegistroDinamicoComponent implements OnInit {
   email!: string;
   activarInscripcion: boolean = false;
   activarReinscripcion: boolean = false;
+  displayStyle?: String = "none";
+  tituloModal?: String;
+  mensajeModal?: String;
 
   constructor(
     private registroDao: RegistroDao,
@@ -45,13 +48,23 @@ export class RegistroDinamicoComponent implements OnInit {
   validarEmail() {
     this.registroDao.validarEmail(this.email).subscribe(
       result => {
-        alert(result.error + " - " + result.mensaje);
-        this.router.navigate(['reinscripcion']);
+        this.mensajeModal = result.mensaje;
+        this.tituloModal = "Reinscripcion";
+        this.openPopup();
       }
     );
   }
 
   get form() {
     return this.registerForm?.controls;
+  }
+
+  openPopup() {
+    this.displayStyle = "block";
+  }
+
+  closePopup() {
+    this.displayStyle = "none";
+    this.router.navigate(['/reinscripcion']);
   }
 }
