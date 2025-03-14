@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
+import { Campamento } from 'src/app/models/registro/Campamento';
 
 @Component({
     selector: 'app-tabla-costos',
@@ -7,6 +8,9 @@ import { Component, OnInit } from '@angular/core';
     standalone: false
 })
 export class TablaCostosComponent implements OnInit {
+
+  @Input()
+  campamento!: Campamento;
 
   constructor() { }
 

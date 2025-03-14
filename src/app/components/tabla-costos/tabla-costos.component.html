@@ -1,41 +1,21 @@
 <!--BLOCK ROW START-->
 <div class="row" id="generic_price_table">
     <div class="col-md-4">
-
-        <!--PRICE CONTENT START-->
         <div class="generic_content clearfix">
-
-            <!--HEAD PRICE DETAIL START-->
             <div class="generic_head_price clearfix">
-
-                <!--HEAD CONTENT START-->
                 <div class="generic_head_content clearfix">
-
-                    <!--HEAD START-->
                     <div class="head_bg"></div>
                     <div class="head">
                         <span>Nacional</span>
                     </div>
-                    <!--//HEAD END-->
-
                 </div>
-                <!--//HEAD CONTENT END-->
-
-                <!--PRICE START-->
                 <div class="generic_price_tag clearfix">
                     <span class="price">
-                        <span class="sign">$</span>
-                        <span class="currency">2,300</span>
-                        <span class="cent">.00</span>
+                        <span class="currency">{{campamento.costoMX | currency }}</span>
                         <span class="month">/MXN</span>
                     </span>
                 </div>
-                <!--//PRICE END-->
-
             </div>
-            <!--//HEAD PRICE DETAIL END-->
-
-            <!--FEATURE LIST START-->
             <div class="generic_feature_list">
                 <ul>
                     <li><span>Hospedaje</span></li>
@@ -46,55 +26,24 @@
                     <li><span>Materiales</span></li>
                 </ul>
             </div>
-            <!--//FEATURE LIST END-->
-
-            <!--BUTTON START--
-            <div class="generic_price_btn clearfix">
-                <a class="" routerLink="">Registrarse</a>
-            </div>
-            !--//BUTTON END-->
-
         </div>
-        <!--//PRICE CONTENT END-->
-
     </div>
-
     <div class="col-md-4">
-
-        <!--PRICE CONTENT START-->
         <div class="generic_content clearfix">
-
-            <!--HEAD PRICE DETAIL START-->
             <div class="generic_head_price clearfix">
-
-                <!--HEAD CONTENT START-->
                 <div class="generic_head_content clearfix">
-
-                    <!--HEAD START-->
                     <div class="head_bg"></div>
                     <div class="head">
                         <span>International fee</span>
                     </div>
-                    <!--//HEAD END-->
-
                 </div>
-                <!--//HEAD CONTENT END-->
-
-                <!--PRICE START-->
                 <div class="generic_price_tag clearfix">
                     <span class="price">
-                        <span class="sign">$</span>
-                        <span class="currency">180</span>
-                        <span class="cent">.00</span>
+                        <span class="currency">{{campamento.costoUSD | currency }}</span>
                         <span class="month">/USD</span>
                     </span>
                 </div>
-                <!--//PRICE END-->
-
             </div>
-            <!--//HEAD PRICE DETAIL END-->
-
-            <!--FEATURE LIST START-->
             <div class="generic_feature_list">
                 <ul>
                     <li><span>Lodgment</span></li>
@@ -105,17 +54,6 @@
                     <li><span>Materials</span></li>
                 </ul>
             </div>
-            <!--//FEATURE LIST END-->
-
-            <!--BUTTON START--
-            <div class="generic_price_btn clearfix">
-                <a class="" href="">Sign up</a>
-            </div>
-            !--//BUTTON END-->
-
         </div>
-        <!--//PRICE CONTENT END-->
-
     </div>
 </div>
-<!--//BLOCK ROW END-->

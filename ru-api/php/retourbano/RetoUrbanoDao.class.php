@@ -16,23 +16,28 @@ class RetoUrbanoDao
     var $pCaja;
 
     /*La funci?n construct es privada para evitar que el objeto pueda ser creado mediante new*/
-    private function __construct(){
+    private function __construct()
+    {
         require 'Db.class.php';
-        $this->bd=Db::getInstance(1);
+        $this->bd = Db::getInstance(1);
     }
 
     /*Funci?n encargada de crear, si es necesario, el objeto. Esta es la funci?n que debemos llamar desde fuera de la clase para instanciar el objeto, y as?, poder utilizar sus m?todos*/
-    public static function getInstance(){
-        if (!(self::$_instance instanceof self)){
-            self::$_instance=new self();
+    public static function getInstance()
+    {
+        if (!(self::$_instance instanceof self)) {
+            self::$_instance = new self();
         }
         return self::$_instance;
     }
 
     /*Evitamos el clonaje del objeto. Patr?n Singleton*/
-    private function __clone(){ }
+    private function __clone()
+    {
+    }
 
-    private function getGuerreroFields(){
+    private function getGuerreroFields()
+    {
         return 'g.id,
         nombre,
         nick,
@@ -63,232 +68,238 @@ class RetoUrbanoDao
         IF(email_confirmado= 0, \'false\', \'true\') as emailConfirmado ';
     }
 
-    public function inscribir($nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos,$telefono)
+    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono)
     {
-        $insert="INSERT INTO guerreros(id, ";
-        $values="VALUES(NULL,";
-        
-        if(!empty($nombre)){
-            $insert.="nombre, ";
-            $values.="'$nombre', ";
-        }
-        
-        if(!empty($nick)){
-            $insert.="nick, ";
-            $values.="'$nick', ";
+        $insert = "INSERT INTO guerreros(id, ";
+        $values = "VALUES(NULL,";
+
+        if (!empty($nombre)) {
+            $insert .= "nombre, ";
+            $values .= "'$nombre', ";
         }
 
-
-        if(!empty($fechaNac)){
-            $insert.="fechanac, ";
-            $values.="STR_TO_DATE('$fechaNac','%d/%m/%Y'), ";
-        }
-                
-
-        if(!empty($edad)){
-            $insert.="edad, ";
-            $values.="'$edad', ";
-        }
-                
-
-        if(!empty($sexo)){
-            $insert.="sexo, ";
-            $values.="'$sexo', ";
-        }
-                
-
-        if(!empty($talla)){
-            $insert.="talla, ";
-            $values.="'$talla', ";
-        }
-                
-
-        if(!empty($vienesDe)){
-            $insert.="vienede, ";
-            $values.="'$vienesDe', ";
-        }
-                
-
-        if(!empty($whatsapp)){
-            $insert.="whatsapp, ";
-            $values.="'$whatsapp', ";
-        }
-
-        if(!empty($telefono)){
-            $insert.="telefono, ";
-            $values.="'$telefono', ";
-        } 
-
-        if(!empty($email)){
-            $insert.="email, ";
-            $values.="'$email', ";
-        }
-                
-
-        if(!empty($alergias)){
-            $insert.="alergias, ";
-            $values.="'$alergias', ";
-        }
-                
-
-        if(!empty($razones)){
-            $insert.="razones, ";
-            $values.="'$razones', ";
-        }
-
-        if(!empty($tutorTelefono)){
-            $insert.="contacto_tutor, ";
-            $values.="'$tutorTelefono', ";
-        }
-                
-
-        if(!empty($iglesia)){
-            $insert.="iglesia, ";
-            $values.="'$iglesia', ";
+        if (!empty($nick)) {
+            $insert .= "nick, ";
+            $values .= "'$nick', ";
         }
 
 
-        if(!empty($tutorNombre)){
-            $insert.="tutor_nombre, ";
-            $values.="'$tutorNombre', ";
-        }
-                
-
-        if(!empty($facebook)){
-            $insert.="facebook, ";
-            $values.="'$facebook', ";
-        }
-                
-
-        if(!empty($instagram)){
-            $insert.="instagram, ";
-            $values.="'$instagram', ";
-        }    
-
-        if(!empty($aceptaPoliticas)){
-            $insert.="politicas, ";
-            $values.="'$aceptaPoliticas', ";
+        if (!empty($fechaNac)) {
+            $insert .= "fechanac, ";
+            $values .= "STR_TO_DATE('$fechaNac','%d/%m/%Y'), ";
         }
 
-        if(!empty($medicamentos)){
-            $insert.="medicamentos, ";
-            $values.="'$medicamentos', ";
+
+        if (!empty($edad)) {
+            $insert .= "edad, ";
+            $values .= "'$edad', ";
         }
 
-        $insert.="fechahora_registro)  ";
-        $values.="(NOW()))";      
 
-        $sentence = $insert.$values;
+        if (!empty($sexo)) {
+            $insert .= "sexo, ";
+            $values .= "'$sexo', ";
+        }
+
+
+        if (!empty($talla)) {
+            $insert .= "talla, ";
+            $values .= "'$talla', ";
+        }
+
+
+        if (!empty($vienesDe)) {
+            $insert .= "vienede, ";
+            $values .= "'$vienesDe', ";
+        }
+
+
+        if (!empty($whatsapp)) {
+            $insert .= "whatsapp, ";
+            $values .= "'$whatsapp', ";
+        }
+
+        if (!empty($telefono)) {
+            $insert .= "telefono, ";
+            $values .= "'$telefono', ";
+        }
+
+        if (!empty($email)) {
+            $insert .= "email, ";
+            $values .= "'$email', ";
+        }
+
+
+        if (!empty($alergias)) {
+            $insert .= "alergias, ";
+            $values .= "'$alergias', ";
+        }
+
+
+        if (!empty($razones)) {
+            $insert .= "razones, ";
+            $values .= "'$razones', ";
+        }
+
+        if (!empty($tutorTelefono)) {
+            $insert .= "contacto_tutor, ";
+            $values .= "'$tutorTelefono', ";
+        }
+
+
+        if (!empty($iglesia)) {
+            $insert .= "iglesia, ";
+            $values .= "'$iglesia', ";
+        }
+
+
+        if (!empty($tutorNombre)) {
+            $insert .= "tutor_nombre, ";
+            $values .= "'$tutorNombre', ";
+        }
+
+
+        if (!empty($facebook)) {
+            $insert .= "facebook, ";
+            $values .= "'$facebook', ";
+        }
+
+
+        if (!empty($instagram)) {
+            $insert .= "instagram, ";
+            $values .= "'$instagram', ";
+        }
+
+        if (!empty($aceptaPoliticas)) {
+            $insert .= "politicas, ";
+            $values .= "'$aceptaPoliticas', ";
+        }
+
+        if (!empty($medicamentos)) {
+            $insert .= "medicamentos, ";
+            $values .= "'$medicamentos', ";
+        }
+
+        $insert .= "fechahora_registro)  ";
+        $values .= "(NOW()))";
+
+        $sentence = $insert . $values;
 
         $response = $this->bd->ejecutarPlus($sentence);
 
-        if($response){
+        if ($response) {
             $insertCampa = "INSERT INTO campamento_guerreros(";
             $valuesCampa = " VALUES (";
 
-            $insertCampa.="id_campamento, ";
-            $valuesCampa.="(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
+            $insertCampa .= "id_campamento, ";
+            $valuesCampa .= "(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
 
-            $insertCampa.="id_guerrero, ";
-            $valuesCampa.= $response.", ";
+            $insertCampa .= "id_guerrero, ";
+            $valuesCampa .= $response . ", ";
 
-            $insertCampa.="status, ";
-            $valuesCampa.="'A', ";
-        
-            $insertCampa.="confirmado, ";
-            $valuesCampa.="0, ";
+            $insertCampa .= "status, ";
+            $valuesCampa .= "'A', ";
 
-            $insertCampa.="asistencia, ";
-            $valuesCampa.="0, ";
-    
-            $insertCampa.="staff, ";
-            $valuesCampa.="0, ";
-    
-            $insertCampa.="admin, ";
-            $valuesCampa.="0, ";
+            $insertCampa .= "confirmado, ";
+            $valuesCampa .= "0, ";
 
-            $insertCampa.="email_enviado, ";
-            $valuesCampa.="0, ";
+            $insertCampa .= "asistencia, ";
+            $valuesCampa .= "0, ";
 
-            $insertCampa.="email_confirmado, ";
-            $valuesCampa.="0, ";
+            $insertCampa .= "staff, ";
+            $valuesCampa .= "0, ";
 
-            $insertCampa.="seguimiento) ";
-            $valuesCampa.="0)";
+            $insertCampa .= "admin, ";
+            $valuesCampa .= "0, ";
 
-            $sentenceCampa = $insertCampa.$valuesCampa;
+            $insertCampa .= "email_enviado, ";
+            $valuesCampa .= "0, ";
+
+            $insertCampa .= "email_confirmado, ";
+            $valuesCampa .= "0, ";
+
+            $insertCampa .= "seguimiento) ";
+            $valuesCampa .= "0)";
+
+            $sentenceCampa = $insertCampa . $valuesCampa;
 
             return $this->bd->ejecutar($sentenceCampa);
         }
 
 
-        return false; 
-    }  
+        return false;
+    }
 
-    public function insertarCampamentoGuerreros($id){
+    public function insertarCampamentoGuerreros($id)
+    {
         $insertCampa = "INSERT INTO campamento_guerreros(";
         $valuesCampa = " VALUES (";
 
-        $insertCampa.="id_campamento, ";
-        $valuesCampa.="(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
+        $insertCampa .= "id_campamento, ";
+        $valuesCampa .= "(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
 
-        $insertCampa.="id_guerrero, ";
-        $valuesCampa.= $id.", ";
+        $insertCampa .= "id_guerrero, ";
+        $valuesCampa .= $id . ", ";
 
-        $insertCampa.="status, ";
-        $valuesCampa.="'A', ";
-    
-        $insertCampa.="confirmado, ";
-        $valuesCampa.="0, ";
+        $insertCampa .= "status, ";
+        $valuesCampa .= "'A', ";
 
-        $insertCampa.="asistencia, ";
-        $valuesCampa.="0, ";
+        $insertCampa .= "confirmado, ";
+        $valuesCampa .= "0, ";
 
-        $insertCampa.="staff, ";
-        $valuesCampa.="0, ";
+        $insertCampa .= "asistencia, ";
+        $valuesCampa .= "0, ";
 
-        $insertCampa.="admin, ";
-        $valuesCampa.="0, ";
+        $insertCampa .= "staff, ";
+        $valuesCampa .= "0, ";
 
-        $insertCampa.="email_enviado, ";
-        $valuesCampa.="0, ";
+        $insertCampa .= "admin, ";
+        $valuesCampa .= "0, ";
 
-        $insertCampa.="email_confirmado, ";
-        $valuesCampa.="0, ";
+        $insertCampa .= "email_enviado, ";
+        $valuesCampa .= "0, ";
 
-        $insertCampa.="seguimiento) ";
-        $valuesCampa.="0)";
+        $insertCampa .= "email_confirmado, ";
+        $valuesCampa .= "0, ";
 
-        $sentenceCampa = $insertCampa.$valuesCampa;
+        $insertCampa .= "seguimiento) ";
+        $valuesCampa .= "0)";
+
+        $sentenceCampa = $insertCampa . $valuesCampa;
 
         return $this->bd->ejecutar($sentenceCampa);
     }
 
-    public function getGuerreroByEmail($email){
-        $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
+    public function getGuerreroByEmail($email)
+    {
+        $que = "SELECT " . $this->getGuerreroFields() . ", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
         WHERE email='$email' AND status='A' ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerreroByEmailToRecovery($email){
-        $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
+    public function getGuerreroByEmailToRecovery($email)
+    {
+        $que = "SELECT " . $this->getGuerreroFields() . ", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
         WHERE email='$email' AND status='A' AND (staff=1 OR admin=1 OR seguimiento=1) ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
-    } 
+    }
 
-    public function getGuerrroRegistradoByEmail($email){
-        $que = "SELECT * FROM guerreros WHERE email='$email'";
+    public function getGuerrroRegistradoByEmail($email)
+    {
+        $que = "SELECT id, nombre, nick, email  FROM guerreros WHERE email='$email' ORDER BY id DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerrroRegistradoById($id){
+    public function getGuerrroRegistradoById($id)
+    {
         $que = "SELECT * FROM guerreros WHERE id='$id'";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerrroRegistradoByCode($code){
+    public function getGuerrroRegistradoByCode($code)
+    {
         $que = "SELECT 
         id,
         nombre,
@@ -309,18 +320,21 @@ class RetoUrbanoDao
         facebook,
         instagram,
         politicas as aceptaPoliticas,
-        medicamentos FROM guerreros WHERE codigo='$code'";
+        medicamentos FROM guerreros WHERE codigo='$code' ORDER BY id DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerreroById($id){
-        $que = "SELECT ".$this->getGuerreroFields().", cg.id as id_campamento_guerrero FROM guerreros g 
+    public function getGuerreroById($id)
+    {
+        $que = "SELECT " . $this->getGuerreroFields() . ", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
-        WHERE g.id='$id' AND status='A' ORDER BY staff DESC";
+        INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.id='$id' AND status='A' AND cm.activo=1 ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getIndicadoresArray(){
+    public function getIndicadoresArray()
+    {
         $que = "SELECT 'Lugares' valor ,maximo_inscr 'count', '1' paquete FROM campamentos c  WHERE c.activo=1
         UNION
         SELECT 'Disponibles' valor ,maximo_inscr-(SELECT COUNT(*) FROM guerreros g 
@@ -351,11 +365,12 @@ class RetoUrbanoDao
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero  WHERE `status`= 'A' AND staff=1 AND sexo='F'
         UNION
         SELECT Talla, COUNT(*), '4' FROM guerreros g 
-        INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero  WHERE `status`= 'A' GROUP BY talla";        
+        INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero  WHERE `status`= 'A' GROUP BY talla";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function obtenerConfiguracion(){        
+    public function obtenerConfiguracion()
+    {
         $que = "SELECT c.fecha_apertura, c.fecha_maxima, c.umbral, c.maximo_inscr, 
         (SELECT COUNT(*) FROM campamento_guerreros cg WHERE status = 'A' AND cg.id_campamento=c.id_campamento ) inscritos, 
         FLOOR((100*(SELECT COUNT(*) FROM campamento_guerreros cg WHERE status = 'A'  AND cg.id_campamento=c.id_campamento))/c.maximo_inscr) porcentaje,
@@ -364,84 +379,92 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function verificarSession($usr,$pwd){
-        $que ="SELECT ".$this->getGuerreroFields().",'' entra FROM guerreros g 
+    public function verificarSession($usr, $pwd)
+    {
+        $que = "SELECT " . $this->getGuerreroFields() . ",'' entra FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
         WHERE email='$usr' AND password='$pwd' AND status='A' 
         AND (staff=1 OR admin=1 OR seguimiento=1)";
-        $array = $this->bd->ObtenerConsulta($que);        
-        if(!empty($array)){
+        $array = $this->bd->ObtenerConsulta($que);
+        if (!empty($array)) {
             $array[0]['entra'] = true;
-            session_start();            
+            session_start();
             $_SESSION['nombre'] = $array[0]['nombre'];
             $_SESSION['id'] = $array[0]['id'];
             $_SESSION['staff'] = $array[0]['staff'];
             $_SESSION['email'] = $array[0]['email'];
             $_SESSION['token'] = $this->crearToken();
-            $this->saveToken($array[0]['id'],$_SESSION['token']);
-            return true;           
-        }else{
+            $this->saveToken($array[0]['id'], $_SESSION['token']);
+            return true;
+        } else {
             return false;
         }
     }
 
-    public function saveToken($id, $token){
+    public function saveToken($id, $token)
+    {
         $delete = "DELETE FROM token WHERE id_guerrero=$id";
         $this->bd->ejecutar($delete);
-        $que="INSERT INTO token(id_guerrero,token,expires,created) 
+        $que = "INSERT INTO token(id_guerrero,token,expires,created) 
             VALUES ('$id','$token',now(),now())";
         $this->bd->ejecutar($que);
     }
 
-    public function deleteToken($id){
+    public function deleteToken($id)
+    {
         $delete = "DELETE FROM token WHERE id_guerrero=$id";
         return $this->bd->ejecutar($delete);
     }
 
-    public function crearToken(){
+    public function crearToken()
+    {
         return bin2hex(random_bytes(16));
     }
 
-    public function validarToken($id, $token){
-        $que ="SELECT * FROM token WHERE id_guerrero='$id' AND token='$token'";        
-        $array = $this->bd->ObtenerConsulta($que);        
-        if(!empty($array)){
-            return true;           
-        }else{
+    public function validarToken($id, $token)
+    {
+        $que = "SELECT * FROM token WHERE id_guerrero='$id' AND token='$token'";
+        $array = $this->bd->ObtenerConsulta($que);
+        if (!empty($array)) {
+            return true;
+        } else {
             return false;
         }
     }
 
-    public function validarAdmin($id){
-        $que ="SELECT admin FROM campamento_guerreros WHERE id_guerrero='$id' and admin=1";        
-        $array = $this->bd->ObtenerConsulta($que);        
-        if(!empty($array)){
-            return true;         
-        }else{
+    public function validarAdmin($id)
+    {
+        $que = "SELECT admin FROM campamento_guerreros WHERE id_guerrero='$id' and admin=1";
+        $array = $this->bd->ObtenerConsulta($que);
+        if (!empty($array)) {
+            return true;
+        } else {
             return false;
         }
     }
 
-    public function consultaGuerreros($status, $staff, $admin, $byname, $seguimiento, $isAdmin){
+    public function consultaGuerreros($status, $staff, $admin, $byname, $seguimiento, $isAdmin)
+    {
         $que = "SELECT "
-        .$this->getGuerreroFields().
-        ",(SELECT SUM(p.cantidad) FROM pagos p WHERE p.id_campamento_guerrero=cg.id) as pagado"
-        .($isAdmin?",password":"").
-        " FROM guerreros g 
+            . $this->getGuerreroFields() .
+            ",(SELECT SUM(p.cantidad) FROM pagos p WHERE p.id_campamento_guerrero=cg.id) as pagado"
+            . ($isAdmin ? ",password" : "") .
+            " FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
-        INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento AND cm.activo=true".
-        ($status=='T'?" WHERE ":" WHERE status = '$status' ".($status!='B'?" AND ":"")).
-        ($status!='B'?" staff ".($staff=='T'?"in(0,1)":("=".$staff))." AND admin=$admin ":'');
-        if(!empty($byname)){
-            $que.=" AND g.nombre like '%$byname%'";
+        INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento AND cm.activo=true" .
+            ($status == 'T' ? " WHERE " : " WHERE status = '$status' " . ($status != 'B' ? " AND " : "")) .
+            ($status != 'B' ? " staff " . ($staff == 'T' ? "in(0,1)" : ("=" . $staff)) . " AND admin=$admin " : '');
+        if (!empty($byname)) {
+            $que .= " AND g.nombre like '%$byname%'";
         }
-        $que.= ($status!='B'? " AND seguimiento = $seguimiento " : "");
+        $que .= ($status != 'B' ? " AND seguimiento = $seguimiento " : "");
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getIndicadores($opcion){
+    public function getIndicadores($opcion)
+    {
 
-        switch($opcion){
+        switch ($opcion) {
             case 4:
                 $que = "SELECT 'Disponibles' valor ,maximo_inscr-(SELECT COUNT(*) FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
@@ -454,7 +477,7 @@ class RetoUrbanoDao
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
                 WHERE `status`= 'A' AND cm.activo=true";
-            break;
+                break;
             case 5:
                 $que = "SELECT 'Guerreros' valor, COUNT(*) 'count' FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
@@ -502,7 +525,7 @@ class RetoUrbanoDao
                 break;
 
             case 8:
-                $que="SELECT Talla valor, COUNT(*) 'count' FROM guerreros g 
+                $que = "SELECT Talla valor, COUNT(*) 'count' FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
                 WHERE `status`= 'A' AND cm.activo=true GROUP BY talla";
@@ -512,13 +535,15 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getSeguimientos(){
+    public function getSeguimientos()
+    {
         $que = "SELECT * FROM RETO_SEGUIMIENTO AS s
                 ORDER BY id_seguimiento DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getSeguimientosById($id){
+    public function getSeguimientosById($id)
+    {
         $que = "SELECT * FROM RETO_SEGUIMIENTO AS s
             LEFT JOIN RETO_ASISTENCIA AS a ON s.id_seguimiento=a.seguimiento_id 
             AND a.estudiante_id=$id
@@ -528,300 +553,276 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function obtenerConfirmacion($dia,$id){
-        $que ="SELECT * FROM RETO_ASISTENCIA A 
+    public function obtenerConfirmacion($dia, $id)
+    {
+        $que = "SELECT * FROM RETO_ASISTENCIA A 
         INNER JOIN RETO_SEGUIMIENTO S ON A.seguimiento_id=S.id_seguimiento
         WHERE estudiante_id = $id AND S.activo = 1";
         $array = $this->bd->ObtenerConsulta($que);
-        if(!empty($array)){
-            if($dia!="0"){
-                if($dia!=$array[0]['dia_llegada']){
+        if (!empty($array)) {
+            if ($dia != "0") {
+                if ($dia != $array[0]['dia_llegada']) {
                     $que = "UPDATE RETO_ASISTENCIA A 
                     INNER JOIN RETO_SEGUIMIENTO S ON A.seguimiento_id=S.id_seguimiento
                     SET dia_llegada='$dia', hora_llegada=null 
                     WHERE estudiante_id = $id AND S.activo = 1";
                     return $this->bd->ejecutar($que);
-                }else{
+                } else {
                     return 1;
                 }
-            }
-            else{            
-                $dia=$array[0]['dia_llegada'];
+            } else {
+                $dia = $array[0]['dia_llegada'];
                 return 1;
             }
-            
-        }else{
-            if($dia!="0"){
-                $que="INSERT INTO RETO_ASISTENCIA(seguimiento_id,estudiante_id,confirmacion,dia_llegada,registro)
+
+        } else {
+            if ($dia != "0") {
+                $que = "INSERT INTO RETO_ASISTENCIA(seguimiento_id,estudiante_id,confirmacion,dia_llegada,registro)
                       SELECT id_seguimiento,$id,0,'$dia',now() FROM RETO_SEGUIMIENTO WHERE activo = 1";
                 return $this->bd->ejecutar($que);
             }
         }
     }
 
-    public function obtenerConfirmacionHora($hora,$id){
-        $que ="SELECT * FROM RETO_ASISTENCIA A 
+    public function obtenerConfirmacionHora($hora, $id)
+    {
+        $que = "SELECT * FROM RETO_ASISTENCIA A 
         INNER JOIN RETO_SEGUIMIENTO S ON A.seguimiento_id=S.id_seguimiento
-        WHERE estudiante_id = ".$id." AND S.activo = 1";
+        WHERE estudiante_id = " . $id . " AND S.activo = 1";
         $array = $this->bd->ObtenerConsulta($que);
-        if(!empty($array)){
+        if (!empty($array)) {
             $que = "UPDATE RETO_ASISTENCIA A 
             INNER JOIN RETO_SEGUIMIENTO S ON A.seguimiento_id=S.id_seguimiento
             SET hora_llegada='$hora' 
-            WHERE estudiante_id = ".$id." AND S.activo = 1";
+            WHERE estudiante_id = " . $id . " AND S.activo = 1";
             return $this->bd->ejecutar($que);
         }
     }
 
-    public function changeStaff($id,$value){
-        $que = "UPDATE campamento_guerreros SET staff=$value WHERE id_guerrero=$id";
-        if($this->bd->ejecutar($que)){
-            $response["error"]="false";
-            $response["mensaje"]="Actualizado correctamente";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }else{
-            $response["error"]="true";
-            $response["mensaje"]="Error al cambiar staff";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }
-    }
-
-    public function changeAdmin($id,$value){
-        $que = "UPDATE campamento_guerreros SET admin=$value WHERE id_guerrero=$id";
-        if($this->bd->ejecutar($que)){
-            $response["error"]="false";
-            $response["mensaje"]="Actualizado correctamente";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }else{
-            $response["error"]="true";
-            $response["mensaje"]="Error al cambiar admin";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }
-    }
-
-    public function changePassword($id,$value){
-        $que = "UPDATE guerreros SET password='$value' WHERE id=$id";
-        if($this->bd->ejecutar($que)){
-            $response["error"]="false";
-            $response["mensaje"]="Actualizado correctamente";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }else{
-            $response["error"]="true";
-            $response["mensaje"]="Error al cambiar admin";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }
-    }
-
-    public function changeStatus($id,$value){
-        $que = "UPDATE campamento_guerreros SET status='$value' WHERE id_guerrero=$id";
-        if($this->bd->ejecutar($que)){
-            $response["error"]="false";
-            $response["mensaje"]="Actualizado correctamente";
-            $response["query"]=$que;
-            echo json_encode($response);
-        }else{
-            $response["error"]="true";
-            $response["mensaje"]="Error al cambiar status";
-            $response["query"]=$que;
-            echo json_encode($response);
-        };
-    }
-
-    public function updatePassword($email,$contrasena){
-        $que = "UPDATE guerreros SET password='$contrasena' WHERE email='$email'" ;
-        return $this->bd->ejecutar($que);
-    }   
-    
-    public function enviarEmailSignUp($email, $pwd){
-        $headers = "From: reto@ywampachuca.org\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-        
-        mail($email , 'Jucum Pachuca, RETO SEGUIMIENTO', $this->getMensajeEmailSignUP($email,$pwd),$headers);
-        mail('reto@ywampachuca.org' , 'Nuevo registro', $this->getMensajeEmailSignUP($email,$pwd),$headers);     
-    }
-
-    private function getMensajeEmailSignUP($email,$pwd){
-        return '<div dir="ltr">
-        <font face="arial, helvetica, sans-serif" size="4">Hola!</font>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4">
-                <br></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4"><b>RECUPERACIÓN DE CONTRASEÑA</b></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4"><br></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4">Estos son sus datos de registro:</font>
-        </div>
-        <div><b><font face="arial, helvetica, sans-serif" size="4">Email:&nbsp;</font></b><font face="arial, helvetica, sans-serif"
-                size="4">'.$email.'</font>
-        </div>
-        <div><b><font face="arial, helvetica, sans-serif" size="4">Password:&nbsp;</font></b><font face="arial, helvetica, sans-serif"
-                size="4">'.$pwd.'</font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4"><br></font>
-        </div>
-        <div>
-            <font face="arial, helvetica, sans-serif" size="4">Usa esa cuenta para entrar al portal en www.ywapachuca.org/retourbano/login<br><br><br>Atentamente<br>Webmaster</font>
-                <p><font face="arial, helvetica, sans-serif" size="4">Correo Generado automáticamente.</font></p>
-        </div>
-    </div>';
-    }
-
-    public function actualizar($id,$nombre,$nick,$fechaNac,$edad,$sexo,$talla,$vienesDe,$alergias,$razones,$tutorNombre,$tutorTelefono,$iglesia,$email,$whatsapp,$facebook,$instagram,$aceptaPoliticas,$medicamentos,$telefono)
+    public function changeStaff($id, $value)
     {
-        $insert="UPDATE guerreros SET ";
-        
-        if(!empty($nombre)){
-            $insert.="nombre='$nombre', ";
+        $que = "UPDATE campamento_guerreros SET staff=$value WHERE id_guerrero=$id";
+        if ($this->bd->ejecutar($que)) {
+            $response["error"] = "false";
+            $response["mensaje"] = "Actualizado correctamente";
+            $response["query"] = $que;
+            echo json_encode($response);
+        } else {
+            $response["error"] = "true";
+            $response["mensaje"] = "Error al cambiar staff";
+            $response["query"] = $que;
+            echo json_encode($response);
         }
-        
-        if(!empty($nick)){
-            $insert.="nick='$nick', ";
-        }
+    }
 
-
-        if(!empty($fechaNac)){
-            $insert.="fechanac=STR_TO_DATE('$fechaNac','%d/%m/%Y'), ";
+    public function changeAdmin($id, $value)
+    {
+        $que = "UPDATE campamento_guerreros SET admin=$value WHERE id_guerrero=$id";
+        if ($this->bd->ejecutar($que)) {
+            $response["error"] = "false";
+            $response["mensaje"] = "Actualizado correctamente";
+            $response["query"] = $que;
+            echo json_encode($response);
+        } else {
+            $response["error"] = "true";
+            $response["mensaje"] = "Error al cambiar admin";
+            $response["query"] = $que;
+            echo json_encode($response);
         }
-                
+    }
 
-        if(!empty($edad)){
-            $insert.="edad='$edad', ";
+    public function changePassword($id, $value)
+    {
+        $que = "UPDATE guerreros SET password='$value' WHERE id=$id";
+        if ($this->bd->ejecutar($que)) {
+            $response["error"] = "false";
+            $response["mensaje"] = "Actualizado correctamente";
+            $response["query"] = $que;
+            echo json_encode($response);
+        } else {
+            $response["error"] = "true";
+            $response["mensaje"] = "Error al cambiar admin";
+            $response["query"] = $que;
+            echo json_encode($response);
         }
-                
+    }
 
-        if(!empty($sexo)){
-            $insert.="sexo='$sexo', ";
+    public function changeStatus($id, $value)
+    {
+        $que = "UPDATE campamento_guerreros SET status='$value' WHERE id_guerrero=$id";
+        if ($this->bd->ejecutar($que)) {
+            $response["error"] = "false";
+            $response["mensaje"] = "Actualizado correctamente";
+            $response["query"] = $que;
+            echo json_encode($response);
+        } else {
+            $response["error"] = "true";
+            $response["mensaje"] = "Error al cambiar status";
+            $response["query"] = $que;
+            echo json_encode($response);
         }
-                
+        ;
+    }
 
-        if(!empty($talla)){
-            $insert.="talla='$talla', ";
-        }
-                
+    public function updatePassword($email, $contrasena)
+    {
+        $que = "UPDATE guerreros SET password='$contrasena' WHERE email='$email'";
+        return $this->bd->ejecutar($que);
+    }
 
-        if(!empty($vienesDe)){
-            $insert.="vienede='$vienesDe', ";
-        }
-                
+    public function actualizar($id, $nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $codigo)
+    {
+        $insert = "UPDATE guerreros SET ";
+        $fields = array();
 
-        if(!empty($whatsapp)){
-            $insert.="whatsapp='$whatsapp', ";
-        }
-         
-        if(!empty($telefono)){
-            $insert.="telefono='$telefono', ";
-        }
-
-        if(!empty($email)){
-            $insert.="email='$email', ";
-        }
-                
-
-        if(!empty($alergias)){
-            $insert.="alergias='$alergias', ";
-        }
-                
-
-        if(!empty($razones)){
-            $insert.="razones='$razones', ";
-        }
-
-        if(!empty($tutorTelefono)){
-            $insert.="contacto_tutor='$tutorTelefono', ";
-        }
-                
-
-        if(!empty($iglesia)){
-            $insert.="iglesia='$iglesia', ";
-        }
-
-
-        if(!empty($tutorNombre)){
-            $insert.="tutor_nombre='$tutorNombre', ";
-        }
-                
-
-        if(!empty($facebook)){
-            $insert.="facebook='$facebook', ";
-        }
-                
-        if(!empty($medicamentos)){
-            $insert.="medicamentos='$medicamentos', ";
+        if (!empty($nombre)) {
+            $fields["nombre"] = $nombre;
         }
 
-        if(!empty($instagram)){
-            $insert.="instagram='$instagram'";
-        }    
+        if (!empty($nick)) {
+            $fields["nick"] = $nick;
+        }
 
-        $sentence = $insert." WHERE id=$id";
+        if (!empty($fechaNac)) {
+            $fields["fechanac"] = "STR_TO_DATE('$fechaNac','%d/%m/%Y')";
+        }
 
+        if (!empty($edad)) {
+            $fields["edad"] = $edad;
+        }
+
+        if (!empty($sexo)) {
+            $fields["sexo"] = $sexo;
+        }
+
+        if (!empty($talla)) {
+            $fields["talla"] = $talla;
+        }
+
+        if (!empty($vienesDe)) {
+            $fields["vienede"] = $vienesDe;
+        }
+
+        if (!empty($whatsapp)) {
+            $fields["whatsapp"] = $whatsapp;
+        }
+
+        if (!empty($telefono)) {
+            $fields["telefono"] = $telefono;
+        }
+
+        if (!empty($email)) {
+            $fields["email"] = $email;
+        }
+
+        if (!empty($alergias)) {
+            $fields["alergias"] = $alergias;
+        }
+
+        if (!empty($razones)) {
+            $fields["razones"] = $razones;
+        }
+
+        if (!empty($tutorTelefono)) {
+            $fields["contacto_tutor"] = $tutorTelefono;
+        }
+
+        if (!empty($iglesia)) {
+            $fields["iglesia"] = $iglesia;
+        }
+
+        if (!empty($tutorNombre)) {
+            $fields["tutor_nombre"] = $tutorNombre;
+        }
+
+        if (!empty($facebook)) {
+            $fields["facebook"] = $facebook;
+        }
+
+        if (!empty($medicamentos)) {
+            $fields["medicamentos"] = $medicamentos;
+        }
+
+        if (!empty($instagram)) {
+            $fields["instagram"] = $instagram;
+        }
+
+        if (!empty($codigo)) {
+            $fields["codigo"] = $codigo;
+        }
+
+        $keys = array_keys($fields);
+        $i = 0;
+        foreach ($keys as $key) {
+            $insert .= ($i > 0 ? ", " : "") . $key . "=" . ($key != 'fechanac' ? "'" : "") . $fields[$key] . ($key != 'fechanac' ? "'" : "");
+            $i++;
+        }
+
+        $sentence = $insert . " WHERE id=$id";
         return $this->bd->ejecutar($sentence);
     }
 
-    public function getPagos($idGuerrero){
+    public function getPagos($idGuerrero)
+    {
         $que = "SELECT p.* FROM campamento_guerreros cg
         INNER JOIN pagos p ON cg.id = p.id_campamento_guerrero 
-        WHERE cg.id_guerrero=".$idGuerrero;
+        WHERE cg.id_guerrero=" . $idGuerrero;
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function guardarPago($idcg,$cantidad,$descripcion,$divisa,$no_ticket){
+    public function guardarPago($idcg, $cantidad, $descripcion, $divisa, $no_ticket)
+    {
         $insertador = "INSERT INTO pagos(id_campamento_guerrero, cantidad, descripcion, divisa, no_ticket)
         VALUES($idcg,$cantidad,'$descripcion','$divisa','$no_ticket')";
         //echo $insertador;
         return $this->bd->ejecutar($insertador);
     }
 
-    public function actualizarPago($idpago,$cantidad,$descripcion,$divisa,$no_ticket){
+    public function actualizarPago($idpago, $cantidad, $descripcion, $divisa, $no_ticket)
+    {
         $insertador = "UPDATE pagos SET cantidad='$cantidad', descripcion = '$descripcion', divisa='$divisa', no_ticket='$no_ticket' WHERE id_pago=$idpago";
         return $this->bd->ejecutar($insertador);
     }
 
-    public function borrarPago($idpago){
+    public function borrarPago($idpago)
+    {
         $insertador = "DELETE FROM pagos WHERE id_pago=$idpago";
         return $this->bd->ejecutar($insertador);
     }
 
-    
-    public function guardarAsistencia($idcg,$valor){
+
+    public function guardarAsistencia($idcg, $valor)
+    {
         $updater = "UPDATE campamento_guerreros SET asistencia=$valor WHERE id=$idcg";
         return $this->bd->ejecutar($updater);
     }
 
-    public function guardarSeguimiento($idcg,$valor){
+    public function guardarSeguimiento($idcg, $valor)
+    {
         $updater = "UPDATE campamento_guerreros SET seguimiento=$valor WHERE id=$idcg";
         return $this->bd->ejecutar($updater);
     }
 
-    public function guardarConfirmacion($idcg,$valor){
+    public function guardarConfirmacion($idcg, $valor)
+    {
         $updater = "UPDATE campamento_guerreros SET confirmado=$valor WHERE id=$idcg";
         return $this->bd->ejecutar($updater);
     }
 
-    public function guardarEmailEnviado($idcg,$valor){
+    public function guardarEmailEnviado($idcg, $valor)
+    {
         $updater = "UPDATE campamento_guerreros SET email_enviado=$valor WHERE id=$idcg";
         return $this->bd->ejecutar($updater);
     }
 
-    public function guardarEmailConfirmacion($idcg,$valor){
+    public function guardarEmailConfirmacion($idcg, $valor)
+    {
         $updater = "UPDATE campamento_guerreros SET email_confirmado=$valor WHERE id=$idcg";
         return $this->bd->ejecutar($updater);
     }
 
-    public function getAsistenciasReto(){
+    public function getAsistenciasReto()
+    {
         $que = "SELECT c.id_campamento, cg.id AS cg, g.id,  g.nombre, rs.id_seguimiento, ra.* 
         FROM campamentos c 
         INNER JOIN campamento_guerreros cg ON cg.id_campamento = c.id_campamento 
@@ -835,13 +836,15 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultaAgruparPorDescripcion(){
+    public function consultaAgruparPorDescripcion()
+    {
         $que = "SELECT descripcion 'Descripción',SUM(cantidad) FROM pagos
         GROUP BY descripcion";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultaTotales(){
+    public function consultaTotales()
+    {
         $que = "SELECT 'Ingresos' as 'valor',SUM(cantidad) 'count' FROM pagos
                 UNION
                 SELECT 'Pagos completos',COUNT(*) FROM PAGOS_GUERREROS
@@ -849,19 +852,22 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultaPagos(){
+    public function consultaPagos()
+    {
         $que = "SELECT id_pago, id_campamento_guerrero, cantidad, descripcion, divisa, no_ticket, g.nombre FROM ywampach_retourbano.pagos as p
                 INNER JOIN campamento_guerreros as cg ON cg.id = p.id_campamento_guerrero
-                INNER JOIN guerreros as g ON cg.id_guerrero = g.id";        
+                INNER JOIN guerreros as g ON cg.id_guerrero = g.id";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultaGuerrerosHistorial($year){
-        $que = "SELECT * FROM guerreros".$year." order by nombre";
+    public function consultaGuerrerosHistorial($year)
+    {
+        $que = "SELECT * FROM guerreros" . $year . " order by nombre";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultaPagosPorGuerrero(){
+    public function consultaPagosPorGuerrero()
+    {
         /*$que = "SELECT g.nombre, cg.staff, sum(cantidad) cantidad, count(id_campamento_guerrero) pagos FROM ywampach_retourbano.pagos as p
                 RIGHT JOIN campamento_guerreros as cg ON cg.id = p.id_campamento_guerrero
                 INNER JOIN guerreros as g ON cg.id_guerrero = g.id
@@ -870,12 +876,14 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultarCampamentos(){
+    public function consultarCampamentos()
+    {
         $que = "SELECT * FROM campamentos ORDER BY id_campamento DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultarCampamentoActivo(){
+    public function consultarCampamentoActivo()
+    {
         $que = "SELECT * FROM campamentos WHERE activo=1 ORDER BY id_campamento DESC";
         return $this->bd->ObtenerConsulta($que);
     }

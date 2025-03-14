@@ -362,7 +362,7 @@
         </div>
     </div>
     <div *ngIf="actualizar; else elseBlock" class="row" style="margin-top: 2em; margin-bottom: 2em;">
-        <button type="submit" class="btn btn-success">Guardar y Registrar</button>
+        <button type="submit" class="btn btn-success">Guardar y Reinscribir</button>
     </div>
     <ng-template #elseBlock class="row" style="margin-top: 2em; margin-bottom: 2em;">
         <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">
@@ -370,7 +370,7 @@
             {{saveInMemory?"Agregar":"Inscribirte"}}</button>
     </ng-template>
     <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}" aria-modal="true">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h1 class="modal-title">{{errorRegistro?'Error al registrar':'Registro correcto'}}</h1>
@@ -389,14 +389,11 @@
                             </ng-template>
                         </a>
                     </div>
-                    <h3>
-                        Revisa tu bandeja de correo electrónico (y spam) ya que nos estaremos poniendo en
-                        contacto
-                        contigo
-                        y también te enviamos los datos de pago. La cuenta de correo es
-                        <b>reto&#64;ywampachuca.org</b>
-                    </h3>
-                    <h3>En el correo que te enviamos viene la información de pago para reservar tu lugar!!</h3>
+                    <p>
+                        Revisa tu bandeja de correo electrónico (y spam) ya que nos estaremos poniendo en contacto
+                        contigo y también te enviamos los datos de pago. La cuenta de correo es <b>reto&#64;ywampachuca.org</b>
+                    </p>
+                    <p>En el correo que te enviamos viene la información de pago para reservar tu lugar!!</p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"

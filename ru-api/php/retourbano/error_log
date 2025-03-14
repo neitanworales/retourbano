@@ -3092,3 +3092,157 @@ Stack trace:
 Stack trace:
 #0 {main}
   thrown in /home1/ywampach/public_html/php/retourbano/reinscribir.php on line 85
+[10-Mar-2025 17:51:52 America/Boise] PHP Fatal error:  Uncaught Error: Call to undefined function recorrerArray() in /home1/ywampach/public_html/php/retourbano/reinscribir.php:85
+Stack trace:
+#0 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/reinscribir.php on line 85
+[11-Mar-2025 07:53:40 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'ywampach_retourbano.RETO_SEGUIMIENTO' doesn't exist in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT * FROM R...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(528): Db->ObtenerConsulta('SELECT * FROM R...')
+#2 /home1/ywampach/public_html/php/retourbano/seguimientos-by-guerrero.php(10): RetoUrbanoDao->getSeguimientosById('2024000')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 07:55:23 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'ywampach_retourbano.RETO_SEGUIMIENTO' doesn't exist in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT * FROM R...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(528): Db->ObtenerConsulta('SELECT * FROM R...')
+#2 /home1/ywampach/public_html/php/retourbano/seguimientos-by-guerrero.php(10): RetoUrbanoDao->getSeguimientosById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 10:21:56 America/Boise] PHP Warning:  Undefined variable $mont in /home1/ywampach/public_html/php/retourbano/reinscribir.php on line 69
+[11-Mar-2025 10:23:27 America/Boise] PHP Warning:  Undefined variable $mont in /home1/ywampach/public_html/php/retourbano/reinscribir.php on line 66
+[11-Mar-2025 19:47:28 America/Boise] PHP Fatal error:  Uncaught Error: Call to a member function reportarStaff() on bool in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php:52
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/recovery-password.php(39): EnviarEmail->enviarEmail('neitan.morales@...', 'Recuperaci\xC3\xB3n d...', '<html>\n\n<head><...', true)
+#1 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 52
+[11-Mar-2025 20:36:51 America/Boise] PHP Warning:  file_get_contents(): Peer certificate CN=`*.bluehost.com' did not match expected CN=`localhost' in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:36:51 America/Boise] PHP Warning:  file_get_contents(): Failed to enable crypto in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:36:51 America/Boise] PHP Warning:  file_get_contents(https://localhost/php/retourbano/emails/recovery-password.html): Failed to open stream: operation failed in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:36:51 America/Boise] PHP Warning:  file_get_contents(): Peer certificate CN=`*.bluehost.com' did not match expected CN=`localhost' in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:36:51 America/Boise] PHP Warning:  file_get_contents(): Failed to enable crypto in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:36:51 America/Boise] PHP Warning:  file_get_contents(https://localhost/php/retourbano/emails/recovery-password.html): Failed to open stream: operation failed in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:37:33 America/Boise] PHP Warning:  file_get_contents(): Peer certificate CN=`*.bluehost.com' did not match expected CN=`localhost' in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:37:33 America/Boise] PHP Warning:  file_get_contents(): Failed to enable crypto in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:37:33 America/Boise] PHP Warning:  file_get_contents(https://localhost/php/retourbano/emails/recovery-password.html): Failed to open stream: operation failed in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:37:33 America/Boise] PHP Warning:  file_get_contents(): Peer certificate CN=`*.bluehost.com' did not match expected CN=`localhost' in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:37:33 America/Boise] PHP Warning:  file_get_contents(): Failed to enable crypto in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:37:33 America/Boise] PHP Warning:  file_get_contents(https://localhost/php/retourbano/emails/recovery-password.html): Failed to open stream: operation failed in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:40:24 America/Boise] PHP Warning:  file_get_contents(): Peer certificate CN=`*.bluehost.com' did not match expected CN=`localhost' in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:40:24 America/Boise] PHP Warning:  file_get_contents(): Failed to enable crypto in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:40:24 America/Boise] PHP Warning:  file_get_contents(https://localhost/php/retourbano/emails/recovery-password.html): Failed to open stream: operation failed in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:40:24 America/Boise] PHP Warning:  file_get_contents(): Peer certificate CN=`*.bluehost.com' did not match expected CN=`localhost' in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:40:24 America/Boise] PHP Warning:  file_get_contents(): Failed to enable crypto in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 20:40:24 America/Boise] PHP Warning:  file_get_contents(https://localhost/php/retourbano/emails/recovery-password.html): Failed to open stream: operation failed in /home1/ywampach/public_html/php/retourbano/emails/EnviarEmail.class.php on line 33
+[11-Mar-2025 21:18:51 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.i' at line 30 in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT g.id,\n  ...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(321): Db->ObtenerConsulta('SELECT g.id,\n  ...')
+#2 /home1/ywampach/public_html/php/retourbano/session.php(18): RetoUrbanoDao->getGuerreroById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:18:57 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.i' at line 30 in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT g.id,\n  ...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(321): Db->ObtenerConsulta('SELECT g.id,\n  ...')
+#2 /home1/ywampach/public_html/php/retourbano/session.php(18): RetoUrbanoDao->getGuerreroById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:21:16 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.i' at line 30 in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT g.id,\n  ...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(321): Db->ObtenerConsulta('SELECT g.id,\n  ...')
+#2 /home1/ywampach/public_html/php/retourbano/session.php(18): RetoUrbanoDao->getGuerreroById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:21:20 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.i' at line 30 in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT g.id,\n  ...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(321): Db->ObtenerConsulta('SELECT g.id,\n  ...')
+#2 /home1/ywampach/public_html/php/retourbano/session.php(18): RetoUrbanoDao->getGuerreroById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:21:35 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.i' at line 30 in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT g.id,\n  ...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(321): Db->ObtenerConsulta('SELECT g.id,\n  ...')
+#2 /home1/ywampach/public_html/php/retourbano/session.php(18): RetoUrbanoDao->getGuerreroById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:27:26 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
+        WHERE g.i' at line 30 in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT g.id,\n  ...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(322): Db->ObtenerConsulta('SELECT g.id,\n  ...')
+#2 /home1/ywampach/public_html/php/retourbano/session.php(18): RetoUrbanoDao->getGuerreroById('2023016')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:28:56 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'ywampach_retourbano.RETO_SEGUIMIENTO' doesn't exist in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT * FROM R...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(529): Db->ObtenerConsulta('SELECT * FROM R...')
+#2 /home1/ywampach/public_html/php/retourbano/seguimientos-by-guerrero.php(10): RetoUrbanoDao->getSeguimientosById('2024000')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 21:29:30 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: Table 'ywampach_retourbano.RETO_SEGUIMIENTO' doesn't exist in /home1/ywampach/public_html/php/retourbano/Db.class.php:87
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(87): mysqli_query(Object(mysqli), 'SELECT * FROM R...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(529): Db->ObtenerConsulta('SELECT * FROM R...')
+#2 /home1/ywampach/public_html/php/retourbano/seguimientos-by-guerrero.php(10): RetoUrbanoDao->getSeguimientosById('2024000')
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 87
+[11-Mar-2025 22:33:17 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Neitan Worales WHERE id=2024000' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), ',Neitan Worales...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar(',Neitan Worales...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Nat\xC3\xA1n Morales', 'Neitan', '29/10/1987', '38', 'M', 'XL', 'CDMX', 'No', 'El rich me obli...', 'Sheila Bonilla', '70706043043', 'Comunidad Faro', 'neitan.morales@...', '5624242759', 'Neitan Worales', 'Neitan Worales', NULL, 'No', '7597231662', NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58
+[11-Mar-2025 22:33:35 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Neitan Worales WHERE id=2024000' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), ',Neitan Worales...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar(',Neitan Worales...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Nat\xC3\xA1n Morales', 'Neitan', '29/10/1987', '38', 'M', 'XL', 'CDMX', 'No', 'El rich me obli...', 'Sheila Bonilla', '70706043043', 'Comunidad Faro', 'neitan.morales@...', '5624242759', 'Neitan Worales', 'Neitan Worales', NULL, 'No', '7597231662', NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58
+[11-Mar-2025 22:42:41 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Comunidad Faro WHERE id=2024000' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), ',Comunidad Faro...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar(',Comunidad Faro...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Natan Morales', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Comunidad Faro', 'neitan.morales@...', NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58
+[11-Mar-2025 22:43:30 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Comunidad Faro WHERE id=2024000' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), ',Comunidad Faro...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar(',Comunidad Faro...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Natan Morales', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Comunidad Faro', 'neitan.morales@...', NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58
+[11-Mar-2025 22:43:53 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'Morales,neitan.morales@gmail.com,Comunidad Faro WHERE id=2024000' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), 'UPDATE guerrero...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar('UPDATE guerrero...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Natan Morales', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Comunidad Faro', 'neitan.morales@...', NULL, NULL, NULL, NULL, NULL, NULL, NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58
+[11-Mar-2025 22:45:59 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '29/10/1987','%d/%m/%Y')', edad='38', sexo='M', talla='XL', vienede='CDMX', whats' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), 'UPDATE guerrero...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar('UPDATE guerrero...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Nat\xC3\xA1n Morales ...', 'Neitan', '29/10/1987', '38', 'M', 'XL', 'CDMX', 'No', 'El rich me obli...', 'Sheila Bonilla', '70706043043', 'Comunidad Faro', 'neitan.morales@...', '5624242759', 'Neitan Worales', 'Neitan Worales', NULL, 'No', '7597231662', NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58
+[11-Mar-2025 22:46:13 America/Boise] PHP Fatal error:  Uncaught mysqli_sql_exception: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '29/10/1987','%d/%m/%Y')', edad='38', sexo='M', talla='XL', vienede='CDMX', whats' at line 1 in /home1/ywampach/public_html/php/retourbano/Db.class.php:58
+Stack trace:
+#0 /home1/ywampach/public_html/php/retourbano/Db.class.php(58): mysqli_query(Object(mysqli), 'UPDATE guerrero...')
+#1 /home1/ywampach/public_html/php/retourbano/RetoUrbanoDao.class.php(774): Db->ejecutar('UPDATE guerrero...')
+#2 /home1/ywampach/public_html/php/retourbano/reinscribir.php(72): RetoUrbanoDao->actualizar('2024000', 'Nat\xC3\xA1n Morales ...', 'Neitan', '29/10/1987', '38', 'M', 'XL', 'CDMX', 'No', 'El rich me obli...', 'Sheila Bonilla', '70706043043', 'Comunidad Faro', 'neitan.morales@...', '5624242759', 'Neitan Worales', 'Neitan Worales', NULL, 'No', '7597231662', NULL)
+#3 {main}
+  thrown in /home1/ywampach/public_html/php/retourbano/Db.class.php on line 58

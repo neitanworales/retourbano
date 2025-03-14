@@ -6,5 +6,11 @@ export class Campamento {
     umbral?: number;
     fecha_maxima?: Date;
     fecha_apertura?: Date;
-    costo?: number;
+    costoMX?: number;
+    costoUSD?: number;
+    banco?: string;
+    cuenta?: string;
+    titularCuenta?: string;
+    contacto1?: string;
+    contacto2?: string;
 }

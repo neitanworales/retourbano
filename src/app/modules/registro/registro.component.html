@@ -1,4 +1,4 @@
-<div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
+<div class="cover-container d-flex w-100 p-3 mx-auto flex-column" style="margin-bottom: 2em;">
     <app-navbar></app-navbar>
 </div>
 <div class="container">
@@ -11,17 +11,22 @@
             <img alt="..." class="img-fluid" src="assets/img/media/megs.4d73356b.jpg" style="width: 100%;">
         </div>
     </div>
-</div>
-<hr>
-<div class="container">
+    <hr>
     <div class="row">
         <div class="col">
-            <app-tabla-costos></app-tabla-costos>
+            <h1>{{campamento.titulo}}</h1>
         </div>
     </div>
-</div>
-<div class="section container">
-    <app-registro-avance [showForm]="true"></app-registro-avance>
+    <div class="row">
+        <div class="col">
+            <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <app-registro-avance [showForm]="true"></app-registro-avance>
+        </div>
+    </div>
 </div>
 
 <app-footer></app-footer>

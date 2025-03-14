@@ -25,11 +25,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (!empty($busqueda)) {
             $campamento = $datos->consultarCampamentoActivo();
 
+            $codigo_generated = bin2hex(random_bytes(4));
+
+            $datos->actualizar($busqueda[0]["id"],NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL,NULL, $codigo_generated);
+
             $variables = array();
-            $variables["nick"] = "Nonoalco";
-            $variables["year"] = "2025";
-            $variables["codigo"] = "43fds-243f4-4e244";
+            $variables["nick"] = $busqueda[0]['nick'];
+            $variables["year"] = $campamento[0]["id_campamento"];
+            $variables["codigo"] = $codigo_generated;
             $variables["basesite"] = "http://ywampachuca.org/retourbano";
+            
             $templateName = "reinscripcion.html";
             $template = $emailDao->getTemplate($variables, $templateName);
             $emailEnviado = $emailDao->enviarEmail($email, 'Reinscripción Reto Urbano', $template, true);

@@ -31,7 +31,7 @@ export class DashboardComponent implements OnInit {
       }
     );
     console.log(this.session);
-    this.cargarDatos();
+    //this.cargarDatos();
   }
 
   private cargarDatos() {

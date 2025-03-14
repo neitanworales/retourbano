@@ -9,21 +9,21 @@ header("Cache-Control: post-check=0, pre-check=0", false);
 header("Pragma: no-cache");
 
 require './RetoUrbanoDao.class.php';
-$datos=RetoUrbanoDao::getInstance();
+$datos = RetoUrbanoDao::getInstance();
 
 $usr = $_REQUEST['username'];
 $pwd = $_REQUEST['password'];
 
-if($datos->verificarSession($usr,$pwd)){
-    $array["session"]=$_SESSION;
-    $array["code"]=200;
-    $array["success"]=true;
+if ($datos->verificarSession($usr, $pwd)) {
+    $array["session"] = $_SESSION;
+    $array["code"] = 200;
+    $array["success"] = true;
     echo json_encode($array);
-}else{
-    http_response_code(401); 
-    $array["code"]=401;
-    $array["message"]='Not authorized';
-    $array["success"]=false;
+} else {
+    http_response_code(401);
+    $array["code"] = 401;
+    $array["message"] = 'Not authorized';
+    $array["success"] = false;
     echo json_encode($array);
 }
 
