@@ -1,59 +1,26 @@
-<!--BLOCK ROW START-->
 <div class="row" id="generic_price_table">
-    <div class="col-md-4">
+    <div *ngFor="let costo of campamento.costos" class="col-md-4">
         <div class="generic_content clearfix">
             <div class="generic_head_price clearfix">
                 <div class="generic_head_content clearfix">
                     <div class="head_bg"></div>
                     <div class="head">
-                        <span>Nacional</span>
+                        <span>{{costo.descripcion}}</span>
                     </div>
                 </div>
                 <div class="generic_price_tag clearfix">
                     <span class="price">
-                        <span class="currency">{{campamento.costoMX | currency }}</span>
-                        <span class="month">/MXN</span>
+                        <span class="currency">{{costo.cantidad | currency }}</span>
+                        <span class="month">/{{costo.divisa}}</span>
                     </span>
                 </div>
             </div>
             <div class="generic_feature_list">
                 <ul>
-                    <li><span>Hospedaje</span></li>
-                    <li><span>Comidas</span></li>
-                    <li><span>Clases</span></li>
-                    <li><span>Talleres</span></li>
-                    <li><span>Playera</span></li>
-                    <li><span>Materiales</span></li>
+                    <li *ngFor="let incluye of costo.incluye"><span>{{incluye}}</span></li>
                 </ul>
             </div>
         </div>
     </div>
-    <div class="col-md-4">
-        <div class="generic_content clearfix">
-            <div class="generic_head_price clearfix">
-                <div class="generic_head_content clearfix">
-                    <div class="head_bg"></div>
-                    <div class="head">
-                        <span>International fee</span>
-                    </div>
-                </div>
-                <div class="generic_price_tag clearfix">
-                    <span class="price">
-                        <span class="currency">{{campamento.costoUSD | currency }}</span>
-                        <span class="month">/USD</span>
-                    </span>
-                </div>
-            </div>
-            <div class="generic_feature_list">
-                <ul>
-                    <li><span>Lodgment</span></li>
-                    <li><span>Meals</span></li>
-                    <li><span>Lecture</span></li>
-                    <li><span>Workshops</span></li>
-                    <li><span>T-shirt</span></li>
-                    <li><span>Materials</span></li>
-                </ul>
-            </div>
-        </div>
-    </div>
+
 </div>

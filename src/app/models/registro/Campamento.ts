@@ -1,3 +1,5 @@
+import { Costo } from "./Costo";
+
 export class Campamento {
     id_campamento?: number;
     titulo?: string;
@@ -13,4 +15,5 @@ export class Campamento {
     titularCuenta?: string;
     contacto1?: string;
     contacto2?: string;
+    costos?: Costo[];
 }

@@ -1,3 +1,6 @@
+body {
+    background-color: black !important;
+}
 .img-main{
     height: 35em;
 }

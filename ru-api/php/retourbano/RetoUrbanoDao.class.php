@@ -887,4 +887,9 @@ class RetoUrbanoDao
         $que = "SELECT * FROM campamentos WHERE activo=1 ORDER BY id_campamento DESC";
         return $this->bd->ObtenerConsulta($que);
     }
+
+    public function consultarCostosByCampamento($campemento){
+        $que = "SELECT * FROM campamento_costos WHERE campamento_id=$campemento";
+        return $this->bd->ObtenerConsulta($que);
+    }
 }

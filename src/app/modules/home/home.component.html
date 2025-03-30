@@ -2,18 +2,19 @@
     <app-navbar></app-navbar>
 
     <main class="gradietne text-center">
-        <img class="img-fluid" src="assets/img/main/RU_WANDF_2025.png">
+        <img class="img-fluid" src="assets/img/main/ru2025backgroud.png">
     </main>
 </div>
 
-<!--div class="main">
+<div class="main">
     <div id="introduccion" class="section pt-o">
         <div class="container">
             <div class="row">
                 <div class="text-center col-md-12">
-                    <h2>RETO URBANO</h2>
-                    <h1>EL MISMO AYER, HOY Y SIEMPRE</h1>
-                    <h2>28 de julio - 1 de agosto, 2024</h2>
+                    <h1>RETO URBANO {{campamento.id_campamento}}</h1>
+                    <h2>{{campamento.titulo}}</h2>
+                    <h2>Pachuca, Centro</h2>
+                    <h2>15-20 de julio, 2025</h2>
                 </div>
                 <div class="text-center col-md-12 section">
                     <app-registro-avance [showForm]="false"></app-registro-avance>
@@ -31,12 +32,39 @@
                 <div class="col-xs-12 col-md-6 col-lg-6">
                     <figure>
                         <img src="assets/img/richz.jpg" class="img-fluid">
-                        <figcaption>Richz Volta - Fundador Reto Urbano  since 2009, Youth with a Mission Pachuca.</figcaption>
+                        <figcaption>Richz Volta - Director Youth with a Mission Pachuca
+                        </figcaption>
                     </figure>
                 </div>
                 <div class="col-xs-12 col-md-6 col-lg-6">
                     <blockquote class="blockquote">
-                        <b>Reto Urbano</b>
+                        <p>! Hola Guerreros !</p>
+                        <p>Los saludamos desde Juventud con Una Misión Pachuca.</p>
+                        <p>Este año estamos cumpliendo 16 años de Reto Urbano, es increíble como pasa el tiempo y
+                            estamos emocionados de esta nueva etapa de RU.</p>
+                        <p>Queremos invitarles a que nuevamente a sean parte de la historia de Juventud con Una Misión.</p>
+
+                        <p>Hace algunas décadas un Joven llamado Loren Cunningham tuvo la visión de Olas de mar que al
+                            estrellarse en la arena se convertían en Jovenes que llegaban a los diferentes países del
+                            mundo llevando el Evangelio a los lugares mas escondidos de la tierra.</p>
+
+                        <p>Este año queremos enfocar en invitarte a ser parte de esas olas de Jovenes que se movilizarán
+                            a todo el mundo y a las esferas de la sociedad a llevar el evangelio de Cristo atraves del
+                            fuego de su Espiritu.</p>
+
+                        <p>Este año nuestra sede será nuevamente la Iglesia PIB del centro de Pachuca, y como estancia
+                            podrás elegir entre buscar tu lugar o quedarte en el hotel El Dorado.</p>
+
+                        <p>También como ya es tradición en Reto, tendremos 3 días de enseñanza, entrenamiento, talleres
+                            y los últimos 2 días tomaremos autobuses y saldremos a llevar el mensaje de Cristo através
+                            de artes urbanas.</p>
+
+                        <p>Estamos esperando jovenes de diferentes países es así que nuestro campamento será bilingüe.</p>
+
+                        <p>Inscríbete ya que el cupo es limitado.</p>
+                        
+                        <p><b>¿Reto que somos!?</b></p>
+
                         <footer class="blockquote-footer">Richz Volta </footer>
                     </blockquote>
                 </div>
@@ -132,8 +160,8 @@
                         puedes expresarte, compartir y aprender juntos.</p>
                 </div>
                 <div class="text-center col-md-6">
-                    <h4>Convivencia</h4><img alt="..." class="img-rounded img-fluid"
-                        src="assets/img/media/biblia.jpg" style="width: 100%;">
+                    <h4>Convivencia</h4><img alt="..." class="img-rounded img-fluid" src="assets/img/media/biblia.jpg"
+                        style="width: 100%;">
                     <p>También seguiremos con el programa “Una biblia en cada hogar” así que prepárate para entregar
                         biblias casa por casa.</p>
                 </div>
@@ -154,7 +182,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-6">
-                    <h1>Historia</h1>
+                    <h1>Historia - Since 2009</h1>
                     <p>En 2009, Dios puso en el corazón del equipo pionero de YWAM Pachuca organizar un entrenamiento
                         tipo campamento con la meta de llevar a los adolescentes a ser Retados a tener una cercanía real
                         con Dios para conocerlo y darlo a conocer. No solo para recibir si no para estar preparado a dar
@@ -191,8 +219,7 @@
                 </div>
                 <div class="col-md-6">
                     <figure>
-                        <img alt="..." class="img-fluid" src="assets/img/media/cero.03ddd8eb.jpg"
-                            style="width: 100%;">
+                        <img alt="..." class="img-fluid" src="assets/img/media/cero.03ddd8eb.jpg" style="width: 100%;">
                         <figcaption>Reto Urbano</figcaption>
                     </figure>
                 </div>
@@ -205,22 +232,19 @@
                 </div>
                 <div class="col-md-6">
                     <figure>
-                        <img alt="..." class="img-fluid" src="assets/img/media/uno.a67c3c92.jpg"
-                            style="width: 100%;">
+                        <img alt="..." class="img-fluid" src="assets/img/media/uno.a67c3c92.jpg" style="width: 100%;">
                         <figcaption>Reto Urbano - Mensaje Radical</figcaption>
                     </figure>
                 </div>
                 <div class="col-md-6">
                     <figure>
-                        <img alt="2015" class="img-fluid" src="assets/img/media/dos.f9251e6b.jpg"
-                            style="width: 100%;">
+                        <img alt="2015" class="img-fluid" src="assets/img/media/dos.f9251e6b.jpg" style="width: 100%;">
                         <figcaption>Reto Urbano - Obediencia Radical (2015)</figcaption>
                     </figure>
                 </div>
                 <div class="col-md-6">
                     <figure>
-                        <img alt="2016" class="img-fluid" src="assets/img/media/tres.dcfba7e5.jpg"
-                            style="width: 100%;">
+                        <img alt="2016" class="img-fluid" src="assets/img/media/tres.dcfba7e5.jpg" style="width: 100%;">
                         <figcaption>Reto Urbano - No de este mundo (2016)</figcaption>
                     </figure>
                 </div>
@@ -240,15 +264,13 @@
                 </div>
                 <div class="col-md-6">
                     <figure>
-                        <img alt="2019" class="img-fluid" src="assets/img/media/2019.e3c55e36.jpg"
-                            style="width: 100%;">
+                        <img alt="2019" class="img-fluid" src="assets/img/media/2019.e3c55e36.jpg" style="width: 100%;">
                         <figcaption>RUX - 10mo Aniversario (2019)</figcaption>
                     </figure>
                 </div>
                 <div class="col-md-6">
                     <figure>
-                        <img alt="2021" class="img-fluid" src="assets/img/media/ru2021.jpg"
-                            style="width: 100%;">
+                        <img alt="2021" class="img-fluid" src="assets/img/media/ru2021.jpg" style="width: 100%;">
                         <figcaption>Reto Urbano - Reyes y Sacerdotes (2021)</figcaption>
                     </figure>
                 </div>
@@ -278,8 +300,8 @@
 
                     <div id="carouselExampleControls" class="carousel slide" data-bs-ride="carousel">
                         <div class="carousel-inner">
-                            <div class="carousel-item active"><img src="assets/img/media/1.0ef5bf1c.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item active"><img src="assets/img/media/1.0ef5bf1c.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
@@ -341,372 +363,372 @@
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/10.6ba5fd42.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/10.6ba5fd42.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/11.106254da.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/11.106254da.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/12.59ee5962.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/12.59ee5962.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/13.c79dc848.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/13.c79dc848.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/14.67291eec.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/14.67291eec.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/15.26c2d118.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/15.26c2d118.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/16.9560e803.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/16.9560e803.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/17.717b4e16.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/17.717b4e16.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/18.6bb61c54.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/18.6bb61c54.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/19.fe3f52da.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/19.fe3f52da.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/20.b8f49220.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/20.b8f49220.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/21.d079e376.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/21.d079e376.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/22.33af8532.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/22.33af8532.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/23.38ab782f.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/23.38ab782f.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/24.c5b7b281.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/24.c5b7b281.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/25.f34f40eb.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/25.f34f40eb.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/26.7b4dd73a.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/26.7b4dd73a.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/27.689f98b7.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/27.689f98b7.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/28.64b2966c.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/28.64b2966c.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/29.3f3e1b1e.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/29.3f3e1b1e.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/30.0b01adc4.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/30.0b01adc4.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/31.e2e31145.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/31.e2e31145.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/32.83350ac7.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/32.83350ac7.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/33.3499a95e.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/33.3499a95e.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/34.55cea353.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/34.55cea353.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/35.0acee0e8.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/35.0acee0e8.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/36.db8f0a5a.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/36.db8f0a5a.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/37.b5579314.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/37.b5579314.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/38.07077a63.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/38.07077a63.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/39.d8b17117.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/39.d8b17117.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/40.188f4958.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/40.188f4958.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/41.fa57a46f.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/41.fa57a46f.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/42.44721956.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/42.44721956.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/43.c92df929.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/43.c92df929.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/44.760da1af.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/44.760da1af.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/45.8b915142.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/45.8b915142.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/46.0c28cd66.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/46.0c28cd66.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/47.6ac52257.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/47.6ac52257.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/48.ef0d1147.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/48.ef0d1147.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/49.a5d7ff26.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/49.a5d7ff26.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/50.5011bfa6.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/50.5011bfa6.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/51.93e56519.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/51.93e56519.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/52.01f97a1f.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/52.01f97a1f.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/53.b93ba7c5.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/53.b93ba7c5.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/54.b5ae8e1e.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/54.b5ae8e1e.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/55.957f7479.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/55.957f7479.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/56.9dd0cf1e.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/56.9dd0cf1e.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/57.83bb2320.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/57.83bb2320.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/58.efdebfa5.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/58.efdebfa5.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/59.a0e5b9a3.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/59.a0e5b9a3.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/60.d7753119.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/60.d7753119.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/61.152fe94f.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/61.152fe94f.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
                                 </div>
                             </div>
-                            <div class="carousel-item"><img src="assets/img/media/62.d6ced3eb.jpeg"
-                                    alt="..." class="img-fluid">
+                            <div class="carousel-item"><img src="assets/img/media/62.d6ced3eb.jpeg" alt="..."
+                                    class="img-fluid">
                                 <div class="carousel-caption d-none d-md-block">
                                     <h3></h3>
                                     <p>...</p>
@@ -850,4 +872,4 @@
         </div>
     </div>
 </div>
-<app-footer></app-footer-->
+<app-footer></app-footer>
