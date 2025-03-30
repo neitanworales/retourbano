@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Campamento } from 'src/app/models/registro/Campamento';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
     selector: 'app-tabla-costos',

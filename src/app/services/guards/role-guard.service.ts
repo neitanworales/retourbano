@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { LoginDao } from '../../api/dao/LoginDao';
 import { AuthService } from './auth.service';
 import { lastValueFrom } from 'rxjs';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
+import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 
 @Injectable()
 export class RoleGuardService  {

@@ -2,7 +2,7 @@ import { APP_BASE_HREF } from '@angular/common';
 import { Component, Inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 
 @Component({
   selector: 'app-registro-dinamico',

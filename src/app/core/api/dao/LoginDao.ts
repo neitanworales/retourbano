@@ -2,9 +2,9 @@ import { Injectable } from "@angular/core";
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
-import { LoginResponse } from "src/app/models/login/LoginResponse";
-import { Session } from "src/app/models/login/Session";
-import { DefaultResponse } from "src/app/models/DefaultResponse";
+import { LoginResponse } from "src/app/core/models/login/LoginResponse";
+import { Session } from "src/app/core/models/login/Session";
+import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable()

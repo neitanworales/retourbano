@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/models/registro/Guerrero';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToRegister } from 'src/app/models/registro/ToRegister';
-import { Tutor } from 'src/app/models/registro/Tutor';
+import { ToRegister } from 'src/app/core/models/registro/ToRegister';
+import { Tutor } from 'src/app/core/models/registro/Tutor';
 
 @Component({
   selector: 'app-registro-form',

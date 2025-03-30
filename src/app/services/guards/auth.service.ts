@@ -1,6 +1,6 @@
 import { lastValueFrom } from 'rxjs';
 import { Injectable } from '@angular/core';
-import { LoginDao } from "../../api/dao/LoginDao";
+import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 
 @Injectable()
 export class AuthService {

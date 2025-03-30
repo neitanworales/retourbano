@@ -29,9 +29,9 @@ const routes: Routes = [
   { path: 'asistencia', component: AsistenciaComponent, canActivate: [RoleGuard], data: { isAdmin: true} },
   { path: 'recovery-password', component: RecoveryPasswordComponent },
   { path: 'info', component: InfoCampaComponent },
-  { path: 'contabilidad', component: ContabilidadComponent },
+  { path: 'contabilidad', component: ContabilidadComponent, canActivate: [RoleGuard], data: { isAdmin: true}},
   { path: 'horario', component: HorarioComponent},
-  { path: 'campamentos', component: CampamentosComponent },
+  { path: 'campamentos', component: CampamentosComponent, canActivate: [AuthGuard]},
   { path: 'reinscripcion', component: ReinscripcionComponent },
 ];
 

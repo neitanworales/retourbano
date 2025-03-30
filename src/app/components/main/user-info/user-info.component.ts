@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Session } from 'src/app/models/login/Session';
+import { Session } from 'src/app/core/models/login/Session';
 
 @Component({
     selector: 'app-user-info',
