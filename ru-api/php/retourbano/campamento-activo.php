@@ -16,7 +16,23 @@ require './RetoUrbanoDao.class.php';
 $datos = RetoUrbanoDao::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $response["resultado"] = $datos->consultarCampamentoActivo();
+    $campamento = $datos->consultarCampamentoActivo();
+
+    $costos = $datos->consultarCostosByCampamento($campamento[0]['id_campamento']);
+    
+    foreach ($costos as &$costo)
+    {
+        $incluyeArray = explode(',', $costo['incluye']);
+        $incluyes = array();
+        foreach ($incluyeArray as &$includes)
+        {
+            array_push($incluyes, $includes);
+        }
+        $costo['incluye'] = $incluyes;
+    }
+
+    $campamento[0]['costos'] = $costos;
+    $response["resultado"] = $campamento;
     $response["mensaje"] = "Ok";
     $response["code"] = 200;
     http_response_code(200);

@@ -113,6 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["titularCuenta"] = $campamento[0]["titularCuenta"];
                         $variables["contacto1"] = $campamento[0]["contacto1"];
                         $variables["contacto2"] = $campamento[0]["contacto2"];
+                        $variables["pago_minimoMX"] = $campamento[0]["pago_minimoMX"];
 
                         $templateName = "inscripcion.html";
                         $template = $emailDao->getTemplate($variables, $templateName);

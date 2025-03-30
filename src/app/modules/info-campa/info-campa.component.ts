@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { CampamentoDao } from 'src/app/api/dao/CampamentoDao';
+import { Campamento } from 'src/app/models/registro/Campamento';
 
 @Component({
     selector: 'app-info-campa',
@@ -8,9 +10,22 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InfoCampaComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    private campamentoDao: CampamentoDao
+  ) { }
+
+  campamento!: Campamento;
 
   ngOnInit(): void {
+    this.loadCampamento();
+  }
+
+  private loadCampamento() {
+    this.campamentoDao.getCampamentoActivo().subscribe(
+      result => {
+        this.campamento = result.resultado![0];
+      }
+    );
   }
 
 }
