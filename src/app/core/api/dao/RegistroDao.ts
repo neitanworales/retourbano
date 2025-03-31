@@ -2,15 +2,15 @@ import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
-import { AvanceResponse } from "src/app/models/registro/AvanceResponse";
-import { Guerrero } from "src/app/models/registro/Guerrero";
-import { MantenimientoResponse } from "src/app/models/registro/MantenimientoResponse";
-import { RegistroResponse } from "src/app/models/registro/RegistroResponse";
-import { IndicadoresResponse } from "src/app/models/registro/IndicadoresResponse";
-import { DefaultResponse } from "src/app/models/DefaultResponse";
-import { Pago } from "src/app/models/registro/Pago";
+import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
+import { Guerrero } from "src/app/core/models/registro/Guerrero";
+import { MantenimientoResponse } from "src/app/core/models/registro/MantenimientoResponse";
+import { RegistroResponse } from "src/app/core/models/registro/RegistroResponse";
+import { IndicadoresResponse } from "src/app/core/models/registro/IndicadoresResponse";
+import { DefaultResponse } from "src/app/core/models/DefaultResponse";
+import { Pago } from "src/app/core/models/registro/Pago";
 import { HttpClient } from "@angular/common/http";
-import { GuerreroResponse } from "src/app/models/GuerreroResponse";
+import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -136,5 +136,10 @@ export class RegistroDao {
 
     public validarCodigo(email: String): Observable<GuerreroResponse>{
         return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo='+email, { headers: this.utils.getHeaders() });
+    }
+
+    public validarInscripcion() : Observable<RegistroResponse> {
+        const session = JSON.parse(localStorage.getItem('session')!);
+        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id='+session?.id, { headers: this.utils.getHeaders() });
     }
 }

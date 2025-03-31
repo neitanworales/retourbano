@@ -1,37 +1,58 @@
 import { Component, OnInit } from '@angular/core';
-import { RetoDao } from 'src/app/api/dao/RetoDao';
-import { Seguimiento } from 'src/app/models/reto/Seguimiento';
+import { RetoDao } from 'src/app/core/api/dao/RetoDao';
+import { Seguimiento } from 'src/app/core/models/reto/Seguimiento';
 import { Time } from "@angular/common";
-import { Session } from 'src/app/models/login/Session';
-import { LoginDao } from 'src/app/api/dao/LoginDao';
+import { Session } from 'src/app/core/models/login/Session';
+import { LoginDao } from 'src/app/core/api/dao/LoginDao';
+import { environment } from 'src/environments/environment';
+import { Utils } from 'src/app/core/api/Utils';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 
 @Component({
-    selector: 'app-dashboard',
-    templateUrl: './dashboard.component.html',
-    styleUrls: ['./dashboard.component.css'],
-    standalone: false
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css'],
+  standalone: false
 })
 export class DashboardComponent implements OnInit {
 
   session!: Session;
-
   seguimientos?: Seguimiento[];
   diaSelected = "";
   horarios?: string[];
   showHorario?: boolean;
   horaSelected?: string
+  mensajeInscritoCampamento?: string;
+  inscrtoCampamento?: boolean;
+  classInscritoCampamento?: string;
+  showFormInscripcion?: boolean = false;
 
-  constructor(private retoDao: RetoDao, private loginDao : LoginDao) { }
+  constructor(private retoDao: RetoDao, private loginDao: LoginDao, private registroDao: RegistroDao) { }
 
   ngOnInit(): void {
     this.session = JSON.parse(localStorage.getItem('session')!);
     this.loginDao.getSession().subscribe(
       result => {
-        this.session.guerrero = result.guerrero;
+        this.session.guerrero = result.session?.guerrero;
       }
     );
     console.log(this.session);
     //this.cargarDatos();
+    this.validarInscricion();
+  }
+
+  private validarInscricion() {
+    this.registroDao.validarInscripcion().subscribe(
+      result => {
+        this.mensajeInscritoCampamento = result.mensaje;
+        this.inscrtoCampamento = result.inscrito;
+        this.classInscritoCampamento = result.inscrito?"alert alert-success":"alert alert-warning";
+      }
+    );
+  }
+
+  public presentarFormInscripcion(){
+    this.showFormInscripcion = true;
   }
 
   private cargarDatos() {

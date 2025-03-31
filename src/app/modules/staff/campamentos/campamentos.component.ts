@@ -1,16 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import { CampamentoDao } from 'src/app/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/models/registro/Campamento';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
-    selector: 'app-campamentos',
-    templateUrl: './campamentos.component.html',
-    //styleUrl: './campamentos.component.css',
-    standalone: false
+  selector: 'app-campamentos',
+  templateUrl: './campamentos.component.html',
+  //styleUrl: './campamentos.component.css',
+  standalone: false
 })
 export class CampamentosComponent implements OnInit {
 
-  constructor(public campaDao: CampamentoDao){}
+  constructor(
+    public campaDao: CampamentoDao,
+    private formBuilder: FormBuilder) { }
 
   columnsToDisplay = [
     'botonera',
@@ -25,15 +28,45 @@ export class CampamentosComponent implements OnInit {
   ];
 
   dataSource?: Campamento[];
+  eventoActivo = new Campamento();
+  eventoForm!: FormGroup;
 
   ngOnInit(): void {
+    this.inicializarForm();
     this.cargarDatos();
   }
 
-  cargarDatos(){
+  inicializarForm() {
+    this.eventoForm = this.formBuilder.group({
+      id_campamento: ["", Validators.required],
+      titulo: ["", Validators.required],
+      activo: [""],
+      maximo_inscr: ["", Validators.required],
+      umbral: ["", Validators.required],
+      fecha_maxima: ["", Validators.required],
+      fecha_apertura: ["", Validators.required],
+      pago_minimoMX: ["", Validators.required],
+      banco: ["", Validators.required],
+      cuenta: ["", Validators.required],
+      titularCuenta: ["", Validators.required],
+      contacto1: ["", Validators.required],
+      contacto2: ["", Validators.required],
+    });
+  }
+
+  cargarDatos() {
     this.campaDao.getCampamentos().subscribe(
       response => {
         this.dataSource = response.resultado;
+      }
+    );
+
+    this.campaDao.getCampamentoActivo().subscribe(
+      response => {
+        console.log(response.resultado![0]);
+        this.eventoActivo = response.resultado![0];
+        console.log(this.eventoActivo);
+        this.eventoForm.patchValue(this.eventoActivo);
       }
     );
   }

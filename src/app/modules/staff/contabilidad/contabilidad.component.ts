@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { PagoDao } from 'src/app/api/dao/PagoDao';
-import { Indicador } from 'src/app/models/registro/Indicador';
-import { Pago } from 'src/app/models/registro/Pago';
+import { PagoDao } from 'src/app/core/api/dao/PagoDao';
+import { Indicador } from 'src/app/core/models/registro/Indicador';
+import { Pago } from 'src/app/core/models/registro/Pago';
 import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 

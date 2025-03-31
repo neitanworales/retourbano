@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { HorarioDao } from 'src/app/api/dao/HorarioDao';
-import { HorarioActividades } from 'src/app/models/horario/HorarioActividades';
+import { HorarioDao } from 'src/app/core/api/dao/HorarioDao';
+import { HorarioActividades } from 'src/app/core/models/horario/HorarioActividades';
 
 @Component({
     selector: 'app-horario',

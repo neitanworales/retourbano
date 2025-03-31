@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { PagoResponse } from "src/app/models/contabilidad/PagoResponse";
+import { PagoResponse } from "src/app/core/models/contabilidad/PagoResponse";
 import { Utils } from "../Utils";
 import { environment } from 'src/environments/environment';
-import { IndicadoresResponse } from "src/app/models/registro/IndicadoresResponse";
+import { IndicadoresResponse } from "src/app/core/models/registro/IndicadoresResponse";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable()

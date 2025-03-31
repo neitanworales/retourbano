@@ -288,13 +288,54 @@ class RetoUrbanoDao
 
     public function getGuerrroRegistradoByEmail($email)
     {
-        $que = "SELECT id, nombre, nick, email  FROM guerreros WHERE email='$email' ORDER BY id DESC";
+        $que = "SELECT 
+        id,
+        nombre,
+        nick,
+        fechaNac as fechaNac,
+        edad,
+        sexo,
+        talla,
+        vienede as vienesDe,
+        alergias,
+        razones,
+        tutor_nombre as tutorNombre,
+        contacto_tutor as tutorTelefono,
+        iglesia,
+        email,
+        whatsapp,
+        telefono,
+        facebook,
+        instagram,
+        politicas as aceptaPoliticas,
+        medicamentos  
+        FROM guerreros WHERE email='$email' ORDER BY id DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
     public function getGuerrroRegistradoById($id)
     {
-        $que = "SELECT * FROM guerreros WHERE id='$id'";
+        $que = "SELECT 
+        id,
+        nombre,
+        nick,
+        fechaNac as fechaNac,
+        edad,
+        sexo,
+        talla,
+        vienede as vienesDe,
+        alergias,
+        razones,
+        tutor_nombre as tutorNombre,
+        contacto_tutor as tutorTelefono,
+        iglesia,
+        email,
+        whatsapp,
+        telefono,
+        facebook,
+        instagram,
+        politicas as aceptaPoliticas,
+        medicamentos FROM guerreros WHERE id='$id'";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -387,14 +428,6 @@ class RetoUrbanoDao
         AND (staff=1 OR admin=1 OR seguimiento=1)";
         $array = $this->bd->ObtenerConsulta($que);
         if (!empty($array)) {
-            $array[0]['entra'] = true;
-            session_start();
-            $_SESSION['nombre'] = $array[0]['nombre'];
-            $_SESSION['id'] = $array[0]['id'];
-            $_SESSION['staff'] = $array[0]['staff'];
-            $_SESSION['email'] = $array[0]['email'];
-            $_SESSION['token'] = $this->crearToken();
-            $this->saveToken($array[0]['id'], $_SESSION['token']);
             return true;
         } else {
             return false;
@@ -603,6 +636,13 @@ class RetoUrbanoDao
     {
         $que = "UPDATE campamento_guerreros SET staff=$value WHERE id_guerrero=$id";
         if ($this->bd->ejecutar($que)) {
+
+            if($value){
+                $this->addRolById($id,'staff');
+            } else {
+                $this->deleteRolById($id, 'staff');
+            }
+
             $response["error"] = "false";
             $response["mensaje"] = "Actualizado correctamente";
             $response["query"] = $que;
@@ -619,6 +659,13 @@ class RetoUrbanoDao
     {
         $que = "UPDATE campamento_guerreros SET admin=$value WHERE id_guerrero=$id";
         if ($this->bd->ejecutar($que)) {
+
+            if($value){
+                $this->addRolById($id,'admin');
+            } else {
+                $this->deleteRolById($id, 'admin');
+            }
+
             $response["error"] = "false";
             $response["mensaje"] = "Actualizado correctamente";
             $response["query"] = $que;
@@ -891,5 +938,21 @@ class RetoUrbanoDao
     public function consultarCostosByCampamento($campemento){
         $que = "SELECT * FROM campamento_costos WHERE campamento_id=$campemento";
         return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function obtenerRolesById($id_guerrero){
+        $que = "SELECT rol FROM guerreros_roles WHERE guerrero_id=$id_guerrero";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function addRolById($id_guerrero,$rol){
+        $que = "INSERT INTO guerreros_roles(id, guerrero_id, rol)
+                VALUES (NULL, $id_guerrero, '$rol')";
+        return $this->bd->ejecutar($que);
+    }
+
+    public function deleteRolById($id_guerrero,$rol){
+        $que = "DELETE FROM guerreros_roles WHERE guerrero_id=$id_guerrero AND rol='$rol'";
+        return $this->bd->ejecutar($que);
     }
 }

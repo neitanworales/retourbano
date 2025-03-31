@@ -1,8 +1,8 @@
 import { Component, OnInit, ViewChild, Input } from '@angular/core';
 import DatalabelsPlugin from 'chartjs-plugin-datalabels';
 import { ChartConfiguration, ChartData, ChartEvent, ChartType } from 'chart.js';
-import { Indicador } from 'src/app/models/registro/Indicador';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
+import { Indicador } from 'src/app/core/models/registro/Indicador';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { BaseChartDirective } from 'ng2-charts';
 
 @Component({

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { RetoDao } from 'src/app/api/dao/RetoDao';
-import { Asistencia } from 'src/app/models/reto/Asistencia';
+import { RetoDao } from 'src/app/core/api/dao/RetoDao';
+import { Asistencia } from 'src/app/core/models/reto/Asistencia';
 
 @Component({
     selector: 'app-asistencia',

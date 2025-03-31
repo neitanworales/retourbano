@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/models/registro/Guerrero';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 
 @Component({
   selector: 'app-reinscripcion',

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { LoginDao } from 'src/app/api/dao/LoginDao';
+import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 

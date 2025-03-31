@@ -5,9 +5,9 @@ import { Injectable } from "@angular/core";
 export class Utils {
 
     constructor(
-    ){}
+    ) { }
 
-    public getHeaders() : HttpHeaders {
+    public getHeaders(): HttpHeaders {
         //const user = JSON.parse(localStorage.getItem('currentUser')!);
         return new HttpHeaders({
             'Content-Type': 'application/json',
@@ -16,3 +16,5 @@ export class Utils {
     }
 
 }
+
+export type UserRole = 'admin' | 'staff';

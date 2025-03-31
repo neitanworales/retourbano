@@ -1,10 +1,10 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable } from "rxjs";
-import { AvanceResponse } from "src/app/models/registro/AvanceResponse";
+import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
 import { environment } from "src/environments/environment";
 import { Utils } from "../Utils";
-import { CampamentoResponse } from "src/app/models/registro/CampamentoResponse";
+import { CampamentoResponse } from "src/app/core/models/registro/CampamentoResponse";
 
 @Injectable()
 export class CampamentoDao {

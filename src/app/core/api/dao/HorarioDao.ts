@@ -1,7 +1,7 @@
 import { APP_BASE_HREF } from "@angular/common";
 import { Inject, Injectable } from "@angular/core";
 import { Observable } from "rxjs/internal/Observable";
-import { HorarioActividades } from "src/app/models/horario/HorarioActividades";
+import { HorarioActividades } from "src/app/core/models/horario/HorarioActividades";
 import { Utils } from "../Utils";
 import { HttpClient } from "@angular/common/http";
 

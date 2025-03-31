@@ -2,10 +2,11 @@ import { Injectable } from "@angular/core";
 import { Observable, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
-import { LoginResponse } from "src/app/models/login/LoginResponse";
-import { Session } from "src/app/models/login/Session";
-import { DefaultResponse } from "src/app/models/DefaultResponse";
+import { LoginResponse } from "src/app/core/models/login/LoginResponse";
+import { Session } from "src/app/core/models/login/Session";
+import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { HttpClient } from "@angular/common/http";
+import { SessionResponse } from "../../models/login/SessionResponse";
 
 @Injectable()
 export class LoginDao {
@@ -23,25 +24,25 @@ export class LoginDao {
 
     public logout(): Observable<LoginResponse>{
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<LoginResponse>(environment.apiUrl + 'retourbano/logout.php?id='+this.session?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() });
+        return this.http.get<LoginResponse>(environment.apiUrl + 'retourbano/logout.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() });
     }
 
-    public getSession(): Observable<Session> {
+    public getSession(): Observable<SessionResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<Session>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() });
+        return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() });
     }
 
     public validarSession(): Observable<boolean> {
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<Session>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(
+        return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(
             map(response => !response.error)
         );
     }
 
     public isAdmin(): Observable<boolean> {
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<Session>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(
-            map(response => !response.guerrero?.admin)
+        return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(
+            map(response => !response.session?.guerrero?.admin)
         );
     }
 

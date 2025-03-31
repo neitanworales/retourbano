@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/models/registro/Guerrero';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ToRegister } from 'src/app/models/registro/ToRegister';
-import { Tutor } from 'src/app/models/registro/Tutor';
+import { ToRegister } from 'src/app/core/models/registro/ToRegister';
+import { Tutor } from 'src/app/core/models/registro/Tutor';
 
 @Component({
   selector: 'app-registro-form',
@@ -34,8 +34,8 @@ export class RegistroFormComponent implements OnInit {
   paraRegistrar!: Guerrero[];
 
   constructor(
-    private formBuilder: FormBuilder, 
-    public registroDao: RegistroDao, 
+    private formBuilder: FormBuilder,
+    public registroDao: RegistroDao,
     private router: Router) {
     this.mensajesRegistros = new Array();
   }
@@ -53,11 +53,13 @@ export class RegistroFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.model.sexo = "";
-    this.model.talla = "";
-    this.model.year = 0;
-    this.model.month = 0;
-    this.model.day = 0;
+    if (!this.actualizar) {
+      this.model.sexo = "";
+      this.model.talla = "";
+      this.model.year = 0;
+      this.model.month = 0;
+      this.model.day = 0;
+    }
 
     /*this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";
