@@ -16,6 +16,15 @@ export class AuthService {
   currentUser$ = this._currentUser.asObservable();
 
   getSession(): Session {
+    console.log("ya te la sá");
+    this.loginDao.getSession().subscribe(
+      result => {
+        console.log("ya te la sa - "+result.session);
+        if (result.session === undefined) {
+          localStorage.setItem('session', JSON.stringify(result.session));
+        }
+      }
+    );
     return JSON.parse(localStorage.getItem('session')!);
   }
 }

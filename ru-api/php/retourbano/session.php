@@ -1,13 +1,16 @@
 <?php
+header("Cache-Control: no-store, no-cache, must-revalidate, max-age=0");
+header("Cache-Control: post-check=0, pre-check=0", false);
+header("Pragma: no-cache");
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-header('Content-Type: application/json');
-header("Expires: Tue, 03 Jul 2001 06:00:00 GMT");
-header("Last-Modified: " . gmdate("D, d M Y H:i:s") . " GMT");
-header("Cache-Control: no-store, no-cache, must-revalidate");
-header("Cache-Control: post-check=0, pre-check=0", false);
-header("Pragma: no-cache");
+header('Content-Type: application/json; charset=utf-8');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    return 0;
+}
 
 require './RetoUrbanoDao.class.php';
 $datos=RetoUrbanoDao::getInstance();
@@ -17,28 +20,35 @@ $token = $_REQUEST['token'];
 
 if($datos->validarToken($id, $token)){
 
-    $response = $datos->getGuerrroRegistradoById($id);
+    $registro = $datos->getGuerrroRegistradoById($id);
 
-    $rolesQuery = $datos->obtenerRolesById($response[0]['id']);
+    $rolesQuery = $datos->obtenerRolesById($registro[0]['id']);
     $roles = array();
     foreach ($rolesQuery as &$rol)
     {
         array_push($roles, $rol['rol']);
     }
-    $response[0]['roles']=$roles;
-    $array["guerrero"]= $response[0];
-    $array["guerrero"]["staff"]= $array["guerrero"]["staff"]=="true";
-    $array["guerrero"]["admin"]= $array["guerrero"]["admin"]=="true";
-    $array["guerrero"]["confirmado"]= $array["guerrero"]["confirmado"]=="true";
-    $array["guerrero"]["asistencia"]= $array["guerrero"]["asistencia"]=="true";
-    $array["guerrero"]["seguimiento"]= $array["guerrero"]["seguimiento"]=="true";
-    $array["error"]=false;
-    $array["mensaje"]="Session correcta";
-    echo json_encode($array);
-}else{
-    $array["error"]=true;
-    $array["mensaje"]="No hay sesion";
-    echo json_encode($array);
+    $sesion['roles']=$roles;
+    $sesion["guerrero"]= $registro[0];
+    $sesion["guerrero"]["staff"]= $sesion["guerrero"]["staff"]=="true";
+    $sesion["guerrero"]["admin"]= $sesion["guerrero"]["admin"]=="true";
+    $sesion["guerrero"]["confirmado"]= $sesion["guerrero"]["confirmado"]=="true";
+    $sesion["guerrero"]["asistencia"]= $sesion["guerrero"]["asistencia"]=="true";
+    $sesion["guerrero"]["seguimiento"]= $sesion["guerrero"]["seguimiento"]=="true";
+    $sesion["token"] = $token;
+    $sesion["id"] = $registro[0]['id'];
+    $response["session"] = $sesion;
+    $response["code"] = 200;
+    $response["mensaje"]="Session correcta";
+    $response["success"] = true;
+    http_response_code(200);
+    echo json_encode($response);
+} else {
+    $response["code"] = 401;
+    $response["message"] = 'Not authorized';
+    $response["success"] = false;
+    http_response_code(401);
+    echo json_encode($response);
 }
 
 ?>

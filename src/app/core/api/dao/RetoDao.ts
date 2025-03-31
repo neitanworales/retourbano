@@ -25,17 +25,17 @@ export class RetoDao {
 
     public getSeguimientosByGuerror(): Observable<SeguimientoResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<SeguimientoResponse>(environment.apiUrl + 'retourbano/seguimientos-by-guerrero.php?id=' + this.session?.id, { headers: this.utils.getHeaders() });
+        return this.http.get<SeguimientoResponse>(environment.apiUrl + 'retourbano/seguimientos-by-guerrero.php?id=' + this.session?.guerrero?.id, { headers: this.utils.getHeaders() });
     }
 
     public confirmaAsistencia(dia: string): Observable<DefaultResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/asistencia.php?id=' + this.session?.id + '&dia=' + dia, { headers: this.utils.getHeaders() });
+        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/asistencia.php?id=' + this.session?.guerrero?.id + '&dia=' + dia, { headers: this.utils.getHeaders() });
     }
 
     public confirmaAsistenciaHora(hora: string): Observable<DefaultResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/asistencia-hora.php?id=' + this.session?.id + '&hora=' + hora, { headers: this.utils.getHeaders() });
+        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/asistencia-hora.php?id=' + this.session?.guerrero?.id + '&hora=' + hora, { headers: this.utils.getHeaders() });
     }
 
 }

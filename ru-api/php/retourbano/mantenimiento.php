@@ -5,7 +5,12 @@ header("Pragma: no-cache");
 header('Access-Control-Allow-Origin: *');
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
-header('Content-Type: application/json');
+header('Content-Type: application/json; charset=utf-8');
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    return 0;
+}
  
 require './RetoUrbanoDao.class.php';
 $datos=RetoUrbanoDao::getInstance();
@@ -67,7 +72,7 @@ switch($opcion){
 
         echo json_encode($arrayResponse);
         break;
-    case 2:
+    case 2: // cambio de status
         $status = empty($_REQUEST['status'])?"Z":$_REQUEST['status'];
         $id = empty($_REQUEST['id'])?"0":$_REQUEST['id'];
         if($id==0){
@@ -83,7 +88,7 @@ switch($opcion){
             $datos->changeStatus($id,$status);
         }
         break;
-    case 3:
+    case 3: // cambio de staff
         $staff = $_REQUEST['staff'];
         $id = empty($_REQUEST['id'])?"0":$_REQUEST['id'];
         if($id==0){
@@ -108,7 +113,7 @@ switch($opcion){
         break;
 
 
-    case 9:
+    case 9: // cambio a admin
         $admin = $_REQUEST['admin'];
         $id = empty($_REQUEST['id'])?"0":$_REQUEST['id'];
         if($id==0){

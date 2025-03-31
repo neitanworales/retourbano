@@ -20,6 +20,7 @@ export class NavbarSeguimientoComponent implements OnInit {
       () => {
         this.guard.canActivate();
       });
+      localStorage.clear();
   }
 
 }

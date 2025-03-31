@@ -34,8 +34,8 @@ export class RegistroFormComponent implements OnInit {
   paraRegistrar!: Guerrero[];
 
   constructor(
-    private formBuilder: FormBuilder, 
-    public registroDao: RegistroDao, 
+    private formBuilder: FormBuilder,
+    public registroDao: RegistroDao,
     private router: Router) {
     this.mensajesRegistros = new Array();
   }
@@ -53,11 +53,13 @@ export class RegistroFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.model.sexo = "";
-    this.model.talla = "";
-    this.model.year = 0;
-    this.model.month = 0;
-    this.model.day = 0;
+    if (!this.actualizar) {
+      this.model.sexo = "";
+      this.model.talla = "";
+      this.model.year = 0;
+      this.model.month = 0;
+      this.model.day = 0;
+    }
 
     /*this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";

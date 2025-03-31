@@ -137,4 +137,9 @@ export class RegistroDao {
     public validarCodigo(email: String): Observable<GuerreroResponse>{
         return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo='+email, { headers: this.utils.getHeaders() });
     }
+
+    public validarInscripcion() : Observable<RegistroResponse> {
+        const session = JSON.parse(localStorage.getItem('session')!);
+        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id='+session?.id, { headers: this.utils.getHeaders() });
+    }
 }
