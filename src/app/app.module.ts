@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 
-import { AuthGuardService } from './services/guards/auth-guard.service';
-import { AuthService } from './services/guards/auth.service';
-import { RoleGuardService } from './services/guards/role-guard.service';
+import { AuthGuardService } from './core/services/guards/auth-guard.service';
+import { AuthService } from './core/services/auth.service';
+import { RoleGuardService } from './core/services/guards/role-guard.service';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './modules/home/home.component';
 import { RegistroComponent } from './modules/registro/registro.component';
@@ -15,7 +15,7 @@ import { DashboardComponent } from './modules/staff/dashboard/dashboard.componen
 import { RegistroDao } from './core/api/dao/RegistroDao';
 import { PagoDao } from './core/api/dao/PagoDao';
 import { Utils } from './core/api/Utils';
-import { LoadingService } from './services/loading-screen/loading-screen.service';
+import { LoadingService } from './core/services/loading-screen/loading-screen.service';
 import { LoadingInterceptor } from './core/api/LoadingInterceptor';
 import { LoginComponent } from './modules/login/login.component';
 import { InscripcionesComponent } from './modules/staff/inscripciones/inscripciones.component';

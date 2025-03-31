@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { AuthService } from './auth.service';
+import { AuthService } from '../auth.service';
 import { lastValueFrom } from 'rxjs';
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { LoginDao } from 'src/app/core/api/dao/LoginDao';

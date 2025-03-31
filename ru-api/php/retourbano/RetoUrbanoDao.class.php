@@ -395,6 +395,15 @@ class RetoUrbanoDao
             $_SESSION['email'] = $array[0]['email'];
             $_SESSION['token'] = $this->crearToken();
             $this->saveToken($array[0]['id'], $_SESSION['token']);
+
+            $rolesQuery = $this->obtenerRolesById($array[0]['id']);
+            $roles = array();
+            foreach ($rolesQuery as &$rol)
+            {
+                array_push($roles, $rol['rol']);
+            }
+            $_SESSION['roles']=$roles;
+
             return true;
         } else {
             return false;
@@ -890,6 +899,11 @@ class RetoUrbanoDao
 
     public function consultarCostosByCampamento($campemento){
         $que = "SELECT * FROM campamento_costos WHERE campamento_id=$campemento";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function obtenerRolesById($id_guerrero){
+        $que = "SELECT rol FROM guerreros_roles WHERE guerrero_id=$id_guerrero";
         return $this->bd->ObtenerConsulta($que);
     }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LoginDao } from 'src/app/core/api/dao/LoginDao';
-import { AuthGuardService } from 'src/app/services/guards/auth-guard.service';
+import { AuthGuardService } from 'src/app/core/services/guards/auth-guard.service';
 
 @Component({
     selector: 'app-navbar-seguimiento',

@@ -1,3 +1,4 @@
+import { UserRole } from "../../api/Utils";
 import { Guerrero } from "../registro/Guerrero";
 
 export class Session {
@@ -9,4 +10,5 @@ export class Session {
     mensaje?: String;
     token?: String;
     guerrero? : Guerrero;
+    roles: UserRole[] = [];
 }
