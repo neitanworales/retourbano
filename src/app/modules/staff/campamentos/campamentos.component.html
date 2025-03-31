@@ -1,66 +1,164 @@
 <app-navbar-seguimiento></app-navbar-seguimiento>
 <div class="container">
     <h1>Campamentos</h1>
-    <div class="title-table mat-elevation-z8">
-        <div class="row d-flex">
-            <div class="col elevado">
-                <p>Registros {{dataSource?.length}}</p>
+    <form [formGroup]="eventoForm" class="row shadow p-3 mb-5 bg-body-tertiary rounded">
+        <h2>Evento Actual</h2>
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                <label for="labelInputID">ID</label>
+                <input class="form-control form-control-sm" type="text" placeholder="ID" id="labelInputID" readonly
+                    formControlName="id_campamento">
+            </div>
+            <div class="form-group">
+                <label for="txtTitulo">Títiulo</label>
+                <input type="text" class="form-control form-control-sm" id="txtTitulo" placeholder="Título"
+                    formControlName="titulo">
+            </div>
+            <div class="form-group">
+                <label for="txtActivo">Activo</label>
+                <input type="number" class="form-control form-control-sm" id="txtMaximoInscritos" placeholder="Activo"
+                    formControlName="activo">
+            </div>
+            <div class="form-group">
+                <label for="txtMaximoInscritos">Máximo Inscritos</label>
+                <input type="number" class="form-control form-control-sm" id="txtMaximoInscritos" placeholder="Maximo"
+                    formControlName="maximo_inscr">
+            </div>
+
+            <div class="form-group">
+                <label for="txtUmbral">Umbral</label>
+                <input type="number" class="form-control form-control-sm" id="txtUmbral" placeholder="Umbral"
+                    formControlName="umbral">
+            </div>
+            <div class="form-group">
+                <label for="txtFecha_apertura">Fecha de apertura de registro</label>
+                <input type="datetime" class="form-control form-control-sm" id="txtFecha_apertura"
+                    placeholder="Fecha Apertura" formControlName="fecha_apertura">
+            </div>
+            <div class="form-group">
+                <label for="txtFecha_maxima">Fecha máxima de regitro</label>
+                <input type="datetime" class="form-control form-control-sm" id="txtFecha_maxima"
+                    placeholder="Fecha Máxima" formControlName="fecha_maxima">
             </div>
         </div>
+        <div class="col-lg-6 col-md-6">
+            <div class="form-group">
+                <label for="txtPagoMinimo">Pago Mínimo</label>
+                <input type="number" class="form-control form-control-sm" id="txtPagoMinimo" placeholder="Pago Minimo"
+                    formControlName="pago_minimoMX">
+            </div>
+            <div class="form-group">
+                <label for="txtBanco">Banco</label>
+                <input type="text" class="form-control form-control-sm" id="txtBanco" placeholder="Banco"
+                    formControlName="banco">
+            </div>
+            <div class="form-group">
+                <label for="txtCuenta">Cuenta</label>
+                <input type="text" class="form-control form-control-sm" id="txtCuenta" placeholder="Cuenta"
+                    formControlName="cuenta">
+            </div>
+            <div class="form-group">
+                <label for="txtTitularCuenta">Títular Cuenta</label>
+                <input type="text" class="form-control form-control-sm" id="txtTitularCuenta"
+                    placeholder="Títular Cuenta" formControlName="titularCuenta">
+            </div>
+            <div class="form-group">
+                <label for="txtContacto1">Contacto 1</label>
+                <input type="text" class="form-control form-control-sm" id="txtContacto1" placeholder="Contacto 1"
+                    formControlName="contacto1">
+            </div>
+            <div class="form-group">
+                <label for="txtContacto2">Contacto 2</label>
+                <input type="text" class="form-control form-control-sm" id="txtContacto2" placeholder="Contacto 2"
+                    formControlName="contacto2">
+            </div>
+            <div class="formGroup" style="margin-top: 1.5em;">
+                <button type="button" class="btn btn-primary" style="margin-right: 1em;">Guardar</button>
+                <button type="button" class="btn btn-warning">Cancelar</button>
+            </div>
+        </div>
+        <div class="row" style="margin-top: 2em;">
+            <h2>Costos</h2>
+            <div *ngFor="let costo of eventoActivo.costos;" class="card col-lg-3" style="margin-top: 1em; margin-right: 1em;">
+                <div class="card-header">
+                    {{costo.descripcion}}
+                </div>
+                <div class="card-body">
+                    <div class="input-group mb-3">
+                        <span class="input-group-text">$</span>
+                        <input type="number" class="form-control" value="{{costo.cantidad}}">
+                        <span class="input-group-text">{{costo.divisa}}</span>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <li *ngFor="let incly of costo.incluye;" class="list-group-item">{{incly}}</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <div class="row">
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSource?.length}}</p>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSource!" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="botonera">
+                <th mat-header-cell *matHeaderCellDef></th>
+                <td mat-cell *matCellDef="let element">
+                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="id_campamento">
+                <th mat-header-cell *matHeaderCellDef> ID </th>
+                <td mat-cell *matCellDef="let element"> {{element.id_campamento}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="titulo">
+                <th mat-header-cell *matHeaderCellDef> Titulo </th>
+                <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="activo">
+                <th mat-header-cell *matHeaderCellDef> Activo </th>
+                <td mat-cell *matCellDef="let element">
+                    <i class="bi bi-toggle-{{element.activo==1?'on':'off'}}"></i>
+                </td>
+            </ng-container>
+
+            <ng-container matColumnDef="maximo_inscr">
+                <th mat-header-cell *matHeaderCellDef> Máximo Inscrito </th>
+                <td mat-cell *matCellDef="let element"> {{element.maximo_inscr}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="umbral">
+                <th mat-header-cell *matHeaderCellDef> Umbral </th>
+                <td mat-cell *matCellDef="let element"> {{element.umbral}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_apertura">
+                <th mat-header-cell *matHeaderCellDef> Fecha de Apertura </th>
+                <td mat-cell *matCellDef="let element"> {{element.fecha_apertura}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="fecha_maxima">
+                <th mat-header-cell *matHeaderCellDef> Fecha Máxima </th>
+                <td mat-cell *matCellDef="let element"> {{element.fecha_maxima}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="costo">
+                <th mat-header-cell *matHeaderCellDef> Costo </th>
+                <td mat-cell *matCellDef="let element"> {{element.costo | currency:"$ "}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="example-element-row"></tr>
+        </table>
     </div>
-
-    <table mat-table [dataSource]="dataSource!" class="mat-elevation-z8">
-
-        <ng-container matColumnDef="botonera">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
-                <button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="id_campamento">
-            <th mat-header-cell *matHeaderCellDef> ID </th>
-            <td mat-cell *matCellDef="let element"> {{element.id_campamento}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="titulo">
-            <th mat-header-cell *matHeaderCellDef> Titulo </th>
-            <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="activo">
-            <th mat-header-cell *matHeaderCellDef> Activo </th>
-            <td mat-cell *matCellDef="let element">
-                <i class="bi bi-toggle-{{element.activo==1?'on':'off'}}"></i>
-            </td>
-        </ng-container>
-
-        <ng-container matColumnDef="maximo_inscr">
-            <th mat-header-cell *matHeaderCellDef> Máximo Inscrito </th>
-            <td mat-cell *matCellDef="let element"> {{element.maximo_inscr}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="umbral">
-            <th mat-header-cell *matHeaderCellDef> Umbral </th>
-            <td mat-cell *matCellDef="let element"> {{element.umbral}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fecha_apertura">
-            <th mat-header-cell *matHeaderCellDef> Fecha de Apertura </th>
-            <td mat-cell *matCellDef="let element"> {{element.fecha_apertura}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="fecha_maxima">
-            <th mat-header-cell *matHeaderCellDef> Fecha Máxima </th>
-            <td mat-cell *matCellDef="let element"> {{element.fecha_maxima}} </td>
-        </ng-container>
-
-        <ng-container matColumnDef="costo">
-            <th mat-header-cell *matHeaderCellDef> Costo </th>
-            <td mat-cell *matCellDef="let element"> {{element.costo | currency:"$ "}} </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-        <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="example-element-row"></tr>
-    </table>
 </div>

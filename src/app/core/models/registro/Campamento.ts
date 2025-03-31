@@ -10,6 +10,7 @@ export class Campamento {
     fecha_apertura?: Date;
     costoMX?: number;
     costoUSD?: number;
+    pago_minimoMX?: number;
     banco?: string;
     cuenta?: string;
     titularCuenta?: string;
