@@ -15,9 +15,17 @@ $datos=RetoUrbanoDao::getInstance();
 $id = $_REQUEST['id'];
 $token = $_REQUEST['token'];
 
-$response = $datos->getGuerreroById($id);
+if($datos->validarToken($id, $token)){
 
-if( !empty($response[0]) && $datos->validarToken($id, $token)){
+    $response = $datos->getGuerrroRegistradoById($id);
+
+    $rolesQuery = $datos->obtenerRolesById($response[0]['id']);
+    $roles = array();
+    foreach ($rolesQuery as &$rol)
+    {
+        array_push($roles, $rol['rol']);
+    }
+    $response[0]['roles']=$roles;
     $array["guerrero"]= $response[0];
     $array["guerrero"]["staff"]= $array["guerrero"]["staff"]=="true";
     $array["guerrero"]["admin"]= $array["guerrero"]["admin"]=="true";

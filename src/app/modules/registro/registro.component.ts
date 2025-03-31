@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { CampamentoDao } from 'src/app/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/models/registro/Campamento';
+import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
   selector: 'app-registro',

@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
-import { Avance } from 'src/app/models/registro/Avance';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Avance } from 'src/app/core/models/registro/Avance';
 
 @Component({
     selector: 'app-registro-avance',

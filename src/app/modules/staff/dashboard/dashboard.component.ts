@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { RetoDao } from 'src/app/api/dao/RetoDao';
-import { Seguimiento } from 'src/app/models/reto/Seguimiento';
+import { RetoDao } from 'src/app/core/api/dao/RetoDao';
+import { Seguimiento } from 'src/app/core/models/reto/Seguimiento';
 import { Time } from "@angular/common";
-import { Session } from 'src/app/models/login/Session';
-import { LoginDao } from 'src/app/api/dao/LoginDao';
+import { Session } from 'src/app/core/models/login/Session';
+import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 
 @Component({
     selector: 'app-dashboard',

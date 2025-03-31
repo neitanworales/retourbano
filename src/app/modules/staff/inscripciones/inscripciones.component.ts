@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
-import { RegistroDao } from 'src/app/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/models/registro/Guerrero';
-import { Pago } from 'src/app/models/registro/Pago';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
 
 @Component({

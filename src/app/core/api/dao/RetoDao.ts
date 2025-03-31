@@ -1,11 +1,11 @@
 import { Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
-import { Session } from "src/app/models/login/Session";
-import { DefaultResponse } from "src/app/models/DefaultResponse";
-import { SeguimientoResponse } from "src/app/models/reto/SeguimientoResponse";
+import { Session } from "src/app/core/models/login/Session";
+import { DefaultResponse } from "src/app/core/models/DefaultResponse";
+import { SeguimientoResponse } from "src/app/core/models/reto/SeguimientoResponse";
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
-import { AsistenciaResponse } from "src/app/models/reto/AsistenciaResponse";
+import { AsistenciaResponse } from "src/app/core/models/reto/AsistenciaResponse";
 import { HttpClient } from "@angular/common/http";
 
 @Injectable()
