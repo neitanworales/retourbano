@@ -1,8 +1,5 @@
 import { NgModule } from '@angular/core';
-
-import { AuthGuardService } from './core/services/guards/auth-guard.service';
 import { AuthService } from './core/services/auth.service';
-import { RoleGuardService } from './core/services/guards/role-guard.service';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './modules/home/home.component';
 import { RegistroComponent } from './modules/registro/registro.component';
@@ -33,11 +30,8 @@ import { RegistroDinamicoComponent } from './components/registro-dinamico/regist
 import { HorarioComponent } from './components/horario/horario.component';
 import { HorarioDao } from './core/api/dao/HorarioDao';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-//import { MatInputModule } from '@angular/material/input';
-//import { MatNativeDateModule } from '@angular/material/core';
-//import { MatIconModule } from '@angular/material/icon';
 import { MatTableModule } from '@angular/material/table' 
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { Router } from '@angular/router';
@@ -96,11 +90,9 @@ import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.co
         LoginDao,
         RetoDao,
         CampamentoDao,
-        AuthGuardService,
         AuthService,
-        RoleGuardService,
         HorarioDao,
         provideAnimationsAsync(),
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient()
     ] })
 export class AppModule { }

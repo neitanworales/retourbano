@@ -812,8 +812,9 @@ class RetoUrbanoDao
     public function getPagos($idGuerrero)
     {
         $que = "SELECT p.* FROM campamento_guerreros cg
-        INNER JOIN pagos p ON cg.id = p.id_campamento_guerrero 
-        WHERE cg.id_guerrero=" . $idGuerrero;
+                INNER JOIN pagos p ON cg.id = p.id_campamento_guerrero
+                INNER JOIN campamentos c ON cg.id_campamento = c.id_campamento
+                WHERE cg.id_guerrero=$idGuerrero AND c.activo=1";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -892,9 +893,12 @@ class RetoUrbanoDao
 
     public function consultaTotales()
     {
-        $que = "SELECT 'Ingresos' as 'valor',SUM(cantidad) 'count' FROM pagos
+        $que = "SELECT 'Ingresos' as 'valor',SUM(cantidad) 'count' FROM pagos p
+                INNER JOIN campamento_guerreros cg ON p.id_campamento_guerrero = cg.id
+                INNER JOIN campamentos c ON cg.id_campamento = c.id_campamento
+                WHERE c.activo=1
                 UNION
-                SELECT 'Pagos completos',COUNT(*) FROM PAGOS_GUERREROS
+                SELECT 'Pagos completos',COUNT(*) FROM view_pagos_guerreros
                 WHERE cantidad >= 2300";
         return $this->bd->ObtenerConsulta($que);
     }
@@ -903,7 +907,9 @@ class RetoUrbanoDao
     {
         $que = "SELECT id_pago, id_campamento_guerrero, cantidad, descripcion, divisa, no_ticket, g.nombre FROM ywampach_retourbano.pagos as p
                 INNER JOIN campamento_guerreros as cg ON cg.id = p.id_campamento_guerrero
-                INNER JOIN guerreros as g ON cg.id_guerrero = g.id";
+                INNER JOIN guerreros as g ON cg.id_guerrero = g.id
+                INNER JOIN campamentos c ON cg.id_campamento = c.id_campamento
+                WHERE c.activo=1";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -915,11 +921,7 @@ class RetoUrbanoDao
 
     public function consultaPagosPorGuerrero()
     {
-        /*$que = "SELECT g.nombre, cg.staff, sum(cantidad) cantidad, count(id_campamento_guerrero) pagos FROM ywampach_retourbano.pagos as p
-                RIGHT JOIN campamento_guerreros as cg ON cg.id = p.id_campamento_guerrero
-                INNER JOIN guerreros as g ON cg.id_guerrero = g.id
-                GROUP BY g.nombre";*/
-        $que = "SELECT nombre, staff descripcion, cantidad, pagos FROM PAGOS_GUERREROS ORDER BY cantidad";
+        $que = "SELECT nombre, staff descripcion, cantidad, pagos FROM view_pagos_guerreros ORDER BY cantidad";
         return $this->bd->ObtenerConsulta($que);
     }
 

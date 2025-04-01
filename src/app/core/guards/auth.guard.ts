@@ -14,8 +14,7 @@ export const authGuard: CanMatchFn = (
       if (session) {
         return true;
       }
-
-      return router.createUrlTree(['/auth/login']);
+      return router.createUrlTree(['login']);
     }),
   );
 };
