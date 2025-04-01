@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { RetoDao } from 'src/app/core/api/dao/RetoDao';
 import { Seguimiento } from 'src/app/core/models/reto/Seguimiento';
 import { Time } from "@angular/common";
@@ -7,6 +7,7 @@ import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 import { environment } from 'src/environments/environment';
 import { Utils } from 'src/app/core/api/Utils';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,17 +28,11 @@ export class DashboardComponent implements OnInit {
   classInscritoCampamento?: string;
   showFormInscripcion?: boolean = false;
 
-  constructor(private retoDao: RetoDao, private loginDao: LoginDao, private registroDao: RegistroDao) { }
+  constructor(private retoDao: RetoDao, private loginDao: LoginDao, private registroDao: RegistroDao) { 
+    this.session = inject(AuthService).getSession()!;
+  }
 
   ngOnInit(): void {
-    this.session = JSON.parse(localStorage.getItem('session')!);
-    this.loginDao.getSession().subscribe(
-      result => {
-        this.session.guerrero = result.session?.guerrero;
-      }
-    );
-    console.log(this.session);
-    //this.cargarDatos();
     this.validarInscricion();
   }
 

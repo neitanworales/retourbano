@@ -1,14 +1,18 @@
 import { inject } from '@angular/core';
-import { CanActivateFn } from '@angular/router';
+import { CanActivateFn, Router } from '@angular/router';
 import { map } from 'rxjs';
 import { AuthService } from '../services/auth.service';
 import { UserRole } from '../api/Utils';
 
 export const hasRoleGuard = (roles: UserRole[]): CanActivateFn => {
   return () => {
+    const router = inject(Router);
     return inject(AuthService).currentUser$.pipe(
       map((session) => {
-        if (!session) return false;
+        if (!session) { 
+          console.log('sin sessión');
+          return router.createUrlTree(['login']); 
+        }
 
         return session.roles.some(role => roles.includes(role));
       }),
