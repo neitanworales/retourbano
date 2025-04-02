@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $instagram = !empty($input['instagram']) ? $input['instagram'] : null;
         $aceptaPoliticas = !empty($input['aceptaPoliticas']) ? $input['aceptaPoliticas'] : null;
         $isTutor = !empty($_REQUEST['tutor']) ? $_REQUEST['tutor'] : false;
+        $hospedaje = !empty($input['hospedaje']) ? $input['hospedaje'] : null;
         if (!empty($fechaNac)) {
             $f = explode("-", $fechaNac);
             $f1 = explode("T", $f[2]);
@@ -63,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             http_response_code(400);
             echo json_encode($response);
         } else {
-            if ($datos->inscribir($nombre, $nick, $fechanac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono)) {
+            if ($datos->inscribir($nombre, $nick, $fechanac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje)) {
 
                 $variables = array();
                 $variables["nombre"] = $nombre;
@@ -85,6 +86,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $variables["aceptaPoliticas"] = $aceptaPoliticas;
                 $variables["medicamentos"] = $medicamentos;
                 $variables["telefono"] = $telefono;
+                $variables["hospedaje"] = $hospedaje ? 'Si' : 'No';
                 $variables["reporte"] = recorrerArray($datos->getIndicadoresArray());
 
                 $campamento = $datos->consultarCampamentoActivo();

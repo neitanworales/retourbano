@@ -348,6 +348,33 @@
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>
+                                                Hospedaje
+                                            </th>
+                                            <th>
+                                                Habitación
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {{element.hospedaje ? 'Si' : 'No'}}
+                                            </td>
+                                            <td>
+                                                {{element.habitacion}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!this.pageHistoricoActive" class="row">
+                            <div class="col">
+                                <table class="table tabla-pagos">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
                                                 Descripción
                                             </th>
                                             <th>

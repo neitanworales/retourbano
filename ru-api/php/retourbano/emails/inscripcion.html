@@ -51,6 +51,10 @@
                         <td>{{talla}}</td>
                     </tr>
                     <tr>
+                        <td>Hospedaje</td>
+                        <td>{{hospedaje}}</td>
+                    </tr>
+                    <tr>
                         <td>Vienes de</td>
                         <td>{{vienesDe}}</td>
                     </tr>
@@ -103,6 +107,30 @@
                     tambi&eacute;n estaremos orando por ti.</p>
 
                 <p>Es importante que hagas tu dep&oacute;sito:</p>
+                <h2>Costos</h2>
+                <p>Estos son los costos</p>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Costo</th>
+                        <th></th>
+                    </tr>
+                    <tr>
+                        <td>Sin Hospedaje</td> 
+                        <td>$1,650</td>      
+                        <td>MXN</td>                
+                    </tr>
+                    <tr>
+                        <td>Con hospedaje</td> 
+                        <td>$2,200</td>      
+                        <td>MXN</td>                
+                    </tr>
+                    <tr>
+                        <td>International Feed</td> 
+                        <td>$180</td>      
+                        <td>USD</td>                
+                    </tr>
+                </table>
                 <h2>Informaci&oacute;n de pago</h2>
                 <ul>
                     <li>
@@ -111,9 +139,6 @@
                             <br><b>{{cuenta}}</b>
                             <br><b>{{titularCuenta}}</b>
                         </p>
-                    </li>
-                    <li>
-                        El costo del campamento es de ${{costoMX}} MXN o ${{costoUSD}} USD para extranjeros
                     </li>
                     <li>
                         Puedes hacer un dep&oacute;sito m&iacute;nimo de ${{pago_minimoMX}} (no reembolsable) para apartar tu lugar...<br>
@@ -137,7 +162,7 @@
                         href="https://www.facebook.com/Retourbanojucumpachuca/">Reto Urbano</a>
                     </li>
                 </ul>
-                <p>Atentamente: Staff de Reto Urbano</p>
+                <h2>Atentamente: Staff de Reto Urbano {{year}}</h2>
     </div>
 </body>
 

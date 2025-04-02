@@ -56,6 +56,7 @@ export class RegistroFormComponent implements OnInit {
     if (!this.actualizar) {
       this.model.sexo = "";
       this.model.talla = "";
+      this.model.hospedaje = null;
       this.model.year = 0;
       this.model.month = 0;
       this.model.day = 0;
@@ -91,6 +92,7 @@ export class RegistroFormComponent implements OnInit {
       day: [0, Validators.min(1)],
 
       talla: ["", Validators.required],
+      hospedaje: ["", Validators.required],
       vienesDe: ["", Validators.required],
       razones: ["", Validators.required],
       tutorNombre: ["", Validators.required],

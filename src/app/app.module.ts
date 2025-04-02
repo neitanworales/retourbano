@@ -42,6 +42,8 @@ import { CampamentoDao } from './core/api/dao/CampamentoDao';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppComponent } from './app.component';
 import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
+import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
+import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -66,7 +68,9 @@ import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.co
         RegistroDinamicoComponent,
         HorarioComponent,
         CampamentosComponent,
-        ReinscripcionComponent
+        ReinscripcionComponent,
+        HospedajesComponent,
+        CuentaComponent
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,

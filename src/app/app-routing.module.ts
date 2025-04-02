@@ -15,6 +15,8 @@ import { CampamentosComponent } from './modules/staff/campamentos/campamentos.co
 import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
 import { hasRoleGuard } from './core/guards/has-role.guard';
 import { authGuard } from './core/guards/auth.guard';
+import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
+import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -27,7 +29,9 @@ const routes: Routes = [
   { path: 'horario', component: HorarioComponent },
   { path: 'reinscripcion', component: ReinscripcionComponent },
   { path: 'staff', component: DashboardComponent, canMatch: [authGuard] },
+  { path: 'cuenta', component: CuentaComponent, canMatch: [authGuard] },
   { path: 'inscripciones', component: InscripcionesComponent, canActivate: [hasRoleGuard(['admin'])] },
+  { path: 'hospedaje', component: HospedajesComponent, canActivate: [hasRoleGuard(['admin', 'staff'])] },
   { path: 'asistencia', component: AsistenciaComponent, canActivate: [hasRoleGuard(['admin', 'staff'])] },
   { path: 'contabilidad', component: ContabilidadComponent, canActivate: [hasRoleGuard(['admin'])] },
   { path: 'campamentos', component: CampamentosComponent, canActivate: [hasRoleGuard(['admin'])] },

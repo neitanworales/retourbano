@@ -262,6 +262,18 @@
                 </div>
             </div>
             <div class="form-group">
+                <label>¿Requieres Hospedaje?</label>
+                <select class="form-control" formControlName="hospedaje" [ngClass]="{'is-invalid': form['hospedaje'].errors }"
+                    [(ngModel)]="model.hospedaje">
+                    <option value="null" disabled="" selected="">Hospedaje</option>
+                    <option value="true">Si</option>
+                    <option value="false">No</option>
+                </select>
+                <div *ngIf="form['hospedaje'].errors" class="invalid-feedback">
+                    <div *ngIf="form['hospedaje'].errors">El hospedaje es obligatorio</div>
+                </div>
+            </div>
+            <div class="form-group">
                 <label>¿De donde vienes?</label>
                 <input type="text" class="form-control" formControlName="vienesDe"
                     placeholder="Escribe tu lugar de procedencia (CDMX, Pachuca, Huston, etc...)"
@@ -288,8 +300,6 @@
                     <div *ngIf="form['razones'].errors">Este campo es necesario</div>
                 </div>
             </div>
-
-
             <div class="form-group">
                 <label>En caso de que asistas a una iglesia, escribe su nombre</label>
                 <input type="text" class="form-control" placeholder="Escribe el nombre de tu iglesia"

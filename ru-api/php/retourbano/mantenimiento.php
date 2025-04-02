@@ -158,7 +158,12 @@ switch($opcion){
         $response["year"]=$year;
         echo json_encode($response);
         break;
-    
+    case 12:
+        $response['resultado']=$datos->obtenerHospedajes();
+        $response["mensaje"]="Ok";
+        http_response_code(200); 
+        echo json_encode($response);
+        break;
     default:
         $response["error"]="true";
         $response["mensaje"]="ninguna opcion seleccionada";

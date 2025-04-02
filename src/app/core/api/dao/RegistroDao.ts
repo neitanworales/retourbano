@@ -11,6 +11,7 @@ import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { Pago } from "src/app/core/models/registro/Pago";
 import { HttpClient } from "@angular/common/http";
 import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
+import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -141,5 +142,14 @@ export class RegistroDao {
     public validarInscripcion() : Observable<RegistroResponse> {
         const session = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id='+session?.id, { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerHospedajes() : Observable<HospedajeResponse> {
+        const user = JSON.parse(localStorage.getItem('session')!);
+        return this.http.get<HospedajeResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=12'
+            + '&user=' + user.id
+            + '&token=' + user.token
+            , { headers: this.utils.getHeaders() });
     }
 }
