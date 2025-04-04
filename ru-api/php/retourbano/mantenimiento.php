@@ -164,6 +164,14 @@ switch($opcion){
         http_response_code(200); 
         echo json_encode($response);
         break;
+    case 13:
+        $id = empty($_REQUEST['id'])?"0":$_REQUEST['id'];
+        $habitacion = empty($_REQUEST['habitacion'])?"0":$_REQUEST['habitacion'];
+        $response['resultado']=$datos->updateHospedaje($id,$habitacion);
+        $response["mensaje"]="Ok";
+        http_response_code(200); 
+        echo json_encode($response);
+        break;
     default:
         $response["error"]="true";
         $response["mensaje"]="ninguna opcion seleccionada";

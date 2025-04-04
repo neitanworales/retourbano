@@ -8,6 +8,16 @@
                     <p>Registros {{hospedajes.length}}</p>
                 </div>
             </div>
+            <div class="col elevado">
+                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                    <i class="bi bi-arrow-clockwise"></i> Cargar todos
+                </button>
+            </div>
+            <div class="col elevado">
+                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel()">
+                    <i class="bi bi-cloud-download"></i> Export to Excel
+                </button>
+            </div>
         </div>
 
         <table mat-table [dataSource]="hospedajes!" class="mat-elevation-z8">
@@ -38,7 +48,7 @@
                 <th mat-header-cell *matHeaderCellDef> Asistencia </th>
                 <td mat-cell *matCellDef="let element"> {{element.asistencia==1 ? 'Si': 'No'}}</td>
             </ng-container>
-
+ß
             <ng-container matColumnDef="hospedaje">
                 <th mat-header-cell *matHeaderCellDef> Hospedaje </th>
                 <td mat-cell *matCellDef="let element"> {{element.hospedaje==1 ? 'Si': 'No'}}</td>
@@ -51,7 +61,15 @@
 
             <ng-container matColumnDef="habitacion">
                 <th mat-header-cell *matHeaderCellDef> Habitacion </th>
-                <td mat-cell *matCellDef="let element"> {{element.habitacion}} </td>
+                <td mat-cell *matCellDef="let element">
+                    <div class="input-group input-group-sm">
+                        <input type="text" class="form-control" placeholder="Número de cuarto"
+                         [readOnly]="!element.editar" [(ngModel)]="element.habitacion">
+                        <button class="btn btn-success" type="button" (click)="editar(element);">
+                            <i [ngClass]="element.editar?'bi bi-x-circle':'bi bi-pencil'" ></i></button>
+                        <button class="btn btn-outline-primary" type="button" [disabled]="!element.editar" (click)="guardar(element);"><i class="bi bi-floppy"></i></button>
+                    </div>
+                </td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>

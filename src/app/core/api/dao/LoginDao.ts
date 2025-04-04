@@ -33,13 +33,6 @@ export class LoginDao {
         return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() });
     }
 
-    /*public validarSession(): Observable<boolean> {
-        this.session = this.utils.getSessionFromStorage();
-        return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(
-            map(response => !response.error)
-        );
-    }*/
-
     public isAdmin(): Observable<boolean> {
         this.session = inject(AuthService).getSession()!;
         return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(

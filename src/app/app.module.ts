@@ -30,7 +30,7 @@ import { RegistroDinamicoComponent } from './components/registro-dinamico/regist
 import { HorarioComponent } from './components/horario/horario.component';
 import { HorarioDao } from './core/api/dao/HorarioDao';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table' 
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
@@ -44,6 +44,7 @@ import { AppComponent } from './app.component';
 import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
 import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
+import { AuthInterceptor } from './core/services/ auth.interceptor';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -86,6 +87,7 @@ import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
             }
         },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         provideCharts(withDefaultRegisterables()),
         LoadingService,
         Utils,
@@ -97,6 +99,6 @@ import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
         AuthService,
         HorarioDao,
         provideAnimationsAsync(),
-        provideHttpClient()
+        provideHttpClient(withInterceptorsFromDi())
     ] })
 export class AppModule { }

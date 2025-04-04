@@ -940,4 +940,9 @@ class RetoUrbanoDao
             ORDER BY habitacion ASC, sexo ASC";
         return $this->bd->ObtenerConsulta($que);
     }
+
+    public function updateHospedaje($id,$habitacion){
+        $que = "UPDATE campamento_guerreros SET habitacion = '$habitacion' WHERE id=$id";
+        return $this->bd->ejecutar($que);
+    }
 }

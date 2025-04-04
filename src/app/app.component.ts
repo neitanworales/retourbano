@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { LoadingService } from './core/services/loading-screen/loading-screen.service';
 
 @Component({
@@ -7,7 +7,11 @@ import { LoadingService } from './core/services/loading-screen/loading-screen.se
     styleUrls: ['./app.component.css'],
     standalone: false
 })
-export class AppComponent {
-  title = 'retourbano';
+export class AppComponent implements OnInit {
+  title = 'Reto Urbano';
   constructor(public loadingService: LoadingService){}
+
+  ngOnInit(): void {
+    this.loadingService.setLoading(false);
+  }
 }
