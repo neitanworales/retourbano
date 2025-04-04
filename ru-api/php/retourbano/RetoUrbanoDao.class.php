@@ -531,6 +531,13 @@ class RetoUrbanoDao
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
                 WHERE `status`= 'A' AND cm.activo=true GROUP BY talla";
                 break;
+            case 14:
+                $que = "SELECT IF(hospedaje= 0, 'Hospedaje aparte', 'Con hospedaje') as valor, COUNT(*) 'count'  
+                        FROM campamento_guerreros cg
+                        INNER JOIN guerreros g ON g.id = cg.id_guerrero
+                        INNER JOIN campamentos c ON c.id_campamento = cg.id_campamento
+                        WHERE c.activo = 1 GROUP BY hospedaje";
+                break;
         }
 
         return $this->bd->ObtenerConsulta($que);
@@ -927,7 +934,7 @@ class RetoUrbanoDao
     }
 
     public function obtenerHospedajes(){
-        $que="SELECT cg.id,id_guerrero, nombre, 
+        /*$que="SELECT cg.id,id_guerrero, nombre, 
             confirmado, 
             asistencia,
             hospedaje,  
@@ -937,7 +944,8 @@ class RetoUrbanoDao
             INNER JOIN guerreros g ON g.id = cg.id_guerrero
             INNER JOIN campamentos c ON c.id_campamento = cg.id_campamento
             WHERE hospedaje=1 AND c.activo = 1
-            ORDER BY habitacion ASC, sexo ASC";
+            ORDER BY habitacion ASC, sexo ASC";*/
+        $que = "SELECT * FROM view_hospedajes";
         return $this->bd->ObtenerConsulta($que);
     }
 

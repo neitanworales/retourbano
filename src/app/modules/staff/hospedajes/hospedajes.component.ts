@@ -12,11 +12,9 @@ import * as XLSX from 'xlsx';
   providers: [DatePipe],
 })
 export class HospedajesComponent implements OnInit {
-  
+
   hospedajes: HospedajeTable[] = new Array();
   columnsToDisplay = [
-    'id',
-    'id_guerrero',
     'nombre',
     'confirmado',
     'asistencia',
@@ -28,7 +26,7 @@ export class HospedajesComponent implements OnInit {
   constructor(
     private registroDao: RegistroDao,
     private datePipe: DatePipe
-  ){
+  ) {
 
   }
 
@@ -40,7 +38,7 @@ export class HospedajesComponent implements OnInit {
     this.registroDao.obtenerHospedajes().subscribe(
       result => {
         this.hospedajes = result.resultado;
-        this.hospedajes.map( (p,i) => {
+        this.hospedajes.map((p, i) => {
           p.editar = false;
           return p;
         });
@@ -48,11 +46,16 @@ export class HospedajesComponent implements OnInit {
     );
   }
 
-  editar(hosp : HospedajeTable){
-    hosp.editar = true;
+  editar(hosp: HospedajeTable) {
+    hosp.editar = !hosp.editar;
+    if (hosp.editar) {
+      hosp.habitacionOldValue = hosp.habitacion;
+    } else {
+      hosp.habitacion = hosp.habitacionOldValue;
+    }
   }
 
-  guardar(hosp : HospedajeTable){
+  guardar(hosp: HospedajeTable) {
     this.registroDao.actualizarHabitacion(hosp.id!, hosp.habitacion!).subscribe(
       result => {
 
@@ -61,26 +64,26 @@ export class HospedajesComponent implements OnInit {
     hosp.editar = false;
   }
 
-    exportToExcel(){
-      let myDate = new Date();
-      let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
-      let fileName= 'INSCRIPCIONES-RETO-URBANO-2024_'+dateString+'.xlsx';
-      /* pass here the table id */
-      //let element = document.getElementById('excel-table');
-      //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
-   
-      const ws: XLSX.WorkSheet =XLSX.utils.json_to_sheet(this.hospedajes!);
-  
-      /* generate workbook and add the worksheet */
-      const wb: XLSX.WorkBook = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, 'Guerreros');
-   
-      /* save to file */  
-      XLSX.writeFile(wb, fileName);
-    }
+  exportToExcel() {
+    let myDate = new Date();
+    let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
+    let fileName = 'HOSPEDAJE_RU_2025_' + dateString + '.xlsx';
+    /* pass here the table id */
+    //let element = document.getElementById('excel-table');
+    //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
 
-    cargarTodos(){
-      this.cargarDatos();
-    }
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.hospedajes!);
+
+    /* generate workbook and add the worksheet */
+    const wb: XLSX.WorkBook = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Guerreros');
+
+    /* save to file */
+    XLSX.writeFile(wb, fileName);
+  }
+
+  cargarTodos() {
+    this.cargarDatos();
+  }
 
 }
