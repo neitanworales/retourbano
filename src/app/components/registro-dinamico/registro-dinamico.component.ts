@@ -19,6 +19,7 @@ export class RegistroDinamicoComponent implements OnInit {
   activarInscripcion: boolean = false;
   activarReinscripcion: boolean = false;
   displayStyle?: String = "none";
+  displayBackgroudStyle?: String = "";
   tituloModal?: String;
   mensajeModal?: String;
 
@@ -49,7 +50,7 @@ export class RegistroDinamicoComponent implements OnInit {
     this.registroDao.validarEmail(this.email).subscribe(
       result => {
         this.mensajeModal = result.mensaje;
-        this.tituloModal = "Reinscripcion";
+        this.tituloModal = "Reinscripción";
         this.openPopup();
       }
     );
@@ -61,10 +62,12 @@ export class RegistroDinamicoComponent implements OnInit {
 
   openPopup() {
     this.displayStyle = "block";
+    this.displayBackgroudStyle = "loading";
   }
 
   closePopup() {
     this.displayStyle = "none";
+    this.displayBackgroudStyle = "";
     this.router.navigate(['/reinscripcion']);
   }
 }

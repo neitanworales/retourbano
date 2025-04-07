@@ -24,3 +24,21 @@
     background:#638;
     cursor: pointer;
 }
+
+.loading {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    opacity: 0.5;
+    z-index: 6000;
+    text-align: center;
+}
+
+.supermodal {
+    z-index: 7000;
+}

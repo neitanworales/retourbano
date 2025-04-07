@@ -28,6 +28,8 @@ export class RegistroFormComponent implements OnInit {
   submitted = false;
 
   displayStyle?: String = "none";
+  displayCommentsStyle?: String = "block";
+  displayBackgroudStyle?: String = "";
   errorRegistro?: boolean;
   mensajesRegistros!: String[];
 
@@ -73,8 +75,9 @@ export class RegistroFormComponent implements OnInit {
     this.model.razones = "El Rich me obliga";
     this.model.tutorNombre = "Carlos Nopal";
     this.model.tutorTelefono = "759783493";
-    this.model.email = "elmoyeras@yopmail.com";
+    this.model.email = "neitan.morales@gmail.com";
     this.model.whatsapp = "2423423423423";
+    this.model.telefono = "2423423423423";
     this.model.alergias = "A las bombas atómicas";
     this.model.medicamentos = "Una pastilla de besos cada 2 horas";
     this.model.aceptaPoliticas = true;
@@ -228,19 +231,27 @@ export class RegistroFormComponent implements OnInit {
   }
 
   openPopup() {
+    if(this.errorRegistro){
+      this.displayCommentsStyle = 'none';
+    } else {
+      this.displayCommentsStyle = 'block';
+    }
     this.displayStyle = "block";
+    this.displayBackgroudStyle = "loading";
   }
 
   closePopup() {
     this.displayStyle = "none";
+    this.displayBackgroudStyle = "";
     this.mensajesRegistros = new Array();
     if (!this.errorRegistro && !this.actualizar) {
-      this.router.navigate(['/']);
+      this.router.navigate(['/info']);
     } else {
       // ??
     }
   }
 }
+
 function moment(arg0: any) {
   throw new Error('Function not implemented.');
 }
