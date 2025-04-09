@@ -364,7 +364,7 @@
             <div class="form-check">
                 <input type="checkbox" formControlName="aceptaPoliticas" placeholder="Escribe aceptaPoliticas"
                     [ngClass]="{'is-invalid': form['aceptaPoliticas'].errors }" [(ngModel)]="model.aceptaPoliticas" />
-                <label>Aceptas los terminos y condiciones</label>
+                <label> Aceptas los <a routerLink="/terminos-y-condiciones" target="_blank">Terminos y Condiciones del manejo de tu información</a></label>
                 <div *ngIf="form['aceptaPoliticas'].errors" class="invalid-feedback">
                     <div *ngIf="form['aceptaPoliticas'].errors">Es necesario aceptar los terminos y condiciones</div>
                 </div>
@@ -372,7 +372,7 @@
         </div>
     </div>
     <div *ngIf="actualizar; else elseBlock" class="row" style="margin-top: 2em; margin-bottom: 2em;">
-        <button type="submit" class="btn btn-success">Guardar y Reinscribir</button>
+        <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">Guardar y Reinscribir</button>
     </div>
     <ng-template #elseBlock class="row" style="margin-top: 2em; margin-bottom: 2em;">
         <button type="submit" class="btn btn-success" [disabled]="registerForm.invalid">
