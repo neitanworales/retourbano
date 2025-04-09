@@ -45,6 +45,7 @@ import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.co
 import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { AuthInterceptor } from './core/services/ auth.interceptor';
+import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -71,7 +72,8 @@ import { AuthInterceptor } from './core/services/ auth.interceptor';
         CampamentosComponent,
         ReinscripcionComponent,
         HospedajesComponent,
-        CuentaComponent
+        CuentaComponent,
+        UsuariosComponent
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,

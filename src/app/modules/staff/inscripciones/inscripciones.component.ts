@@ -356,7 +356,7 @@ export class InscripcionesComponent implements OnInit {
   exportToExcel(){
     let myDate = new Date();
     let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
-    let fileName= 'INSCRIPCIONES-RETO-URBANO-2024_'+dateString+'.xlsx';
+    let fileName= 'INSCRIPCIONES-RETO-URBANO-2025_'+dateString+'.xlsx';
     /* pass here the table id */
     //let element = document.getElementById('excel-table');
     //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);

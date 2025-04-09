@@ -5,13 +5,29 @@
         </div>
     </div>
     <div class="row">
+        <h3>Si no tienes un código, escribe tu correo con el que ya te habías inscrito en Reto Urbano y se te enviará un código a tu correo que debes ingresar en la caja de abajo</h3>
+        <div class="col">
+            <form (ngSubmit)="validarEmail()" [formGroup]="registerFormEmail">
+                <div class="input-group mb-3">
+                    <input type="email" class="form-control form-control-lg" formControlName="email" placeholder="Escribe tu e-mail"
+                        [ngClass]="{'is-invalid': formEmail['email'].errors }" [(ngModel)]="email" />
+                    <button type="submit" class="btn btn-success" [disabled]="registerFormEmail.invalid">Buscar</button>
+                </div>
+                <div *ngIf="formEmail['email'].errors" class="invalid-feedback">
+                    <div *ngIf="formEmail['email'].errors">El e-mail es obligatorio</div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="row">
+        <h3>Ingresa el código que recibiste en tu correo.</h3>
         <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
             <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm">
                 <div class="input-group mb-3">
                     <input class="form-control form-control-lg" type="text" placeholder="Ingresa el código"
                         formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
                         [(ngModel)]="codigo" />
-                    <button type="submit" class="btn btn-success">Validar</button>
+                    <button type="submit" class="btn btn-success" [disabled]="registerFormEmail.invalid">Validar</button>
                 </div>
                 <div *ngIf="form['codigo'].errors" class="invalid-feedback">
                     <div *ngIf="form['codigo'].errors">El e-mail es obligatorio</div>
@@ -19,16 +35,18 @@
             </form>
         </div>
     </div>
-    <div class="row">
+    <div class="row" *ngIf="guerrero">
         <div class="col-1"></div>
         <div class="col-10">
+            <h3>Guerrero encontrado:</h3>
             <app-registro-form [saveInMemory]="false" [guerreroToEdit]="guerrero"></app-registro-form>
         </div>
         <div class="col-1"></div>
     </div>
 </div>
 
-<div id="modal-validar-email" class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}" aria-modal="true">
+<div id="modal-validar-email" class="modal supermodal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}"
+    aria-modal="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
@@ -44,3 +62,4 @@
         </div>
     </div>
 </div>
+<i [ngClass]="displayBackgroudStyle"></i>

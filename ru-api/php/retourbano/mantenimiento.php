@@ -107,7 +107,8 @@ switch($opcion){
     case 5:
     case 6:      
     case 7:
-    case 8:  
+    case 8:
+    case 14:
         $arrayResponse['resultado']=$datos->getIndicadores($opcion);
         echo json_encode($arrayResponse);
         break;

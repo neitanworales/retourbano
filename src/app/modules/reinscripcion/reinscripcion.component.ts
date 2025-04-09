@@ -13,11 +13,14 @@ import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 export class ReinscripcionComponent implements OnInit {
 
   registerForm!: FormGroup;
+  registerFormEmail!: FormGroup;
   codigo: String = "";
   guerrero!: Guerrero;
   displayStyle?: String = "none";
+  displayBackgroudStyle?: String = "";
   tituloModal?: String;
   mensajeModal?: String;
+  email!: string;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -30,6 +33,10 @@ export class ReinscripcionComponent implements OnInit {
     this.validarCodigo();
   }
   ngOnInit(): void {
+    this.registerFormEmail = this.formBuilder.group({
+      email: ["", Validators.required]
+    });
+
     this.registerForm = this.formBuilder.group({
       codigo: ["", Validators.required]
     });
@@ -39,6 +46,10 @@ export class ReinscripcionComponent implements OnInit {
     return this.registerForm?.controls;
   }
 
+  get formEmail() {
+    return this.registerFormEmail?.controls;
+  }
+
   validarCodigo() {
     this.registroDao.validarCodigo(this.codigo).subscribe(
       result => {
@@ -46,13 +57,24 @@ export class ReinscripcionComponent implements OnInit {
       });
   }
 
+  validarEmail() {
+    this.registroDao.validarEmail(this.email).subscribe(
+      result => {
+        this.mensajeModal = result.mensaje;
+        this.tituloModal = "Reinscripción";
+        this.openPopup();
+      }
+    );
+  }
+
   openPopup() {
+    this.displayBackgroudStyle = "loading";
     this.displayStyle = "block";
   }
 
   closePopup() {
+    this.displayBackgroudStyle = "";
     this.displayStyle = "none";
-    this.router.navigate(['/']);
   }
 
 }

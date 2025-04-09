@@ -17,6 +17,8 @@ import { hasRoleGuard } from './core/guards/has-role.guard';
 import { authGuard } from './core/guards/auth.guard';
 import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
+import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
+import { TerminosYCondicionesComponent } from './modules/terminos-y-condiciones/terminos-y-condiciones.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -28,13 +30,15 @@ const routes: Routes = [
   { path: 'info', component: InfoCampaComponent },
   { path: 'horario', component: HorarioComponent },
   { path: 'reinscripcion', component: ReinscripcionComponent },
+  { path: 'terminos-y-condiciones', component: TerminosYCondicionesComponent },
   { path: 'staff', component: DashboardComponent, canMatch: [authGuard] },
-  { path: 'cuenta', component: CuentaComponent, canMatch: [authGuard] },
-  { path: 'inscripciones', component: InscripcionesComponent, canActivate: [hasRoleGuard(['admin'])] },
-  { path: 'hospedaje', component: HospedajesComponent, canActivate: [hasRoleGuard(['admin', 'staff'])] },
-  { path: 'asistencia', component: AsistenciaComponent, canActivate: [hasRoleGuard(['admin', 'staff'])] },
-  { path: 'contabilidad', component: ContabilidadComponent, canActivate: [hasRoleGuard(['admin'])] },
-  { path: 'campamentos', component: CampamentosComponent, canActivate: [hasRoleGuard(['admin'])] },
+  { path: 'staff/cuenta', component: CuentaComponent, canMatch: [authGuard] },
+  { path: 'staff/inscripciones', component: InscripcionesComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/hospedaje', component: HospedajesComponent, canActivate: [hasRoleGuard(['super', 'admin', 'staff'])] },
+  { path: 'staff/asistencia', component: AsistenciaComponent, canActivate: [hasRoleGuard(['super', 'admin', 'staff'])] },
+  { path: 'staff/contabilidad', component: ContabilidadComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/campamentos', component: CampamentosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/usuarios', component: UsuariosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
 ];
 
 @NgModule({

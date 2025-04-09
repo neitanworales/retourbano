@@ -58,10 +58,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $busqueda = $isTutor ? array() : $datos->getGuerreroByEmail($email);
         if (!empty($busqueda)) {
-            $response["mensaje"] = "Ya existe un registro con ese correo electrónico";
+            $response["mensaje"] = "Ya existe un registro con ese correo electrónico, por favor intenta reinscribirte";
             $response["error"] = true;
             $response["code"] = 400;
-            http_response_code(400);
+            http_response_code(200);
             echo json_encode($response);
         } else {
             if ($datos->inscribir($nombre, $nick, $fechanac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje)) {
