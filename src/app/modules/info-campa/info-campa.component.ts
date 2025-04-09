@@ -14,7 +14,7 @@ export class InfoCampaComponent implements OnInit {
     private campamentoDao: CampamentoDao
   ) { }
 
-  campamento!: Campamento;
+  campamento: Campamento = new Campamento();
 
   ngOnInit(): void {
     this.loadCampamento();

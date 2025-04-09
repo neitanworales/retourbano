@@ -30,7 +30,7 @@ import { RegistroDinamicoComponent } from './components/registro-dinamico/regist
 import { HorarioComponent } from './components/horario/horario.component';
 import { HorarioDao } from './core/api/dao/HorarioDao';
 import { BrowserModule } from '@angular/platform-browser';
-import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatTableModule } from '@angular/material/table' 
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
@@ -42,6 +42,10 @@ import { CampamentoDao } from './core/api/dao/CampamentoDao';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppComponent } from './app.component';
 import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
+import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
+import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
+import { AuthInterceptor } from './core/services/ auth.interceptor';
+import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -66,7 +70,10 @@ import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.co
         RegistroDinamicoComponent,
         HorarioComponent,
         CampamentosComponent,
-        ReinscripcionComponent
+        ReinscripcionComponent,
+        HospedajesComponent,
+        CuentaComponent,
+        UsuariosComponent
     ],
     bootstrap: [AppComponent], 
     imports: [BrowserModule,
@@ -82,6 +89,7 @@ import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.co
             }
         },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         provideCharts(withDefaultRegisterables()),
         LoadingService,
         Utils,
@@ -93,6 +101,6 @@ import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.co
         AuthService,
         HorarioDao,
         provideAnimationsAsync(),
-        provideHttpClient()
+        provideHttpClient(withInterceptorsFromDi())
     ] })
 export class AppModule { }

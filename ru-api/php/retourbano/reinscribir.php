@@ -48,11 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         $instagram = !empty($input['instagram']) ? $input['instagram'] : null;
         $aceptaPoliticas = !empty($input['aceptaPoliticas']) ? $input['aceptaPoliticas'] : null;
         $isTutor = !empty($_REQUEST['tutor']) ? $_REQUEST['tutor'] : false;
-
+        $hospedaje = !empty($input['hospedaje']) ? $input['hospedaje'] : null;
         $year = !empty($input['year']) ? $input['year'] : null;
         $month = !empty($input['month']) ? $input['month'] : null;
         $day = !empty($input['day']) ? $input['day'] : null;
-
         $fechaNacimientoStr = "";
         if (empty($year) && empty($month) && empty($day)) {
             if (!empty($fechaNac)) {
@@ -79,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     http_response_code(200);
                     echo json_encode($response);
                 } else {
-                    if ($datos->insertarCampamentoGuerreros($id)) {
+                    if ($datos->insertarCampamentoGuerreros($id, $hospedaje)) {
                         $variables = array();
                         $variables["nombre"] = $nombre;
                         $variables["nick"] = $nick;
@@ -100,6 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["aceptaPoliticas"] = $aceptaPoliticas;
                         $variables["medicamentos"] = $medicamentos;
                         $variables["telefono"] = $telefono;
+                        $variables["hospedaje"] = $hospedaje ? 'Si' : 'No';
                         $variables["reporte"] = recorrerArray($datos->getIndicadoresArray());
 
                         $campamento = $datos->consultarCampamentoActivo();

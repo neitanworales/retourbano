@@ -65,10 +65,13 @@ class RetoUrbanoDao
         IF(asistencia= 0, \'false\', \'true\') as asistencia,
         IF(seguimiento= 0, \'false\', \'true\') as seguimiento,
         IF(email_enviado= 0, \'false\', \'true\') as emailEnviado, 
-        IF(email_confirmado= 0, \'false\', \'true\') as emailConfirmado ';
+        IF(email_confirmado= 0, \'false\', \'true\') as emailConfirmado,
+        IF(email_confirmado= 0, \'false\', \'true\') as emailConfirmado,
+        IF(hospedaje= 0, \'false\', \'true\') as hospedaje, 
+        habitacion ';
     }
 
-    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono)
+    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje)
     {
         $insert = "INSERT INTO guerreros(id, ";
         $values = "VALUES(NULL,";
@@ -188,49 +191,12 @@ class RetoUrbanoDao
         $response = $this->bd->ejecutarPlus($sentence);
 
         if ($response) {
-            $insertCampa = "INSERT INTO campamento_guerreros(";
-            $valuesCampa = " VALUES (";
-
-            $insertCampa .= "id_campamento, ";
-            $valuesCampa .= "(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
-
-            $insertCampa .= "id_guerrero, ";
-            $valuesCampa .= $response . ", ";
-
-            $insertCampa .= "status, ";
-            $valuesCampa .= "'A', ";
-
-            $insertCampa .= "confirmado, ";
-            $valuesCampa .= "0, ";
-
-            $insertCampa .= "asistencia, ";
-            $valuesCampa .= "0, ";
-
-            $insertCampa .= "staff, ";
-            $valuesCampa .= "0, ";
-
-            $insertCampa .= "admin, ";
-            $valuesCampa .= "0, ";
-
-            $insertCampa .= "email_enviado, ";
-            $valuesCampa .= "0, ";
-
-            $insertCampa .= "email_confirmado, ";
-            $valuesCampa .= "0, ";
-
-            $insertCampa .= "seguimiento) ";
-            $valuesCampa .= "0)";
-
-            $sentenceCampa = $insertCampa . $valuesCampa;
-
-            return $this->bd->ejecutar($sentenceCampa);
+            return $this->insertarCampamentoGuerreros($response, $hospedaje);
         }
-
-
         return false;
     }
 
-    public function insertarCampamentoGuerreros($id)
+    public function insertarCampamentoGuerreros($id, $hospedaje)
     {
         $insertCampa = "INSERT INTO campamento_guerreros(";
         $valuesCampa = " VALUES (";
@@ -262,11 +228,13 @@ class RetoUrbanoDao
         $insertCampa .= "email_confirmado, ";
         $valuesCampa .= "0, ";
 
+        $insertCampa .= "hospedaje, ";
+        $valuesCampa .= "$hospedaje, ";
+
         $insertCampa .= "seguimiento) ";
         $valuesCampa .= "0)";
 
         $sentenceCampa = $insertCampa . $valuesCampa;
-
         return $this->bd->ejecutar($sentenceCampa);
     }
 
@@ -434,6 +402,20 @@ class RetoUrbanoDao
         }
     }
 
+    public function login($usuario, $password)
+    {
+        $que = "SELECT g.id FROM guerreros g 
+                INNER JOIN guerreros_roles gr ON gr.guerrero_id=g.id
+                WHERE email='$usuario' 
+                AND password='$password'";
+        $array = $this->bd->ObtenerConsulta($que);
+        if (!empty($array)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     public function saveToken($id, $token)
     {
         $delete = "DELETE FROM token WHERE id_guerrero=$id";
@@ -467,7 +449,21 @@ class RetoUrbanoDao
 
     public function validarAdmin($id)
     {
-        $que = "SELECT admin FROM campamento_guerreros WHERE id_guerrero='$id' and admin=1";
+        /*$que = "SELECT admin FROM campamento_guerreros WHERE id_guerrero='$id' and admin=1";
+        $array = $this->bd->ObtenerConsulta($que);
+        if (!empty($array)) {
+            return true;
+        } else {
+            return false;
+        }*/
+        return $this->validarPermiso($id);
+    }
+
+    public function validarPermiso($id)
+    {
+        $que = "SELECT id FROM guerreros_roles 
+        WHERE guerrero_id=2024000 
+        AND rol = 'admin' OR rol = 'super'";
         $array = $this->bd->ObtenerConsulta($que);
         if (!empty($array)) {
             return true;
@@ -483,8 +479,8 @@ class RetoUrbanoDao
             ",(SELECT SUM(p.cantidad) FROM pagos p WHERE p.id_campamento_guerrero=cg.id) as pagado"
             . ($isAdmin ? ",password" : "") .
             " FROM guerreros g 
-        INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
-        INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento AND cm.activo=true" .
+            INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
+            INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento AND cm.activo=true" .
             ($status == 'T' ? " WHERE " : " WHERE status = '$status' " . ($status != 'B' ? " AND " : "")) .
             ($status != 'B' ? " staff " . ($staff == 'T' ? "in(0,1)" : ("=" . $staff)) . " AND admin=$admin " : '');
         if (!empty($byname)) {
@@ -563,6 +559,13 @@ class RetoUrbanoDao
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
                 WHERE `status`= 'A' AND cm.activo=true GROUP BY talla";
                 break;
+            case 14:
+                $que = "SELECT IF(hospedaje= 0, 'Hospedaje aparte', 'Con hospedaje') as valor, COUNT(*) 'count'  
+                        FROM campamento_guerreros cg
+                        INNER JOIN guerreros g ON g.id = cg.id_guerrero
+                        INNER JOIN campamentos c ON c.id_campamento = cg.id_campamento
+                        WHERE c.activo = 1 GROUP BY hospedaje";
+                break;
         }
 
         return $this->bd->ObtenerConsulta($que);
@@ -637,8 +640,8 @@ class RetoUrbanoDao
         $que = "UPDATE campamento_guerreros SET staff=$value WHERE id_guerrero=$id";
         if ($this->bd->ejecutar($que)) {
 
-            if($value){
-                $this->addRolById($id,'staff');
+            if ($value) {
+                $this->addRolById($id, 'staff');
             } else {
                 $this->deleteRolById($id, 'staff');
             }
@@ -660,8 +663,8 @@ class RetoUrbanoDao
         $que = "UPDATE campamento_guerreros SET admin=$value WHERE id_guerrero=$id";
         if ($this->bd->ejecutar($que)) {
 
-            if($value){
-                $this->addRolById($id,'admin');
+            if ($value) {
+                $this->addRolById($id, 'admin');
             } else {
                 $this->deleteRolById($id, 'admin');
             }
@@ -937,24 +940,51 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function consultarCostosByCampamento($campemento){
+    public function consultarCostosByCampamento($campemento)
+    {
         $que = "SELECT * FROM campamento_costos WHERE campamento_id=$campemento";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function obtenerRolesById($id_guerrero){
+    public function obtenerRolesById($id_guerrero)
+    {
         $que = "SELECT rol FROM guerreros_roles WHERE guerrero_id=$id_guerrero";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function addRolById($id_guerrero,$rol){
+    public function addRolById($id_guerrero, $rol)
+    {
         $que = "INSERT INTO guerreros_roles(id, guerrero_id, rol)
                 VALUES (NULL, $id_guerrero, '$rol')";
         return $this->bd->ejecutar($que);
     }
 
-    public function deleteRolById($id_guerrero,$rol){
+    public function deleteRolById($id_guerrero, $rol)
+    {
         $que = "DELETE FROM guerreros_roles WHERE guerrero_id=$id_guerrero AND rol='$rol'";
+        return $this->bd->ejecutar($que);
+    }
+
+    public function obtenerHospedajes()
+    {
+        /*$que="SELECT cg.id,id_guerrero, nombre, 
+            confirmado, 
+            asistencia,
+            hospedaje,  
+            sexo,
+            habitacion
+            FROM campamento_guerreros cg
+            INNER JOIN guerreros g ON g.id = cg.id_guerrero
+            INNER JOIN campamentos c ON c.id_campamento = cg.id_campamento
+            WHERE hospedaje=1 AND c.activo = 1
+            ORDER BY habitacion ASC, sexo ASC";*/
+        $que = "SELECT * FROM view_hospedajes";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function updateHospedaje($id, $habitacion)
+    {
+        $que = "UPDATE campamento_guerreros SET habitacion = '$habitacion' WHERE id=$id";
         return $this->bd->ejecutar($que);
     }
 }

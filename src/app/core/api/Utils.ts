@@ -31,4 +31,4 @@ export class Utils {
 
 }
 
-export type UserRole = 'admin' | 'staff';
+export type UserRole = 'admin' | 'staff' | 'super';

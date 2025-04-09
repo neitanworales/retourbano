@@ -41,6 +41,9 @@
         <div class="col-md-6">
             <app-pie-chart [opcion]="8"></app-pie-chart>
         </div>
+        <div class="col-md-6">
+            <app-pie-chart [opcion]="14"></app-pie-chart>
+        </div>
     </div>
 
     <div [ngStyle]="{'display':displayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
@@ -282,8 +285,12 @@
                                         </div>
                                         <div class="row">
                                             <div class="col-md-2">
-                                                <h2><small>Sexo:</small> {{element.sexo}} <small>Edad:</small>
-                                                    {{element.edad}} <small>Talla:</small> {{element.talla}}</h2>
+                                                <h2>
+                                                    <small>Sexo:</small> {{element.sexo}} 
+                                                    <small>Edad:</small> {{element.edad}}
+                                                    <small>Talla:</small> {{element.talla}}
+                                                    <small><i class="bi bi-h-square"></i></small> {{element.habitacion}}
+                                                </h2>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="icon-block">
@@ -339,6 +346,33 @@
                                         </div>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="!this.pageHistoricoActive" class="row">
+                            <div class="col">
+                                <table class="table tabla-pagos">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Hospedaje
+                                            </th>
+                                            <th>
+                                                Habitación
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {{element.hospedaje ? 'Si' : 'No'}}
+                                            </td>
+                                            <td>
+                                                {{element.habitacion}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
 

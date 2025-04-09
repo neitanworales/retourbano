@@ -1,14 +1,27 @@
-<header class="mb-auto">
+<header class="mb-auto header-staff">
     <div class="container-fluid">
         <nav class="nav nav-masthead justify-content-center">
             <a class="nav-link" aria-current="page" routerLink="/"> <i class="bi bi-box-arrow-left"></i> Regresar</a>
-            <a class="nav-link" routerLink="/inscripciones"><i class="bi bi-card-checklist"></i> Inscripciones</a>
-            <a class="nav-link" routerLink="/contabilidad"><i class="bi bi-wallet"></i> Contabilidad</a>
-            <a class="nav-link" routerLink="/campamentos"><i class="bi bi-tornado"></i> Campamentos</a>
-            <a class="nav-link" (click)="cerrarSesion()"><i class="bi bi-door-closed"></i> Salir</a>
-            <a class="nav-link d-flex">
+            <a class="nav-link" routerLink="/staff"><i class="bi bi-house"></i></a>
+            @if(hasRole(['super', 'admin'])){
+            <a class="nav-link" routerLink="/staff/inscripciones"><i class="bi bi-card-checklist"></i> Inscripciones</a>
+            }
+            @if(hasRole(['super', 'admin'])){
+            <a class="nav-link" routerLink="/staff/hospedaje"><i class="bi bi-h-square"></i> Hospedaje</a>
+            }
+            @if(hasRole(['super', 'admin'])){
+            <a class="nav-link" routerLink="/staff/contabilidad"><i class="bi bi-wallet"></i> Contabilidad</a>
+            }
+            @if(hasRole(['super', 'admin'])){
+            <a class="nav-link" routerLink="/staff/campamentos"><i class="bi bi-tornado"></i> Campamentos</a>
+            }
+            @if(hasRole(['super', 'admin'])){
+            <a class="nav-link" routerLink="/staff/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
+            }   
+            <a class="nav-link d-flex" routerLink="/staff/cuenta">
                 <app-user-info></app-user-info>
             </a>
+            <a class="nav-link" (click)="cerrarSesion()"><i class="bi bi-door-closed"></i> Salir</a>
         </nav>
     </div>
 </header>

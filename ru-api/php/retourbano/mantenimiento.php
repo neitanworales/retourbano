@@ -107,7 +107,8 @@ switch($opcion){
     case 5:
     case 6:      
     case 7:
-    case 8:  
+    case 8:
+    case 14:
         $arrayResponse['resultado']=$datos->getIndicadores($opcion);
         echo json_encode($arrayResponse);
         break;
@@ -158,7 +159,20 @@ switch($opcion){
         $response["year"]=$year;
         echo json_encode($response);
         break;
-    
+    case 12:
+        $response['resultado']=$datos->obtenerHospedajes();
+        $response["mensaje"]="Ok";
+        http_response_code(200); 
+        echo json_encode($response);
+        break;
+    case 13:
+        $id = empty($_REQUEST['id'])?"0":$_REQUEST['id'];
+        $habitacion = empty($_REQUEST['habitacion'])?"0":$_REQUEST['habitacion'];
+        $response['resultado']=$datos->updateHospedaje($id,$habitacion);
+        $response["mensaje"]="Ok";
+        http_response_code(200); 
+        echo json_encode($response);
+        break;
     default:
         $response["error"]="true";
         $response["mensaje"]="ninguna opcion seleccionada";

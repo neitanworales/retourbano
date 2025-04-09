@@ -1,4 +1,4 @@
-import { Injectable } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { Observable } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
@@ -11,13 +11,16 @@ import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { Pago } from "src/app/core/models/registro/Pago";
 import { HttpClient } from "@angular/common/http";
 import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
+import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
+import { AuthService } from "../../services/auth.service";
 
 @Injectable()
 export class RegistroDao {
 
     constructor(
         private http: HttpClient,
-        private utils: Utils
+        private utils: Utils,
+        private autho: AuthService
     ) { }
 
     public getAvanceRegistro(): Observable<AvanceResponse> {
@@ -33,7 +36,7 @@ export class RegistroDao {
     }
 
     public consultarGuerreros(opcion: number, activo: boolean, staff: boolean, admin: boolean, byName: string, seg: boolean): Observable<MantenimientoResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<MantenimientoResponse>(environment.apiUrl + 'retourbano/mantenimiento.php'
             + '?opcion=' + opcion
             + '&status=' + (activo ? 'A' : 'B')
@@ -41,54 +44,54 @@ export class RegistroDao {
             + '&admin=' + ((staff && admin) ? '1' : '0')
             + '&byname=' + byName
             + '&seguimiento=' + (seg ? '1' : '0')
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
     public consultarIndicadores(opcion: number): Observable<IndicadoresResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<IndicadoresResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=' + opcion
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
     public actualizarStaff(isStaff: boolean, id: number): Observable<DefaultResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=3&id=' + id + '&staff=' + (isStaff ? 1 : 0)
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
     public actualizarStatus(isActived: boolean, id: number): Observable<DefaultResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=2&id=' + id + '&status=' + (isActived ? 'A' : 'B')
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
     public actualizarAdmin(isAdmin: boolean, id: number): Observable<DefaultResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=9&id=' + id + '&admin=' + (isAdmin ? 1 : 0)
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
     public cambiarContrasena(newPassword: String, id: number): Observable<DefaultResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=10&id=' + id
             + '&newPassword=' + newPassword
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
@@ -121,12 +124,12 @@ export class RegistroDao {
     }
 
     public consultarHistorico(year: number): Observable<MantenimientoResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
+        const user = this.autho.getSessionValida();
         return this.http.get<MantenimientoResponse>(environment.apiUrl + 'retourbano/mantenimiento.php'
             + '?opcion=11'
             + '&year=' + year
-            + '&user=' + user.id
-            + '&token=' + user.token
+            + '&user=' + user?.id
+            + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
@@ -139,7 +142,26 @@ export class RegistroDao {
     }
 
     public validarInscripcion() : Observable<RegistroResponse> {
-        const session = JSON.parse(localStorage.getItem('session')!);
+        const session = this.autho.getSessionValida();
         return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id='+session?.id, { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerHospedajes() : Observable<HospedajeResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<HospedajeResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=12'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public actualizarHabitacion(id: number, habitacion: string): Observable<DefaultResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=13&id=' + id 
+            + '&habitacion=' + habitacion
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
     }
 }

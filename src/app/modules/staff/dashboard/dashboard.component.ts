@@ -1,11 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { RetoDao } from 'src/app/core/api/dao/RetoDao';
 import { Seguimiento } from 'src/app/core/models/reto/Seguimiento';
-import { Time } from "@angular/common";
 import { Session } from 'src/app/core/models/login/Session';
 import { LoginDao } from 'src/app/core/api/dao/LoginDao';
-import { environment } from 'src/environments/environment';
-import { Utils } from 'src/app/core/api/Utils';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { AuthService } from 'src/app/core/services/auth.service';
 

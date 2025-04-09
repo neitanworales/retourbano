@@ -20,7 +20,7 @@ export class LoginDao {
     ) { }
 
     public login(username: String, password: String): Observable<LoginResponse> {
-        return this.http.get<LoginResponse>(environment.apiUrl + 'retourbano/login.php?username=' + username + '&password=' + password, { headers: this.utils.getHeaders() });
+        return this.http.get<LoginResponse>(environment.apiUrl + 'retourbano/login-new.php?username=' + username + '&password=' + password, { headers: this.utils.getHeaders() });
     }
 
     public logout(): Observable<LoginResponse>{
@@ -32,13 +32,6 @@ export class LoginDao {
         this.session = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() });
     }
-
-    /*public validarSession(): Observable<boolean> {
-        this.session = this.utils.getSessionFromStorage();
-        return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id='+this.session?.guerrero?.id+"&token="+this.session?.token , { headers: this.utils.getHeaders() }).pipe(
-            map(response => !response.error)
-        );
-    }*/
 
     public isAdmin(): Observable<boolean> {
         this.session = inject(AuthService).getSession()!;

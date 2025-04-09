@@ -1,6 +1,8 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { LoginDao } from 'src/app/core/api/dao/LoginDao';
+import { UserRole } from 'src/app/core/api/Utils';
+import { Session } from 'src/app/core/models/login/Session';
 import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
@@ -11,11 +13,15 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class NavbarSeguimientoComponent implements OnInit {
 
+  currentUser?: Session;
+
   constructor(
     private loginDao: LoginDao,
     private router: Router,
     private autho: AuthService
-  ) { }
+  ) {
+    this.currentUser = inject(AuthService).getSessionValida();
+  }
 
   ngOnInit(): void {
   }
@@ -33,6 +39,10 @@ export class NavbarSeguimientoComponent implements OnInit {
     } else {
       this.router.navigate(['login']);
     }
+  }
+
+  hasRole(roles: UserRole[]) {
+    return this.currentUser?.roles.some((role) => roles.includes(role));
   }
 
 }
