@@ -3,6 +3,8 @@ import { Costo } from "./Costo";
 export class Campamento {
     id_campamento?: number;
     titulo?: string;
+    fecha_inicio?: Date;
+    fecha_termino?: Date;
     activo?: boolean;
     maximo_inscr?: number;
     umbral?: number;

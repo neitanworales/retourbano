@@ -13,6 +13,7 @@ import { HttpClient } from "@angular/common/http";
 import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
 import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
 import { AuthService } from "../../services/auth.service";
+import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -160,6 +161,24 @@ export class RegistroDao {
         return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=13&id=' + id 
             + '&habitacion=' + habitacion
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerUsuarios(): Observable<MtoLoginResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<MtoLoginResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=15'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerRepetidos(): Observable<GuerreroResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<GuerreroResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=16'
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });

@@ -987,4 +987,26 @@ class RetoUrbanoDao
         $que = "UPDATE campamento_guerreros SET habitacion = '$habitacion' WHERE id=$id";
         return $this->bd->ejecutar($que);
     }
+
+    public function getUsuarios(){
+        $que = "SELECT g.id, nick, email FROM ywampach_retourbano.guerreros g
+                WHERE password IS NOT NULL 
+                ORDER BY nick;";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getGuerrerosRepetidos(){
+        $que = "SELECT email, count(*) FROM ywampach_retourbano.guerreros g
+                GROUP BY email
+                ORDER BY count(*) DESC, email";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getGuerreroCampamentosByEmail($email){
+        $que = "SELECT g.id as guerreroID, cg.id, cg.id_guerrero, cg.id_campamento, nick, nombre, email FROM ywampach_retourbano.guerreros g
+                LEFT JOIN ywampach_retourbano.campamento_guerreros cg ON g.id=cg.id_guerrero
+                WHERE g.email = '$email'
+                ORDER BY g.id DESC, cg.id_campamento";
+        return $this->bd->ObtenerConsulta($que);
+    }
 }
