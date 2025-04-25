@@ -63,6 +63,9 @@ export class RegistroFormComponent implements OnInit {
       this.model.day = 0;
     } 
     this.model.talla = "";
+    this.model.alergias = "";
+    this.model.medicamentos = "";
+    this.model.razones = "";
 
     /*this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";

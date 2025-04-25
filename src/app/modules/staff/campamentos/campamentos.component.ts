@@ -19,6 +19,8 @@ export class CampamentosComponent implements OnInit {
     'botonera',
     'id_campamento',
     'titulo',
+    'fecha_inicio',
+    'fecha_termino',
     'activo',
     'maximo_inscr',
     'umbral',
@@ -40,6 +42,8 @@ export class CampamentosComponent implements OnInit {
     this.eventoForm = this.formBuilder.group({
       id_campamento: ["", Validators.required],
       titulo: ["", Validators.required],
+      fecha_inicio: ["", Validators.required],
+      fecha_termino: ["", Validators.required],
       activo: [""],
       maximo_inscr: ["", Validators.required],
       umbral: ["", Validators.required],
