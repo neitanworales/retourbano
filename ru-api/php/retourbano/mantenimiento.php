@@ -191,10 +191,28 @@ switch ($opcion) {
         foreach ($guerrerosRepetidos as &$gr) {
             $campas = $datos->getGuerreroCampamentosByEmail($gr['email']);
             $campamentos = array();
-            array_push($campamentos, $campas);
+            foreach ($campas as &$camps) {
+                array_push($campamentos, $camps);
+            }
             $gr['campamentos']=$campamentos;
+
+            $tutoria = $datos->getTotoriaByEmail($gr['email']);
+            $tutorias = array();
+            foreach ($tutoria as &$tuts) {
+                array_push($tutorias, $tuts);
+            }
+            $gr['tutorias']=$tutorias;
         }
         $response['resultado'] = $guerrerosRepetidos;
+        $response["mensaje"] = "Ok";
+        http_response_code(200);
+        echo json_encode($response);
+        break;
+    case 17:
+        $id = empty($_REQUEST['id']) ? "0" : $_REQUEST['id'];
+        $email = empty($_REQUEST['email']) ? "" : $_REQUEST['email'];
+        $email_tutor = empty($_REQUEST['email_tutor']) ? "" : $_REQUEST['email_tutor'];
+        $response['resultado'] = $datos->updateTutoria($id, $email, $email_tutor);
         $response["mensaje"] = "Ok";
         http_response_code(200);
         echo json_encode($response);

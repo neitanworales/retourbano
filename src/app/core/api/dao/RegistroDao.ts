@@ -14,6 +14,7 @@ import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
 import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
 import { AuthService } from "../../services/auth.service";
 import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
+import { CampamentoGuerrerosResponse } from "../../models/registro/CampamentoGuerreros";
 
 @Injectable()
 export class RegistroDao {
@@ -175,10 +176,22 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public obtenerRepetidos(): Observable<GuerreroResponse> {
+    public obtenerRepetidos(): Observable<CampamentoGuerrerosResponse> {
         const user = this.autho.getSessionValida();
-        return this.http.get<GuerreroResponse>(environment.apiUrl
+        return this.http.get<CampamentoGuerrerosResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=16'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public updateEmailTutor(id: number, email: String, email_tutor: String): Observable<DefaultResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=17'
+            + '&id='+id
+            + '&email='+email
+            + '&email_tutor='+email_tutor
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });

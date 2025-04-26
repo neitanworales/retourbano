@@ -996,17 +996,32 @@ class RetoUrbanoDao
     }
 
     public function getGuerrerosRepetidos(){
-        $que = "SELECT email, count(*) FROM ywampach_retourbano.guerreros g
+        $que = "SELECT email, count(*) count FROM ywampach_retourbano.guerreros g
+                WHERE (g.email_tutor='' OR g.email_tutor IS NULL) 
                 GROUP BY email
                 ORDER BY count(*) DESC, email";
         return $this->bd->ObtenerConsulta($que);
     }
 
     public function getGuerreroCampamentosByEmail($email){
-        $que = "SELECT g.id as guerreroID, cg.id, cg.id_guerrero, cg.id_campamento, nick, nombre, email FROM ywampach_retourbano.guerreros g
+        $que = "SELECT g.id as guerreroID, cg.id, cg.id_guerrero, cg.id_campamento, nick, nombre, email, email_tutor FROM ywampach_retourbano.guerreros g
                 LEFT JOIN ywampach_retourbano.campamento_guerreros cg ON g.id=cg.id_guerrero
-                WHERE g.email = '$email'
+                WHERE g.email = '$email' AND (g.email_tutor='' OR g.email_tutor IS NULL) 
                 ORDER BY g.id DESC, cg.id_campamento";
         return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getTotoriaByEmail($email){
+        $que = "SELECT g.id as guerreroID, cg.id, cg.id_guerrero, cg.id_campamento, nick, nombre, email, email_tutor FROM ywampach_retourbano.guerreros g
+                LEFT JOIN ywampach_retourbano.campamento_guerreros cg ON g.id=cg.id_guerrero
+                WHERE g.email_tutor = '$email'
+                ORDER BY g.id DESC, cg.id_campamento";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function updateTutoria($id, $email, $email_tutor)
+    {
+        $que = "UPDATE ywampach_retourbano.guerreros SET email='$email', email_tutor='$email_tutor' WHERE id=$id";
+        return $this->bd->ejecutar($que);
     }
 }

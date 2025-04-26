@@ -1,0 +1,53 @@
+tr.example-detail-row {
+    height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+    background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+    background: #efefef;
+}
+
+.example-element-row td {
+    border-bottom-width: 0;
+}
+
+.example-element-detail {
+    overflow: hidden;
+}
+
+.tabla-historico {
+    font-family: Arial, Helvetica, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 2em;
+}
+
+.tabla-historico td,
+.tabla-historico th {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.tabla-historico tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.tabla-historico tr:hover {
+    background-color: #ddd;
+}
+
+.tabla-historico th {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #04AA6D;
+    color: white;
+}
+
+caption {
+    display: table-caption;
+    text-align: center;
+}
