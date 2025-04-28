@@ -35,24 +35,28 @@
           <div *ngIf="form['email'].errors">El e-mail es obligatorio</div>
         </div>
       </form>
+      <div class="alert alert-warning" role="alert">
+        <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> ¡¡Recuerda revisar tu bandeja de SPAM o Correo no deseado!! <i class="bi bi-exclamation-triangle-fill"></i>
+      </div>
     </div>
   </div>
 </ng-template>
 
-<div id="modal-validar-email" class="modal supermodal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}" aria-modal="true">
+<div id="modal-validar-email" class="modal supermodal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}"
+  aria-modal="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h1 class="modal-title">{{tituloModal}}</h1>
-          </div>
-          <div class="modal-body">
-              {{mensajeModal}}
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-dismiss="modal"
-                  (click)="closePopup()">Cerrar/Close</button>
-          </div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title">{{tituloModal}}</h1>
       </div>
+      <div class="modal-body">
+        {{mensajeModal}}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal"
+          (click)="closePopup()">Cerrar/Close</button>
+      </div>
+    </div>
   </div>
 </div>
 <i [ngClass]="displayBackgroudStyle"></i>

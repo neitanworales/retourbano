@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             $templateName = "reinscripcion.html";
             $template = $emailDao->getTemplate($variables, $templateName);
             $emailEnviado = $emailDao->enviarEmail($email, 'Reinscripción Reto Urbano', $template, true);
-            $response["mensaje"] = $emailEnviado ? "Se envió correo de verificacion a $email": "Error al enviar correo de verificacion a $email";
+            $response["mensaje"] = $emailEnviado ? "Se envió correo de verificacion a $email, ¡¡Recuerda revisar tu bandeja de SPAM o Correo no deseado!!": "Error al enviar correo de verificacion a $email";
             $response["code"] = 200;
             http_response_code(200);
             echo json_encode($response);
