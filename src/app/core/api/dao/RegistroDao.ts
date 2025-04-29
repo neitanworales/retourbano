@@ -196,4 +196,14 @@ export class RegistroDao {
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
+
+    public actualizarPassword(email: String, password: String): Observable<DefaultResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=18&email=' + email
+            + '&password=' + password
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
 }

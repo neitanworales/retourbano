@@ -27,7 +27,8 @@ export class UsuariosComponent implements OnInit {
     'id',
     'nick',
     'email',
-    'roles'
+    'roles',
+    'password'
   ];
 
   columnsToDisplayRepetidos = [
@@ -105,5 +106,23 @@ export class UsuariosComponent implements OnInit {
       }
     );
   }
+
+    editarPassword(hosp: MtoLogin) {
+      hosp.editar = !hosp.editar;
+      if (hosp.editar) {
+        hosp.passwordOldValue = hosp.password;
+      } else {
+        hosp.password = hosp.passwordOldValue;
+      }
+    }
+  
+    guardarPassword(hosp: MtoLogin) {
+      this.registroDao.actualizarPassword(hosp.email!, hosp.password!).subscribe(
+        result => {
+  
+        }
+      );
+      hosp.editar = false;
+    }
 
 }

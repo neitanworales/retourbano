@@ -217,6 +217,14 @@ switch ($opcion) {
         http_response_code(200);
         echo json_encode($response);
         break;
+    case 18:
+        $email = empty($_REQUEST['email']) ? "" : $_REQUEST['email'];
+        $password = empty($_REQUEST['password']) ? "" : $_REQUEST['password'];
+        $response['resultado'] = $datos->updatePassword($email, $password);
+        $response["mensaje"] = "Ok";
+        http_response_code(200);
+        echo json_encode($response);
+        break;
     default:
         $response["error"] = "true";
         $response["mensaje"] = "ninguna opcion seleccionada";

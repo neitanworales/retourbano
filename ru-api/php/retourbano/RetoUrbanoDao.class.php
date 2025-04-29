@@ -989,8 +989,9 @@ class RetoUrbanoDao
     }
 
     public function getUsuarios(){
-        $que = "SELECT g.id, nick, email FROM ywampach_retourbano.guerreros g
-                WHERE password IS NOT NULL 
+        $que = "SELECT DISTINCT g.id, nick, email, password FROM ywampach_retourbano.guerreros g
+                INNER JOIN ywampach_retourbano.guerreros_roles gr ON g.id = gr.guerrero_id
+                -- WHERE (password IS NOT NULL)
                 ORDER BY nick;";
         return $this->bd->ObtenerConsulta($que);
     }
