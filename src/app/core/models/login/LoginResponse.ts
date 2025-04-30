@@ -5,4 +5,7 @@ import { Session } from "./Session";
 export class LoginResponse extends DefaultResponse {
     success? : boolean;
     session? : Session
+
+    usuario_encrypted? : String;
+    password_encrypted? : String;
 }

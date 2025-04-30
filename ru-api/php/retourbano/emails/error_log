@@ -1,8 +1,0 @@
-[11-Mar-2025 20:46:18 America/Boise] PHP Fatal error:  Uncaught Error: Array callback must have exactly two elements in /home1/ywampach/public_html/php/retourbano/emails/template.php:20
-Stack trace:
-#0 {main}
-  thrown in /home1/ywampach/public_html/php/retourbano/emails/template.php on line 20
-[11-Mar-2025 20:47:54 America/Boise] PHP Fatal error:  Uncaught Error: Array callback must have exactly two elements in /home1/ywampach/public_html/php/retourbano/emails/template.php:20
-Stack trace:
-#0 {main}
-  thrown in /home1/ywampach/public_html/php/retourbano/emails/template.php on line 20

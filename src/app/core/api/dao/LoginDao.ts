@@ -20,7 +20,9 @@ export class LoginDao {
     ) { }
 
     public login(username: String, password: String): Observable<LoginResponse> {
-        return this.http.get<LoginResponse>(environment.apiUrl + 'retourbano/login-new.php?username=' + username + '&password=' + password, { headers: this.utils.getHeaders() });
+        const usernameSafe = encodeURIComponent(username.toString());
+        const passwordSafe = encodeURIComponent(password.toString());
+        return this.http.get<LoginResponse>(environment.apiUrl + 'retourbano/login.php?username=' + usernameSafe + '&password=' + passwordSafe, { headers: this.utils.getHeaders() });
     }
 
     public logout(): Observable<LoginResponse>{

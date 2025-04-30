@@ -15,12 +15,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require './RetoUrbanoDao.class.php';
 $datos = RetoUrbanoDao::getInstance();
 
-$usr = $_REQUEST['username'];
-$pwd = $_REQUEST['password'];
+require './tumba.php';
 
-if ($datos->verificarSession($usr, $pwd)) {
+$usuario = decrypt($_REQUEST['username']);
+$password = decrypt($_REQUEST['password']);
 
-    $registro = $datos->getGuerrroRegistradoByEmail($usr);
+if ($datos->login($usuario, $password)) {
+
+    $registro = $datos->getGuerrroRegistradoByEmail($usuario);
 
     $rolesQuery = $datos->obtenerRolesById($registro[0]['id']);
     $roles = array();

@@ -198,10 +198,12 @@ export class RegistroDao {
     }
 
     public actualizarPassword(email: String, password: String): Observable<DefaultResponse> {
+        const usernameSafe = encodeURIComponent(email.toString());
+        const passwordSafe = encodeURIComponent(password.toString());
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=18&email=' + email
-            + '&password=' + password
+            + 'retourbano/mantenimiento.php?opcion=18&email=' + usernameSafe
+            + '&password=' + passwordSafe
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });

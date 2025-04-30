@@ -46,6 +46,7 @@ import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.compo
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { AuthInterceptor } from './core/services/ auth.interceptor';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
+import { TumbaService } from './core/services/tumbaService';
 
 @NgModule({ declarations: [
         AppComponent,
@@ -101,6 +102,7 @@ import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
         AuthService,
         HorarioDao,
         provideAnimationsAsync(),
-        provideHttpClient(withInterceptorsFromDi())
+        provideHttpClient(withInterceptorsFromDi()),
+        TumbaService
     ] })
 export class AppModule { }

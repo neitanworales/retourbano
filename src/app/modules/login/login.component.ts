@@ -3,8 +3,7 @@ import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { map } from 'rxjs';
-import { Session } from 'src/app/core/models/login/Session';
+import { TumbaService } from 'src/app/core/services/tumbaService';
 
 @Component({
   selector: 'app-login',
@@ -24,7 +23,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     public loginDao: LoginDao,
     private router: Router,
-    private autho: AuthService
+    private autho: AuthService, 
+    private tumba: TumbaService
   ) {
     const session = inject(AuthService).getSession();
     if (session) {
@@ -50,7 +50,7 @@ export class LoginComponent implements OnInit {
     if (this.registerForm?.invalid) {
       return;
     }
-    this.loginDao.login(this.username!, this.password!).subscribe(
+    this.loginDao.login(this.tumba.encryptar(this.username!), this.tumba.encryptar(this.password!)).subscribe(
       result => {
         console.log("sucess : " + result.success);
         if (result.success) {

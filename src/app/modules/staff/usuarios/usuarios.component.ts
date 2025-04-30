@@ -3,6 +3,7 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { MtoLogin } from 'src/app/core/models/login/MtoLogin';
 import { AsistenciaCampamentos, CampamentoGuerreros } from 'src/app/core/models/registro/CampamentoGuerreros';
+import { TumbaService } from 'src/app/core/services/tumbaService';
 
 @Component({
   selector: 'app-usuarios',
@@ -43,6 +44,7 @@ export class UsuariosComponent implements OnInit {
 
   constructor(
     private registroDao: RegistroDao,
+    private tumba: TumbaService
   ) {
 
   }
@@ -111,17 +113,19 @@ export class UsuariosComponent implements OnInit {
       hosp.editar = !hosp.editar;
       if (hosp.editar) {
         hosp.passwordOldValue = hosp.password;
+        hosp.password = this.tumba.desencryptar(hosp.password!);
       } else {
         hosp.password = hosp.passwordOldValue;
       }
     }
   
     guardarPassword(hosp: MtoLogin) {
-      this.registroDao.actualizarPassword(hosp.email!, hosp.password!).subscribe(
+      this.registroDao.actualizarPassword(this.tumba.encryptar(hosp.email!), this.tumba.encryptar(hosp.password!)).subscribe(
         result => {
-  
+          
         }
       );
+      hosp.password = this.tumba.encryptar(hosp.password!);
       hosp.editar = false;
     }
 

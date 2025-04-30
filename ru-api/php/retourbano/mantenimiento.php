@@ -15,6 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
 require './RetoUrbanoDao.class.php';
 $datos = RetoUrbanoDao::getInstance();
 
+require './tumba.php';
+
 $role_requiered = ['admin'];
 
 if (empty($_REQUEST['user']) or empty($_REQUEST['token']) or empty($_REQUEST['opcion'])) {
@@ -180,6 +182,7 @@ switch ($opcion) {
                 array_push($roles, $rol['rol']);
             }
             $usr['roles']=$roles;
+            $usr['password'] = encrypt($usr['password']);
         }
         $response['users'] = $usuarios;
         $response["mensaje"] = "Ok";
@@ -220,7 +223,14 @@ switch ($opcion) {
     case 18:
         $email = empty($_REQUEST['email']) ? "" : $_REQUEST['email'];
         $password = empty($_REQUEST['password']) ? "" : $_REQUEST['password'];
-        $response['resultado'] = $datos->updatePassword($email, $password);
+
+        $email_decode = urldecode($email);
+        $password_decode = urldecode($password);
+
+        $email_decrypt = decrypt($email);
+        $password_decrypt = decrypt($password);
+
+        $response['resultado'] = $datos->updatePassword($email_decrypt, $password_decrypt);
         $response["mensaje"] = "Ok";
         http_response_code(200);
         echo json_encode($response);
