@@ -61,7 +61,7 @@
                         <th mat-header-cell *matHeaderCellDef> Password </th>
                         <td mat-cell *matCellDef="let element">
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control" placeholder="Agregar password"
+                                <input type="{{element.editar?'text':'password'}}" class="form-control" placeholder="Agregar password"
                                     [readOnly]="!element.editar" [(ngModel)]="element.password">
                                 <button class="btn btn-success" type="button" (click)="editarPassword(element);">
                                     <i [ngClass]="element.editar?'bi bi-x-circle':'bi bi-pencil'"></i></button>
