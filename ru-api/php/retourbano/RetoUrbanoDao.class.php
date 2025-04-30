@@ -988,7 +988,24 @@ class RetoUrbanoDao
         return $this->bd->ejecutar($que);
     }
 
-    public function getUsuarios(){
+    public function obtenerHabitaciones()
+    {
+        $que = "SELECT vh.habitacion, count(vh.habitacion) count FROM ywampach_retourbano.view_hospedajes vh
+                GROUP BY vh.habitacion
+                ORDER BY vh.habitacion ASC";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function personasPorHabitacion($habitacion)
+    {
+        $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
+                FROM ywampach_retourbano.view_hospedajes vh
+                WHERE habitacion = '$habitacion'";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getUsuarios()
+    {
         $que = "SELECT DISTINCT g.id, nick, email, password FROM ywampach_retourbano.guerreros g
                 INNER JOIN ywampach_retourbano.guerreros_roles gr ON g.id = gr.guerrero_id
                 -- WHERE (password IS NOT NULL)
@@ -996,7 +1013,8 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerrerosRepetidos(){
+    public function getGuerrerosRepetidos()
+    {
         $que = "SELECT email, count(*) count FROM ywampach_retourbano.guerreros g
                 WHERE (g.email_tutor='' OR g.email_tutor IS NULL) 
                 GROUP BY email
@@ -1004,7 +1022,8 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerreroCampamentosByEmail($email){
+    public function getGuerreroCampamentosByEmail($email)
+    {
         $que = "SELECT g.id as guerreroID, cg.id, cg.id_guerrero, cg.id_campamento, nick, nombre, email, email_tutor FROM ywampach_retourbano.guerreros g
                 LEFT JOIN ywampach_retourbano.campamento_guerreros cg ON g.id=cg.id_guerrero
                 WHERE g.email = '$email' AND (g.email_tutor='' OR g.email_tutor IS NULL) 
@@ -1012,7 +1031,8 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getTotoriaByEmail($email){
+    public function getTotoriaByEmail($email)
+    {
         $que = "SELECT g.id as guerreroID, cg.id, cg.id_guerrero, cg.id_campamento, nick, nombre, email, email_tutor FROM ywampach_retourbano.guerreros g
                 LEFT JOIN ywampach_retourbano.campamento_guerreros cg ON g.id=cg.id_guerrero
                 WHERE g.email_tutor = '$email'

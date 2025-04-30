@@ -1,6 +1,7 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Habitacion } from 'src/app/core/models/hospedaje/Habitacion';
 import { HospedajeTable } from 'src/app/core/models/hospedaje/HospedajeTable';
 import * as XLSX from 'xlsx';
 
@@ -13,7 +14,15 @@ import * as XLSX from 'xlsx';
 })
 export class HospedajesComponent implements OnInit {
 
+  pageHabitaciones : boolean = true;
+  pageHospedajes! : boolean;
+
+  pageHabitacionesDisplayStyle = 'block';
+  pageHospedajesDisplayStyle = 'none';
+
   hospedajes: HospedajeTable[] = new Array();
+  habitaciones: Habitacion[] = new Array();
+
   columnsToDisplay = [
     'nombre',
     'confirmado',
@@ -31,10 +40,10 @@ export class HospedajesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.cargarDatosHospedajes();
   }
 
-  private cargarDatos() {
+  private cargarDatosHospedajes() {
     this.registroDao.obtenerHospedajes().subscribe(
       result => {
         this.hospedajes = result.resultado;
@@ -42,6 +51,18 @@ export class HospedajesComponent implements OnInit {
           p.editar = false;
           return p;
         });
+      }
+    );
+  }
+
+  cargarHabitaciones(){
+    this.cargarDatosHabitaciones();
+  }
+
+  private cargarDatosHabitaciones(){
+    this.registroDao.obtenerHabitaciones().subscribe(
+      result => {
+        this.habitaciones = result.resultado;
       }
     );
   }
@@ -83,7 +104,23 @@ export class HospedajesComponent implements OnInit {
   }
 
   cargarTodos() {
-    this.cargarDatos();
+    this.cargarDatosHospedajes();
+  }
+
+  activarPageHabitaciones(){
+    this.pageHospedajesDisplayStyle = 'none';
+    this.pageHabitacionesDisplayStyle = 'block';
+    this.pageHabitaciones = true;
+    this.pageHospedajes = false;
+    this.cargarDatosHabitaciones();
+  }
+
+  activarPageHospedajes(){
+    this.pageHospedajesDisplayStyle = 'block';
+    this.pageHabitacionesDisplayStyle = 'none';
+    this.pageHabitaciones = false;
+    this.pageHospedajes = true;
+    this.cargarDatosHospedajes();
   }
 
 }

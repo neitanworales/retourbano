@@ -235,6 +235,21 @@ switch ($opcion) {
         http_response_code(200);
         echo json_encode($response);
         break;
+    case 19:
+        $habitaciones = $datos->obtenerHabitaciones();
+        foreach ($habitaciones as &$hab) {
+            $personitas = $datos->personasPorHabitacion($hab['habitacion']);
+            $personas = array();
+            foreach ($personitas as &$pers) {
+                array_push($personas, $pers);
+            }
+            $hab['personas']=$personas;
+        }
+        $response['resultado'] = $habitaciones;
+        $response["mensaje"] = "Ok";
+        http_response_code(200);
+        echo json_encode($response);
+        break;
     default:
         $response["error"] = "true";
         $response["mensaje"] = "ninguna opcion seleccionada";
