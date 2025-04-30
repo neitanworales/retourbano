@@ -15,6 +15,7 @@ import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
 import { AuthService } from "../../services/auth.service";
 import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
 import { CampamentoGuerrerosResponse } from "../../models/registro/CampamentoGuerreros";
+import { HabitacionResponse } from "../../models/hospedaje/HabitacionResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -152,6 +153,15 @@ export class RegistroDao {
         const user = this.autho.getSessionValida();
         return this.http.get<HospedajeResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=12'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerHabitaciones() : Observable<HabitacionResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<HabitacionResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=19'
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
