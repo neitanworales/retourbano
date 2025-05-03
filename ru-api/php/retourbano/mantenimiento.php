@@ -167,7 +167,7 @@ switch ($opcion) {
         break;
     case 13:
         $id = empty($_REQUEST['id']) ? "0" : $_REQUEST['id'];
-        $habitacion = empty($_REQUEST['habitacion']) ? "0" : $_REQUEST['habitacion'];
+        $habitacion = empty($_REQUEST['habitacion']) ? "" : $_REQUEST['habitacion'];
         $response['resultado'] = $datos->updateHospedaje($id, $habitacion);
         $response["mensaje"] = "Ok";
         http_response_code(200);
@@ -246,6 +246,17 @@ switch ($opcion) {
             $hab['personas']=$personas;
         }
         $response['resultado'] = $habitaciones;
+        $response["mensaje"] = "Ok";
+        http_response_code(200);
+        echo json_encode($response);
+        break;
+    case 20:
+        $personitas = $datos->personasSinHabitacion();
+        $personas = array();
+        foreach ($personitas as &$pers) {
+            array_push($personas, $pers);
+        }
+        $response['personas'] = $personas;
         $response["mensaje"] = "Ok";
         http_response_code(200);
         echo json_encode($response);

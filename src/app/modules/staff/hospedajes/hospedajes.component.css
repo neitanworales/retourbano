@@ -1,3 +1,16 @@
 .elevado {
     padding-top: 1em;
 }
+
+.card-habitacion{
+    margin-right: 2em;
+    margin-bottom: 1em;
+}
+
+.persona-pink {
+    background-color: pink;
+}
+
+.persona-blue {
+    background-color: skyblue;
+}

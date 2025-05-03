@@ -991,8 +991,19 @@ class RetoUrbanoDao
     public function obtenerHabitaciones()
     {
         $que = "SELECT vh.habitacion, count(vh.habitacion) count FROM ywampach_retourbano.view_hospedajes vh
+                WHERE vh.habitacion != ''
                 GROUP BY vh.habitacion
+                HAVING count > 0
                 ORDER BY vh.habitacion ASC";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function personasSinHabitacion()
+    {
+        $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
+                FROM ywampach_retourbano.view_hospedajes vh
+                WHERE habitacion = '' OR habitacion IS NULL
+                ORDER BY staff DESC, nombre";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -1000,7 +1011,7 @@ class RetoUrbanoDao
     {
         $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
                 FROM ywampach_retourbano.view_hospedajes vh
-                WHERE habitacion = '$habitacion'";
+                WHERE habitacion = '$habitacion' ORDER BY staff DESC, nombre";
         return $this->bd->ObtenerConsulta($que);
     }
 
