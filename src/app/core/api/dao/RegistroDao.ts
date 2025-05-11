@@ -137,29 +137,30 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public validarEmail(email: String): Observable<DefaultResponse>{
-        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email='+email, { headers: this.utils.getHeaders() });
+    public validarEmail(email: String): Observable<DefaultResponse> {
+        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email=' + email, { headers: this.utils.getHeaders() });
     }
 
-    public validarCodigo(email: String): Observable<GuerreroResponse>{
-        return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo='+email, { headers: this.utils.getHeaders() });
+    public validarCodigo(email: String): Observable<GuerreroResponse> {
+        return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo=' + email, { headers: this.utils.getHeaders() });
     }
 
-    public validarInscripcion() : Observable<RegistroResponse> {
+    public validarInscripcion(): Observable<RegistroResponse> {
         const session = this.autho.getSessionValida();
-        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id='+session?.id, { headers: this.utils.getHeaders() });
+        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id=' + session?.id, { headers: this.utils.getHeaders() });
     }
 
-    public obtenerHospedajes() : Observable<HospedajeResponse> {
+    public obtenerHospedajes(con_hospedaje: Boolean): Observable<HospedajeResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<HospedajeResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=12'
+            + '&con_hospedaje=' + (con_hospedaje ? '1' : '0')
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
 
-    public obtenerHabitaciones() : Observable<HabitacionResponse> {
+    public obtenerHabitaciones(): Observable<HabitacionResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<HabitacionResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=19'
@@ -168,7 +169,7 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public obtenerPersonasSinHabitacion() : Observable<SinHabitacionResponse> {
+    public obtenerPersonasSinHabitacion(): Observable<SinHabitacionResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<SinHabitacionResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=20'
@@ -180,8 +181,18 @@ export class RegistroDao {
     public actualizarHabitacion(id: number, habitacion: string): Observable<DefaultResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=13&id=' + id 
+            + 'retourbano/mantenimiento.php?opcion=13&id=' + id
             + '&habitacion=' + habitacion
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public actualizarHospedaje(id: number, hospedaje: boolean): Observable<DefaultResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=21&id=' + id
+            + '&hospedaje=' + (hospedaje ? '1' : '0')
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
@@ -209,9 +220,9 @@ export class RegistroDao {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=17'
-            + '&id='+id
-            + '&email='+email
-            + '&email_tutor='+email_tutor
+            + '&id=' + id
+            + '&email=' + email
+            + '&email_tutor=' + email_tutor
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });

@@ -965,24 +965,19 @@ class RetoUrbanoDao
         return $this->bd->ejecutar($que);
     }
 
-    public function obtenerHospedajes()
+    public function obtenerHospedajes($conHospedaje)
     {
-        /*$que="SELECT cg.id,id_guerrero, nombre, 
-            confirmado, 
-            asistencia,
-            hospedaje,  
-            sexo,
-            habitacion
-            FROM campamento_guerreros cg
-            INNER JOIN guerreros g ON g.id = cg.id_guerrero
-            INNER JOIN campamentos c ON c.id_campamento = cg.id_campamento
-            WHERE hospedaje=1 AND c.activo = 1
-            ORDER BY habitacion ASC, sexo ASC";*/
         $que = "SELECT * FROM view_hospedajes";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function updateHospedaje($id, $habitacion)
+    public function updateHospedaje($id, $hospedaje)
+    {
+        $que = "UPDATE campamento_guerreros SET hospedaje = '$hospedaje', habitacion='' WHERE id=$id";
+        return $this->bd->ejecutar($que);
+    }
+
+    public function updateHabitacion($id, $habitacion)
     {
         $que = "UPDATE campamento_guerreros SET habitacion = '$habitacion' WHERE id=$id";
         return $this->bd->ejecutar($que);
@@ -991,7 +986,7 @@ class RetoUrbanoDao
     public function obtenerHabitaciones()
     {
         $que = "SELECT vh.habitacion, count(vh.habitacion) count FROM ywampach_retourbano.view_hospedajes vh
-                WHERE vh.habitacion != ''
+                WHERE vh.habitacion != '' AND hospedaje = 1
                 GROUP BY vh.habitacion
                 HAVING count > 0
                 ORDER BY vh.habitacion ASC";
@@ -1002,7 +997,8 @@ class RetoUrbanoDao
     {
         $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
                 FROM ywampach_retourbano.view_hospedajes vh
-                WHERE habitacion = '' OR habitacion IS NULL
+                WHERE hospedaje = 1
+                AND (habitacion = '' OR habitacion IS NULL)
                 ORDER BY staff DESC, nombre";
         return $this->bd->ObtenerConsulta($que);
     }
@@ -1011,7 +1007,9 @@ class RetoUrbanoDao
     {
         $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
                 FROM ywampach_retourbano.view_hospedajes vh
-                WHERE habitacion = '$habitacion' ORDER BY staff DESC, nombre";
+                WHERE habitacion = '$habitacion' 
+                AND hospedaje = 1 
+                ORDER BY staff DESC, nombre";
         return $this->bd->ObtenerConsulta($que);
     }
 

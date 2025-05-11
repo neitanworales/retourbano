@@ -17,6 +17,7 @@ export class HospedajesComponent implements OnInit {
 
   pageHabitaciones : boolean = true;
   pageHospedajes! : boolean;
+  pageNoHospedajes! : boolean;
 
   pageHabitacionesDisplayStyle = 'block';
   pageHospedajesDisplayStyle = 'none';
@@ -46,7 +47,7 @@ export class HospedajesComponent implements OnInit {
   }
 
   private cargarDatosHospedajes() {
-    this.registroDao.obtenerHospedajes().subscribe(
+    this.registroDao.obtenerHospedajes(this.pageHospedajes).subscribe(
       result => {
         this.hospedajes = result.resultado;
         this.hospedajes.map((p, i) => {
@@ -92,6 +93,24 @@ export class HospedajesComponent implements OnInit {
     hosp.editar = false;
   }
 
+  editarHospedaje(hosp: HospedajeTable) {
+    hosp.editarHospedaje = !hosp.editarHospedaje;
+    if (hosp.editar) {
+      hosp.hospedajeOldValue = hosp.hospedajeOldValue;
+    } else {
+      hosp.hospedaje = hosp.hospedajeOldValue;
+    }
+  }
+
+  guardarHospedaje(hosp: HospedajeTable) { 
+    this.registroDao.actualizarHospedaje(hosp.id!, hosp.hospedaje!).subscribe(
+      result => {
+
+      }
+    );
+    hosp.editarHospedaje = false;
+  }
+
   exportToExcel() {
     let myDate = new Date();
     let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
@@ -119,6 +138,7 @@ export class HospedajesComponent implements OnInit {
     this.pageHabitacionesDisplayStyle = 'block';
     this.pageHabitaciones = true;
     this.pageHospedajes = false;
+    this.pageNoHospedajes = false;
     this.cargarDatosHabitaciones();
   }
 
@@ -127,6 +147,16 @@ export class HospedajesComponent implements OnInit {
     this.pageHabitacionesDisplayStyle = 'none';
     this.pageHabitaciones = false;
     this.pageHospedajes = true;
+    this.pageNoHospedajes = false;
+    this.cargarDatosHospedajes();
+  }
+
+  activarPageNoHospedajes(){
+    this.pageHospedajesDisplayStyle = 'block';
+    this.pageHabitacionesDisplayStyle = 'none';
+    this.pageHabitaciones = false;
+    this.pageHospedajes = false;
+    this.pageNoHospedajes = true;
     this.cargarDatosHospedajes();
   }
 

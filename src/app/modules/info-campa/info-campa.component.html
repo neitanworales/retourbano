@@ -29,8 +29,8 @@
                 <i class="bi bi-info-circle"></i> Informes, dudas y comentarios
             </h2>
             <p>
-                <i class="bi bi-person-exclamation"></i> {{campamento.titularCuenta}} <i class="bi bi-whatsapp"></i> +52
-                {{campamento.contacto1}}
+                <i class="bi bi-person-exclamation"></i> {{campamento.titularCuenta}} <i class="bi bi-whatsapp"></i> 
+                <a href="https://wa.me/52{{campamento.contacto1}}" target="_blank">+52{{campamento.contacto1}}</a>
             </p>
         </div>
         <div class="col-lg-12 col-md-12">
@@ -44,8 +44,8 @@
                 <i class="bi bi-map"></i> Calle Ignacio Allende 500, Centro, 42000 Pachuca de Soto, Hgo.
             </p>
             <p>
-                <i class="bi bi-link"></i> <a href="http://www.convencionbautista.mx/" target="_blank">
-                    http://www.convencionbautista.mx/</a>
+                <i class="bi bi-facebook"></i> <a href="https://www.facebook.com/share/18ndnpUAS8/" target="_blank"> PIB
+                    Pachuca</a>
             </p>
             <iframe
                 src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59237.3961319168!2d-98.80524158477783!3d20.124095608273926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e5bf1b80bb%3A0x784964863c9f7a2a!2sPrimera%20Iglesia%20Bautista%20de%20Pachuca!5e1!3m2!1ses-419!2smx!4v1743313524040!5m2!1ses-419!2smx"
@@ -90,7 +90,8 @@
             <i class="bi bi-cash-coin"></i> Información de pago
         </h2>
         <div class="alert alert-warning" role="alert">
-            <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> Antes de hacer tu pago registráte aquí: <a target="_blank" routerLink="/registro">registro</a>
+            <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> Antes de hacer tu pago
+            registráte aquí: <a target="_blank" routerLink="/registro">registro</a>
         </div>
         <p>
             <i class="bi bi-bank"></i> {{campamento.banco}}
@@ -106,14 +107,13 @@
         </p>
         <p>
             Una vez realizado tu pago, Es importante que nos notifiques tus dep&oacute;sitos en
-            <b>reto&#64;ywampachuca.org</b> o al los whatsapps <b>{{campamento.contacto1}}</b> y/o
+            <b>reto&#64;ywampachuca.org</b> o al los whatsapps <b><a href="https://wa.me/52{{campamento.contacto1}}" target="_blank">{{campamento.contacto1}}</a></b> y/o
             <b>{{campamento.contacto2}}</b> enviando tus
             fichas de depósito y el nombre de la persona inscrita.
             Puedes notificar igualemente por el chat de la p&aacute;gina de <a
                 href="https://www.facebook.com/Retourbanojucumpachuca/">Reto Urbano</a>
         </p>
     </div>
-    <h1>PRÓXIMAMENTE MAS INFORMACIÓN</h1>
 </div>
 <!--div class="row">
     <div class="col">
@@ -218,4 +218,8 @@
         </div>
     </div>
 </div-->
+<app-que-traer></app-que-traer>
+<div class="container section">
+    <h1>PRÓXIMAMENTE MAS INFORMACIÓN</h1>
+</div>
 <app-footer></app-footer>
