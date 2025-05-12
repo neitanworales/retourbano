@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["medicamentos"] = $medicamentos;
                         $variables["telefono"] = $telefono;
                         $variables["hospedaje"] = $hospedaje ? 'Si' : 'No';
-                        $variables["reporte"] = recorrerArray($datos->getIndicadoresArray());
+                        $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray());
 
                         $campamento = $datos->consultarCampamentoActivo();
 
@@ -167,17 +167,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     echo json_encode($response);
 }
 
-function recorrerArray($array)
-{
-    $cadena = "";
-    $ant = 1;
-    $cadena = '<div id="deals">';
-    foreach ($array as $value) {
-        $cadena .= ($value['paquete'] != $ant ? '</div><div id="deals">' : '') . '<div class="sale-item">
-                        <div class="header">' . $value['valor'] . '</div>
-                        <div class="body">' . $value['count'] . '</div>
-                    </div>';
-        $ant = $value['paquete'];
-    }
-    $cadena .= '</div>';
-}
+?>

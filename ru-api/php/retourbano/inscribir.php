@@ -87,7 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $variables["medicamentos"] = $medicamentos;
                 $variables["telefono"] = $telefono;
                 $variables["hospedaje"] = $hospedaje ? 'Si' : 'No';
-                $variables["reporte"] = recorrerArray($datos->getIndicadoresArray());
+                $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray());
 
                 $campamento = $datos->consultarCampamentoActivo();
 
@@ -137,22 +137,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $response["code"] = 400;
     http_response_code(400);
     echo json_encode($response);
-}
-
-function recorrerArray($array)
-{
-    $cadena = "";
-    $ant = 1;
-    $cadena = '<div id="deals">';
-    foreach ($array as $value) {
-        $cadena .= ($value['paquete'] != $ant ? '</div><div id="deals">' : '') . '<div class="sale-item">
-                        <div class="header">' . $value['valor'] . '</div>
-                        <div class="body">' . $value['count'] . '</div>
-                    </div>';
-        $ant = $value['paquete'];
-    }
-    $cadena .= '</div>';
-    return $cadena;
 }
 
 ?>

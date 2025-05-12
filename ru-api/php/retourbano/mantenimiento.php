@@ -270,6 +270,12 @@ switch ($opcion) {
         http_response_code(200);
         echo json_encode($response);
         break;
+    case 22:
+        $response["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray());
+        $response["mensaje"] = "Ok";
+        http_response_code(200);
+        echo json_encode($response);
+        breaK;
     default:
         $response["error"] = "true";
         $response["mensaje"] = "ninguna opcion seleccionada";
