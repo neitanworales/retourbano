@@ -239,4 +239,13 @@ export class RegistroDao {
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
     }
+        
+    public getIndicadores(): Observable<IndicadoresResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<IndicadoresResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=22'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
 }

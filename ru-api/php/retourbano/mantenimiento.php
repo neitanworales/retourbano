@@ -271,7 +271,8 @@ switch ($opcion) {
         echo json_encode($response);
         break;
     case 22:
-        $response["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray());
+        $response["reporte-html"] = $datos->recorrerArray($datos->getIndicadoresArray());
+        $response["reporte"] = $datos->getIndicadoresArray();
         $response["mensaje"] = "Ok";
         http_response_code(200);
         echo json_encode($response);
