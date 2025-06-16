@@ -1,225 +1,65 @@
 <div class="container section">
-    <div class="row">
-        <h1 style="display: none;">Reto Urbano {{campamento.titulo}}</h1>
-        <h2>¡Guerreros!</h2>
-        <p>
-            Gracias por registrarse, Reto Urbano {{campamento.id_campamento}} se acerca en unos días y estamos
-            preparándonos para recibirte.
-        </p>
-        <p>
-            Si aún no te registras da <a target="_blank" routerLink="/registro">click aquí</a>
-        </p>
-    </div>
+    <h1>+ Info {{campamento.titulo}}</h1>
+    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{campamento.id_campamento}} está por comenzar!</h2>
 
-    <div class="row">
-        <h1>Información de campamento</h1>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6 col-md-6">
-            <h2>
-                <i class="bi bi-calendar-event"></i> ¿Cuando?
-            </h2>
-            <p>
-                <i class="bi bi-calendar2-check"></i> 15 - 20 de julio, {{campamento.id_campamento}}
-            </p>
-        </div>
-        <div class="col-lg-6 col-md-6">
-            <h2>
-                <i class="bi bi-info-circle"></i> Informes, dudas y comentarios
-            </h2>
-            <p>
-                <i class="bi bi-person-exclamation"></i> {{campamento.titularCuenta}} <i class="bi bi-whatsapp"></i> 
-                <a href="https://wa.me/52{{campamento.contacto1}}" target="_blank">+52{{campamento.contacto1}}</a>
-            </p>
-        </div>
-        <div class="col-lg-12 col-md-12">
-            <h2>
-                <i class="bi bi-pin-map"></i> ¿Donde?
-            </h2>
-            <p>
-                <i class="bi bi-house"></i> PIB - Primera Iglesia Bautista de Pachuca
-            </p>
-            <p>
-                <i class="bi bi-map"></i> Calle Ignacio Allende 500, Centro, 42000 Pachuca de Soto, Hgo.
-            </p>
-            <p>
-                <i class="bi bi-facebook"></i> <a href="https://www.facebook.com/share/18ndnpUAS8/" target="_blank"> PIB
-                    Pachuca</a>
-            </p>
-            <iframe
-                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59237.3961319168!2d-98.80524158477783!3d20.124095608273926!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e5bf1b80bb%3A0x784964863c9f7a2a!2sPrimera%20Iglesia%20Bautista%20de%20Pachuca!5e1!3m2!1ses-419!2smx!4v1743313524040!5m2!1ses-419!2smx"
-                width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
-        </div>
-    </div>
-
-    <!--div class="row">
-        <div class="col-lg-6 col-md-6" style="display: none;">
-            <h2>
-                <i class="bi bi-airplane"></i> Lugar y hora de llegada
-            </h2>
-            <p>
-                <i class="bi bi-clock"></i> Lunes 24 de Julio de 9:00 - 11:00am
-            </p>
-            <p>
-                <i class="bi bi-geo-alt"></i> Camino el Venado a Téllez km. 1 s/n, 42083, 42083
-                Pachuca de Soto, Hgo.
-            </p>
-
-        </div>
-        <div class="col-lg-6 col-md-6" style="display: none;">
-            <h2>
-                <i class="bi bi-airplane"></i> Fecha y hora de salida
-            </h2>
-            <p>
-                <i class="bi bi-clock"></i>29 de julio a las 11 am
-            </p>
-            <p>
-                Por favor comunicar que los recojan a esa hora.
-            </p>
-        </div-->
-    <div class="col-lg-12 col-md-12">
-        <h2>
-            <i class="bi bi-cash-coin"></i> ¿Costo?
-        </h2>
-        <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
-    </div>
-    <div class="col-lg-6 col-md-6">
-        <h2>
-            <i class="bi bi-cash-coin"></i> Información de pago
-        </h2>
-        <div class="alert alert-warning" role="alert">
-            <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> Antes de hacer tu pago
-            registráte aquí: <a target="_blank" routerLink="/registro">registro</a>
-        </div>
-        <p>
-            <i class="bi bi-bank"></i> {{campamento.banco}}
-        </p>
-        <p>
-            <i class="bi bi-file-person"></i> {{campamento.titularCuenta}}
-        </p>
-        <p>
-            <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{campamento.cuenta}}
-        </p>
-        <p>
-            <i class="bi bi-credit-card-2-back"></i> Tarjeta (SPEI) {{campamento.cuenta}}
-        </p>
-        <p>
-            Una vez realizado tu pago, Es importante que nos notifiques tus dep&oacute;sitos en
-            <b>reto&#64;ywampachuca.org</b> o al los whatsapps <b><a href="https://wa.me/52{{campamento.contacto1}}" target="_blank">{{campamento.contacto1}}</a></b> y/o
-            <b>{{campamento.contacto2}}</b> enviando tus
-            fichas de depósito y el nombre de la persona inscrita.
-            Puedes notificar igualemente por el chat de la p&aacute;gina de <a
-                href="https://www.facebook.com/Retourbanojucumpachuca/">Reto Urbano</a>
-        </p>
-    </div>
+    <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
+    <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de <b>$750 MXN</b></p>
+    <p>Realiza tu depósito a:</p>
+    <p>
+        <i class="bi bi-bank"></i> {{campamento.banco}}
+    </p>
+    <p>
+        <i class="bi bi-file-person"></i> {{campamento.titularCuenta}}
+    </p>
+    <p>
+        <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{campamento.cuenta}}
+    </p>
+    <p>
+        <i class="bi bi-credit-card-2-back"></i> Tarjeta (SPEI) {{campamento.cuenta}}
+    </p>
+    <p>
+        <i class="bi bi-envelope-at"></i> Una vez realizado tu pago, Es importante que nos notifiques tus dep&oacute;sitos en
+        <b>reto&#64;ywampachuca.org</b> o al los whatsapps <b><a href="https://wa.me/52{{campamento.contacto1}}"
+                target="_blank">{{campamento.contacto1}}</a></b> y/o
+        <b>{{campamento.contacto2}}</b> enviando tus
+        fichas de depósito y el nombre de la persona inscrita.
+    </p>
+    <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes como fecha límite el 5 de julio para poder realizarlo</b>
+    </p>
+    <h3>2. <i class="bi bi-car-front-fill"></i> Día de legada:</h3>
+    <p><i class="bi bi-calendar-event"></i> Lunes 15 de julio</p>
+    <p><i class="bi bi-clock"></i> Hora: 2:00 pm</p>
+    <p><i class="bi bi-geo"></i> <b>Punto de encuentro:</b> Recepción del Hotel Plaza El Dorado</p>
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.242746198175!2d-98.73807258991687!3d20.123917981230566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e513612033%3A0x943512eab497c65a!2sHotel%20Plaza%20El%20Dorado!5e0!3m2!1ses!2smx!4v1750114433837!5m2!1ses!2smx"
+        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p><b>Registro abierto:</b> 2:00 PM - 3:30 PM
+    <p>Si te es posible, trae <b>etiquetada</b> tu maleta con tus datos personales.</p>
+    <p>** Ten en cuenta que si no llegas a tiempo al registro tendrás que llegar directamente a la "Primera Iglesia
+        Bautista"</p>
+    <h3>3. Día de salida:</h3>
+    <p><i class="bi bi-calendar-event"></i> Sábado 20 de julio</p>
+    <p><i class="bi bi-clock"></i> Hora: 5:30 PM</p>
+    <p><i class="bi bi-geo"></i> <b>Lugar de entrega:</b> Primera Iglesia Bautista</p>
+    <iframe
+        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.2385463082446!2d-98.73572688991682!3d20.124093281230476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e5bf1b80bb%3A0x784964863c9f7a2a!2sPrimera%20Iglesia%20Bautista%20de%20Pachuca!5e0!3m2!1ses!2smx!4v1750115039174!5m2!1ses!2smx"
+        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"></iframe>
+    <p>¡Llega puntual para recoger a los campers con tiempo y sin prisas!</p>
+    <h3>2. Lista de recomendaciones para traer:</h3>
+    <p><i class="bi bi-check2-circle"></i> Biblia, cuaderno y lapiceros (obligatorio)</p>
+    <p><i class="bi bi-check2-circle"></i> Mochila pequeña o cangurera</p>
+    <p><i class="bi bi-check2-circle"></i> Ropa cómoda para 6 días (tendremos algunas actividades al aire libre )</p>
+    <p><i class="bi bi-check2-circle"></i> chamarra para el frío, el clima tiende a ser frio por las noches</p>
+    <p><i class="bi bi-check2-circle"></i> Accesorios para el sol como gorra, bucket heat, bloqueador etc.</p>
+    <p><i class="bi bi-check2-circle"></i> Artículos de uso personal, todo lo que ocupas para bañarte y arreglarte</p>
+    <p><i class="bi bi-check2-circle"></i> Calzado cómodo que te permita hacer ejercicio y actividades al aire libre.</p>
+    <p><i class="bi bi-check2-circle"></i> Dinero extra para tienda.</p>
+    <p>No es necesario que traigas almohada / cobijas</p>
+    <p>Te recomendamos NO TRAER dispositivos electrónicos extras (iPad, computadora, swich, laptop etc.) <b>Reto Urbano no
+        podrá hacerse responsable de la pérdida o el daño de alguno de estos dispositivos.</b></p>
 </div>
-<!--div class="row">
-    <div class="col">
-        <h2>
-            <i class="bi bi-backpack"></i> Que llevar
-        </h2>
-        <p>
-            Durante el registro pagarás el resto del campamento y se te entregará tu kid de bienvenida (Playera y
-            gafete) es importante que sepas que si te registraste después del 30 de junio tu playera esta sujeta a
-            disponibilidad de talla.
-            Durante el registro deveras entregar el resto de tu pago exacto y en efectivo por favor, es muy
-            importante que puedas traer tu voucher físico o captura de pantalla de tu depósito.
-        </p>
-        <div class="">
 
-            <div class="text-center">Aquí un listado de las cosas que debes de traer al campamento! , te
-                ayudamos a marcar la lista!</div>
-            <ul class="list-group list-group-flush">
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Ganas de aprender y divertirte</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Biblia</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Cuaderno y pluma para apuntar</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Bolsa o mochila pequeña</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Toalla y Almohada ( Las instalaciones proveerán sabanas y
-                            cobija)</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Sueter, Sudadera, Chamarra de lluvia (Se estiman lluvias)
-                        </span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Ropa de deporte o para ensuciar, Gorra</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Artículos de higiene y limpieza personal</span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Dinero extra para compras ( tendremos tienda) </span>
-                    </div>
-                </li>
-                <li class="list-group-item">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <div class="input-group-text"><input type="checkbox"
-                                    aria-label="Checkbox for following text input"></div>
-                        </div><span class="form-control">Ropa para una semana</span>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </div>
-</div-->
-<app-que-traer></app-que-traer>
-<div class="container section">
-    <h1>PRÓXIMAMENTE MAS INFORMACIÓN</h1>
-</div>
+
 <app-footer></app-footer>

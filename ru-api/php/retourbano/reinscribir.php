@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["aceptaPoliticas"] = $aceptaPoliticas;
                         $variables["medicamentos"] = $medicamentos;
                         $variables["telefono"] = $telefono;
-                        $variables["hospedaje"] = $hospedaje ? 'Si' : 'No';
+                        $variables["hospedaje"] = $hospedaje;
                         $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray());
 
                         $campamento = $datos->consultarCampamentoActivo();
