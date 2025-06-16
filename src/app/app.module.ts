@@ -32,7 +32,11 @@ import { HorarioDao } from './core/api/dao/HorarioDao';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatTableModule } from '@angular/material/table'
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { Router } from '@angular/router';
 import { PieChartComponent } from "./components/pie-chart/pie-chart.component";
@@ -76,7 +80,7 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         ReinscripcionComponent,
         HospedajesComponent,
         CuentaComponent,
-        UsuariosComponent, 
+        UsuariosComponent,
         QueTraerComponent
     ],
     bootstrap: [AppComponent],
@@ -86,6 +90,10 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         ReactiveFormsModule,
         PieChartComponent,
         MatTableModule,
+        MatNativeDateModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatTimepickerModule,
         BrowserAnimationsModule],
     providers: [
         {
@@ -107,7 +115,10 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         HorarioDao,
         provideAnimationsAsync(),
         provideHttpClient(withInterceptorsFromDi()),
-        TumbaService
+        TumbaService,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTimepickerModule,
     ]
 })
 export class AppModule { }

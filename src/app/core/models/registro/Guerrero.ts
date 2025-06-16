@@ -35,6 +35,6 @@ export class Guerrero {
     updatePassword?: boolean;
     medicamentos?: String;
     telefono?: String;
-    hospedaje?: boolean | null;
+    hospedaje?: Boolean = false;
     habitacion?: String;
 }

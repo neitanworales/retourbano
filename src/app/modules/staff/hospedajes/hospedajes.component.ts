@@ -32,6 +32,7 @@ export class HospedajesComponent implements OnInit {
     'asistencia',
     'hospedaje',
     'sexo',
+    'edad',
     'habitacion'
   ];
 

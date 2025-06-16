@@ -1009,7 +1009,7 @@ class RetoUrbanoDao
 
     public function personasSinHabitacion()
     {
-        $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
+        $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion, edad 
                 FROM ywampach_retourbano.view_hospedajes vh
                 WHERE hospedaje = 1
                 AND (habitacion = '' OR habitacion IS NULL)
@@ -1019,7 +1019,7 @@ class RetoUrbanoDao
 
     public function personasPorHabitacion($habitacion)
     {
-        $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion 
+        $que = "SELECT id, id_guerrero, nombre, sexo, staff, habitacion, edad 
                 FROM ywampach_retourbano.view_hospedajes vh
                 WHERE habitacion = '$habitacion' 
                 AND hospedaje = 1 
