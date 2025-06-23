@@ -43,9 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             http_response_code(200);
             echo json_encode($response);
         } else {
-            $response["mensaje"] = "Not found $email";
+            $response["mensaje"] = "No se encontró este correo: $email - favor de validar.";
             $response["code"] = 404;
-            http_response_code(404);
+            http_response_code(200);
             echo json_encode($response);
         }
     } else {
