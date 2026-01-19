@@ -10,22 +10,32 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 })
 export class HomeComponent implements OnInit {
 
+  campamentos?: Campamento[];
+  isLoading: boolean = true;
+
   constructor(
     private campamentoDao: CampamentoDao
-  ) { }
-
-  campamento: Campamento = new Campamento();
-
-  ngOnInit(): void {
+  ) { 
     this.loadCampamento();
   }
 
+  ngOnInit(): void {
+    
+  }
+
   private loadCampamento() {
-    this.campamentoDao.getCampamentoActivo().subscribe(
-      result => {
-        this.campamento = result.resultado![0];
+    this.campamentoDao.getCampamentoActivo().subscribe({
+      next: (result) => {
+        console.log("Campamentos cargados: ", result.resultado);
+        this.campamentos = result.resultado!;
+        console.log("Campamentos asignados: ", this.campamentos);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar campamentos:', error);
+        this.isLoading = false;
       }
-    );
+    });
   }
 
 }

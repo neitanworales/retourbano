@@ -13,6 +13,10 @@ import { HttpClient } from "@angular/common/http";
 import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
 import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
 import { AuthService } from "../../services/auth.service";
+import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
+import { CampamentoGuerrerosResponse } from "../../models/registro/CampamentoGuerreros";
+import { HabitacionResponse } from "../../models/hospedaje/HabitacionResponse";
+import { SinHabitacionResponse } from "../../models/hospedaje/SinHabitacionResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -133,23 +137,42 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public validarEmail(email: String): Observable<DefaultResponse>{
-        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email='+email, { headers: this.utils.getHeaders() });
+    public validarEmail(email: String): Observable<DefaultResponse> {
+        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email=' + email, { headers: this.utils.getHeaders() });
     }
 
-    public validarCodigo(email: String): Observable<GuerreroResponse>{
-        return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo='+email, { headers: this.utils.getHeaders() });
+    public validarCodigo(email: String): Observable<GuerreroResponse> {
+        return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo=' + email, { headers: this.utils.getHeaders() });
     }
 
-    public validarInscripcion() : Observable<RegistroResponse> {
+    public validarInscripcion(): Observable<RegistroResponse> {
         const session = this.autho.getSessionValida();
-        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id='+session?.id, { headers: this.utils.getHeaders() });
+        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id=' + session?.id, { headers: this.utils.getHeaders() });
     }
 
-    public obtenerHospedajes() : Observable<HospedajeResponse> {
+    public obtenerHospedajes(con_hospedaje: Boolean): Observable<HospedajeResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<HospedajeResponse>(environment.apiUrl
             + 'retourbano/mantenimiento.php?opcion=12'
+            + '&con_hospedaje=' + (con_hospedaje ? '1' : '0')
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerHabitaciones(): Observable<HabitacionResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<HabitacionResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=19'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerPersonasSinHabitacion(): Observable<SinHabitacionResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<SinHabitacionResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=20'
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });
@@ -158,8 +181,69 @@ export class RegistroDao {
     public actualizarHabitacion(id: number, habitacion: string): Observable<DefaultResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=13&id=' + id 
+            + 'retourbano/mantenimiento.php?opcion=13&id=' + id
             + '&habitacion=' + habitacion
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public actualizarHospedaje(id: number, hospedaje: boolean): Observable<DefaultResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=21&id=' + id
+            + '&hospedaje=' + (hospedaje ? '1' : '0')
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerUsuarios(): Observable<MtoLoginResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<MtoLoginResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=15'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public obtenerRepetidos(): Observable<CampamentoGuerrerosResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<CampamentoGuerrerosResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=16'
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public updateEmailTutor(id: number, email: String, email_tutor: String): Observable<DefaultResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=17'
+            + '&id=' + id
+            + '&email=' + email
+            + '&email_tutor=' + email_tutor
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+
+    public actualizarPassword(email: String, password: String): Observable<DefaultResponse> {
+        const usernameSafe = encodeURIComponent(email.toString());
+        const passwordSafe = encodeURIComponent(password.toString());
+        const user = this.autho.getSessionValida();
+        return this.http.get<DefaultResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=18&email=' + usernameSafe
+            + '&password=' + passwordSafe
+            + '&user=' + user?.id
+            + '&token=' + user?.token
+            , { headers: this.utils.getHeaders() });
+    }
+        
+    public getIndicadores(): Observable<IndicadoresResponse> {
+        const user = this.autho.getSessionValida();
+        return this.http.get<IndicadoresResponse>(environment.apiUrl
+            + 'retourbano/mantenimiento.php?opcion=22'
             + '&user=' + user?.id
             + '&token=' + user?.token
             , { headers: this.utils.getHeaders() });

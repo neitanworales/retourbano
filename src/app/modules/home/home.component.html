@@ -1,4 +1,133 @@
-<main class="gradietne text-center">
+<!-- Masthead-->
+<header class="masthead">
+    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
+        <div class="d-flex justify-content-center">
+            <div class="text-center">
+                <h1 class="mx-auto my-0 text-uppercase">RETO URBANO</h1>
+                <h2 class="text-white-50 mx-auto mt-2 mb-5">reto ¿que somos?</h2>
+                <a class="btn btn-primary" routerLink="/info" [queryParams]="{ id_ciudad: '1' }">Pachuca</a>
+                <a class="btn btn-primary" routerLink="/info" [queryParams]="{ id_ciudad: '2' }">Puebla</a>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- About-->
+<section class="about-section text-center" id="about">
+    <div class="container px-4 px-lg-5">
+        <!-- Spinner de carga -->
+        <div *ngIf="isLoading" class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="spinner-border text-white" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+        <!-- Contenido cuando ya cargó -->
+        <div *ngIf="!isLoading" class="row gx-4 gx-lg-5 justify-content-center">
+            <div *ngFor="let campamento of campamentos" class="col-lg-6">
+                <h1 class="text-white mb-4">{{campamento.titulo}}</h1>
+                <div class="row">
+                    <div class="text-white text-center col-md-12">
+                        <h2>{{campamento.ciudad?.nombre}}</h2>
+                        <h3>{{campamento.fecha_inicio | date:'dd MMMM' }} a {{campamento.fecha_termino | date:'dd MMMM' }}</h3>
+                    </div>
+                    <div class="text-center col-md-12 section">
+                        <app-registro-avance [showForm]="false"
+                            [configuracion]="campamento.configuracion"></app-registro-avance>
+                    </div>
+                    <div class="text-center col-md-12 section">
+                        <a routerLink="/registro" [queryParams]="{ id_ciudad: campamento.ciudad?.id_ciudad }" class="btn btn-danger">Ir a
+                            inscripciones</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="mensaje-section bg-light text-center" id="mensaje">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-6 col-lg-6">
+                <figure>
+                    <img src="assets/img/richz.jpg" class="img-fluid">
+                    <figcaption>Richz Volta - Director Youth with a Mission Pachuca
+                    </figcaption>
+                </figure>
+            </div>
+            <div class="col-xs-12 col-md-6 col-lg-6">
+                <blockquote class="blockquote">
+                    <p>! Hola Guerreros !</p>
+                    <p>Los saludamos desde Juventud con Una Misión Pachuca.</p>
+                    <p>Este año estamos cumpliendo 16 años de Reto Urbano, es increíble como pasa el tiempo y
+                        estamos emocionados de esta nueva etapa de RU.</p>
+                    <p>Queremos invitarles a que nuevamente a sean parte de la historia de Juventud con Una Misión.
+                    </p>
+
+                    <p>Hace algunas décadas un Joven llamado Loren Cunningham tuvo la visión de Olas de mar que al
+                        estrellarse en la arena se convertían en Jovenes que llegaban a los diferentes países del
+                        mundo llevando el Evangelio a los lugares mas escondidos de la tierra.</p>
+
+                    <p>Este año queremos enfocar en invitarte a ser parte de esas olas de Jovenes que se movilizarán
+                        a todo el mundo y a las esferas de la sociedad a llevar el evangelio de Cristo atraves del
+                        fuego de su Espiritu.</p>
+
+                    <p>Este año nuestra sede será nuevamente la Iglesia PIB del centro de Pachuca, y como estancia
+                        podrás elegir entre buscar tu lugar o quedarte en el hotel El Dorado.</p>
+
+                    <p>También como ya es tradición en Reto, tendremos 3 días de enseñanza, entrenamiento, talleres
+                        y los últimos 2 días tomaremos autobuses y saldremos a llevar el mensaje de Cristo através
+                        de artes urbanas.</p>
+
+                    <p>Estamos esperando jovenes de diferentes países es así que nuestro campamento será bilingüe.
+                    </p>
+
+                    <p>Inscríbete ya que el cupo es limitado.</p>
+
+                    <p><b>¿Reto que somos!?</b></p>
+
+                    <footer class="blockquote-footer">Richz Volta </footer>
+                </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+<section id="quienes" class="section pt-o">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h1>¿Qué es Reto Urbano?</h1>
+                <p>Reto urbano es un Campamento/Entrenamiento, ministerio de Juventud con una Misión Pachuca.</p>
+                <p>Reto es un entrenamiento para adolescentes y jovenes de 13 a 21 años que quieran dar un paso mas
+                    profundo en su relación con Dios. RU es un campamento donde queremos que conozcan a Dios para
+                    darlo a conocer, donde queremos que reciban revelación de la palabra pero al mismo tiempo
+                    ayudarte a formar tu caracter.</p>
+                <p><b>En RU te retaremos a vivir y obedecer radicalmente, renovando tu manera de pensar para ser un
+                        fiel seguidor de Cristo.</b></p>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h1>Misión</h1>Nuestra Mision es dar valor a los adolescentes y jovenes, promoviéndoles y
+                animándoles a ser influencia en la sociedad, guiándoles a encontrar sus identidad, propósito,
+                misión, visión y vocación a través de un Discipulado integral, específicamente en las 4 areas de
+                desarrollo, basado en el ejemplo de Jesus en Lucas:<blockquote class="blockquote">“Y Jesús crecía en
+                    sabiduría y en estatura, y en gracia para con Dios y los hombres.”<footer class="blockquote-footer">
+                        Lucas 2:52</footer>
+                </blockquote>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col">
+                <h1>Visión</h1>
+                <p>Ver una generación transformada a través de una Cosmovision Bíblica, teniendo como misión ser
+                    influencia en las 7 esferas de la sociedad y así presentar el evangelio de Cristo en su vida,
+                    trabajo y vocación. Creando una generacion de misioneros que enseñan a otros y continuan la gran
+                    comisión, formados en caracter, entendimiento Bíblico y guiados por el Espíritu Santo.</p>
+            </div>
+        </div>
+    </div>
+</section>
+<!--main class="gradietne text-center">
     <img class="img-fluid" src="assets/img/main/ru2025backgroud.png">
 </main>
 
@@ -22,53 +151,7 @@
         </div>
     </div>
     <hr>
-    <div id="mensaje" class="section pt-o">
-        <div class="container">
-            <div class="row">
-                <div class="col-xs-12 col-md-6 col-lg-6">
-                    <figure>
-                        <img src="assets/img/richz.jpg" class="img-fluid">
-                        <figcaption>Richz Volta - Director Youth with a Mission Pachuca
-                        </figcaption>
-                    </figure>
-                </div>
-                <div class="col-xs-12 col-md-6 col-lg-6">
-                    <blockquote class="blockquote">
-                        <p>! Hola Guerreros !</p>
-                        <p>Los saludamos desde Juventud con Una Misión Pachuca.</p>
-                        <p>Este año estamos cumpliendo 16 años de Reto Urbano, es increíble como pasa el tiempo y
-                            estamos emocionados de esta nueva etapa de RU.</p>
-                        <p>Queremos invitarles a que nuevamente a sean parte de la historia de Juventud con Una Misión.
-                        </p>
-
-                        <p>Hace algunas décadas un Joven llamado Loren Cunningham tuvo la visión de Olas de mar que al
-                            estrellarse en la arena se convertían en Jovenes que llegaban a los diferentes países del
-                            mundo llevando el Evangelio a los lugares mas escondidos de la tierra.</p>
-
-                        <p>Este año queremos enfocar en invitarte a ser parte de esas olas de Jovenes que se movilizarán
-                            a todo el mundo y a las esferas de la sociedad a llevar el evangelio de Cristo atraves del
-                            fuego de su Espiritu.</p>
-
-                        <p>Este año nuestra sede será nuevamente la Iglesia PIB del centro de Pachuca, y como estancia
-                            podrás elegir entre buscar tu lugar o quedarte en el hotel El Dorado.</p>
-
-                        <p>También como ya es tradición en Reto, tendremos 3 días de enseñanza, entrenamiento, talleres
-                            y los últimos 2 días tomaremos autobuses y saldremos a llevar el mensaje de Cristo através
-                            de artes urbanas.</p>
-
-                        <p>Estamos esperando jovenes de diferentes países es así que nuestro campamento será bilingüe.
-                        </p>
-
-                        <p>Inscríbete ya que el cupo es limitado.</p>
-
-                        <p><b>¿Reto que somos!?</b></p>
-
-                        <footer class="blockquote-footer">Richz Volta </footer>
-                    </blockquote>
-                </div>
-            </div>
-        </div>
-    </div>
+    
     <hr>
     <div id="quienes" class="section pt-o">
         <div class="container">
@@ -750,124 +833,7 @@
     </div>
     <hr>
     <div id="registro" class="section pt-o">
-        <div class="container">
-            <div class="row">
-                <div class="col">
-                    <h2 class="text-center">¿Que traer al campamento?</h2>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6"><img alt="..." class="img-rounded img-fluid"
-                        src="assets/img/media/62.d6ced3eb.jpeg" style="width: 100%;"></div>
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="">
-
-                            <div class="text-center">Aquí un listado de las cosas que debes de traer al campamento! , te
-                                ayudamos a marcar la lista!</div>
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Biblia</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Cuaderno para apuntar</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Almohada</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Ropa de deporte</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Mochila</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Cubrebocas</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Gel sanitizante</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Ropa para una semana</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Utensilios de higiene personal</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Toalla</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Dinero extra para tienda</span>
-                                    </div>
-                                </li>
-                                <li class="list-group-item">
-                                    <div class="input-group">
-                                        <div class="input-group-prepend">
-                                            <div class="input-group-text"><input type="checkbox"
-                                                    aria-label="Checkbox for following text input"></div>
-                                        </div><span class="form-control">Ganas de aprender y divertirte</span>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <app-que-traer></app-que-traer>
     </div>
 </div>
-<app-footer></app-footer>
+<app-footer></app-footer-->

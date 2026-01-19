@@ -1,12 +1,9 @@
-body {
-    background-color: black !important;
-}
-.img-main{
-    height: 35em;
+.section {
+    margin-bottom: 3em;
 }
 
-.section{
-    margin-top: 8em;
+.mensaje-section {
+    padding: 4em 0;
 }
 
 .blockquote-footer{

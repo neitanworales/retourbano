@@ -1,7 +1,9 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Habitacion } from 'src/app/core/models/hospedaje/Habitacion';
 import { HospedajeTable } from 'src/app/core/models/hospedaje/HospedajeTable';
+import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -13,13 +15,24 @@ import * as XLSX from 'xlsx';
 })
 export class HospedajesComponent implements OnInit {
 
+  pageHabitaciones : boolean = true;
+  pageHospedajes! : boolean;
+  pageNoHospedajes! : boolean;
+
+  pageHabitacionesDisplayStyle = 'block';
+  pageHospedajesDisplayStyle = 'none';
+
   hospedajes: HospedajeTable[] = new Array();
+  habitaciones: Habitacion[] = new Array();
+  personasSinHabitacion: Guerrero[] = new Array();
+
   columnsToDisplay = [
     'nombre',
     'confirmado',
     'asistencia',
     'hospedaje',
     'sexo',
+    'edad',
     'habitacion'
   ];
 
@@ -31,17 +44,34 @@ export class HospedajesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.cargarDatos();
+    this.cargarDatosHabitaciones();
   }
 
-  private cargarDatos() {
-    this.registroDao.obtenerHospedajes().subscribe(
+  private cargarDatosHospedajes() {
+    this.registroDao.obtenerHospedajes(this.pageHospedajes).subscribe(
       result => {
         this.hospedajes = result.resultado;
         this.hospedajes.map((p, i) => {
           p.editar = false;
           return p;
         });
+      }
+    );
+  }
+
+  cargarHabitaciones(){
+    this.cargarDatosHabitaciones();
+  }
+
+  private cargarDatosHabitaciones(){
+    this.registroDao.obtenerHabitaciones().subscribe(
+      result => {
+        this.habitaciones = result.resultado;
+      }
+    );
+    this.registroDao.obtenerPersonasSinHabitacion().subscribe(
+      result => {
+        this.personasSinHabitacion = result.personas!;
       }
     );
   }
@@ -64,6 +94,24 @@ export class HospedajesComponent implements OnInit {
     hosp.editar = false;
   }
 
+  editarHospedaje(hosp: HospedajeTable) {
+    hosp.editarHospedaje = !hosp.editarHospedaje;
+    if (hosp.editar) {
+      hosp.hospedajeOldValue = hosp.hospedajeOldValue;
+    } else {
+      hosp.hospedaje = hosp.hospedajeOldValue;
+    }
+  }
+
+  guardarHospedaje(hosp: HospedajeTable) { 
+    this.registroDao.actualizarHospedaje(hosp.id!, hosp.hospedaje!).subscribe(
+      result => {
+
+      }
+    );
+    hosp.editarHospedaje = false;
+  }
+
   exportToExcel() {
     let myDate = new Date();
     let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
@@ -83,7 +131,34 @@ export class HospedajesComponent implements OnInit {
   }
 
   cargarTodos() {
-    this.cargarDatos();
+    this.cargarDatosHospedajes();
+  }
+
+  activarPageHabitaciones(){
+    this.pageHospedajesDisplayStyle = 'none';
+    this.pageHabitacionesDisplayStyle = 'block';
+    this.pageHabitaciones = true;
+    this.pageHospedajes = false;
+    this.pageNoHospedajes = false;
+    this.cargarDatosHabitaciones();
+  }
+
+  activarPageHospedajes(){
+    this.pageHospedajesDisplayStyle = 'block';
+    this.pageHabitacionesDisplayStyle = 'none';
+    this.pageHabitaciones = false;
+    this.pageHospedajes = true;
+    this.pageNoHospedajes = false;
+    this.cargarDatosHospedajes();
+  }
+
+  activarPageNoHospedajes(){
+    this.pageHospedajesDisplayStyle = 'block';
+    this.pageHabitacionesDisplayStyle = 'none';
+    this.pageHabitaciones = false;
+    this.pageHospedajes = false;
+    this.pageNoHospedajes = true;
+    this.cargarDatosHospedajes();
   }
 
 }

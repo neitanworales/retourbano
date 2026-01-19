@@ -1,4 +1,10 @@
 <app-navbar-seguimiento></app-navbar-seguimiento>
 <div class="container" style="margin-top: 1em;">
-    <h1>Cuenta</h1>
+    <h1>Cuenta {{session.id}}</h1>
+    <h2>Datos Generales</h2>
+    <p>Nombre: {{session.guerrero?.nombre}}</p>
+    <p>Email: {{session.guerrero?.email}}</p>
+    <p>Sexo: {{session.guerrero?.sexo}}</p>
+    <p>Fecha de Nacimiento: {{session.guerrero?.fechaNac}}</p>
+    <p>Edad: {{session.guerrero?.edad}}</p>
 </div>

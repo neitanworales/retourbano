@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
+import { Session } from 'src/app/core/models/login/Session';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-cuenta',
@@ -8,8 +10,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class CuentaComponent implements OnInit {
   
+  session!: Session;
+
+  constructor(){
+    this.session = inject(AuthService).getSession()!;
+  }
+
   ngOnInit(): void {
-    throw new Error('Method not implemented.');
+    
   }
 
 }

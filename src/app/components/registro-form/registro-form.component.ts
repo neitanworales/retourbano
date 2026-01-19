@@ -57,12 +57,15 @@ export class RegistroFormComponent implements OnInit {
   ngOnInit(): void {
     if (!this.actualizar) {
       this.model.sexo = "";      
-      this.model.hospedaje = null;
+      this.model.hospedaje = true;
       this.model.year = 0;
       this.model.month = 0;
       this.model.day = 0;
     } 
     this.model.talla = "";
+    this.model.alergias = "";
+    this.model.medicamentos = "";
+    this.model.razones = "";
 
     /*this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";

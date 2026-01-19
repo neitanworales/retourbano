@@ -32,7 +32,11 @@ import { HorarioDao } from './core/api/dao/HorarioDao';
 import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS, provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatTableModule } from '@angular/material/table' 
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table'
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatTimepickerModule } from '@angular/material/timepicker';
 import { provideCharts, withDefaultRegisterables } from 'ng2-charts';
 import { Router } from '@angular/router';
 import { PieChartComponent } from "./components/pie-chart/pie-chart.component";
@@ -46,8 +50,11 @@ import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.compo
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { AuthInterceptor } from './core/services/ auth.interceptor';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
+import { TumbaService } from './core/services/tumbaService';
+import { QueTraerComponent } from "./components/que-traer/que-traer.component";
 
-@NgModule({ declarations: [
+@NgModule({
+    declarations: [
         AppComponent,
         HomeComponent,
         RegistroComponent,
@@ -73,16 +80,22 @@ import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
         ReinscripcionComponent,
         HospedajesComponent,
         CuentaComponent,
-        UsuariosComponent
+        UsuariosComponent,
+        QueTraerComponent
     ],
-    bootstrap: [AppComponent], 
+    bootstrap: [AppComponent],
     imports: [BrowserModule,
         AppRoutingModule,
         FormsModule,
         ReactiveFormsModule,
         PieChartComponent,
         MatTableModule,
-        BrowserAnimationsModule], providers: [
+        MatNativeDateModule,
+        MatFormFieldModule,
+        MatDatepickerModule,
+        MatTimepickerModule,
+        BrowserAnimationsModule],
+    providers: [
         {
             provide: 'router', useFactory: (rotuer: Router) => {
                 return new Router();
@@ -101,6 +114,11 @@ import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
         AuthService,
         HorarioDao,
         provideAnimationsAsync(),
-        provideHttpClient(withInterceptorsFromDi())
-    ] })
+        provideHttpClient(withInterceptorsFromDi()),
+        TumbaService,
+        MatDatepickerModule,
+        MatNativeDateModule,
+        MatTimepickerModule,
+    ]
+})
 export class AppModule { }
