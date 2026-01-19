@@ -387,13 +387,13 @@ class RetoUrbanoDao
         return $cadena;
     }
 
-    public function obtenerConfiguracion()
+    public function obtenerConfiguracion($id_campamento, $id_ciudad)
     {
         $que = "SELECT c.fecha_apertura, c.fecha_maxima, c.umbral, c.maximo_inscr, 
         (SELECT COUNT(*) FROM campamento_guerreros cg WHERE status = 'A' AND cg.id_campamento=c.id_campamento ) inscritos, 
         FLOOR((100*(SELECT COUNT(*) FROM campamento_guerreros cg WHERE status = 'A'  AND cg.id_campamento=c.id_campamento))/c.maximo_inscr) porcentaje,
         c.maximo_inscr-(SELECT COUNT(*) FROM campamento_guerreros cg WHERE status = 'A'  AND cg.id_campamento=c.id_campamento) disponibles
-        FROM campamentos c WHERE c.activo=1;";
+        FROM campamentos c WHERE id_ciudad = $id_ciudad AND id_campamento=$id_campamento  AND c.activo=1";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -1067,5 +1067,11 @@ class RetoUrbanoDao
     {
         $que = "UPDATE ywampach_retourbano.guerreros SET email='$email', email_tutor='$email_tutor' WHERE id=$id";
         return $this->bd->ejecutar($que);
+    }
+
+    public function consultarCiudadById($id_ciudad)
+    {
+        $que = "SELECT * FROM ciudades WHERE id=$id_ciudad";
+        return $this->bd->ObtenerConsulta($que);
     }
 }

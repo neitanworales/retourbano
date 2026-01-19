@@ -20,17 +20,20 @@ export class RegistroAvanceComponent implements OnInit {
   @Input()
   showForm?: boolean;
 
+  @Input()
+  configuracion?: Avance;
+
   constructor(
     public registroDao : RegistroDao
   ) {
-    this.getRegistroAvance();
    }
 
   ngOnInit(): void {
+    this.getRegistroAvance();
   }
 
   private getRegistroAvance(){
-    this.registroDao.getAvanceRegistro().subscribe(
+    /*this.registroDao.getAvanceRegistro().subscribe(
       result => {
         var avances = result.resultado;
         if(Array.isArray(avances)){
@@ -43,7 +46,17 @@ export class RegistroAvanceComponent implements OnInit {
           this.lugaresDisponibles = this.avance?.disponibles>0;
         }
       }
-    );
+    );*/
+
+    console.log("Configuracion recibida: ", this.configuracion);
+    this.avance = this.configuracion;
+    this.avanceStyle = "width: "+this.avance!.porcentaje!+"%;";
+    this.avance!.fecha_maxima = new Date((this.avance!.fecha_maxima+"").replace(/-/g, "/"));
+    this.avance!.fecha_apertura= new Date((this.avance!.fecha_apertura+"").replace(/-/g, "/"));
+    this.abiertas = this.today.getTime()>=this.avance!.fecha_apertura?.getTime();
+    this.cerradas = this.today.getTime()>this.avance!.fecha_maxima?.getTime();
+    this.lugaresDisponibles = this.avance!.disponibles>0;
+    
   }
 
 }

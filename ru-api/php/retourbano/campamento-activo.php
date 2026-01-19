@@ -16,23 +16,29 @@ require './RetoUrbanoDao.class.php';
 $datos = RetoUrbanoDao::getInstance();
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $campamento = $datos->consultarCampamentoActivo();
+    $campamentos = $datos->consultarCampamentoActivo();
 
-    $costos = $datos->consultarCostosByCampamento($campamento[0]['id_campamento']);
-    
-    foreach ($costos as &$costo)
+    foreach ($campamentos as &$campamento)
     {
-        $incluyeArray = explode(',', $costo['incluye']);
-        $incluyes = array();
-        foreach ($incluyeArray as &$includes)
+        $campamento['configuracion'] = $datos->obtenerConfiguracion($campamento['id_campamento'], $campamento['id_ciudad'])[0];
+        $campamento['ciudad'] = $datos->consultarCiudadById($campamento['id_ciudad'])[0];
+        $costos = $datos->consultarCostosByCampamento($campamento['id_campamento']);
+        
+        foreach ($costos as &$costo)
         {
-            array_push($incluyes, $includes);
+            $incluyeArray = explode(',', $costo['incluye']);
+            $incluyes = array();
+            foreach ($incluyeArray as &$includes)
+            {
+                array_push($incluyes, $includes);
+            }
+            $costo['incluye'] = $incluyes;
         }
-        $costo['incluye'] = $incluyes;
-    }
 
-    $campamento[0]['costos'] = $costos;
-    $response["resultado"] = $campamento;
+        $campamento['costos'] = $costos;
+    }
+    $response["resultado"] = $campamentos;
+    
     $response["mensaje"] = "Ok";
     $response["code"] = 200;
     http_response_code(200);
