@@ -1,36 +1,36 @@
-<div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
-            <h1>Registro</h1>
-            <h2>¿Estás listo para aceptar el Reto?</h2>
+<section class="section main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
+                <h1>Registro</h1>
+                <h2>¿Estás listo para aceptar el Reto?</h2>
+            </div>
+            <div class="col-xs-12 col-md-12 col-lg-12">
+                <img alt="..." class="img-fluid" src="assets/img/media/megs.4d73356b.jpg" style="width: 100%;">
+            </div>
         </div>
-        <div class="col-xs-12 col-md-12 col-lg-12">
-            <img alt="..." class="img-fluid" src="assets/img/media/megs.4d73356b.jpg" style="width: 100%;">
+        <hr>
+        <div class="row">
+            <div class="col">
+                <h1>{{campamento.titulo}}</h1>
+            </div>
         </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col">
-            <h1>{{campamento.titulo}}</h1>
+        <div class="row">
+            <div class="col">
+                <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
+        <div class="row">
+            <div class="col">
+                <div class="alert alert-primary" role="alert">
+                    Primeros 50 en registrarse recibirán un regalo sorpresa al comenzar el campamento
+                </div>
+            </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="alert alert-primary" role="alert">
-                Primeros 50  en registrarse recibirán un regalo sorpresa al comenzar el campamento
+        <div class="row">
+            <div class="col">
+                <app-registro-avance [showForm]="true"></app-registro-avance>
             </div>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <app-registro-avance [showForm]="true"></app-registro-avance>
-        </div>
-    </div>
-</div>
-
-<app-footer></app-footer>
+</section>

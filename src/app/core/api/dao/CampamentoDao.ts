@@ -23,6 +23,10 @@ export class CampamentoDao {
     }
 
     public getCampamentoActivo(): Observable<CampamentoResponse> {
-        return this.http.get<CampamentoResponse>(environment.apiUrl+'retourbano/campamento-activo.php');
+        return this.http.get<CampamentoResponse>(environment.apiUrl+'retourbano/campamento-activo.php', { headers: this.utils.getHeaders() });
+    }
+
+    public getCampamentoInfo(idCampamento: number): Observable<CampamentoResponse> {
+        return this.http.get<CampamentoResponse>(environment.apiUrl+'retourbano/campamento-activo.php?id_campamento='+idCampamento, { headers: this.utils.getHeaders() });
     }
 }

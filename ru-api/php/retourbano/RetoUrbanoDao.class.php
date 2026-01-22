@@ -954,6 +954,12 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
+        public function consultarCampamentoActivoById($id_campamento)
+    {
+        $que = "SELECT * FROM campamentos WHERE activo=1 AND id_campamento=$id_campamento ORDER BY id_campamento DESC";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
     public function consultarCostosByCampamento($campemento)
     {
         $que = "SELECT * FROM campamento_costos WHERE campamento_id=$campemento";

@@ -1,9 +1,10 @@
-<div class="container section">
-    <h1>+ Info {{campamento.titulo}}</h1>
-    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{campamento.id_campamento}} está por comenzar!</h2>
+<section class="container section main-section">
+    <h1>+ Info - {{campamento.ciudad?.nombre}}</h1>
+    <h1>{{campamento.titulo}}</h1>
+    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{campamento.year}} está por comenzar!</h2>
 
     <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
-    <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de <b>$750 MXN</b></p>
+    <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de <b>${{campamento.pago_minimoMX}} MXN</b></p>
     <p>Realiza tu depósito a:</p>
     <p>
         <i class="bi bi-bank"></i> {{campamento.banco}}
@@ -18,17 +19,19 @@
         <i class="bi bi-credit-card-2-back"></i> Tarjeta (SPEI) {{campamento.cuenta}}
     </p>
     <p>
-        <i class="bi bi-envelope-at"></i> Una vez realizado tu pago, Es importante que nos notifiques tus dep&oacute;sitos en
-        <b>reto&#64;ywampachuca.org</b> o al los whatsapps <b><a href="https://wa.me/52{{campamento.contacto1}}"
+        <i class="bi bi-envelope-at"></i> Una vez realizado tu pago, Es importante que nos notifiques tus
+        dep&oacute;sitos en
+        <b>{{campamento.email_contacto}}</b> o al los whatsapps <b><a href="https://wa.me/52{{campamento.contacto1}}"
                 target="_blank">{{campamento.contacto1}}</a></b> y/o
         <b>{{campamento.contacto2}}</b> enviando tus
         fichas de depósito y el nombre de la persona inscrita.
     </p>
-    <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes como fecha límite el 5 de julio para poder realizarlo</b>
+    <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes como fecha
+            límite el 5 de julio para poder realizarlo</b>
     </p>
     <h3>2. <i class="bi bi-car-front-fill"></i> Día de legada:</h3>
-    <p><i class="bi bi-calendar-event"></i> Martes 15 de julio</p>
-    <p><i class="bi bi-clock"></i> Hora: 2:00 pm</p>
+    <p><i class="bi bi-calendar-event"></i> {{campamento.fecha_inicio | date}}</p>
+    <p><i class="bi bi-clock"></i> {{campamento.fecha_inicio | date:'shortTime'}}</p>
     <p><i class="bi bi-geo"></i> <b>Punto de encuentro:</b> Recepción del Hotel Plaza El Dorado</p>
     <iframe
         src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.242746198175!2d-98.73807258991687!3d20.123917981230566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e513612033%3A0x943512eab497c65a!2sHotel%20Plaza%20El%20Dorado!5e0!3m2!1ses!2smx!4v1750114433837!5m2!1ses!2smx"
@@ -54,12 +57,11 @@
     <p><i class="bi bi-check2-circle"></i> chamarra para el frío, el clima tiende a ser frio por las noches</p>
     <p><i class="bi bi-check2-circle"></i> Accesorios para el sol como gorra, bucket heat, bloqueador etc.</p>
     <p><i class="bi bi-check2-circle"></i> Artículos de uso personal, todo lo que ocupas para bañarte y arreglarte</p>
-    <p><i class="bi bi-check2-circle"></i> Calzado cómodo que te permita hacer ejercicio y actividades al aire libre.</p>
+    <p><i class="bi bi-check2-circle"></i> Calzado cómodo que te permita hacer ejercicio y actividades al aire libre.
+    </p>
     <p><i class="bi bi-check2-circle"></i> Dinero extra para tienda.</p>
     <p>No es necesario que traigas almohada / cobijas</p>
-    <p>Te recomendamos NO TRAER dispositivos electrónicos extras (iPad, computadora, swich, laptop etc.) <b>Reto Urbano no
-        podrá hacerse responsable de la pérdida o el daño de alguno de estos dispositivos.</b></p>
-</div>
-
-
-<app-footer></app-footer>
+    <p>Te recomendamos NO TRAER dispositivos electrónicos extras (iPad, computadora, swich, laptop etc.) <b>Reto Urbano
+            no
+            podrá hacerse responsable de la pérdida o el daño de alguno de estos dispositivos.</b></p>
+</section>

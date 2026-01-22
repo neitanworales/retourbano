@@ -3,9 +3,9 @@ import { Ciudad } from "./Ciudad";
 import { Avance } from "./Avance";
 
 export class Campamento {
-    ciudad?: Ciudad;
     id_campamento?: number;
-    contador?: number;
+    year?: number;
+    ciudad?: Ciudad;
     titulo?: string;
     fecha_inicio?: Date;
     fecha_termino?: Date;
@@ -24,4 +24,5 @@ export class Campamento {
     contacto2?: string;
     costos?: Costo[];
     configuracion?: Avance;
+    email_contacto?: string;
 }
