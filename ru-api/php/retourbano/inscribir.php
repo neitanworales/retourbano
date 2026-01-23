@@ -72,7 +72,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             http_response_code(200);
             echo json_encode($response);
         } else {
-            if ($datos->inscribir($nombre, $nick, $fechanac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje, $id_campamento)) {
+            $campamento = $datos->consultarCampamentoActivoById($id_campamento);
+            if ($datos->inscribir($nombre, $nick, $fechanac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje, $id_campamento, $campamento[0]["year"])) {
 
                 $variables = array();
                 $variables["nombre"] = $nombre;
@@ -96,8 +97,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $variables["telefono"] = $telefono;
                 $variables["hospedaje"] = $hospedaje;
                 $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray($id_campamento));
-
-                $campamento = $datos->consultarCampamentoActivoById($id_campamento);
 
                 $variables["year"] = $campamento[0]["year"];
                 $variables["titulo"] = $campamento[0]["titulo"];

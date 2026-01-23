@@ -87,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     http_response_code(200);
                     echo json_encode($response);
                 } else {
-                    if ($datos->insertarCampamentoGuerreros($id, $hospedaje, $id_campamento)) {
+                    $campamento = $datos->consultarCampamentoActivoById($id_campamento);
+                    if ($datos->insertarCampamentoGuerreros($id, $hospedaje, $id_campamento, $campamento[0]["year"])) {
                         $variables = array();
                         $variables["nombre"] = $nombre;
                         $variables["nick"] = $nick;
@@ -110,8 +111,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["telefono"] = $telefono;
                         $variables["hospedaje"] = $hospedaje;
                         $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray($id_campamento));
-
-                        $campamento = $datos->consultarCampamentoActivoById($id_campamento);
 
                         $variables["year"] = $campamento[0]["year"];
                         $variables["titulo"] = $campamento[0]["titulo"];

@@ -82,7 +82,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.razones = "Por mandato divino del yich";
     this.model.tutorNombre = "Carlos Nopal";
     this.model.tutorTelefono = "759783493";
-    this.model.email = "prueba.registro@yopmail.com";
+    this.model.email = "prueba.registro_1118@yopmail.com";
     this.model.whatsapp = "2423423423423";
     this.model.telefono = "2423423423423";
     this.model.alergias = "A las bombas atómicas";
@@ -90,7 +90,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.aceptaPoliticas = true;
     this.model.facebook = "No tengo brother";
     this.model.instagram = "Para que o que?";
-    this.model.iglesia = "La sagrada familia"
+    this.model.iglesia = "La sagrada familia";
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],

@@ -71,7 +71,7 @@ class RetoUrbanoDao
         habitacion ';
     }
 
-    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje, $id_campamento)
+    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje, $id_campamento, $year)
     {
         $insert = "INSERT INTO guerreros(id, ";
         $values = "VALUES(NULL,";
@@ -191,12 +191,12 @@ class RetoUrbanoDao
         $response = $this->bd->ejecutarPlus($sentence);
 
         if ($response) {
-            return $this->insertarCampamentoGuerreros($response, $hospedaje, $id_campamento);
+            return $this->insertarCampamentoGuerreros($response, $hospedaje, $id_campamento, $year);
         }
         return false;
     }
 
-    public function insertarCampamentoGuerreros($id, $hospedaje, $id_campamento)
+    public function insertarCampamentoGuerreros($id, $hospedaje, $id_campamento, $year)
     {
         $insertCampa = "INSERT INTO campamento_guerreros(";
         $valuesCampa = " VALUES (";
@@ -206,6 +206,9 @@ class RetoUrbanoDao
 
         $insertCampa .= "id_guerrero, ";
         $valuesCampa .= $id . ", ";
+
+        $insertCampa .= "year, ";
+        $valuesCampa .= "'$year', ";
 
         $insertCampa .= "status, ";
         $valuesCampa .= "'A', ";
