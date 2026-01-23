@@ -1,5 +1,3 @@
-<app-navbar-seguimiento></app-navbar-seguimiento>
-
 <div class="container">
     <div class="row" style="margin-top: 1em; margin-bottom: 2em;">
         <div class="col-lg-6">
@@ -16,7 +14,7 @@
             <a class="btn btn-info" href="/inscripciones">Ir a Inscripciones de RU</a>
         </div>
         <div *ngIf="showFormInscripcion" class="col-lg-6">
-            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="session.guerrero!"></app-registro-form>
+            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="session.guerrero!" [campamento]="campamento!"></app-registro-form>
         </div>
         <div class="col-lg-6">
             DASHBOARD
@@ -36,4 +34,3 @@
         </div>
     </div>
 </div>
-<app-footer-seguimiento></app-footer-seguimiento>

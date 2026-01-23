@@ -71,7 +71,7 @@ class RetoUrbanoDao
         habitacion ';
     }
 
-    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje)
+    public function inscribir($nombre, $nick, $fechaNac, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, $hospedaje, $id_campamento)
     {
         $insert = "INSERT INTO guerreros(id, ";
         $values = "VALUES(NULL,";
@@ -191,18 +191,18 @@ class RetoUrbanoDao
         $response = $this->bd->ejecutarPlus($sentence);
 
         if ($response) {
-            return $this->insertarCampamentoGuerreros($response, $hospedaje);
+            return $this->insertarCampamentoGuerreros($response, $hospedaje, $id_campamento);
         }
         return false;
     }
 
-    public function insertarCampamentoGuerreros($id, $hospedaje)
+    public function insertarCampamentoGuerreros($id, $hospedaje, $id_campamento)
     {
         $insertCampa = "INSERT INTO campamento_guerreros(";
         $valuesCampa = " VALUES (";
 
         $insertCampa .= "id_campamento, ";
-        $valuesCampa .= "(SELECT id_campamento FROM campamentos WHERE activo = 1), ";
+        $valuesCampa .= "$id_campamento, ";
 
         $insertCampa .= "id_guerrero, ";
         $valuesCampa .= $id . ", ";
@@ -333,41 +333,41 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getGuerreroById($id)
+    public function getGuerreroById($id, $id_campamento)
     {
         $que = "SELECT " . $this->getGuerreroFields() . ", cg.id as id_campamento_guerrero FROM guerreros g 
         INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
         INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-        WHERE g.id='$id' AND status='A' AND cm.activo=1 ORDER BY staff DESC";
+        WHERE g.id='$id' AND status='A' AND cm.activo=1 AND cm.id_campamento=$id_campamento ORDER BY staff DESC";
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getIndicadoresArray()
+    public function getIndicadoresArray($id_campamento)
     {
-        $que = "SELECT 'Lugares' valor ,maximo_inscr 'count', '1' paquete FROM campamentos c  WHERE c.activo=1 
+        $que = "SELECT 'Lugares' valor ,maximo_inscr 'count', '1' paquete FROM campamentos c  WHERE c.activo=1 AND c.id_campamento=$id_campamento
             UNION 
             " .
-            $this->getIndicadoresQuery(4)
+            $this->getIndicadoresQuery(4, $id_campamento)
             . " 
             UNION 
             " .
-            $this->getIndicadoresQuery(5)
+            $this->getIndicadoresQuery(5, $id_campamento)
             . " 
             UNION 
             " .
-            $this->getIndicadoresQuery(6)
+            $this->getIndicadoresQuery(6, $id_campamento)
             . " 
             UNION 
             " .
-            $this->getIndicadoresQuery(7)
+            $this->getIndicadoresQuery(7, $id_campamento)
             . " 
             UNION 
             " .
-            $this->getIndicadoresQuery(8)
+            $this->getIndicadoresQuery(8, $id_campamento)
             . " 
             UNION 
             " .
-            $this->getIndicadoresQuery(14);
+            $this->getIndicadoresQuery(14, $id_campamento);
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -499,7 +499,7 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-    public function getIndicadoresQuery($opcion)
+    public function getIndicadoresQuery($opcion, $id_campamento)
     {
         $que = "";
         switch ($opcion) {
@@ -507,81 +507,80 @@ class RetoUrbanoDao
                 $que = "SELECT 'Disponibles' valor ,maximo_inscr-(SELECT COUNT(*) FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                AND cm.activo=true
-                WHERE `status`= 'A' ) 'count', '1' paquete FROM campamentos c
-                WHERE c.activo=1 
+                AND cm.activo=true WHERE `status`= 'A' AND cm.id_campamento=$id_campamento ) 'count', '1' paquete FROM campamentos c
+                WHERE c.activo=1 AND c.id_campamento=$id_campamento
                 UNION
                 SELECT 'Inscritos', COUNT(*), '1' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND cm.activo=true";
+                WHERE `status`= 'A' AND cm.activo=true AND cm.id_campamento=$id_campamento";
                 break;
             case 5:
                 $que = "SELECT 'Guerreros' valor, COUNT(*) 'count', '2' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND staff=0 AND cm.activo=true 
+                WHERE `status`= 'A' AND staff=0 AND cm.activo=true AND cm.id_campamento=$id_campamento
                 UNION
                 SELECT 'Staff', COUNT(*), '2' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND staff=1 AND cm.activo=true 
+                WHERE `status`= 'A' AND staff=1 AND cm.activo=true AND cm.id_campamento=$id_campamento
                 UNION
                 SELECT 'Admins', COUNT(*), '2' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND admin=1 AND cm.activo=true 
+                WHERE `status`= 'A' AND admin=1 AND cm.activo=true AND cm.id_campamento=$id_campamento
                 UNION
                 SELECT 'Bajas', COUNT(*), '2' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'B' AND cm.activo=true ";
+                WHERE `status`= 'B' AND cm.activo=true AND cm.id_campamento=$id_campamento";
                 break;
 
             case 6:
                 $que = "SELECT 'Hombres' valor, COUNT(*) 'count', '3' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND staff=0 AND sexo='M' AND cm.activo=true
+                WHERE `status`= 'A' AND staff=0 AND sexo='M' AND cm.activo=true AND cm.id_campamento=$id_campamento
                 UNION
                 SELECT 'Mujeres', COUNT(*), '3' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND staff=0 AND sexo='F' AND cm.activo=true";
+                WHERE `status`= 'A' AND staff=0 AND sexo='F' AND cm.activo=true AND cm.id_campamento=$id_campamento";
                 break;
 
             case 7:
                 $que = "SELECT 'Hombres_Staff' valor, COUNT(*) 'count', '4' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento 
-                WHERE `status`= 'A' AND staff=1 AND sexo='M' AND cm.activo=true
+                WHERE `status`= 'A' AND staff=1 AND sexo='M' AND cm.activo=true AND cm.id_campamento=$id_campamento
                 UNION
                 SELECT 'Mujeres_Staff', COUNT(*), '4' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND staff=1 AND sexo='F' AND cm.activo=true";
+                WHERE `status`= 'A' AND staff=1 AND sexo='F' AND cm.activo=true AND cm.id_campamento=$id_campamento";
                 break;
 
             case 8:
                 $que = "SELECT Talla valor, COUNT(*) 'count', '5' paquete FROM guerreros g 
                 INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
                 INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento
-                WHERE `status`= 'A' AND cm.activo=true GROUP BY talla";
+                WHERE `status`= 'A' AND cm.activo=true AND cm.id_campamento=$id_campamento GROUP BY talla";
                 break;
             case 14:
                 $que = "SELECT IF(hospedaje= 0, 'Hospedaje aparte', 'Con hospedaje') as valor, COUNT(*) 'count'  , '6' paquete
                         FROM campamento_guerreros cg
                         INNER JOIN guerreros g ON g.id = cg.id_guerrero
                         INNER JOIN campamentos c ON c.id_campamento = cg.id_campamento
-                        WHERE c.activo = 1 GROUP BY hospedaje";
+                        WHERE c.activo = 1 AND c.id_campamento=$id_campamento GROUP BY hospedaje";
                 break;
         }
         return $que;
     }
 
-    public function getIndicadores($opcion)
+    public function getIndicadores($opcion, $id_campamento)
     {   
-        $que = $this->getIndicadoresQuery($opcion);
+        $que = $this->getIndicadoresQuery($opcion, $id_campamento);
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -954,7 +953,7 @@ class RetoUrbanoDao
         return $this->bd->ObtenerConsulta($que);
     }
 
-        public function consultarCampamentoActivoById($id_campamento)
+    public function consultarCampamentoActivoById($id_campamento)
     {
         $que = "SELECT * FROM campamentos WHERE activo=1 AND id_campamento=$id_campamento ORDER BY id_campamento DESC";
         return $this->bd->ObtenerConsulta($que);

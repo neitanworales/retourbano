@@ -4,6 +4,8 @@
     <img alt="..." src="/assets/img/main/fireloading.gif" style="width: 18em; margin-top: 15em;">
   </i>
 </ng-container>
-<app-navbar></app-navbar>
+
+<app-navbar *ngIf="!(authService.currentUser$ | async)"></app-navbar>
+<app-navbar-seguimiento *ngIf="(authService.currentUser$ | async)"></app-navbar-seguimiento>
 <router-outlet></router-outlet>
 <app-footer></app-footer>

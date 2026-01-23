@@ -1,6 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Avance } from 'src/app/core/models/registro/Avance';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
     selector: 'app-registro-avance',
@@ -20,8 +21,8 @@ export class RegistroAvanceComponent implements OnInit {
   @Input()
   showForm?: boolean;
 
-  @Input()
-  configuracion?: Avance;
+  @Input({ required: true })
+  campamento!: Campamento;
 
   constructor(
     public registroDao : RegistroDao
@@ -48,8 +49,8 @@ export class RegistroAvanceComponent implements OnInit {
       }
     );*/
 
-    console.log("Configuracion recibida: ", this.configuracion);
-    this.avance = this.configuracion;
+    console.log("Configuracion recibida: ", this.campamento.configuracion);
+    this.avance = this.campamento.configuracion;
     this.avanceStyle = "width: "+this.avance!.porcentaje!+"%;";
     this.avance!.fecha_maxima = new Date((this.avance!.fecha_maxima+"").replace(/-/g, "/"));
     this.avance!.fecha_apertura= new Date((this.avance!.fecha_apertura+"").replace(/-/g, "/"));

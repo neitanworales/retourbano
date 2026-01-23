@@ -1,7 +1,10 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { map, filter, tap, switchMap } from 'rxjs';
+import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 
 @Component({
@@ -21,18 +24,25 @@ export class ReinscripcionComponent implements OnInit {
   tituloModal?: String;
   mensajeModal?: String;
   email!: string;
+  campamentos?: Campamento[];
+  id_campamento?: number;
+  campamento?: Campamento;
 
   constructor(
     private formBuilder: FormBuilder,
     private registroDao: RegistroDao,
     private route: ActivatedRoute,
-    private router: Router) {
+    private router: Router,
+    private campamentoDao: CampamentoDao) {
     this.route.queryParams.subscribe(params => {
       this.codigo = params['code'];
     });
     this.validarCodigo();
   }
   ngOnInit(): void {
+    this.loadCampamentos();
+    this.loadCampamento();
+
     this.registerFormEmail = this.formBuilder.group({
       email: ["", Validators.required]
     });
@@ -58,7 +68,7 @@ export class ReinscripcionComponent implements OnInit {
   }
 
   validarEmail() {
-    this.registroDao.validarEmail(this.email).subscribe(
+    this.registroDao.validarEmail(this.email, this.id_campamento!).subscribe(
       result => {
         this.mensajeModal = result.mensaje;
         this.tituloModal = "Reinscripción";
@@ -77,4 +87,35 @@ export class ReinscripcionComponent implements OnInit {
     this.displayStyle = "none";
   }
 
+  private loadCampamento() {
+    this.route.queryParamMap
+      .pipe(
+        map((params: ParamMap) => Number(params.get('id_campamento'))),
+        filter((id) => !isNaN(id) && id > 0),
+        tap((id) => {
+          this.id_campamento = id;
+        }),
+        switchMap((id) => this.campamentoDao.getCampamentoInfo(id))
+      )
+      .subscribe({
+        next: (result) => {
+          this.campamento = result.campamento!;
+        },
+        error: (error) => {
+          console.error('Error al cargar campamento:', error);
+        }
+      });
+    console.log('Campamento', this.campamento);
+  }
+
+  private loadCampamentos() {
+    this.campamentoDao.getCampamentoActivo().subscribe({
+      next: (result) => {
+        this.campamentos = result.resultado!;
+      },
+      error: (error) => {
+        console.error('Error al cargar campamentos:', error);
+      }
+    });
+  }
 }

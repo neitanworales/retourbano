@@ -36,7 +36,7 @@ if (empty($datos)) {
         $variables["pwd"] = $pwd; 
 
         $message = $emailDao->getTemplate($variables, 'recovery-password.html');
-        $emailDao->enviarEmail($email,'Recuperación de contraseña', $message, true);
+        $emailDao->enviarEmail($email,'Recuperación de contraseña', $message, true, 'reto@ywampachuca.org');
 
         $data->error = false;
         $data->mensaje = "Se envió tu contraseña a tu correo.. Por favor revisa el SPAM y selecciona a reto@ywampachuca.org como conocido.. A veces tarda en llegar el correo.";

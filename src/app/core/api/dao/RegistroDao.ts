@@ -31,12 +31,12 @@ export class RegistroDao {
         return this.http.get<AvanceResponse>(environment.apiUrl + 'retourbano/configuracion.php', { headers: this.utils.getHeaders() });
     }
 
-    public agregarGuerrero(guerrero: Guerrero, tutor: boolean): Observable<RegistroResponse> {
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/inscribir.php?tutor=' + (tutor ? "1" : "0"), guerrero, { headers: this.utils.getHeaders() });
+    public agregarGuerrero(guerrero: Guerrero, tutor: boolean, id_campamento: number): Observable<RegistroResponse> {
+        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/inscribir.php?tutor=' + (tutor ? "1" : "0") + '&id_campamento=' + id_campamento, guerrero, { headers: this.utils.getHeaders() });
     }
 
-    public updateGuerrero(guerrero: Guerrero): Observable<RegistroResponse> {
-        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/reinscribir.php', guerrero, { headers: this.utils.getHeaders() });
+    public updateGuerrero(guerrero: Guerrero, id_campamento: number): Observable<RegistroResponse> {
+        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/reinscribir.php?id_campamento=' + id_campamento, guerrero, { headers: this.utils.getHeaders() });
     }
 
     public consultarGuerreros(opcion: number, activo: boolean, staff: boolean, admin: boolean, byName: string, seg: boolean): Observable<MantenimientoResponse> {
@@ -137,8 +137,8 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public validarEmail(email: String): Observable<DefaultResponse> {
-        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email=' + email, { headers: this.utils.getHeaders() });
+    public validarEmail(email: String, id_campamento: number): Observable<DefaultResponse> {
+        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email=' + email + '&id_campamento=' + id_campamento, { headers: this.utils.getHeaders() });
     }
 
     public validarCodigo(email: String): Observable<GuerreroResponse> {

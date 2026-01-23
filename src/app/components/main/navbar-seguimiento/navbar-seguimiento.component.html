@@ -1,28 +1,90 @@
 <header class="mb-auto header-staff">
-    <div class="container-fluid">
-        <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" aria-current="page" routerLink="/"> <i class="bi bi-box-arrow-left"></i> Regresar</a>
-            <a class="nav-link" routerLink="/staff"><i class="bi bi-house"></i></a>
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/inscripciones"><i class="bi bi-card-checklist"></i> Inscripciones</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/hospedaje"><i class="bi bi-h-square"></i> Hospedaje</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/contabilidad"><i class="bi bi-wallet"></i> Contabilidad</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/campamentos"><i class="bi bi-tornado"></i> Campamentos</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
-            }   
-            <a class="nav-link d-flex" routerLink="/staff/cuenta">
-                <app-user-info></app-user-info>
-            </a>
-            <a class="nav-link" (click)="cerrarSesion()"><i class="bi bi-door-closed"></i> Salir</a>
-        </nav>
-    </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary nav-masthead">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            aria-expanded="false">
+                            Menú principal
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" routerLink="/">Home</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" routerLink="/info"
+                                    [queryParams]="{ id_campamento: '11' }">Pachuca</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" routerLink="/info"
+                                    [queryParams]="{ id_campamento: '12' }">Puebla</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" routerLink="/registro">Inscripcion/Register</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" routerLink="/reinscripcion">Reinscripción
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff"><i class="bi bi-house"></i></a>
+                    </li>
+
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/inscripciones"><i class="bi bi-card-checklist"></i>
+                            Inscripciones</a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/hospedaje"><i class="bi bi-h-square"></i> Hospedaje</a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/contabilidad"><i class="bi bi-wallet"></i>
+                            Contabilidad</a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/campamentos"><i class="bi bi-tornado"></i>
+                            Campamentos</a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
+                    </li>
+                    }
+                    <li class="nav-item">
+                        <a class="nav-link d-flex" routerLink="/staff/cuenta">
+                            <app-user-info></app-user-info>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <select class="form-select"
+                                [(ngModel)]="selectedCampamentoId"
+                                (ngModelChange)="onCampamentoChange($event)"
+                                [compareWith]="compareIds">
+                            <option [ngValue]="null">Selecciona campamento</option>
+                            <option *ngFor="let c of campamentos" [ngValue]="(+c.id_campamento!)">{{c.titulo}} {{c.ciudad?.nombre}} {{c.year}}</option>
+                        </select>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" (click)="cerrarSesion()"><i class="bi bi-door-closed"></i> Salir</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
-<hr>

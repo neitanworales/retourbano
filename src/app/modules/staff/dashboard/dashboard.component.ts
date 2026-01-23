@@ -8,6 +8,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { Indicador } from 'src/app/core/models/registro/Indicador';
 import { Paquete } from 'src/app/core/models/registro/Paquete';
 import { arrow } from '@popperjs/core';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
   selector: 'app-dashboard',
@@ -17,6 +18,7 @@ import { arrow } from '@popperjs/core';
 })
 export class DashboardComponent implements OnInit {
 
+  campamento?: Campamento;
   session!: Session;
   seguimientos?: Seguimiento[];
   diaSelected = "";

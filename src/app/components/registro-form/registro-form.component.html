@@ -409,7 +409,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <a type="button" class="btn btn-link" data-dismiss="modal" routerLink="/registro">Ir a renscripciones</a>
+                    <a class="btn btn-link" data-dismiss="modal" routerLink="/registro" [queryParams]="{ id_campamento: campamento.id_campamento }">Ir al registro</a>
 
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"
                         (click)="closePopup()">Cerrar/Close</button>

@@ -5,32 +5,65 @@
                 <h1>Registro</h1>
                 <h2>¿Estás listo para aceptar el Reto?</h2>
             </div>
-            <div class="col-xs-12 col-md-12 col-lg-12">
-                <img alt="..." class="img-fluid" src="assets/img/media/megs.4d73356b.jpg" style="width: 100%;">
-            </div>
         </div>
-        <hr>
-        <div class="row">
-            <div class="col">
-                <h1>{{campamento.titulo}}</h1>
+        <div *ngIf="campamento != null; else botones">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <img alt="..." class="img-fluid"
+                        [src]="'assets/img/flyers/ru_flyer_' + campamento!.id_campamento! + '.jpg'"
+                        style="width: 100%;">
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <h1>{{campamento.titulo!}}</h1>
+                    <div class="card">
+                        <div class="card-header">
+                            Registro al campamento {{campamento.titulo}}
+                        </div>
+                        <div class="card-body">
+                            <p>Este campamento se llevará a cabo en {{campamento.ciudad?.nombre}}</p>
+                        </div>
+                        <div class="card-footer">
+                            ¿Deseas registrarte a otro campamento?
+                            <a *ngFor="let campamento of campamentos" class="btn btn-sm btn-outline-info"
+                                routerLink="/registro"
+                                [queryParams]="{ id_campamento: campamento.id_campamento }">{{campamento.ciudad?.nombre
+                                +'
+                                -'+campamento.titulo}}</a>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <div class="col">
-                <div class="alert alert-primary" role="alert">
-                    Primeros 50 en registrarse recibirán un regalo sorpresa al comenzar el campamento
+            <div class="row">
+                <div class="col">
+                    <app-tabla-costos [campamento]="campamento!"></app-tabla-costos>
+                </div>
+            </div>
+            <!--div class="row">
+                <div class="col">
+                    <div class="alert alert-primary" role="alert">
+                        Primeros 50 en registrarse recibirán un regalo sorpresa al comenzar el campamento
+                    </div>
+                </div>
+            </div-->
+            <div class="row">
+                <div class="col">
+                    <app-registro-avance [showForm]="true" [campamento]="campamento"></app-registro-avance>
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col">
-                <app-registro-avance [showForm]="true"></app-registro-avance>
+        <ng-template #botones>
+            <div class="row">
+                <div class="col text-center">
+                    <h2>¿A cual campamento quieres registrarte?</h2>
+                    <a *ngFor="let campamento of campamentos" class="btn btn-primary" routerLink="/registro"
+                        [queryParams]="{ id_campamento: campamento.id_campamento }">{{campamento.ciudad?.nombre +' -
+                        '+campamento.titulo}}</a>
+                </div>
+
             </div>
-        </div>
+        </ng-template>
     </div>
 </section>

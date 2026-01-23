@@ -37,25 +37,25 @@ class EnviarEmail
         return $template;
     }
 
-    public function enviarEmail($to, $subject, $message, $reenviarStaff)
+    public function enviarEmail($to, $subject, $message, $reenviarStaff, $correo_staff)
     {
         $headers = "From: Reto Urbano <reto@ywampachuca.org>\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
         $enviado = mail($to, $subject, $message, $headers);
         if ($reenviarStaff) {
-            $this->reportarStaff($subject, $message);
+            $this->reportarStaff($subject, $message, $correo_staff);
         }
         return $enviado;
     }
 
-    public function reportarStaff($subject, $message)
+    public function reportarStaff($subject, $message, $correo_staff)
     {
         $headers = "From: Avisos Staff RU <reto@ywampachuca.org>\r\n";
         $headers .= "MIME-Version: 1.0\r\n";
         $headers .= "Content-Type: text/html; charset=ISO-8859-1\r\n";
         $subject = '[REPORTE A STAFF] ' . $subject;
-        $enviado = mail('reto@ywampachuca.org', $subject, $message, $headers);
+        $enviado = mail($correo_staff, $subject, $message, $headers);
         return $enviado;
     }
 

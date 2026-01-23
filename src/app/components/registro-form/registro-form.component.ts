@@ -5,6 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToRegister } from 'src/app/core/models/registro/ToRegister';
 import { Tutor } from 'src/app/core/models/registro/Tutor';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
   selector: 'app-registro-form',
@@ -17,8 +18,11 @@ export class RegistroFormComponent implements OnInit {
   @Input()
   guerreroToEdit!: Guerrero;
 
-  @Input()
+  @Input({ required: true })
   saveInMemory!: boolean;
+
+  @Input({ required: true })
+  campamento!: Campamento;
 
   registerForm!: FormGroup;
 
@@ -67,7 +71,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.medicamentos = "";
     this.model.razones = "";
 
-    /*this.model.nombre = "Jesús de Veracruz";
+    this.model.nombre = "Jesús de Veracruz";
     this.model.nick = "Mr. Corleone";
     this.model.sexo = "M";
     this.model.year = 2001;
@@ -75,10 +79,10 @@ export class RegistroFormComponent implements OnInit {
     this.model.day = 1;
     this.model.talla = "XL";
     this.model.vienesDe = "CMDX";
-    this.model.razones = "El Rich me obliga";
+    this.model.razones = "Por mandato divino del yich";
     this.model.tutorNombre = "Carlos Nopal";
     this.model.tutorTelefono = "759783493";
-    this.model.email = "neitan.morales@gmail.com";
+    this.model.email = "prueba.registro@yopmail.com";
     this.model.whatsapp = "2423423423423";
     this.model.telefono = "2423423423423";
     this.model.alergias = "A las bombas atómicas";
@@ -86,7 +90,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.aceptaPoliticas = true;
     this.model.facebook = "No tengo brother";
     this.model.instagram = "Para que o que?";
-    this.model.iglesia = "La sagrada familia"*/
+    this.model.iglesia = "La sagrada familia"
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],
@@ -177,7 +181,7 @@ export class RegistroFormComponent implements OnInit {
       this.registerForm.controls['tutorTelefono'].setValue(tutor.tutorTelefono);
       this.loadListaParaRegistrar();
     } else {
-      this.registroDao.agregarGuerrero(this.model, this.saveInMemory).subscribe(
+      this.registroDao.agregarGuerrero(this.model, this.saveInMemory, this.campamento.id_campamento!).subscribe(
         result => {
           this.errorRegistro = result.error;
           this.mensajesRegistros.push(result.mensaje!);
@@ -189,7 +193,7 @@ export class RegistroFormComponent implements OnInit {
 
   registrarBatch() {
     this.paraRegistrar.forEach(async (warrior) => {
-      this.registroDao.agregarGuerrero(warrior, this.saveInMemory).subscribe(
+      this.registroDao.agregarGuerrero(warrior, this.saveInMemory, this.campamento.id_campamento!).subscribe(
         result => {
           this.errorRegistro = result.error;
           this.mensajesRegistros.push(result.mensaje!);
@@ -203,7 +207,7 @@ export class RegistroFormComponent implements OnInit {
   }
 
   updateGuerrero() {
-    this.registroDao.updateGuerrero(this.model).subscribe(
+    this.registroDao.updateGuerrero(this.model, this.campamento.id_campamento!).subscribe(
       result => {
         this.errorRegistro = result.error;
         this.mensajesRegistros.push(result.mensaje!);
@@ -248,7 +252,7 @@ export class RegistroFormComponent implements OnInit {
     this.displayBackgroudStyle = "";
     this.mensajesRegistros = new Array();
     if (!this.errorRegistro && !this.actualizar) {
-      this.router.navigate(['/info']);
+      this.router.navigate(['/info'], { queryParams: { id_campamento: this.campamento.id_campamento } });
     } else {
       // ??
     }

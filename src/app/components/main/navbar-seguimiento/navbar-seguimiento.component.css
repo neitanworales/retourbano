@@ -9,3 +9,7 @@ hr {
     border-top: var(--bs-border-width) solid;
     opacity:.25
 }
+
+.header-staff {
+    background-color: azure;
+}

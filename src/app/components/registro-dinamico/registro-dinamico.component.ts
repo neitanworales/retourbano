@@ -1,8 +1,9 @@
 import { APP_BASE_HREF } from '@angular/common';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
 
 @Component({
   selector: 'app-registro-dinamico',
@@ -11,6 +12,9 @@ import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
   standalone: false
 })
 export class RegistroDinamicoComponent implements OnInit {
+
+  @Input({ required: true })
+  campamento!: Campamento;
 
   registerForm!: FormGroup;
   step: number = 1;
@@ -47,7 +51,7 @@ export class RegistroDinamicoComponent implements OnInit {
   }
 
   validarEmail() {
-    this.registroDao.validarEmail(this.email).subscribe(
+    this.registroDao.validarEmail(this.email,this.campamento.id_campamento!).subscribe(
       result => {
         this.mensajeModal = result.mensaje;
         this.tituloModal = "Reinscripción";
