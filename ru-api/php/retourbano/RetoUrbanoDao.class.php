@@ -1037,10 +1037,7 @@ class RetoUrbanoDao
 
     public function getUsuarios()
     {
-        $que = "SELECT DISTINCT g.id, nick, email, password FROM ywampach_retourbano.guerreros g
-                INNER JOIN ywampach_retourbano.guerreros_roles gr ON g.id = gr.guerrero_id
-                -- WHERE (password IS NOT NULL)
-                ORDER BY nick;";
+        $que = "SELECT * FROM view_usuarios";
         return $this->bd->ObtenerConsulta($que);
     }
 
@@ -1080,6 +1077,18 @@ class RetoUrbanoDao
     public function consultarCiudadById($id_ciudad)
     {
         $que = "SELECT * FROM ciudades WHERE id=$id_ciudad";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getAsignacionesByUserId($id_guerrero)
+    {
+        $que = "SELECT * FROM guerreros_asignaciones WHERE id_guerrero=$id_guerrero";
+        return $this->bd->ObtenerConsulta($que);
+    }
+
+    public function getCampamentoById($id_campamento)
+    {
+        $que = "SELECT * FROM campamentos WHERE id_campamento=$id_campamento";
         return $this->bd->ObtenerConsulta($que);
     }
 }

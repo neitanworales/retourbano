@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
@@ -14,7 +15,8 @@ export class InfoCampaComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private campamentoDao: CampamentoDao
+    private campamentoDao: CampamentoDao,
+    private sanitizer: DomSanitizer
   ) { }
 
   id_campamento?: number;
@@ -57,6 +59,18 @@ export class InfoCampaComponent implements OnInit {
         this.isLoading = false;
       }
     });
+  }
+
+  getSafeUrl(url?: string | null): SafeResourceUrl | null {
+    if (!url) {
+      return null;
+    }
+
+    const normalizedUrl = url.replace(/&amp;/g, '&');
+    if (normalizedUrl !== url) {
+      console.warn('Mapa URL normalizada desde HTML escapado.');
+    }
+    return this.sanitizer.bypassSecurityTrustResourceUrl(normalizedUrl);
   }
 
 }

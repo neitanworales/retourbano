@@ -25,4 +25,10 @@ export class Campamento {
     costos?: Costo[];
     configuracion?: Avance;
     email_contacto?: string;
+    llegada_lugar?: string;
+    llegada_coordenadas?: string;
+    llegada_nota?: string;
+    salida_lugar?: string;
+    salida_coordenadas?: string;
+    salida_nota?: string;
 }

@@ -4,7 +4,8 @@
     <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{campamento.year}} está por comenzar!</h2>
 
     <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
-    <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de <b>${{campamento.pago_minimoMX}} MXN</b></p>
+    <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de <b>${{campamento.pago_minimoMX}}
+            MXN</b></p>
     <p>Realiza tu depósito a:</p>
     <p>
         <i class="bi bi-bank"></i> {{campamento.banco}}
@@ -29,37 +30,38 @@
     <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes como fecha
             límite el 5 de julio para poder realizarlo</b>
     </p>
-    <h3>2. <i class="bi bi-car-front-fill"></i> Día de legada:</h3>
-    <p><i class="bi bi-calendar-event"></i> {{campamento.fecha_inicio | date}}</p>
-    <p><i class="bi bi-clock"></i> {{campamento.fecha_inicio | date:'shortTime'}}</p>
-    <p><i class="bi bi-geo"></i> <b>Punto de encuentro:</b> Recepción del Hotel Plaza El Dorado</p>
-    <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.242746198175!2d-98.73807258991687!3d20.123917981230566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e513612033%3A0x943512eab497c65a!2sHotel%20Plaza%20El%20Dorado!5e0!3m2!1ses!2smx!4v1750114433837!5m2!1ses!2smx"
+    <div>
+        <h3>2. <i class="bi bi-car-front-fill"></i> Día de legada:</h3>
+        <p *ngIf="campamento.fecha_inicio"><i class="bi bi-calendar-event"></i> {{campamento.fecha_inicio | date}}</p>
+        <p *ngIf="campamento.fecha_inicio"><i class="bi bi-clock"></i> {{campamento.fecha_inicio | date:'shortTime'}}</p>
+        <p *ngIf="campamento.llegada_lugar"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b> {{campamento.llegada_lugar}}</p>
+        <iframe *ngIf="campamento.llegada_coordenadas"
+            [src]="getSafeUrl(campamento.llegada_coordenadas)"
+            width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p *ngIf="campamento.llegada_nota">{{campamento.llegada_nota}}</p>
+    </div>
+    <div>
+    <h3>3. <i class="bi bi-car-front-fill"></i> Día de salida:</h3>
+    <p *ngIf="campamento.fecha_termino"><i class="bi bi-calendar-event"></i> {{campamento.fecha_termino | date}}</p>
+    <p *ngIf="campamento.fecha_termino"><i class="bi bi-clock"></i> {{campamento.fecha_termino | date:'shortTime'}}</p>
+    <p *ngIf="campamento.salida_lugar"><i class="bi bi-geo"></i> <b>Lugar de entrega:</b> {{campamento.salida_lugar}}</p>
+    <iframe *ngIf="campamento.salida_coordenadas"
+        [src]="getSafeUrl(campamento.salida_coordenadas)"
         width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
         referrerpolicy="no-referrer-when-downgrade"></iframe>
-    <p><b>Registro abierto:</b> 2:00 PM - 3:30 PM
-    <p>Si te es posible, trae <b>etiquetada</b> tu maleta con tus datos personales.</p>
-    <p>** Ten en cuenta que si no llegas a tiempo al registro tendrás que llegar directamente a la "Primera Iglesia
-        Bautista"</p>
-    <h3>3. Día de salida:</h3>
-    <p><i class="bi bi-calendar-event"></i> Domingo 20 de julio</p>
-    <p><i class="bi bi-clock"></i> Hora: 5:30 PM</p>
-    <p><i class="bi bi-geo"></i> <b>Lugar de entrega:</b> Primera Iglesia Bautista</p>
-    <iframe
-        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.2385463082446!2d-98.73572688991682!3d20.124093281230476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e5bf1b80bb%3A0x784964863c9f7a2a!2sPrimera%20Iglesia%20Bautista%20de%20Pachuca!5e0!3m2!1ses!2smx!4v1750115039174!5m2!1ses!2smx"
-        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"></iframe>
-    <p>¡Llega puntual para recoger a los campers con tiempo y sin prisas!</p>
-    <h3>2. Lista de recomendaciones para traer:</h3>
+    <p *ngIf="campamento.salida_nota">{{campamento.salida_nota}}</p>
+    </div>
+    <h3>Lista de recomendaciones para traer:</h3>
     <p><i class="bi bi-check2-circle"></i> Biblia, cuaderno y lapiceros (obligatorio)</p>
     <p><i class="bi bi-check2-circle"></i> Mochila pequeña o cangurera</p>
     <p><i class="bi bi-check2-circle"></i> Ropa cómoda para 6 días (tendremos algunas actividades al aire libre )</p>
     <p><i class="bi bi-check2-circle"></i> chamarra para el frío, el clima tiende a ser frio por las noches</p>
     <p><i class="bi bi-check2-circle"></i> Accesorios para el sol como gorra, bucket heat, bloqueador etc.</p>
     <p><i class="bi bi-check2-circle"></i> Artículos de uso personal, todo lo que ocupas para bañarte y arreglarte</p>
-    <p><i class="bi bi-check2-circle"></i> Calzado cómodo que te permita hacer ejercicio y actividades al aire libre.
-    </p>
+    <p><i class="bi bi-check2-circle"></i> Calzado cómodo que te permita hacer ejercicio y actividades al aire libre.</p>
     <p><i class="bi bi-check2-circle"></i> Dinero extra para tienda.</p>
+    <p><i class="bi bi-check2-circle"></i> Etiqueta tu maleta con tus datos personales.</p>
     <p>No es necesario que traigas almohada / cobijas</p>
     <p>Te recomendamos NO TRAER dispositivos electrónicos extras (iPad, computadora, swich, laptop etc.) <b>Reto Urbano
             no

@@ -20,16 +20,17 @@ import { TumbaService } from 'src/app/core/services/tumbaService';
 })
 export class UsuariosComponent implements OnInit {
 
-  users?: MtoLogin[];
-  repetidos?: CampamentoGuerreros[];
+  users?: MtoLogin[] = [];
+  repetidos?: CampamentoGuerreros[] = [];
   expandedCampamentoGuerrero?: CampamentoGuerreros;
+  expandedUsers?: MtoLogin;
 
   columnsToDisplay = [
     'id',
     'nick',
     'email',
     'roles',
-    'password'
+    'asignaciones',
   ];
 
   columnsToDisplayRepetidos = [
@@ -93,7 +94,7 @@ export class UsuariosComponent implements OnInit {
     );
   }
 
-  esTutor(cg: AsistenciaCampamentos){
+  esTutor(cg: AsistenciaCampamentos) {
     this.registroDao.updateEmailTutor(cg.guerreroID!, '', cg.email!).subscribe(
       resultado => {
         this.cargarTodosRepetidos();
@@ -101,7 +102,7 @@ export class UsuariosComponent implements OnInit {
     );
   }
 
-  noEsTutor(cg: AsistenciaCampamentos){
+  noEsTutor(cg: AsistenciaCampamentos) {
     this.registroDao.updateEmailTutor(cg.guerreroID!, cg.email_tutor!, '').subscribe(
       resultado => {
         this.cargarTodosRepetidos();
@@ -109,24 +110,24 @@ export class UsuariosComponent implements OnInit {
     );
   }
 
-    editarPassword(hosp: MtoLogin) {
-      hosp.editar = !hosp.editar;
-      if (hosp.editar) {
-        hosp.passwordOldValue = hosp.password;
-        hosp.password = this.tumba.desencryptar(hosp.password!);
-      } else {
-        hosp.password = hosp.passwordOldValue;
+  editarPassword(hosp: MtoLogin) {
+    hosp.editar = !hosp.editar;
+    if (hosp.editar) {
+      hosp.passwordOldValue = hosp.password;
+      hosp.password = this.tumba.desencryptar(hosp.password!);
+    } else {
+      hosp.password = hosp.passwordOldValue;
+    }
+  }
+
+  guardarPassword(hosp: MtoLogin) {
+    this.registroDao.actualizarPassword(this.tumba.encryptar(hosp.email!), this.tumba.encryptar(hosp.password!)).subscribe(
+      result => {
+
       }
-    }
-  
-    guardarPassword(hosp: MtoLogin) {
-      this.registroDao.actualizarPassword(this.tumba.encryptar(hosp.email!), this.tumba.encryptar(hosp.password!)).subscribe(
-        result => {
-          
-        }
-      );
-      hosp.password = this.tumba.encryptar(hosp.password!);
-      hosp.editar = false;
-    }
+    );
+    hosp.password = this.tumba.encryptar(hosp.password!);
+    hosp.editar = false;
+  }
 
 }

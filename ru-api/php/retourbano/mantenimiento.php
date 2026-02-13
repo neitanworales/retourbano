@@ -182,6 +182,15 @@ switch ($opcion) {
             foreach ($rolesQuery as &$rol) {
                 array_push($roles, $rol['rol']);
             }
+            $asignacionesDuras=$datos->getAsignacionesByUserId($usr['id']);
+            $asignaciones = array();
+            foreach ($asignacionesDuras as &$asig) {
+                $campamento = $datos->getCampamentoById($asig['id_campamento'])[0];
+                $campamento['ciudad'] = $datos->consultarCiudadById($campamento['id_ciudad'])[0];
+                $asig['campamento']=$campamento;
+                array_push($asignaciones, $asig); 
+            }
+            $usr['asignaciones']=$asignaciones;
             $usr['roles']=$roles;
             $usr['password'] = encrypt($usr['password']);
         }
