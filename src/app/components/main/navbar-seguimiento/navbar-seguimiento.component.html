@@ -71,7 +71,7 @@
                             <app-user-info></app-user-info>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!--li class="nav-item">
                         <select class="form-select"
                                 [(ngModel)]="selectedCampamentoId"
                                 (ngModelChange)="onCampamentoChange($event)"
@@ -79,7 +79,7 @@
                             <option [ngValue]="null">Selecciona campamento</option>
                             <option *ngFor="let c of campamentos" [ngValue]="(+c.id_campamento!)">{{c.titulo}} {{c.ciudad?.nombre}} {{c.year}}</option>
                         </select>
-                    </li>
+                    </li-->
                     <li class="nav-item">
                         <a class="nav-link" (click)="cerrarSesion()"><i class="bi bi-door-closed"></i> Salir</a>
                     </li>

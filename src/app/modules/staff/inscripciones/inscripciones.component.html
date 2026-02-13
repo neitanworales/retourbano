@@ -1,47 +1,62 @@
 <div class="container">
+    <ul class="nav nav-tabs">
+        <li *ngFor="let campamento of campamentos; let i = index" nav-item>
+            <a class="nav-link {{tabsCampas![i]?'active':''}}" (click)="tabCampamentos(i)"><i
+                    class="bi bi-info-circle-fill"></i> {{campamento.ciudad?.nombre}}</a>
+        </li>
+    </ul>
+</div>
+<div *ngIf="campamentoSeleccionadoId" class="container">
     <h1>Inscripciones RU</h1>
     <ul class="nav nav-tabs">
         <li class="nav-item">
-            <a class="nav-link {{pageResumenActive?'active':''}}" (click)="activarPageResumen()"><i class="bi bi-pie-chart-fill"></i> Resumen</a>
+            <a class="nav-link {{pageResumenActive?'active':''}}" (click)="activarPageResumen()"><i
+                    class="bi bi-pie-chart-fill"></i> Resumen</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageInscritosActive?'active':''}}" (click)="activarPageInscritos()"><i class="bi bi-person-fill-check"></i> Inscritos</a>
+            <a class="nav-link {{pageInscritosActive?'active':''}}" (click)="activarPageInscritos()"><i
+                    class="bi bi-person-fill-check"></i> Inscritos</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageStaffActive?'active':''}}" (click)="activarPageStaff()"><i class="bi bi-person-raised-hand"></i> Staff</a>
+            <a class="nav-link {{pageStaffActive?'active':''}}" (click)="activarPageStaff()"><i
+                    class="bi bi-person-raised-hand"></i> Staff</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageAdminsActive?'active':''}}" (click)="activarPageAdmins()"><i class="bi bi-person-video3"></i> Administradores</a>
+            <a class="nav-link {{pageAdminsActive?'active':''}}" (click)="activarPageAdmins()"><i
+                    class="bi bi-person-video3"></i> Administradores</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageBajasActive?'active':''}}" (click)="activarPageBajas()"><i class="bi bi-person-fill-dash"></i> Bajas</a>
+            <a class="nav-link {{pageBajasActive?'active':''}}" (click)="activarPageBajas()"><i
+                    class="bi bi-person-fill-dash"></i> Bajas</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageSeguimientoActive?'active':''}}" (click)="activarPageSeguimiento()"><i class="bi bi-person-fill-up"></i> Seguimiento</a>
+            <a class="nav-link {{pageSeguimientoActive?'active':''}}" (click)="activarPageSeguimiento()"><i
+                    class="bi bi-person-fill-up"></i> Seguimiento</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageHistoricoActive?'active':''}}" (click)="activarPageHistorico()"><i class="bi bi-clock-history"></i> Historico</a>
+            <a class="nav-link {{pageHistoricoActive?'active':''}}" (click)="activarPageHistorico()"><i
+                    class="bi bi-clock-history"></i> Historico</a>
         </li>
     </ul>
 
     <div class="row" [ngStyle]="{'display':chartsDisplayStyle}">
         <div class="col-md-6">
-            <app-pie-chart [opcion]="4"></app-pie-chart>
+            <app-pie-chart [opcion]="4" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="5"></app-pie-chart>
+            <app-pie-chart [opcion]="5" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="6"></app-pie-chart>
+            <app-pie-chart [opcion]="6" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="7"></app-pie-chart>
+            <app-pie-chart [opcion]="7" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="8"></app-pie-chart>
+            <app-pie-chart [opcion]="8" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="14"></app-pie-chart>
+            <app-pie-chart [opcion]="14" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
         </div>
     </div>
 
@@ -72,8 +87,8 @@
                 <div class="col elevado">
 
                     <div class="btn-group me-2" role="group" aria-label="First group">
-                        <button *ngFor="let y of years; let i = index" type="button" class="btn btn-{{y==year?'success':'light'}}"
-                            (click)="changeYear(y)">{{y}}</button>
+                        <button *ngFor="let y of years; let i = index" type="button"
+                            class="btn btn-{{y==year?'success':'light'}}" (click)="changeYear(y)">{{y}}</button>
                     </div>
                 </div>
             </div>
@@ -285,7 +300,7 @@
                                         <div class="row">
                                             <div class="col-md-2">
                                                 <h2>
-                                                    <small>Sexo:</small> {{element.sexo}} 
+                                                    <small>Sexo:</small> {{element.sexo}}
                                                     <small>Edad:</small> {{element.edad}}
                                                     <small>Talla:</small> {{element.talla}}
                                                     <small><i class="bi bi-h-square"></i></small> {{element.habitacion}}

@@ -79,7 +79,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   loadDataUsuarios() {
-    this.registroDao.obtenerUsuarios().subscribe(
+    this.registroDao.obtenerUsuarios(0).subscribe(
       resultado => {
         this.users = resultado.users;
       }
@@ -87,7 +87,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   loadDataRepetidos() {
-    this.registroDao.obtenerRepetidos().subscribe(
+    this.registroDao.obtenerRepetidos(0).subscribe(
       resultado => {
         this.repetidos = resultado.resultado;
       }
@@ -95,7 +95,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   esTutor(cg: AsistenciaCampamentos) {
-    this.registroDao.updateEmailTutor(cg.guerreroID!, '', cg.email!).subscribe(
+    this.registroDao.updateEmailTutor(cg.guerreroID!, '', cg.email!,0).subscribe(
       resultado => {
         this.cargarTodosRepetidos();
       }
@@ -103,7 +103,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   noEsTutor(cg: AsistenciaCampamentos) {
-    this.registroDao.updateEmailTutor(cg.guerreroID!, cg.email_tutor!, '').subscribe(
+    this.registroDao.updateEmailTutor(cg.guerreroID!, cg.email_tutor!, '',0).subscribe(
       resultado => {
         this.cargarTodosRepetidos();
       }
@@ -121,7 +121,7 @@ export class UsuariosComponent implements OnInit {
   }
 
   guardarPassword(hosp: MtoLogin) {
-    this.registroDao.actualizarPassword(this.tumba.encryptar(hosp.email!), this.tumba.encryptar(hosp.password!)).subscribe(
+    this.registroDao.actualizarPassword(this.tumba.encryptar(hosp.email!), this.tumba.encryptar(hosp.password!),0).subscribe(
       result => {
 
       }

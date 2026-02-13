@@ -1,10 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
+import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
+import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { PieChartComponent } from 'src/app/components/pie-chart/pie-chart.component';
 
 @Component({
     selector: 'app-inscripciones',
@@ -21,6 +24,13 @@ import * as XLSX from 'xlsx';
     standalone: false
 })
 export class InscripcionesComponent implements OnInit {
+
+  @ViewChild(PieChartComponent)
+  child!: PieChartComponent;
+
+  tabsCampas? : boolean[] = [false, false];
+  campamentos?: Campamento[];
+  campamentoSeleccionadoId?: number;
 
   pageResumenActive = true;
   pageInscritosActive = false;
@@ -61,10 +71,27 @@ export class InscripcionesComponent implements OnInit {
     2015,2016,2017,2018,2019,2021,2022,2023
   ];
 
-  constructor(public registroDao: RegistroDao, private datePipe: DatePipe) { }
+  constructor(
+    public registroDao: RegistroDao, 
+    private datePipe: DatePipe,
+    private campamentoDao: CampamentoDao) { }
 
   ngOnInit(): void {
     this.cargarDatos();
+    this.loadCampamentos();
+  }
+
+  loadCampamentos() {
+    this.campamentoDao.getCampamentoActivo().subscribe({
+      next: (result) => {
+        console.log("Campamentos cargados: ", result.resultado);
+        this.campamentos = result.resultado;
+        console.log("Tabs campamentos asignados: ", this.tabsCampas);
+      },
+      error: (error) => {
+        console.error('Error al cargar campamentos:', error);
+      }
+    });
   }
 
   activarPageResumen() {
@@ -161,7 +188,7 @@ export class InscripcionesComponent implements OnInit {
       this.displayStyle = "";
       this.chartsDisplayStyle = "none";
 
-      this.registroDao.consultarHistorico(this.year).subscribe(
+      this.registroDao.consultarHistorico(this.year, this.campamentoSeleccionadoId!).subscribe(
         respuesta => {
           this.dataSource = respuesta.resultado;
         }
@@ -209,7 +236,7 @@ export class InscripcionesComponent implements OnInit {
         seg = true;
       }
 
-      this.registroDao.consultarGuerreros(opcion, activo, staff, admin, this.searchByName!, seg).subscribe(
+      this.registroDao.consultarGuerreros(opcion, activo, staff, admin, this.searchByName!, seg, this.campamentoSeleccionadoId).subscribe(
         respuesta => {
           this.dataSource = respuesta.resultado;
         }
@@ -218,7 +245,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   actualizarStaff(isStaff: boolean, id: number) {
-    this.registroDao.actualizarStaff(isStaff, id).subscribe(
+    this.registroDao.actualizarStaff(isStaff, id, this.campamentoSeleccionadoId!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -228,7 +255,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   actualizarAdmin(isAdmin: boolean, id: number) {
-    this.registroDao.actualizarAdmin(isAdmin, id).subscribe(
+    this.registroDao.actualizarAdmin(isAdmin, id, this.campamentoSeleccionadoId!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -238,7 +265,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   actualizarStatus(isActive: boolean, id: number) {
-    this.registroDao.actualizarStatus(isActive, id).subscribe(
+    this.registroDao.actualizarStatus(isActive, id, this.campamentoSeleccionadoId!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -331,7 +358,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   cambiarContrasena(guerrero: Guerrero) {
-    this.registroDao.cambiarContrasena(guerrero.password!, guerrero.id!).subscribe(
+    this.registroDao.cambiarContrasena(guerrero.password!, guerrero.id!, this.campamentoSeleccionadoId!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el cambio de contraseña");
@@ -369,6 +396,25 @@ export class InscripcionesComponent implements OnInit {
  
     /* save to file */  
     XLSX.writeFile(wb, fileName);
+  }
+
+  tabCampamentos(arg0: number) {
+    this.tabsCampas = [false, false];
+    this.tabsCampas[arg0] = true;
+    this.campamentoSeleccionadoId = this.campamentos![arg0].id_campamento;
+    console.log("Campamento seleccionado: ", this.campamentos![arg0]);
+    console.log("ID campamento seleccionado: ", this.campamentoSeleccionadoId);
+    this.actualizarGraficos();
+    this.cargarDatos();
+  }
+
+  actualizarGraficos(){
+    this.child.refrescar(4);
+    this.child.refrescar(5);
+    this.child.refrescar(6);
+    this.child.refrescar(7);
+    this.child.refrescar(8);
+    this.child.refrescar(14);
   }
 
 }

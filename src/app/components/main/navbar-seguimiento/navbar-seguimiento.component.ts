@@ -35,14 +35,14 @@ export class NavbarSeguimientoComponent implements OnInit {
     const parsed = stored != null ? Number(stored) : null;
     this.selectedCampamentoId = parsed != null && !isNaN(parsed) && parsed > 0 ? parsed : undefined;
     console.log('Campamento seleccionado cargado:', this.selectedCampamentoId);
-    this.campamentoDao.getCampamentoActivo().subscribe({
+    /*this.campamentoDao.getCampamentoActivo().subscribe({
       next: (resp) => {
         this.campamentos = resp.resultado ?? [];
       },
       error: (err) => {
         console.error('Error al cargar campamentos:', err);
       }
-    });
+    });*/
   }
 
   cerrarSesion() {

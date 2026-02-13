@@ -18,6 +18,9 @@ export class PieChartComponent implements OnInit {
   @Input()
   opcion?: number;
 
+  @Input()
+  campamentoSelectedId?: number;
+
   indicadores?: Indicador[];
 
   etiquetas?: string[];
@@ -38,7 +41,7 @@ export class PieChartComponent implements OnInit {
 
   private getDatos() {
 
-    this.registroDao.consultarIndicadores(this.opcion!).subscribe(
+    this.registroDao.consultarIndicadores(this.opcion!, this.campamentoSelectedId!).subscribe(
       result => {
         this.indicadores = result.resultado;
         if (this.indicadores !== undefined) {
@@ -77,5 +80,10 @@ export class PieChartComponent implements OnInit {
     }
   };
 
+  public refrescar(opcion: number) {
+    this.opcion = opcion;
+    console.log('Hijo refrescado');
+    this.getDatos();
+  }
 
 }

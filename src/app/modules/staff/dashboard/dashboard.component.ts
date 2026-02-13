@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private cargarIndicadores() {
-    this.registroDao.getIndicadores().subscribe(
+    this.registroDao.getIndicadores(this.campamento?.id_campamento!).subscribe(
       result => {
         const maxPaquetes = Math.max(...result.reporte!.map(item => item.paquete!));
         console.log("Max paquetotes: " + maxPaquetes);

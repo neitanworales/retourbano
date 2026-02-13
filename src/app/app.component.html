@@ -5,7 +5,11 @@
   </i>
 </ng-container>
 
-<app-navbar *ngIf="!(authService.currentUser$ | async)"></app-navbar>
-<app-navbar-seguimiento *ngIf="(authService.currentUser$ | async)"></app-navbar-seguimiento>
-<router-outlet></router-outlet>
-<app-footer></app-footer>
+<div class="app-shell">
+  <app-navbar *ngIf="!(authService.currentUser$ | async)"></app-navbar>
+  <app-navbar-seguimiento *ngIf="(authService.currentUser$ | async)"></app-navbar-seguimiento>
+  <main class="app-main">
+    <router-outlet></router-outlet>
+  </main>
+  <app-footer></app-footer>
+</div>

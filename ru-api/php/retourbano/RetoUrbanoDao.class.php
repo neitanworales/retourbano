@@ -484,21 +484,21 @@ class RetoUrbanoDao
         }
     }
 
-    public function consultaGuerreros($status, $staff, $admin, $byname, $seguimiento, $isAdmin)
+    public function consultaGuerreros($status, $staff, $admin, $byname, $seguimiento, $isAdmin, $campamentoId)
     {
         $que = "SELECT "
             . $this->getGuerreroFields() .
             ",(SELECT SUM(p.cantidad) FROM pagos p WHERE p.id_campamento_guerrero=cg.id) as pagado"
             . ($isAdmin ? ",password" : "") .
             " FROM guerreros g 
-            INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero 
-            INNER JOIN campamentos cm ON cg.id_campamento=cm.id_campamento AND cm.activo=true" .
+            INNER JOIN campamento_guerreros cg ON g.id=cg.id_guerrero " .
             ($status == 'T' ? " WHERE " : " WHERE status = '$status' " . ($status != 'B' ? " AND " : "")) .
             ($status != 'B' ? " staff " . ($staff == 'T' ? "in(0,1)" : ("=" . $staff)) . " AND admin=$admin " : '');
         if (!empty($byname)) {
             $que .= " AND g.nombre like '%$byname%'";
         }
         $que .= ($status != 'B' ? " AND seguimiento = $seguimiento " : "");
+        $que .= " AND cg.id_campamento = $campamentoId";
         return $this->bd->ObtenerConsulta($que);
     }
 

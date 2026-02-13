@@ -39,6 +39,7 @@ if (!$datos->validarToken($user, $token) or !$datos->validarAdmin($user)) {
 }
 $isAdmin = true;
 $opcion = $_REQUEST['opcion'];
+$campamentoId = $_REQUEST['campamento_id'] ?? null;
 
 switch ($opcion) {
     case 1:
@@ -47,7 +48,7 @@ switch ($opcion) {
         $admin = $_REQUEST['admin'] == 1 ? "1" : "0";
         $byname = $_REQUEST['byname'];
         $seguimiento = $_REQUEST['seguimiento'] == 1 ? "1" : "0";
-        $arrayResponse['resultado'] = $datos->consultaGuerreros($status, $staff, $admin, $byname, $seguimiento, $isAdmin);
+        $arrayResponse['resultado'] = $datos->consultaGuerreros($status, $staff, $admin, $byname, $seguimiento, $isAdmin, $campamentoId);
 
         $number = 1;
         foreach ($arrayResponse['resultado'] as &$valor) {
@@ -109,7 +110,7 @@ switch ($opcion) {
     case 7:
     case 8:
     case 14:
-        $arrayResponse['resultado'] = $datos->getIndicadores($opcion);
+        $arrayResponse['resultado'] = $datos->getIndicadores($opcion, $campamentoId);
         echo json_encode($arrayResponse);
         break;
 
@@ -280,8 +281,8 @@ switch ($opcion) {
         echo json_encode($response);
         break;
     case 22:
-        $response["reporte-html"] = $datos->recorrerArray($datos->getIndicadoresArray());
-        $response["reporte"] = $datos->getIndicadoresArray();
+        $response["reporte-html"] = $datos->recorrerArray($datos->getIndicadoresArray($campamentoId));
+        $response["reporte"] = $datos->getIndicadoresArray($campamentoId);
         $response["mensaje"] = "Ok";
         http_response_code(200);
         echo json_encode($response);
