@@ -6,7 +6,7 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 @Component({
   selector: 'app-campamentos',
   templateUrl: './campamentos.component.html',
-  //styleUrl: './campamentos.component.css',
+  styleUrl: './campamentos.component.css',
   standalone: false
 })
 export class CampamentosComponent implements OnInit {
@@ -55,6 +55,13 @@ export class CampamentosComponent implements OnInit {
       titularCuenta: ["", Validators.required],
       contacto1: ["", Validators.required],
       contacto2: ["", Validators.required],
+      email_contacto: ["", Validators.required],
+      llegada_lugar: ["", Validators.required],
+      llegada_coordenadas: ["", Validators.required],
+      llegada_nota: ["", Validators.required],
+      salida_lugar: ["", Validators.required],
+      salida_coordenadas: ["", Validators.required],
+      salida_nota: ["", Validators.required]
     });
   }
 
