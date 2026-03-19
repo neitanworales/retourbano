@@ -19,6 +19,7 @@ export class Campamento {
     pago_minimoMX?: number;
     banco?: string;
     cuenta?: string;
+    clabe?: string;
     titularCuenta?: string;
     contacto1?: string;
     contacto2?: string;
@@ -32,4 +33,5 @@ export class Campamento {
     salida_coordenadas?: string;
     salida_nota?: string;
     notas_costos?: string;
+    cruzada_lugar?: string;
 }
