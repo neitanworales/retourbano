@@ -31,4 +31,5 @@ export class Campamento {
     salida_lugar?: string;
     salida_coordenadas?: string;
     salida_nota?: string;
+    notas_costos?: string;
 }

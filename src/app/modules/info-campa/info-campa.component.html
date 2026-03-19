@@ -2,6 +2,9 @@
     <h1>+ Info - {{campamento.ciudad?.nombre}}</h1>
     <h1>{{campamento.titulo}}</h1>
     <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{campamento.year}} está por comenzar!</h2>
+    <hr>
+    <h3>Costos</h3>
+    <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
 
     <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
     <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de <b>${{campamento.pago_minimoMX}}
