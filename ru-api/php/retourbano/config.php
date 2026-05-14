@@ -3,7 +3,7 @@
 $host_1='localhost';
 $user_1='root';
 $password_1='';
-$db_1='jucum_pachuca';
+$db_1='ywampach_retourbano';
 
 // ------ ACT ------ //
 $host_2='localhost';
