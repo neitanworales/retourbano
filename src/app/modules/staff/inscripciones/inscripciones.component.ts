@@ -84,8 +84,8 @@ export class InscripcionesComponent implements OnInit {
   loadCampamentos() {
     this.eventDao.getEventActivo().subscribe({
       next: (result) => {
-        console.log("Eventos cargados: ", result.resultado);
-        this.events = result.resultado;
+        console.log("Eventos cargados: ", result.data?.events);
+        this.events = result.data?.events;
         console.log("Tabs eventos asignados: ", this.tabsCampas);
       },
       error: (error) => {

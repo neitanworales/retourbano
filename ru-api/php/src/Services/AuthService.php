@@ -32,6 +32,8 @@ class AuthService
         $expiresAt = date('Y-m-d H:i:s', strtotime('+7 days'));
         $this->tokens->createToken((int) $user->id, $token, $expiresAt);
 
+        $userRoles = $this->roles->getRolesByUserId((int) $user->id);
+
         return array(
             'token' => $token,
             'expires_at' => $expiresAt,
@@ -42,6 +44,7 @@ class AuthService
                 'email' => $user->email,
                 'user_status' => $user->user_status,
             ),
+            'roles' => $userRoles,
         );
     }
 

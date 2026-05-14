@@ -36,7 +36,7 @@ export class InfoCampaComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          this.event = result.event!;
+          this.event = result.data?.events?.[0]!;
           this.isLoading = false;
         },
         error: (error) => {
@@ -51,7 +51,7 @@ export class InfoCampaComponent implements OnInit {
     this.isLoading = true;
     this.eventDao.getEventInfo(id_event).subscribe({
       next: (result) => {
-        this.event = result.event!;
+        this.event = result.data?.events?.[0]!;
         this.isLoading = false;
       },
       error: (error) => {

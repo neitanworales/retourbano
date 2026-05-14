@@ -68,15 +68,15 @@ export class CampamentosComponent implements OnInit {
   cargarDatos() {
     this.eventDao.getEvents().subscribe(
       response => {
-        this.dataSource = response.resultado;
+        this.dataSource = response.data?.events || [];
       }
     );
 
     this.eventDao.getEventActivo().subscribe(
       response => {
-        console.log(response.resultado![0]);
-        this.eventoActivo = response.resultado![0];
-        console.log(this.eventoActivo);
+        console.log(response.data?.events?.[0]);
+        this.eventoActivo = response.data?.events?.[0]!;
+        console.log(this.eventoActivo)
         this.eventoForm.patchValue(this.eventoActivo);
       }
     );

@@ -53,7 +53,7 @@ export class RegistroDinamicoComponent implements OnInit {
   validarEmail() {
     this.registroDao.validarEmail(this.email,this.event.id!).subscribe(
       result => {
-        this.mensajeModal = result.mensaje;
+        this.mensajeModal = result.message;
         this.tituloModal = "Reinscripción";
         this.openPopup();
       }

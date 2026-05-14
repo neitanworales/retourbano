@@ -1,0 +1,696 @@
+openapi: 3.0.3
+info:
+  title: Retourbano API v1
+  version: 1.0.0
+  description: |
+    Documentacion Swagger/OpenAPI para los endpoints v1 actuales.
+
+    Notas de autenticacion:
+    - Endpoints protegidos aceptan token por `Authorization: Bearer <token>`.
+    - Por compatibilidad, tambien pueden aceptar `token` en query o body en algunos casos.
+servers:
+  - url: https://events.local/ru-api/php/public
+    description: Local HTTPS (XAMPP)
+  - url: https://events.local/public
+    description: Local HTTPS alternate
+  - url: https://www.ywampachuca.org/php/public
+    description: Produccion
+
+tags:
+  - name: Auth
+  - name: Events
+  - name: Users
+  - name: Registrations
+
+paths:
+  /api/v1/auth/login:
+    post:
+      tags: [Auth]
+      summary: Login de usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+            example:
+              email: usuario@correo.com
+              password: MiPassword123
+      responses:
+        '200':
+          description: Login exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAuthLogin'
+        '401':
+          description: Credenciales invalidas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/auth/validate:
+    post:
+      tags: [Auth]
+      summary: Validar token de sesion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Token valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessUser'
+        '401':
+          description: Token invalido o expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/auth/logout:
+    post:
+      tags: [Auth]
+      summary: Cerrar sesion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token]
+              properties:
+                token:
+                  type: string
+      responses:
+        '200':
+          description: Logout exitoso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+
+  /api/v1/auth/forgot-password:
+    post:
+      tags: [Auth]
+      summary: Solicitar recuperacion de contrasena
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+      responses:
+        '200':
+          description: Solicitud procesada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+
+  /api/v1/auth/reset-password:
+    post:
+      tags: [Auth]
+      summary: Cambiar contrasena con token de recuperacion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, new_password]
+              properties:
+                token:
+                  type: string
+                new_password:
+                  type: string
+                  minLength: 8
+      responses:
+        '200':
+          description: Password actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+        '401':
+          description: Token invalido o expirado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/events:
+    get:
+      tags: [Events]
+      summary: Listar eventos
+      parameters:
+        - in: query
+          name: year
+          schema:
+            type: integer
+        - in: query
+          name: active
+          schema:
+            type: integer
+            enum: [0, 1]
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Lista de eventos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessEvents'
+
+  /api/v1/events/detail:
+    get:
+      tags: [Events]
+      summary: Obtener detalle de evento
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Evento encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessEvent'
+        '404':
+          description: Evento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/events/upcoming-availability:
+    get:
+      tags: [Events]
+      summary: Eventos activos proximos y disponibilidad del usuario autenticado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+          description: Si se envia, valida solo ese evento.
+        - in: query
+          name: limit
+          required: false
+          schema:
+            type: integer
+            default: 10
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Disponibilidad calculada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessUpcomingAvailability'
+        '401':
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/users/detail:
+    get:
+      tags: [Users]
+      summary: Obtener detalle de usuario (solo staff/admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Usuario encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessUser'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/users/profile:
+    get:
+      tags: [Users]
+      summary: Perfil del usuario autenticado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Perfil encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessUser'
+
+  /api/v1/registrations:
+    post:
+      tags: [Registrations]
+      summary: Crear inscripcion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id, event_id]
+              properties:
+                user_id:
+                  type: integer
+                event_id:
+                  type: integer
+                requires_lodging:
+                  type: integer
+                  enum: [0, 1]
+                room_code:
+                  type: string
+      responses:
+        '200':
+          description: Inscripcion creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessRegistration'
+
+  /api/v1/registrations/status:
+    patch:
+      tags: [Registrations]
+      summary: Actualizar estatus de inscripcion
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registration_id, status]
+              properties:
+                registration_id:
+                  type: integer
+                status:
+                  type: string
+                token:
+                  type: string
+                  description: Compatibilidad legacy.
+      responses:
+        '200':
+          description: Estatus actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+
+  /api/v1/registrations/detail:
+    get:
+      tags: [Registrations]
+      summary: Obtener inscripcion por id (solo staff/admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: registration_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Inscripcion encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessRegistrationDetail'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/registrations/by-event:
+    get:
+      tags: [Registrations]
+      summary: Listar inscripciones por evento (solo staff/admin)
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Inscripciones por evento
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessRegistrations'
+
+  /api/v1/registrations/by-user:
+    get:
+      tags: [Registrations]
+      summary: Listar inscripciones por usuario autenticado o usuario enviado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: user_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: limit
+          schema:
+            type: integer
+            default: 100
+        - in: query
+          name: offset
+          schema:
+            type: integer
+            default: 0
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Inscripciones por usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessRegistrations'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: Token
+
+  schemas:
+    ApiSuccess:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: ok
+        data:
+          type: object
+
+    ApiError:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        message:
+          type: string
+        code:
+          type: integer
+          example: 401
+        details:
+          type: object
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        full_name:
+          type: string
+        display_name:
+          type: string
+        email:
+          type: string
+        user_status:
+          type: string
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: integer
+        legacy_event_id:
+          type: integer
+          nullable: true
+        organization_id:
+          type: integer
+          nullable: true
+        city_id:
+          type: integer
+          nullable: true
+        event_year:
+          type: integer
+          nullable: true
+        title:
+          type: string
+        start_at:
+          type: string
+          format: date-time
+          nullable: true
+        end_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_active:
+          type: integer
+        max_registrations:
+          type: integer
+          nullable: true
+
+    EventWithAvailability:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            is_registered:
+              type: boolean
+            registration_id:
+              type: integer
+              nullable: true
+            registration_status:
+              type: string
+              nullable: true
+
+    Registration:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: integer
+        user_id:
+          type: integer
+        registration_status:
+          type: string
+        requires_lodging:
+          type: integer
+          nullable: true
+        room_code:
+          type: string
+          nullable: true
+
+    ApiSuccessAuthLogin:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        message:
+          type: string
+          example: login successful
+        data:
+          type: object
+          properties:
+            token:
+              type: string
+            expires_at:
+              type: string
+              format: date-time
+            user:
+              $ref: '#/components/schemas/User'
+
+    ApiSuccessUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+
+    ApiSuccessEvents:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/Event'
+
+    ApiSuccessEvent:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/Event'
+
+    ApiSuccessUpcomingAvailability:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            inscrito:
+              type: boolean
+            events:
+              type: array
+              items:
+                $ref: '#/components/schemas/EventWithAvailability'
+
+    ApiSuccessRegistration:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/Registration'
+
+    ApiSuccessRegistrationDetail:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            registration:
+              $ref: '#/components/schemas/Registration'
+
+    ApiSuccessRegistrations:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            registrations:
+              type: array
+              items:
+                $ref: '#/components/schemas/Registration'

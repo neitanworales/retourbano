@@ -38,7 +38,7 @@ export class RegistroComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          this.event = result.event!;
+          this.event = result.data?.events?.[0];
         },
         error: (error) => {
           console.error('Error al cargar evento:', error);
@@ -50,7 +50,7 @@ export class RegistroComponent implements OnInit {
   private loadEvents() {
     this.eventDao.getEventActivo().subscribe({
       next: (result) => {
-        this.events = result.resultado!;
+        this.events = result.data?.events!;
       },
       error: (error) => {
         console.error('Error al cargar eventos    :', error);

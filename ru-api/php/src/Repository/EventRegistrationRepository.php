@@ -93,7 +93,9 @@ class EventRegistrationRepository extends BaseRepository
 
     public function findByUser($userId, $limit = 100, $offset = 0)
     {
-        $sql = 'SELECT * FROM event_registrations WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?';
+        $sql = 'SELECT * FROM events e
+                LEFT JOIN event_registrations er ON er.event_id = e.id 
+                WHERE er.user_id = ? AND e.is_active = 0 ORDER BY e.event_year DESC LIMIT ? OFFSET ?';
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('iii', $userId, $limit, $offset);
         $stmt->execute();
@@ -101,7 +103,7 @@ class EventRegistrationRepository extends BaseRepository
         $stmt->close();
 
         return array_map(function ($row) {
-            return new EventRegistration($row);
+            return new Event($row);
         }, $rows);
     }
 }

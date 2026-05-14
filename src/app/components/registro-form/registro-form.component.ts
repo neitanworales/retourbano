@@ -186,7 +186,7 @@ export class RegistroFormComponent implements OnInit {
       this.registroDao.agregarGuerrero(this.model, this.saveInMemory, this.event.id!).subscribe(
         result => {
           this.errorRegistro = result.error;
-          this.mensajesRegistros.push(result.mensaje!);
+          this.mensajesRegistros.push(result.message!);
           this.openPopup();
         }
       );
@@ -198,7 +198,7 @@ export class RegistroFormComponent implements OnInit {
       this.registroDao.agregarGuerrero(warrior, this.saveInMemory, this.event.id!).subscribe(
         result => {
           this.errorRegistro = result.error;
-          this.mensajesRegistros.push(result.mensaje!);
+          this.mensajesRegistros.push(result.message!);
         }
       );
     });
@@ -212,7 +212,7 @@ export class RegistroFormComponent implements OnInit {
     this.registroDao.updateGuerrero(this.model, this.event.id!).subscribe(
       result => {
         this.errorRegistro = result.error;
-        this.mensajesRegistros.push(result.mensaje!);
+        this.mensajesRegistros.push(result.message!);
         this.openPopup();
       }
     );

@@ -1,5 +1,5 @@
 import { inject, Injectable } from "@angular/core";
-import { Observable } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
 import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
@@ -17,6 +17,7 @@ import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
 import { CampamentoGuerrerosResponse } from "../../models/registro/CampamentoGuerreros";
 import { HabitacionResponse } from "../../models/hospedaje/HabitacionResponse";
 import { SinHabitacionResponse } from "../../models/hospedaje/SinHabitacionResponse";
+import { EventResponse } from "../../models/registro/EventResponse";
 
 @Injectable()
 export class RegistroDao {
@@ -152,9 +153,39 @@ export class RegistroDao {
         return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo=' + email, { headers: this.utils.getHeaders() });
     }
 
-    public validarInscripcion(): Observable<RegistroResponse> {
+    public validarInscripcion(eventId?: number): Observable<RegistroResponse> {
         const session = this.autho.getSessionValida();
-        return this.http.get<RegistroResponse>(environment.apiUrl + 'retourbano/validar-inscripcion.php?id=' + session?.id, { headers: this.utils.getHeaders() });
+        const token = session?.token?.toString() || '';
+        const eventQuery = eventId && eventId > 0 ? '&event_id=' + eventId : '';
+
+        return this.http.get<any>(
+            this.utils.v1('/events/upcoming-availability') + '?token=' + encodeURIComponent(token) + eventQuery,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => {
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'Disponibilidad consultada',
+                    code: response?.code || 200,
+                    inscrito: !!response?.data?.inscrito,
+                    events: response?.data?.events || []
+                } as RegistroResponse;
+            }),
+            catchError(() => this.http.get<any>(
+                this.utils.v1('/retourbano/validar-inscripcion.php?id=' + session?.id),
+                { headers: this.utils.getHeaders() }
+            ).pipe(
+                map((legacy) => ({
+                    success: legacy?.success ?? !legacy?.error,
+                    error: !!legacy?.error,
+                    message: legacy?.message || legacy?.mensaje || 'Disponibilidad consultada',
+                    code: legacy?.code || 200,
+                    inscrito: !!legacy?.inscrito,
+                    events: legacy?.events || []
+                } as RegistroResponse))
+            ))
+        );
     }
 
     public obtenerHospedajes(con_hospedaje: Boolean, campamentoId: number): Observable<HospedajeResponse> {
@@ -264,5 +295,39 @@ export class RegistroDao {
             + '&token=' + user?.token
             + '&campamento_id=' + campamentoId
             , { headers: this.utils.getHeaders() });
+    }
+
+    public getUserRegistrations(limit: number = 100, offset: number = 0): Observable<EventResponse> {
+        const session = this.autho.getSessionValida();
+        const token = session?.token?.toString() || '';
+
+        return this.http.get<any>(
+            this.utils.v1('/registrations/by-user') + '?token=' + encodeURIComponent(token) + '&user_id=' + session?.id + '&limit=' + limit + '&offset=' + offset,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => {
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'Registrations retrieved',
+                    code: response?.code || 200,
+                    data: {
+                        events: response?.data?.registrations || []
+                    }
+                } as EventResponse;
+            }),
+            catchError((error) => {
+                console.error('Error getting user registrations:', error);
+                return of({
+                    success: false,
+                    error: true,
+                    message: 'Error al obtener historial de eventos',
+                    code: 500,
+                    data: {
+                        events: []
+                    }
+                } as EventResponse);
+            })
+        );
     }
 }

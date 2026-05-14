@@ -70,7 +70,7 @@ export class ReinscripcionComponent implements OnInit {
   validarEmail() {
     this.registroDao.validarEmail(this.email, this.id_event!).subscribe(
       result => {
-        this.mensajeModal = result.mensaje;
+        this.mensajeModal = result.message;
         this.tituloModal = "Reinscripción";
         this.openPopup();
       }
@@ -99,7 +99,7 @@ export class ReinscripcionComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          this.event = result.event!;
+          this.event = result.data?.events?.[0];
         },
         error: (error) => {
           console.error('Error al cargar campamento:', error);
@@ -111,7 +111,7 @@ export class ReinscripcionComponent implements OnInit {
   private loadCampamentos() {
     this.eventDao.getEventActivo().subscribe({
       next: (result) => {
-        this.event = result.resultado![0];
+        this.event = result.data?.events?.[0];
       },
       error: (error) => {
         console.error('Error al cargar campamentos:', error);

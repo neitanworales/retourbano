@@ -37,7 +37,7 @@ export class NavbarSeguimientoComponent implements OnInit {
     console.log('Evento seleccionado cargado:', this.selectedEventoId);
     /*this.eventDao.getEventActivo().subscribe({
       next: (resp) => {
-        this.event = resp.resultado ?? [];
+        this.event = resp.data?.events ?? [];
       },
       error: (err) => {
         console.error('Error al cargar eventos:', err);

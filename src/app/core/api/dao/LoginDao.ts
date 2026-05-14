@@ -1,7 +1,7 @@
 import { inject, Injectable } from "@angular/core";
 import { Observable, catchError, map } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Utils } from "../Utils";
+import { Utils, UserRole } from "../Utils";
 import { LoginResponse } from "src/app/core/models/login/LoginResponse";
 import { Session } from "src/app/core/models/login/Session";
 import { DefaultResponse } from "src/app/core/models/DefaultResponse";
@@ -21,6 +21,7 @@ interface V1LoginUser {
 interface V1LoginPayload {
     token: string;
     user: V1LoginUser;
+    roles?: UserRole[];
 }
 
 interface V1Response<T> {
@@ -47,9 +48,10 @@ export class LoginDao {
             password: password.toString()
         };
 
-        return this.http.post<V1Response<V1LoginPayload>>(this.v1('/auth/login'), body, { headers: this.utils.getHeaders() }).pipe(
+        return this.http.post<V1Response<V1LoginPayload>>(this.utils.v1('/auth/login'), body, { headers: this.utils.getHeaders() }).pipe(
             map((response) => this.mapV1LoginToLegacy(response)),
-            catchError(() => {
+            catchError((error) => {
+                console.log("Login fallido con API v1, intentando con endpoint legacy..." + error);
                 const usernameEncrypted = this.tumba.encryptar(username);
                 const passwordEncrypted = this.tumba.encryptar(password);
                 const usernameSafe = encodeURIComponent(usernameEncrypted.toString());
@@ -66,11 +68,11 @@ export class LoginDao {
         this.session = JSON.parse(localStorage.getItem('session')!);
         const body = { token: this.session?.token?.toString() || '' };
 
-        return this.http.post<V1Response<Record<string, never>>>(this.v1('/auth/logout'), body, { headers: this.utils.getHeaders() }).pipe(
+        return this.http.post<V1Response<Record<string, never>>>(this.utils.v1('/auth/logout'), body, { headers: this.utils.getHeaders() }).pipe(
             map((response) => ({
                 success: !!response?.success,
                 error: !response?.success,
-                mensaje: response?.message || 'logout',
+                message: response?.message || 'logout',
                 code: response?.code || 200
             } as LoginResponse)),
             catchError(() => this.http.get<LoginResponse>(
@@ -84,7 +86,7 @@ export class LoginDao {
         this.session = JSON.parse(localStorage.getItem('session')!);
         const body = { token: this.session?.token?.toString() || '' };
 
-        return this.http.post<V1Response<{ user: V1LoginUser }>>(this.v1('/auth/validate'), body, { headers: this.utils.getHeaders() }).pipe(
+        return this.http.post<V1Response<{ user: V1LoginUser }>>(this.utils.v1('/auth/validate'), body, { headers: this.utils.getHeaders() }).pipe(
             map((response) => {
                 const user = response?.data?.user;
                 const usuario = new Usuario();
@@ -104,13 +106,13 @@ export class LoginDao {
                 return {
                     success: !!response?.success,
                     error: !response?.success,
-                    mensaje: response?.message || 'session validated',
+                    message: response?.message || 'session validated',
                     code: response?.code || 200,
                     session: validSession
                 } as SessionResponse;
             }),
             catchError(() => this.http.get<SessionResponse>(
-                environment.apiUrl + 'retourbano/session.php?id=' + this.getSessionUserId(this.session) + '&token=' + this.session?.token,
+                this.utils.v1('/retourbano/session.php?id=' + this.getSessionUserId(this.session) + '&token=' + this.session?.token),
                 { headers: this.utils.getHeaders() }
             ))
         );
@@ -118,32 +120,28 @@ export class LoginDao {
 
     public isAdmin(): Observable<boolean> {
         this.session = inject(AuthService).getSession()!;
-        return this.http.get<SessionResponse>(environment.apiUrl + 'retourbano/session.php?id=' + this.getSessionUserId(this.session) + "&token=" + this.session?.token , { headers: this.utils.getHeaders() }).pipe(
+        return this.http.get<SessionResponse>(this.utils.v1('/retourbano/session.php?id=' + this.getSessionUserId(this.session) + "&token=" + this.session?.token), { headers: this.utils.getHeaders() }).pipe(
             map(response => !(response.session?.usuario?.admin ?? response.session?.guerrero?.admin))
         );
     }
 
     public recoveryPassword(email: string) : Observable<DefaultResponse> {
         return this.http.post<V1Response<Record<string, never>>>(
-            this.v1('/auth/forgot-password'),
+            this.utils.v1('/auth/forgot-password'),
             { email },
             { headers: this.utils.getHeaders() }
         ).pipe(
             map((response) => ({
+                success: !!response?.success,
                 error: !response?.success,
-                mensaje: response?.message || 'if the email exists, password reset instructions were sent',
+                message: response?.message || 'if the email exists, password reset instructions were sent',
                 code: response?.code || 200
             } as DefaultResponse)),
             catchError(() => this.http.get<DefaultResponse>(
-                environment.apiUrl + 'retourbano/recovery-password.php?email=' + email,
+                this.utils.v1('/retourbano/recovery-password.php?email=' + email),
                 { headers: this.utils.getHeaders() }
             ))
         );
-    }
-
-    private v1(path: string): string {
-        const base = (environment.apiUrl || '').replace(/\/+$/, '');
-        return `${base}${path}`;
     }
 
     private mapV1LoginToLegacy(response: V1Response<V1LoginPayload>): LoginResponse {
@@ -159,13 +157,13 @@ export class LoginDao {
             token: response?.data?.token,
             usuario: usuario,
             guerrero: usuario,
-            roles: []
+            roles: response?.data?.roles || []
         };
 
         return {
             success: !!response?.success,
             error: !response?.success,
-            mensaje: response?.message || 'login successful',
+            message: response?.message || 'login successful',
             code: response?.code || 200,
             session: session
         } as LoginResponse;

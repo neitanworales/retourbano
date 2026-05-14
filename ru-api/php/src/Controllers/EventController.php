@@ -2,14 +2,17 @@
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Repository/EventRepository.php';
+require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
 
 class EventController extends BaseController
 {
     private $events;
+    private $registrations;
 
     public function __construct()
     {
         $this->events = new EventRepository();
+        $this->registrations = new EventRegistrationRepository();
     }
 
     public function list($request)
@@ -40,5 +43,66 @@ class EventController extends BaseController
         }
 
         return $this->ok(array('event' => $event->toArray()), 'event found');
+    }
+
+    public function upcomingAvailability($request)
+    {
+        if (!isset($request['auth_user']) || !isset($request['auth_user']->id)) {
+            return $this->fail('authenticated user is required', 401);
+        }
+
+        $userId = (int) $request['auth_user']->id;
+        $eventId = isset($request['event_id']) ? (int) $request['event_id'] : 0;
+        $limit = isset($request['limit']) ? (int) $request['limit'] : null;
+        if ($limit !== null && $limit <= 0) {
+            $limit = null;
+        }
+
+        if ($eventId > 0) {
+            $singleEvent = $this->events->findModelById($eventId);
+            if (!$singleEvent) {
+                return $this->fail('event not found', 404);
+            }
+            $events = array($singleEvent);
+        } else {
+            $events = $this->events->findUpcomingActive($limit);
+        }
+
+        $items = array();
+        $isRegisteredAny = false;
+
+        foreach ($events as $event) {
+            $registration = $this->registrations->findByEventAndUser((int) $event->id, $userId);
+            $isRegistered = $registration !== null;
+            if ($isRegistered) {
+                $isRegisteredAny = true;
+            }
+
+            $row = $event->toArray();
+            $row['is_registered'] = $isRegistered;
+            $row['registration_id'] = $isRegistered ? (int) $registration->id : null;
+            $row['registration_status'] = $isRegistered ? $registration->registration_status : null;
+            $items[] = $row;
+        }
+
+        if (empty($items)) {
+            $message = 'No hay eventos activos proximos disponibles';
+        } elseif ($eventId > 0 && $isRegisteredAny) {
+            $message = 'Ya estas inscrito en este evento';
+        } elseif ($eventId > 0 && !$isRegisteredAny) {
+            $message = 'Aun no estas inscrito en este evento';
+        } elseif ($isRegisteredAny) {
+            $message = 'Ya estas inscrito en al menos un evento activo';
+        } else {
+            $message = 'Hay eventos activos disponibles y aun no estas inscrito';
+        }
+
+        return $this->ok(
+            array(
+                'inscrito' => $isRegisteredAny,
+                'events' => $items,
+            ),
+            $message
+        );
     }
 }

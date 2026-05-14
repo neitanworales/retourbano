@@ -44,6 +44,12 @@ $router->add('GET', '/api/v1/events/detail', function ($request) use ($eventCont
     return $eventController->detail($request);
 });
 
+$router->add('GET', '/api/v1/events/upcoming-availability', function ($request) use ($eventController, $authGuard) {
+    return $authGuard->protect($request, function ($securedRequest) use ($eventController) {
+        return $eventController->upcomingAvailability($securedRequest);
+    });
+});
+
 $router->add('GET', '/api/v1/users/detail', function ($request) use ($userController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
         return $userController->detail($securedRequest);

@@ -78,6 +78,30 @@ class EventRepository extends BaseRepository
         }, $rows);
     }
 
+    public function findUpcomingActive($limit = null)
+    {
+        $sql = 'SELECT * FROM events
+                WHERE is_active = 1
+                ORDER BY start_at ASC, id ASC';
+
+        if ($limit !== null && (int) $limit > 0) {
+            $sql .= ' LIMIT ?';
+            $stmt = $this->db->prepare($sql);
+            $limit = (int) $limit;
+            $stmt->bind_param('i', $limit);
+        } else {
+            $stmt = $this->db->prepare($sql);
+        }
+
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            return new Event($row);
+        }, $rows);
+    }
+
     public function create(Event $event)
     {
         $sql = 'INSERT INTO events (legacy_event_id, organization_id, city_id, event_year, title, start_at, end_at, is_active, max_registrations, registration_deadline, registration_open_at, price_mxn, price_usd)

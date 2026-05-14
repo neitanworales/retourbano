@@ -22,7 +22,7 @@ export class RecoveryPasswordComponent implements OnInit {
   recovery() {
     this.loginDao.recoveryPassword(this.email!).subscribe(
       result => {
-        this.mensaje = result.mensaje;
+        this.mensaje = result.message;
         this.visibleAlert = true;
         if(result.error){
           this.typeAlert = "danger"

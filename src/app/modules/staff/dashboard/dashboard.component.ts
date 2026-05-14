@@ -7,7 +7,6 @@ import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { Indicador } from 'src/app/core/models/registro/Indicador';
 import { Paquete } from 'src/app/core/models/registro/Paquete';
-import { arrow } from '@popperjs/core';
 import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
@@ -19,15 +18,15 @@ import { Event } from 'src/app/core/models/registro/Event';
 export class DashboardComponent implements OnInit {
 
   event?: Event;
+  events?: Event[];
+  upcomingEvents: Event[] = [];
+  registeredEvents: Event[] = [];
   session!: Session;
   seguimientos?: Seguimiento[];
   diaSelected = "";
   horarios?: string[];
   showHorario?: boolean;
   horaSelected?: string
-  mensajeInscritoCampamento?: string;
-  inscrtoCampamento?: boolean;
-  classInscritoCampamento?: string;
   showFormInscripcion?: boolean = false;
   paquetes: Paquete[] = [];
 
@@ -37,15 +36,38 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.validarInscricion();
+    this.cargarHistorialEventos();
     this.cargarIndicadores();
   }
 
   private validarInscricion() {
-    this.registroDao.validarInscripcion().subscribe(
+    this.registroDao.validarInscripcion(0).subscribe(
       result => {
-        this.mensajeInscritoCampamento = result.mensaje;
-        this.inscrtoCampamento = result.inscrito;
-        this.classInscritoCampamento = result.inscrito ? "alert alert-success" : "alert alert-warning";
+        this.events = result.events;
+        this.upcomingEvents = result.events?.filter(e => !e.is_registered) || [];
+      }
+    );
+  }
+
+  private cargarHistorialEventos() {
+    this.registroDao.getUserRegistrations().subscribe(
+      result => {
+        const registrations = result.data?.events || [];
+        this.registeredEvents = registrations.map((item) => {
+          const event = new Event();
+          event.id = item.id;
+          event.title = item.title || 'Evento sin nombre';
+          event.start_at = item.start_at;
+          event.city_label = item.city_label || 'Sin ciudad';
+          event.is_registered = true;
+          event.registration_id = item.registration_id;
+          event.registration_status = item.registration_status || 'active';
+          return event;
+        });
+      },
+      error => {
+        console.error('Error loading registration history:', error);
+        this.registeredEvents = [];
       }
     );
   }
@@ -68,6 +90,9 @@ export class DashboardComponent implements OnInit {
 
   public presentarFormInscripcion() {
     this.showFormInscripcion = true;
+  }
+
+  inscribirEvento(event_id: number) {
   }
 
 }
