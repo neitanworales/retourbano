@@ -64,4 +64,62 @@ class PaymentRepository extends BaseRepository
 
         return $id;
     }
+
+    public function updateFields($id, $fields)
+    {
+        $allowed = array(
+            'amount' => 'd',
+            'description' => 's',
+            'currency' => 's',
+            'receipt_number' => 's',
+            'payment_method' => 's',
+            'paid_at' => 's',
+        );
+
+        $setParts = array();
+        $types = '';
+        $params = array();
+
+        foreach ($fields as $column => $value) {
+            if (!array_key_exists($column, $allowed)) {
+                continue;
+            }
+            $setParts[] = "$column = ?";
+            $type = $allowed[$column];
+            $types .= $type;
+            $params[] = $type === 'd' ? (float) $value : (string) $value;
+        }
+
+        if (empty($setParts)) {
+            return false;
+        }
+
+        $sql = 'UPDATE payments SET ' . implode(', ', $setParts) . ', updated_at = NOW() WHERE id = ?';
+        $types .= 'i';
+        $params[] = (int) $id;
+
+        $stmt = $this->db->prepare($sql);
+
+        $bindParams = array($types);
+        foreach ($params as $key => $value) {
+            $bindParams[] = &$params[$key];
+        }
+
+        call_user_func_array(array($stmt, 'bind_param'), $bindParams);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
+    }
+
+    public function deleteById($id)
+    {
+        $sql = 'DELETE FROM payments WHERE id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $id);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
+    }
 }

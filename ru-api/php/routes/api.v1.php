@@ -4,6 +4,7 @@ $authController = new AuthController();
 $registrationController = new RegistrationController();
 $eventController = new EventController();
 $userController = new UserController();
+$paymentController = new PaymentController();
 $authGuard = new AuthGuard();
 
 $router->add('POST', '/api/v1/auth/login', function ($request) use ($authController) {
@@ -89,5 +90,35 @@ $router->add('GET', '/api/v1/registrations/by-event', function ($request) use ($
 $router->add('GET', '/api/v1/registrations/by-user', function ($request) use ($registrationController, $authGuard) {
     return $authGuard->protect($request, function ($securedRequest) use ($registrationController) {
         return $registrationController->getByUser($securedRequest);
+    });
+});
+
+$router->add('POST', '/api/v1/payments', function ($request) use ($paymentController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
+        return $paymentController->create($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/payments', function ($request) use ($paymentController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
+        return $paymentController->update($securedRequest);
+    });
+});
+
+$router->add('DELETE', '/api/v1/payments', function ($request) use ($paymentController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
+        return $paymentController->delete($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/payments/detail', function ($request) use ($paymentController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
+        return $paymentController->getById($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/payments/by-registration', function ($request) use ($paymentController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
+        return $paymentController->getByRegistration($securedRequest);
     });
 });

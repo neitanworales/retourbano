@@ -3,16 +3,19 @@
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Services/RegistrationService.php';
 require_once __DIR__ . '/../Repository/UserRepository.php';
+require_once __DIR__ . '/../Repository/PaymentRepository.php';
 
 class RegistrationController extends BaseController
 {
     private $registrationService;
     private $users;
+    private $payments;
 
     public function __construct()
     {
         $this->registrationService = new RegistrationService();
         $this->users = new UserRepository();
+        $this->payments = new PaymentRepository();
     }
 
     public function register($request)
@@ -100,7 +103,9 @@ class RegistrationController extends BaseController
             return $this->fail('registration not found', 404);
         }
 
-        return $this->ok(array('registration' => $this->attachUserToItem($registration->toArray())), 'registration found');
+        $item = $this->attachUserToItem($registration->toArray());
+        $item = $this->attachPaymentsToItem($item);
+        return $this->ok(array('registration' => $item), 'registration found');
     }
 
     public function getByEvent($request)
@@ -122,7 +127,8 @@ class RegistrationController extends BaseController
 
         $registrations = $this->registrationService->getByEvent($eventId, $limit, $offset, $filters);
         $items = array_map(function ($registration) {
-            return $this->attachUserToItem($registration->toArray());
+            $item = $this->attachUserToItem($registration->toArray());
+            return $this->attachPaymentsToItem($item);
         }, $registrations);
 
         return $this->ok(array('registrations' => $items), 'registrations by event');
@@ -140,7 +146,8 @@ class RegistrationController extends BaseController
 
         $registrations = $this->registrationService->getByUser($userId, $limit, $offset);
         $items = array_map(function ($registration) {
-            return $this->attachUserToItem($registration->toArray());
+            $item = $this->attachUserToItem($registration->toArray());
+            return $this->attachPaymentsToItem($item);
         }, $registrations);
 
         return $this->ok(array('registrations' => $items), 'registrations by user');
@@ -165,6 +172,34 @@ class RegistrationController extends BaseController
         }
 
         $item['user'] = $cache[$userId];
+        return $item;
+    }
+
+    private function attachPaymentsToItem($item)
+    {
+        if (!is_array($item) || !isset($item['id'])) {
+            return $item;
+        }
+
+        $registrationId = (int) $item['id'];
+        if ($registrationId <= 0) {
+            $item['pagos'] = array();
+            return $item;
+        }
+
+        static $cache = array();
+        if (!array_key_exists($registrationId, $cache)) {
+            $payments = $this->payments->findByRegistrationId($registrationId);
+            $cache[$registrationId] = array_map(function ($payment) {
+                return $payment->toArray();
+            }, $payments);
+        }
+
+        $item['pagos'] = $cache[$registrationId];
+        $item['pagado'] = array_reduce($item['pagos'], function ($total, $payment) {
+            $amount = isset($payment['amount']) ? (float) $payment['amount'] : 0;
+            return $total + $amount;
+        }, 0.0);
         return $item;
     }
 

@@ -274,16 +274,19 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  agregarPago(pagos: Pago[]) {
+  agregarPago(element: EventRegistration) {
+    if(element.pagos == null){
+      element.pagos = [];
+    }
     let nuevoPago = new Pago();
     nuevoPago.nuevo = true;
     nuevoPago.actualizar = false;
-    nuevoPago.divisa = "MXN"
-    pagos.push(nuevoPago);
+    nuevoPago.currency = "MXN"
+    element.pagos.push(nuevoPago);
   }
 
   guardarPago(pago: Pago, reg: EventRegistration) {
-    this.registroDao.guardarPago(pago, reg.user?.id!).subscribe(
+    this.registroDao.guardarPago(pago, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
@@ -293,7 +296,7 @@ export class InscripcionesComponent implements OnInit {
           if (reg.pagado == null) {
             reg.pagado = 0;
           }
-          reg.pagado = Number(reg.pagado) + Number(pago.cantidad!);
+          reg.pagado = Number(reg.pagado) + Number(pago.amount!);
         }
       }
     );

@@ -22,7 +22,7 @@ export class EventRegistration {
 
     // Payment data
     pagado?: number;
-    pagos?: Pago[];
+    pagos?: Pago[] = [];
 
     // Legacy UI field
     numero?: number;

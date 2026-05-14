@@ -254,16 +254,48 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public guardarPago(pago: Pago, idGuerrero: number) {
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idguerrero=' + idGuerrero, pago, { headers: this.utils.getHeaders() });
+    public guardarPago(pago: Pago, eventRegistrationId: number): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.post<DefaultResponse>(
+            this.utils.v1('/payments') + '?token=' + token,
+            {
+                event_registration_id: eventRegistrationId,
+                amount: pago.amount,
+                description: pago.description,
+                currency: pago.currency || 'MXN',
+                receipt_number: pago.receipt_number,
+            },
+            { headers: this.utils.getHeaders() }
+        );
     }
 
-    public actualizarPago(pago: Pago) {
-        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idpago=' + pago.id_pago, pago, { headers: this.utils.getHeaders() });
+    public actualizarPago(pago: Pago): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.patch<DefaultResponse>(
+            this.utils.v1('/payments') + '?token=' + token,
+            {
+                payment_id: pago.id,
+                amount: pago.amount,
+                description: pago.description,
+                currency: pago.currency,
+                receipt_number: pago.receipt_number,
+            },
+            { headers: this.utils.getHeaders() }
+        );
     }
 
-    public borrarPago(pago: Pago) {
-        return this.http.delete<RegistroResponse>(environment.apiUrl + 'retourbano/guardar-pago.php?idpago=' + pago.id_pago, { headers: this.utils.getHeaders() });
+    public borrarPago(pago: Pago): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.delete<DefaultResponse>(
+            this.utils.v1('/payments') + '?token=' + token + '&payment_id=' + pago.id,
+            { headers: this.utils.getHeaders() }
+        );
     }
 
     public guardarConfirmacion(valor: boolean, registrationId: number): Observable<DefaultResponse> {

@@ -417,36 +417,36 @@
                                             <td>
                                                 <div *ngIf="pago.nuevo; else elseCol1">
                                                     <input type="text" class="form-control"
-                                                        [(ngModel)]="pago.descripcion">
+                                                        [(ngModel)]="pago.description">
                                                 </div>
                                                 <ng-template #elseCol1>
-                                                    {{pago.descripcion}}
+                                                    {{pago.description}}
                                                 </ng-template>
                                             </td>
                                             <td>
                                                 <div *ngIf="pago.nuevo; else elseCol2">
                                                     <input type="number" class="form-control"
-                                                        [(ngModel)]="pago.cantidad">
+                                                        [(ngModel)]="pago.amount">
                                                 </div>
                                                 <ng-template #elseCol2>
-                                                    {{pago.cantidad | currency:"$ "}}
+                                                    {{pago.amount | currency:"$ "}}
                                                 </ng-template>
                                             </td>
                                             <td>
                                                 <div *ngIf="pago.nuevo; else elseCol3">
-                                                    <input type="text" class="form-control" [(ngModel)]="pago.divisa">
+                                                    <input type="text" class="form-control" [(ngModel)]="pago.currency">
                                                 </div>
                                                 <ng-template #elseCol3>
-                                                    {{pago.divisa}}
+                                                    {{pago.currency}}
                                                 </ng-template>
                                             </td>
                                             <td>
                                                 <div *ngIf="pago.nuevo; else elseCol4">
                                                     <input type="text" class="form-control"
-                                                        [(ngModel)]="pago.no_ticket">
+                                                        [(ngModel)]="pago.receipt_number">
                                                 </div>
                                                 <ng-template #elseCol4>
-                                                    {{pago.no_ticket}}
+                                                    {{pago.receipt_number}}
                                                 </ng-template>
                                             </td>
                                             <td>
@@ -465,7 +465,7 @@
                                         </tr>
                                         <tr>
                                             <td>
-                                                <button type="button" (click)="agregarPago(element.pagos)" class="btn">
+                                                <button type="button" (click)="agregarPago(element)" class="btn">
                                                     <i class="bi bi-plus-circle"></i>
                                                 </button>
                                             </td>
