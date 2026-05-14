@@ -5,23 +5,22 @@
         </div>
     </div>
 
-    <div *ngIf="campamento != null; else botones">
+    <div *ngIf="event != null; else botones">
 
         <div class="row">
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        Reinscripción al campamento {{campamento.titulo}}
+                        Reinscripción al campamento {{event.titulo}}
                     </div>
                     <div class="card-body">
-                        <p>Este campamento se llevará a cabo en {{campamento.ciudad?.nombre}}</p>
+                        <p>Este campamento se llevará a cabo en {{event.ciudad?.nombre}}</p>
                     </div>
                     <div class="card-footer">
                         ¿Deseas reinscribirte a otro campamento?
-                        <a *ngFor="let campamento of campamentos" class="btn btn-sm btn-outline-info"
+                        <a *ngFor="let event of events" class="btn btn-sm btn-outline-info"
                             routerLink="/reinscripcion"
-                            [queryParams]="{ id_campamento: campamento.id_campamento }">{{campamento.ciudad?.nombre +'
-                            -'+campamento.titulo}}</a>
+                            [queryParams]="{ id_campamento: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
                     </div>
                 </div>
             </div>
@@ -80,7 +79,7 @@
             <div class="col-10">
                 <h3>Guerrero encontrado:</h3>
                 <app-registro-form [saveInMemory]="false" [guerreroToEdit]="guerrero"
-                    [campamento]="campamento!"></app-registro-form>
+                    [event]="event!"></app-registro-form>
             </div>
             <div class="col-1"></div>
         </div>
@@ -89,9 +88,9 @@
         <div class="row">
             <div class="col text-center">
                 <h2>¿A cual campamento quieres registrarte?</h2>
-                <a *ngFor="let campamento of campamentos" class="btn btn-primary" routerLink="/reinscripcion"
-                    [queryParams]="{ id_campamento: campamento.id_campamento }">{{campamento.ciudad?.nombre +' -
-                    '+campamento.titulo}}</a>
+                <a *ngFor="let event of events" class="btn btn-primary" routerLink="/reinscripcion"
+                    [queryParams]="{ id_campamento: event.id }">{{event.ciudad?.nombre +' -
+                    '+event.titulo}}</a>
             </div>
         </div>
     </ng-template>

@@ -1,7 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { APP_BASE_HREF } from '@angular/common';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
+import { Event } from 'src/app/core/models/registro/Event';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
 
 @Component({
   selector: 'app-navbar',
@@ -11,28 +11,28 @@ import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
 })
 export class NavbarComponent implements OnInit {
 
-  campamentos?: Campamento[];
+  events?: Event[];
   isLoading: boolean = true;
 
   constructor(
-    private campamentoDao: CampamentoDao
+    private eventDao: EventDao
   ) {
-    this.loadCampamento();
+    this.loadEvent();
   }
 
   ngOnInit(): void {
   }
 
-  private loadCampamento() {
-    this.campamentoDao.getCampamentoActivo().subscribe({
+  private loadEvent() {
+    this.eventDao.getEventActivo().subscribe({
       next: (result) => {
-        console.log("Campamentos cargados: ", result.resultado);
-        this.campamentos = result.resultado!;
-        console.log("Campamentos asignados: ", this.campamentos);
+        console.log("Eventos cargados: ", result.resultado);
+        this.events = result.resultado!;
+        console.log("Eventos asignados: ", this.events);
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar campamentos:', error);
+        console.error('Error al cargar eventos:', error);
         this.isLoading = false;
       }
     });

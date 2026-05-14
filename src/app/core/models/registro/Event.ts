@@ -2,8 +2,8 @@ import { Costo } from "./Costo";
 import { Ciudad } from "./Ciudad";
 import { Avance } from "./Avance";
 
-export class Campamento {
-    id_campamento?: number;
+export class Event {
+    id?: number;
     year?: number;
     ciudad?: Ciudad;
     titulo?: string;

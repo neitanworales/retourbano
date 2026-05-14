@@ -2,9 +2,9 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, filter, tap, switchMap } from 'rxjs';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { Event } from 'src/app/core/models/registro/Event';
 import { Guerrero } from 'src/app/core/models/registro/Guerrero';
 
 @Component({
@@ -24,16 +24,16 @@ export class ReinscripcionComponent implements OnInit {
   tituloModal?: String;
   mensajeModal?: String;
   email!: string;
-  campamentos?: Campamento[];
-  id_campamento?: number;
-  campamento?: Campamento;
+  events?: Event[];
+  id_event?: number;
+  event?: Event;
 
   constructor(
     private formBuilder: FormBuilder,
     private registroDao: RegistroDao,
     private route: ActivatedRoute,
     private router: Router,
-    private campamentoDao: CampamentoDao) {
+    private eventDao: EventDao) {
     this.route.queryParams.subscribe(params => {
       this.codigo = params['code'];
     });
@@ -41,7 +41,7 @@ export class ReinscripcionComponent implements OnInit {
   }
   ngOnInit(): void {
     this.loadCampamentos();
-    this.loadCampamento();
+    this.loadEvent();
 
     this.registerFormEmail = this.formBuilder.group({
       email: ["", Validators.required]
@@ -68,7 +68,7 @@ export class ReinscripcionComponent implements OnInit {
   }
 
   validarEmail() {
-    this.registroDao.validarEmail(this.email, this.id_campamento!).subscribe(
+    this.registroDao.validarEmail(this.email, this.id_event!).subscribe(
       result => {
         this.mensajeModal = result.mensaje;
         this.tituloModal = "Reinscripción";
@@ -87,31 +87,31 @@ export class ReinscripcionComponent implements OnInit {
     this.displayStyle = "none";
   }
 
-  private loadCampamento() {
+  private loadEvent() {
     this.route.queryParamMap
       .pipe(
-        map((params: ParamMap) => Number(params.get('id_campamento'))),
+        map((params: ParamMap) => Number(params.get('id_event'))),
         filter((id) => !isNaN(id) && id > 0),
         tap((id) => {
-          this.id_campamento = id;
+          this.id_event = id;
         }),
-        switchMap((id) => this.campamentoDao.getCampamentoInfo(id))
+        switchMap((id) => this.eventDao.getEventInfo(id))
       )
       .subscribe({
         next: (result) => {
-          this.campamento = result.campamento!;
+          this.event = result.event!;
         },
         error: (error) => {
           console.error('Error al cargar campamento:', error);
         }
       });
-    console.log('Campamento', this.campamento);
+    console.log('Campamento', this.event);
   }
 
   private loadCampamentos() {
-    this.campamentoDao.getCampamentoActivo().subscribe({
+    this.eventDao.getEventActivo().subscribe({
       next: (result) => {
-        this.campamentos = result.resultado!;
+        this.event = result.resultado![0];
       },
       error: (error) => {
         console.error('Error al cargar campamentos:', error);

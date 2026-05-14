@@ -1,5 +1,5 @@
 <div class="container">
-    <div class="row" style="margin-top: 1em; margin-bottom: 2em;">
+    <!--div class="row" style="margin-top: 1em; margin-bottom: 2em;">
         <div class="col-lg-6">
             <div class="alert alert-info" role="alert">
                 Hola {{session.guerrero?.nombre}}
@@ -14,17 +14,31 @@
             <a class="btn btn-info" href="/inscripciones">Ir a Inscripciones de RU</a>
         </div>
         <div *ngIf="showFormInscripcion" class="col-lg-6">
-            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="session.guerrero!" [campamento]="campamento!"></app-registro-form>
+            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="session.guerrero!"
+                [campamento]="campamento!"></app-registro-form>
         </div>
         <div class="col-lg-6">
             DASHBOARD
         </div>
+    </div-->
+    <div class="row" style="margin-top: 1em; margin-bottom: 2em;">
+        <div class="col-lg-6">
+            <div class="alert alert-info" role="alert">
+                Hola {{session.guerrero?.nombre}}
+            </div>
+        </div>
+        <div class="col-lg-6">
+            <h2>Dashboard</h2>
+            <h3>Eventos Próximos</h3>
+            
+        </div>
     </div>
     <div class="row">
-        <h3>Indicadores</h3>
+        <h2>Indicadores</h2>
         <div class="d-flex flex-wrap">
             <ol *ngFor="let paquete of paquetes" class="list-group list-group-numbered paquete">
-                <li *ngFor="let indicador of paquete.indicadores" class="list-group-item d-flex justify-content-between align-items-start">
+                <li *ngFor="let indicador of paquete.indicadores"
+                    class="list-group-item d-flex justify-content-between align-items-start">
                     <div class="ms-2 me-auto">
                         <div class="fw-bold">{{indicador.valor}}</div>
                     </div>

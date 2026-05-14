@@ -4,8 +4,8 @@ import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 import { UserRole } from 'src/app/core/api/Utils';
 import { Session } from 'src/app/core/models/login/Session';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
   selector: 'app-navbar-seguimiento',
@@ -16,31 +16,31 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 export class NavbarSeguimientoComponent implements OnInit {
 
   currentUser?: Session;
-  campamentos: Campamento[] = [];
-  selectedCampamentoId?: number;
+  eventos: Event[] = [];
+  selectedEventoId?: number;
   compareIds = (a: number | null, b: number | null) => a === b;
 
   constructor(
     private loginDao: LoginDao,
     private router: Router,
     private autho: AuthService,
-    private campamentoDao: CampamentoDao
+    private eventDao: EventDao
   ) {
     this.currentUser = inject(AuthService).getSessionValida();
   }
 
   ngOnInit(): void {
-    // Initialize selected campamento from localStorage before options load
-    const stored = localStorage.getItem('campamentoSeleccionado');
+    // Initialize selected evento from localStorage before options load
+    const stored = localStorage.getItem('eventoSeleccionado');
     const parsed = stored != null ? Number(stored) : null;
-    this.selectedCampamentoId = parsed != null && !isNaN(parsed) && parsed > 0 ? parsed : undefined;
-    console.log('Campamento seleccionado cargado:', this.selectedCampamentoId);
-    /*this.campamentoDao.getCampamentoActivo().subscribe({
+    this.selectedEventoId = parsed != null && !isNaN(parsed) && parsed > 0 ? parsed : undefined;
+    console.log('Evento seleccionado cargado:', this.selectedEventoId);
+    /*this.eventDao.getEventActivo().subscribe({
       next: (resp) => {
-        this.campamentos = resp.resultado ?? [];
+        this.event = resp.resultado ?? [];
       },
       error: (err) => {
-        console.error('Error al cargar campamentos:', err);
+        console.error('Error al cargar eventos:', err);
       }
     });*/
   }
@@ -64,10 +64,10 @@ export class NavbarSeguimientoComponent implements OnInit {
     return this.currentUser?.roles.some((role) => roles.includes(role));
   }
 
-  onCampamentoChange(id: number) {
-    this.selectedCampamentoId = id;
+  onEventoChange(id: number) {
+    this.selectedEventoId = id;
     if (id != null) {
-      localStorage.setItem('campamentoSeleccionado', String(id));
+      localStorage.setItem('eventoSeleccionado', String(id));
     }
   }
 

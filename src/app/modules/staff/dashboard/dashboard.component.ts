@@ -8,7 +8,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
 import { Indicador } from 'src/app/core/models/registro/Indicador';
 import { Paquete } from 'src/app/core/models/registro/Paquete';
 import { arrow } from '@popperjs/core';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,7 +18,7 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 })
 export class DashboardComponent implements OnInit {
 
-  campamento?: Campamento;
+  event?: Event;
   session!: Session;
   seguimientos?: Seguimiento[];
   diaSelected = "";
@@ -51,7 +51,7 @@ export class DashboardComponent implements OnInit {
   }
 
   private cargarIndicadores() {
-    this.registroDao.getIndicadores(this.campamento?.id_campamento!).subscribe(
+    this.registroDao.getIndicadores(this.event?.id!).subscribe(
       result => {
         const maxPaquetes = Math.max(...result.reporte!.map(item => item.paquete!));
         console.log("Max paquetotes: " + maxPaquetes);
@@ -69,98 +69,5 @@ export class DashboardComponent implements OnInit {
   public presentarFormInscripcion() {
     this.showFormInscripcion = true;
   }
-
-  private cargarDatos() {
-    this.retoDao.getSeguimientosByGuerror().subscribe(
-      resultado => {
-        this.seguimientos = resultado.resultado;
-
-        let first = this.seguimientos?.find((obj) => {
-          return obj.activo == true;
-        });
-
-        if (first?.dia_llegada !== undefined) {
-          this.diaSelected = first?.dia_llegada;
-          this.horaSelected = first?.hora_llegada;
-          if (this.diaSelected === 'v') {
-            this.showHorario = true;
-            this.horarios = this.horariosViernes;
-          } else if (this.diaSelected === 's') {
-            this.showHorario = true;
-            this.horarios = this.horariosSabado;
-          } else {
-            this.showHorario = false;
-            this.horarios = [];
-          }
-        }
-      }
-    );
-  }
-
-  diaLlegada(dia: string) {
-    this.retoDao.confirmaAsistencia(dia).subscribe(
-      resultado => {
-        if (!resultado.error) {
-          this.diaSelected = dia;
-          this.horaSelected = "";
-          this.horaLlegada();
-          if (this.diaSelected === 'v') {
-            this.showHorario = true;
-            this.horarios = this.horariosViernes;
-          } else if (this.diaSelected === 's') {
-            this.showHorario = true;
-            this.horarios = this.horariosSabado;
-          } else {
-            this.showHorario = false;
-            this.horarios = [];
-          }
-        }
-      }
-    );
-  }
-
-  horaLlegada() {
-    this.retoDao.confirmaAsistenciaHora(this.horaSelected!).subscribe(
-      resultado => {
-        console.log(resultado);
-      }
-    );
-  }
-
-  horariosViernes = [
-    "15:00",
-    "15:30",
-    "16:00",
-    "16:30",
-    "17:00",
-    "17:30",
-    "18:00",
-    "18:30",
-    "19:00",
-    "19:30",
-    "20:00",
-    "20:30",
-    "21:00",
-    "21:30",
-    "22:00",
-    "22:30",
-  ]
-
-  horariosSabado = [
-    "06:00",
-    "06:30",
-    "07:00",
-    "07:30",
-    "08:00",
-    "08:30",
-    "09:00",
-    "09:30",
-    "10:00",
-    "10:30",
-    "11:00",
-    "11:30",
-    "12:00",
-    "12:30",
-  ]
 
 }

@@ -1,38 +1,38 @@
 <section class="container section main-section">
-    <h1>+ Info - {{campamento.ciudad?.nombre}}</h1>
-    <h1>{{campamento.titulo}}</h1>
-    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{campamento.year}} está por comenzar!</h2>
+    <h1>+ Info - {{event.ciudad?.nombre}}</h1>
+    <h1>{{event.titulo}}</h1>
+    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{event.year}} está por comenzar!</h2>
     <hr>
     <ul>
         <li>
             <h3>Costos</h3>
-            <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
+            <app-tabla-costos [event]="event"></app-tabla-costos>
         </li>
         <li>
             <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
             <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de
-                <b>${{campamento.pago_minimoMX}}
+                <b>${{event.pago_minimoMX}}
                     MXN</b></p>
             <p>Realiza tu depósito a:</p>
-            <p *ngIf="campamento.banco">
-                <i class="bi bi-bank"></i> {{campamento.banco}}
+            <p *ngIf="event.banco">
+                <i class="bi bi-bank"></i> {{event.banco}}
             </p>
-            <p *ngIf="campamento.titularCuenta">
-                <i class="bi bi-file-person"></i> {{campamento.titularCuenta}}
+            <p *ngIf="event.titularCuenta">
+                <i class="bi bi-file-person"></i> {{event.titularCuenta}}
             </p>
-            <p *ngIf="campamento.cuenta">
-                <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{campamento.cuenta}}
+            <p *ngIf="event.cuenta">
+                <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{event.cuenta}}
             </p>
-            <p *ngIf="campamento.clabe">
-                <i class="bi bi-credit-card-2-back"></i> CLABE: {{campamento.clabe}}
+            <p *ngIf="event.clabe">
+                <i class="bi bi-credit-card-2-back"></i> CLABE: {{event.clabe}}
             </p>
-            <p *ngIf="campamento.email_contacto">
+            <p *ngIf="event.email_contacto">
                 <i class="bi bi-envelope-at"></i> Una vez realizado tu pago, Es importante que nos notifiques tus
                 dep&oacute;sitos en
-                <b>{{campamento.email_contacto}}</b> o al los whatsapps <b><a
-                        href="https://wa.me/52{{campamento.contacto1}}" target="_blank">{{campamento.contacto1}}</a></b>
+                <b>{{event.email_contacto}}</b> o al los whatsapps <b><a
+                        href="https://wa.me/52{{event.contacto1}}" target="_blank">{{event.contacto1}}</a></b>
                 y/o
-                <b>{{campamento.contacto2}}</b> enviando tus
+                <b>{{event.contacto2}}</b> enviando tus
                 fichas de depósito y el nombre de la persona inscrita.
             </p>
             <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes
@@ -42,35 +42,35 @@
         </li>
         <li>
             <h3>2. <i class="bi bi-car-front-fill"></i> Día de llegada:</h3>
-            <p *ngIf="campamento.fecha_inicio"><i class="bi bi-calendar-event"></i> {{campamento.fecha_inicio | date}}</p>
-            <p *ngIf="campamento.fecha_inicio"><i class="bi bi-clock"></i> {{campamento.fecha_inicio | date:'shortTime'}}
+            <p *ngIf="event.fecha_inicio"><i class="bi bi-calendar-event"></i> {{event.fecha_inicio | date}}</p>
+            <p *ngIf="event.fecha_inicio"><i class="bi bi-clock"></i> {{event.fecha_inicio | date:'shortTime'}}
             </p>
-            <p *ngIf="campamento.llegada_lugar"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b>
-                {{campamento.llegada_lugar}}</p>
-            <iframe *ngIf="campamento.llegada_coordenadas" [src]="getSafeUrl(campamento.llegada_coordenadas)" width="600"
+            <p *ngIf="event.llegada_lugar"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b>
+                {{event.llegada_lugar}}</p>
+            <iframe *ngIf="event.llegada_coordenadas" [src]="getSafeUrl(event.llegada_coordenadas)" width="600"
                 height="450" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <p *ngIf="campamento.llegada_nota">{{campamento.llegada_nota}}</p>
+            <p *ngIf="event.llegada_nota">{{event.llegada_nota}}</p>
         </li>
         <li>
             <h3>3. <i class="bi bi-backpack2"></i> Viaje Misionero:</h3>
             <p>Durante este tiempo se llevará acabo un pequeño viaje misionero.</p>
             <p>Es importante mencionar que este viaje es una parte fundamental del campamento, ya que es el momento en el que los participantes pueden poner en práctica lo aprendido y vivir una experiencia de servicio y amor hacia los demás.</p>
-            <p *ngIf="campamento.cruzada_lugar">Este año el viaje misionero se realizará en {{campamento.cruzada_lugar}}</p>
+            <p *ngIf="event.cruzada_lugar">Este año el viaje misionero se realizará en {{event.cruzada_lugar}}</p>
             <p>* El viaje misionero es un viaje de ida y vuelta y los costos están dentro del costo total del campamento.</p>
             <p>** El día de llegada se podrá firmar una forma de autorización para menores de edad.</p>
         </li>
         <li>
             <h3>4. <i class="bi bi-car-front-fill"></i> Día de salida:</h3>
-            <p *ngIf="campamento.fecha_termino"><i class="bi bi-calendar-event"></i> {{campamento.fecha_termino | date}}</p>
-            <p *ngIf="campamento.fecha_termino"><i class="bi bi-clock"></i> {{campamento.fecha_termino | date:'shortTime'}}
+            <p *ngIf="event.fecha_termino"><i class="bi bi-calendar-event"></i> {{event.fecha_termino | date}}</p>
+            <p *ngIf="event.fecha_termino"><i class="bi bi-clock"></i> {{event.fecha_termino | date:'shortTime'}}
             </p>
-            <p *ngIf="campamento.salida_lugar"><i class="bi bi-geo"></i> <b>Lugar de entrega:</b>
-                {{campamento.salida_lugar}}</p>
-            <iframe *ngIf="campamento.salida_coordenadas" [src]="getSafeUrl(campamento.salida_coordenadas)" width="600"
+            <p *ngIf="event.salida_lugar"><i class="bi bi-geo"></i> <b>Lugar de entrega:</b>
+                {{event.salida_lugar}}</p>
+            <iframe *ngIf="event.salida_coordenadas" [src]="getSafeUrl(event.salida_coordenadas)" width="600"
                 height="450" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <p *ngIf="campamento.salida_nota">{{campamento.salida_nota}}</p>
+            <p *ngIf="event.salida_nota">{{event.salida_nota}}</p>
         </li>
     </ul>
 </section>

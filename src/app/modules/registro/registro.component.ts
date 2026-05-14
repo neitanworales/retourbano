@@ -1,8 +1,8 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
   selector: 'app-registro',
@@ -14,46 +14,46 @@ export class RegistroComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private campamentoDao: CampamentoDao
+    private eventDao: EventDao
   ) { }
 
-  campamentos?: Campamento[];
-  id_campamento?: number;
-  campamento?: Campamento;
+  events?: Event[];
+  id_event?: number;
+  event?: Event;
 
   ngOnInit(): void {
-    this.loadCampamento();
-    this.loadCampamentos();
+    this.loadEvent();
+    this.loadEvents();
   }
 
-  private loadCampamento() {
+  private loadEvent() {
     this.route.queryParamMap
       .pipe(
-        map((params: ParamMap) => Number(params.get('id_campamento'))),
+        map((params: ParamMap) => Number(params.get('id_event'))),
         filter((id) => !isNaN(id) && id > 0),
         tap((id) => {
-          this.id_campamento = id;
+          this.id_event = id;
         }),
-        switchMap((id) => this.campamentoDao.getCampamentoInfo(id))
+        switchMap((id) => this.eventDao.getEventInfo(id))
       )
       .subscribe({
         next: (result) => {
-          this.campamento = result.campamento!;
+          this.event = result.event!;
         },
         error: (error) => {
-          console.error('Error al cargar campamento:', error);
+          console.error('Error al cargar evento:', error);
         }
       });
-    console.log('Campamento', this.campamento);
+    console.log('Evento', this.event);
   }
 
-  private loadCampamentos() {
-    this.campamentoDao.getCampamentoActivo().subscribe({
+  private loadEvents() {
+    this.eventDao.getEventActivo().subscribe({
       next: (result) => {
-        this.campamentos = result.resultado!;
+        this.events = result.resultado!;
       },
       error: (error) => {
-        console.error('Error al cargar campamentos:', error);
+        console.error('Error al cargar eventos    :', error);
       }
     });
   }

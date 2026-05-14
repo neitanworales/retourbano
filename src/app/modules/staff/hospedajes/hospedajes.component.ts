@@ -15,7 +15,7 @@ import * as XLSX from 'xlsx';
 })
 export class HospedajesComponent implements OnInit {
 
-  campamentoSeleccionadoId?: number;
+  eventSeleccionadoId?: number;
 
   pageHabitaciones : boolean = true;
   pageHospedajes! : boolean;
@@ -50,7 +50,7 @@ export class HospedajesComponent implements OnInit {
   }
 
   private cargarDatosHospedajes() {
-    this.registroDao.obtenerHospedajes(this.pageHospedajes, this.campamentoSeleccionadoId!).subscribe(
+    this.registroDao.obtenerHospedajes(this.pageHospedajes, this.eventSeleccionadoId!).subscribe(
       result => {
         this.hospedajes = result.resultado;
         this.hospedajes.map((p, i) => {
@@ -66,12 +66,12 @@ export class HospedajesComponent implements OnInit {
   }
 
   private cargarDatosHabitaciones(){
-    this.registroDao.obtenerHabitaciones(this.campamentoSeleccionadoId!).subscribe(
+    this.registroDao.obtenerHabitaciones(this.eventSeleccionadoId!).subscribe(
       result => {
         this.habitaciones = result.resultado;
       }
     );
-    this.registroDao.obtenerPersonasSinHabitacion(this.campamentoSeleccionadoId!).subscribe(
+    this.registroDao.obtenerPersonasSinHabitacion(this.eventSeleccionadoId!).subscribe(
       result => {
         this.personasSinHabitacion = result.personas!;
       }
@@ -88,7 +88,7 @@ export class HospedajesComponent implements OnInit {
   }
 
   guardar(hosp: HospedajeTable) {
-    this.registroDao.actualizarHabitacion(hosp.id!, hosp.habitacion!, this.campamentoSeleccionadoId!).subscribe(
+    this.registroDao.actualizarHabitacion(hosp.id!, hosp.habitacion!, this.eventSeleccionadoId!).subscribe(
       result => {
 
       }
@@ -106,7 +106,7 @@ export class HospedajesComponent implements OnInit {
   }
 
   guardarHospedaje(hosp: HospedajeTable) { 
-    this.registroDao.actualizarHospedaje(hosp.id!, hosp.hospedaje!, this.campamentoSeleccionadoId!).subscribe(
+    this.registroDao.actualizarHospedaje(hosp.id!, hosp.hospedaje!, this.eventSeleccionadoId!).subscribe(
       result => {
 
       }

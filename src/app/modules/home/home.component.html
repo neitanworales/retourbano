@@ -5,8 +5,8 @@
             <div class="text-center">
                 <h1 class="mx-auto my-0 text-uppercase">RETO URBANO</h1>
                 <h2 class="text-white-50 mx-auto mt-2 mb-5">reto ¿que somos?</h2>
-                <a *ngFor="let campamento of campamentos" class="btn btn-primary" routerLink="/info"
-                    [queryParams]="{ id_campamento: campamento.id_campamento }">{{campamento.ciudad?.nombre}}</a>
+                <a *ngFor="let event of events" class="btn btn-primary" routerLink="/info"
+                    [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre}}</a>
             </div>
         </div>
     </div>
@@ -24,20 +24,20 @@
         </div>
         <!-- Contenido cuando ya cargó -->
         <div *ngIf="!isLoading" class="row gx-4 gx-lg-5 justify-content-center">
-            <div *ngFor="let campamento of campamentos" class="col-lg-6">
-                <h1 class="text-white mb-4">{{campamento.titulo}}</h1>
+            <div *ngFor="let event of events" class="col-lg-6">
+                <h1 class="text-white mb-4">{{event.titulo}}</h1>
                 <div class="row">
                     <div class="text-white text-center col-md-12">
-                        <h2>{{campamento.ciudad?.nombre}}</h2>
-                        <h3>{{campamento.fecha_inicio | date:'dd MMMM' }} a {{campamento.fecha_termino | date:'dd MMMM'
+                        <h2>{{event.ciudad?.nombre}}</h2>
+                        <h3>{{event.fecha_inicio | date:'dd MMMM' }} a {{event.fecha_termino | date:'dd MMMM'
                             }}</h3>
                     </div>
                     <div class="text-center col-md-12 section">
                         <app-registro-avance [showForm]="false"
-                            [campamento]="campamento"></app-registro-avance>
+                            [event]="event"></app-registro-avance>
                     </div>
                     <div class="text-center col-md-12 section">
-                        <a routerLink="/registro" [queryParams]="{ id_campamento: campamento.id_campamento }"
+                        <a routerLink="/registro" [queryParams]="{ id_event: event.id }"
                             class="btn btn-danger">Ir a
                             inscripciones</a>
                     </div>

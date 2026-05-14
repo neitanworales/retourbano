@@ -1,5 +1,5 @@
 <div class="row" id="generic_price_table">
-    <div *ngFor="let costo of campamento.costos" class="col-md-4">
+    <div *ngFor="let costo of event.costos" class="col-md-4">
         <div class="generic_content clearfix">
             <div class="generic_head_price clearfix">
                 <div class="generic_head_content clearfix">
@@ -23,6 +23,6 @@
         </div>
     </div>
 </div>
-<div class="alert alert-primary" role="alert" *ngIf="campamento.notas_costos">
-    {{campamento.notas_costos}}
+<div class="alert alert-primary" role="alert" *ngIf="event.notas_costos">
+    {{event.notas_costos}}
 </div>

@@ -2,8 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
     selector: 'app-info-campa',
@@ -15,47 +15,47 @@ export class InfoCampaComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
-    private campamentoDao: CampamentoDao,
+    private eventDao: EventDao,
     private sanitizer: DomSanitizer
   ) { }
 
-  id_campamento?: number;
-  campamento: Campamento = new Campamento();
+  id_event?: number;
+  event: Event = new Event();
   isLoading = false;
 
   ngOnInit(): void {
     this.route.queryParamMap
       .pipe(
-        map((params: ParamMap) => Number(params.get('id_campamento'))),
+        map((params: ParamMap) => Number(params.get('id_event'))),
         filter((id) => !isNaN(id) && id > 0),
         tap((id) => {
           this.isLoading = true;
-          this.id_campamento = id;
+          this.id_event = id;
         }),
-        switchMap((id) => this.campamentoDao.getCampamentoInfo(id))
+        switchMap((id) => this.eventDao.getEventInfo(id))
       )
       .subscribe({
         next: (result) => {
-          this.campamento = result.campamento!;
+          this.event = result.event!;
           this.isLoading = false;
         },
         error: (error) => {
-          console.error('Error al cargar campamento:', error);
+          console.error('Error al cargar evento:', error);
           this.isLoading = false;
         }
       });
   }
 
-  private loadCampamento(id_campamento: number): void {
-    console.log('Id campamento recibida:', id_campamento);
+  private loadEvent(id_event  : number): void {
+    console.log('Id evento recibida:', id_event);
     this.isLoading = true;
-    this.campamentoDao.getCampamentoInfo(id_campamento).subscribe({
+    this.eventDao.getEventInfo(id_event).subscribe({
       next: (result) => {
-        this.campamento = result.campamento!;
+        this.event = result.event!;
         this.isLoading = false;
       },
       error: (error) => {
-        console.error('Error al cargar campamento:', error);
+        console.error('Error al cargar evento :', error);
         this.isLoading = false;
       }
     });

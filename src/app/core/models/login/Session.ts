@@ -1,9 +1,10 @@
 import { UserRole } from "../../api/Utils";
-import { Guerrero } from "../registro/Guerrero";
+import { Usuario } from "../usuario/Usuario";
 
 export class Session {
     id?: number;
     token?: String;
-    guerrero? : Guerrero;
+    usuario?: Usuario;
+    guerrero?: Usuario;
     roles: UserRole[] = [];
 }

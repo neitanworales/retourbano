@@ -42,7 +42,7 @@ import { Router } from '@angular/router';
 import { PieChartComponent } from "./components/pie-chart/pie-chart.component";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CampamentosComponent } from './modules/staff/campamentos/campamentos.component';
-import { CampamentoDao } from './core/api/dao/CampamentoDao';
+import { EventDao } from './core/api/dao/EventDao';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppComponent } from './app.component';
 import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
@@ -110,7 +110,7 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         PagoDao,
         LoginDao,
         RetoDao,
-        CampamentoDao,
+        EventDao,
         AuthService,
         HorarioDao,
         provideAnimationsAsync(),

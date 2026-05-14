@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
     selector: 'app-tabla-costos',
@@ -10,7 +10,7 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 export class TablaCostosComponent implements OnInit {
 
   @Input()
-  campamento!: Campamento;
+  event!: Event;
 
   constructor() { }
 

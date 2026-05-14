@@ -19,7 +19,7 @@ export class PieChartComponent implements OnInit {
   opcion?: number;
 
   @Input()
-  campamentoSelectedId?: number;
+  eventSelectedId?: number;
 
   indicadores?: Indicador[];
 
@@ -41,7 +41,7 @@ export class PieChartComponent implements OnInit {
 
   private getDatos() {
 
-    this.registroDao.consultarIndicadores(this.opcion!, this.campamentoSelectedId!).subscribe(
+    this.registroDao.consultarIndicadores(this.opcion!, this.eventSelectedId!).subscribe(
       result => {
         this.indicadores = result.resultado;
         if (this.indicadores !== undefined) {

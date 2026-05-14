@@ -1,12 +1,12 @@
 <div class="container">
     <ul class="nav nav-tabs">
-        <li *ngFor="let campamento of campamentos; let i = index" nav-item>
+        <li *ngFor="let campamento of events; let i = index" nav-item>
             <a class="nav-link {{tabsCampas![i]?'active':''}}" (click)="tabCampamentos(i)"><i
                     class="bi bi-info-circle-fill"></i> {{campamento.ciudad?.nombre}}</a>
         </li>
     </ul>
 </div>
-<div *ngIf="campamentoSeleccionadoId" class="container">
+<div *ngIf="selectedEventoId" class="container">
     <h1>Inscripciones RU</h1>
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -41,22 +41,22 @@
 
     <div class="row" [ngStyle]="{'display':chartsDisplayStyle}">
         <div class="col-md-6">
-            <app-pie-chart [opcion]="4" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
+            <app-pie-chart [opcion]="4" [eventSelectedId]="selectedEventoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="5" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
+            <app-pie-chart [opcion]="5" [eventSelectedId]="selectedEventoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="6" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
+            <app-pie-chart [opcion]="6" [eventSelectedId]="selectedEventoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="7" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
+            <app-pie-chart [opcion]="7" [eventSelectedId]="selectedEventoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="8" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
+            <app-pie-chart [opcion]="8" [eventSelectedId]="selectedEventoId"></app-pie-chart>
         </div>
         <div class="col-md-6">
-            <app-pie-chart [opcion]="14" [campamentoSelectedId]="campamentoSeleccionadoId"></app-pie-chart>
+            <app-pie-chart [opcion]="14" [eventSelectedId]="selectedEventoId"></app-pie-chart>
         </div>
     </div>
 

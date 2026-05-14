@@ -5,7 +5,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToRegister } from 'src/app/core/models/registro/ToRegister';
 import { Tutor } from 'src/app/core/models/registro/Tutor';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
   selector: 'app-registro-form',
@@ -22,7 +22,7 @@ export class RegistroFormComponent implements OnInit {
   saveInMemory!: boolean;
 
   @Input({ required: true })
-  campamento!: Campamento;
+  event!: Event;
 
   registerForm!: FormGroup;
 
@@ -183,7 +183,7 @@ export class RegistroFormComponent implements OnInit {
       this.registerForm.controls['tutorTelefono'].setValue(tutor.tutorTelefono);
       this.loadListaParaRegistrar();
     } else {
-      this.registroDao.agregarGuerrero(this.model, this.saveInMemory, this.campamento.id_campamento!).subscribe(
+      this.registroDao.agregarGuerrero(this.model, this.saveInMemory, this.event.id!).subscribe(
         result => {
           this.errorRegistro = result.error;
           this.mensajesRegistros.push(result.mensaje!);
@@ -195,7 +195,7 @@ export class RegistroFormComponent implements OnInit {
 
   registrarBatch() {
     this.paraRegistrar.forEach(async (warrior) => {
-      this.registroDao.agregarGuerrero(warrior, this.saveInMemory, this.campamento.id_campamento!).subscribe(
+      this.registroDao.agregarGuerrero(warrior, this.saveInMemory, this.event.id!).subscribe(
         result => {
           this.errorRegistro = result.error;
           this.mensajesRegistros.push(result.mensaje!);
@@ -209,7 +209,7 @@ export class RegistroFormComponent implements OnInit {
   }
 
   updateGuerrero() {
-    this.registroDao.updateGuerrero(this.model, this.campamento.id_campamento!).subscribe(
+    this.registroDao.updateGuerrero(this.model, this.event.id!).subscribe(
       result => {
         this.errorRegistro = result.error;
         this.mensajesRegistros.push(result.mensaje!);
@@ -254,7 +254,7 @@ export class RegistroFormComponent implements OnInit {
     this.displayBackgroudStyle = "";
     this.mensajesRegistros = new Array();
     if (!this.errorRegistro && !this.actualizar) {
-      this.router.navigate(['/info'], { queryParams: { id_campamento: this.campamento.id_campamento } });
+      this.router.navigate(['/info'], { queryParams: { id_event: this.event.id } });
     } else {
       // ??
     }

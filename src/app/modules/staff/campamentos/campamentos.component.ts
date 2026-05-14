@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
   selector: 'app-campamentos',
@@ -12,12 +12,12 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 export class CampamentosComponent implements OnInit {
 
   constructor(
-    public campaDao: CampamentoDao,
+    public eventDao: EventDao,
     private formBuilder: FormBuilder) { }
 
   columnsToDisplay = [
     'botonera',
-    'id_campamento',
+    'id_event',
     'titulo',
     'fecha_inicio',
     'fecha_termino',
@@ -29,8 +29,8 @@ export class CampamentosComponent implements OnInit {
     'costo'
   ];
 
-  dataSource?: Campamento[];
-  eventoActivo = new Campamento();
+  dataSource?: Event[];
+  eventoActivo = new Event();
   eventoForm!: FormGroup;
 
   ngOnInit(): void {
@@ -66,13 +66,13 @@ export class CampamentosComponent implements OnInit {
   }
 
   cargarDatos() {
-    this.campaDao.getCampamentos().subscribe(
+    this.eventDao.getEvents().subscribe(
       response => {
         this.dataSource = response.resultado;
       }
     );
 
-    this.campaDao.getCampamentoActivo().subscribe(
+    this.eventDao.getEventActivo().subscribe(
       response => {
         console.log(response.resultado![0]);
         this.eventoActivo = response.resultado![0];

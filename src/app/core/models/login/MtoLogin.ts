@@ -1,5 +1,5 @@
 import { UserRole } from "../../api/Utils";
-import { Campamento } from "../registro/Campamento";
+import { Event } from "../registro/Event";
 import { Guerrero } from "../registro/Guerrero";
 import { Asignacion } from "./Asignacion";
 
