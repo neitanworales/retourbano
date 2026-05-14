@@ -3,7 +3,8 @@ import { Component, OnInit } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Habitacion } from 'src/app/core/models/hospedaje/Habitacion';
 import { HospedajeTable } from 'src/app/core/models/hospedaje/HospedajeTable';
-import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
+import { User } from 'src/app/core/models/registro/User';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -26,7 +27,7 @@ export class HospedajesComponent implements OnInit {
 
   hospedajes: HospedajeTable[] = new Array();
   habitaciones: Habitacion[] = new Array();
-  personasSinHabitacion: Guerrero[] = new Array();
+  personasSinHabitacion: EventRegistration[] = new Array();
 
   columnsToDisplay = [
     'nombre',

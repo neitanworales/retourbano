@@ -307,6 +307,102 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiSuccessUser'
 
+  /api/v1/users/roles:
+    patch:
+      tags: [Users]
+      summary: Actualizar roles globales de usuario (tabla user_roles)
+      description: |
+        Endpoint separado para roles globales de la app.
+        No modifica los flags de event_registrations.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id]
+              properties:
+                user_id:
+                  type: integer
+                roles:
+                  type: array
+                  items:
+                    type: string
+                  description: Reemplazo total de roles globales.
+                add_roles:
+                  type: array
+                  items:
+                    type: string
+                remove_roles:
+                  type: array
+                  items:
+                    type: string
+                token:
+                  type: string
+                  description: Compatibilidad legacy.
+      responses:
+        '200':
+          description: Roles globales actualizados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/users/event-roles:
+    patch:
+      tags: [Users]
+      summary: Actualizar roles por evento (tabla event_registrations)
+      description: |
+        Endpoint separado para flags por evento (is_staff/is_admin).
+        Cuando este endpoint se usa, sincroniza user_roles en base al estado agregado de registros del usuario.
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id, event_id]
+              properties:
+                user_id:
+                  type: integer
+                event_id:
+                  type: integer
+                event_roles:
+                  type: array
+                  items:
+                    type: string
+                  description: Atajo para staff/admin del evento.
+                event_is_staff:
+                  type: boolean
+                event_is_admin:
+                  type: boolean
+                token:
+                  type: string
+                  description: Compatibilidad legacy.
+      responses:
+        '200':
+          description: Roles por evento actualizados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+        '404':
+          description: Usuario o inscripcion del evento no encontrada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
   /api/v1/registrations:
     post:
       tags: [Registrations]
@@ -328,6 +424,11 @@ paths:
                   enum: [0, 1]
                 room_code:
                   type: string
+                reasons:
+                  type: string
+                razones:
+                  type: string
+                  description: Alias legacy de reasons.
       responses:
         '200':
           description: Inscripcion creada
@@ -339,7 +440,7 @@ paths:
   /api/v1/registrations/status:
     patch:
       tags: [Registrations]
-      summary: Actualizar estatus de inscripcion
+      summary: Actualizar campos de event_registrations
       security:
         - bearerAuth: []
       requestBody:
@@ -348,18 +449,29 @@ paths:
           application/json:
             schema:
               type: object
-              required: [registration_id, status]
+              required: [registration_id]
               properties:
                 registration_id:
                   type: integer
                 status:
                   type: string
+                  description: Valor para registration_status.
+                is_confirmed:
+                  type: boolean
+                attendance_confirmed:
+                  type: boolean
+                is_followup:
+                  type: boolean
+                welcome_email_sent:
+                  type: boolean
+                email_confirmed:
+                  type: boolean
                 token:
                   type: string
                   description: Compatibilidad legacy.
       responses:
         '200':
-          description: Estatus actualizado
+          description: Inscripcion actualizada
           content:
             application/json:
               schema:
@@ -418,6 +530,30 @@ paths:
           schema:
             type: integer
             default: 0
+        - in: query
+          name: is_staff
+          required: false
+          schema:
+            type: integer
+            enum: [0, 1]
+        - in: query
+          name: is_admin
+          required: false
+          schema:
+            type: integer
+            enum: [0, 1]
+        - in: query
+          name: is_followup
+          required: false
+          schema:
+            type: integer
+            enum: [0, 1]
+        - in: query
+          name: registration_status
+          required: false
+          schema:
+            type: string
+          description: Ejemplo: active, inactive, dropped.
         - in: query
           name: token
           required: false

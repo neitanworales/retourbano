@@ -1,11 +1,12 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { User } from 'src/app/core/models/registro/User';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToRegister } from 'src/app/core/models/registro/ToRegister';
 import { Tutor } from 'src/app/core/models/registro/Tutor';
 import { Event } from 'src/app/core/models/registro/Event';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 
 @Component({
   selector: 'app-registro-form',
@@ -16,7 +17,7 @@ import { Event } from 'src/app/core/models/registro/Event';
 export class RegistroFormComponent implements OnInit {
 
   @Input()
-  guerreroToEdit!: Guerrero;
+  guerreroToEdit!: EventRegistration;
 
   @Input({ required: true })
   saveInMemory!: boolean;
@@ -27,7 +28,7 @@ export class RegistroFormComponent implements OnInit {
   registerForm!: FormGroup;
 
   actualizar: boolean = false;
-  model = new Guerrero();
+  model = new EventRegistration();
 
   submitted = false;
 
@@ -37,7 +38,7 @@ export class RegistroFormComponent implements OnInit {
   errorRegistro?: boolean;
   mensajesRegistros!: String[];
 
-  paraRegistrar!: Guerrero[];
+  paraRegistrar!: User[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -50,25 +51,25 @@ export class RegistroFormComponent implements OnInit {
     if (this.guerreroToEdit != undefined) {
       this.actualizar = true;
       this.model = this.guerreroToEdit;
-      const dateString = this.guerreroToEdit.fechaNac + "";
-      this.model.year = Number(dateString?.substring(0, 4));
-      this.model.month = Number(dateString?.substring(5).substring(0, 2));
-      this.model.day = Number(dateString?.substring(8));
-      this.model.aceptaPoliticas = false;
+      const dateString = this.guerreroToEdit.user!.fechaNac + "";
+      this.model.user!.year = Number(dateString?.substring(0, 4));
+      this.model.user!.month = Number(dateString?.substring(5).substring(0, 2));
+      this.model.user!.day = Number(dateString?.substring(8));
+      this.model.user!.aceptaPoliticas = false;
     }
   }
 
   ngOnInit(): void {
     if (!this.actualizar) {
-      this.model.sexo = "";      
+      this.model.user!.sexo = "";      
       this.model.hospedaje = true;
-      this.model.year = 0;
-      this.model.month = 0;
-      this.model.day = 0;
+      this.model.user!.year = 0;
+      this.model.user!.month = 0;
+      this.model.user!.day = 0;
     } 
-    this.model.talla = "";
-    this.model.alergias = "";
-    this.model.medicamentos = "";
+    this.model.user!.talla = "";
+    this.model.user!.alergias = "";
+    this.model.user!.medicamentos = "";
     this.model.razones = "";
 
     /*
@@ -146,18 +147,18 @@ export class RegistroFormComponent implements OnInit {
   calculateEdad() {
     let now = new Date();
 
-    if (this.model.year !== undefined) {
-      this.model.edad = now.getFullYear() - this.model.year;
+    if (this.model.user!.year !== undefined) {
+      this.model.user!.edad = now.getFullYear() - this.model.user!.year;
     }
 
-    if (this.model.month !== undefined) {
-      if (this.model.month < now.getMonth()) {
-        this.model.edad = (this.model.edad!) - 1;
+    if (this.model.user!.month !== undefined) {
+      if (this.model.user!.month < now.getMonth()) {
+        this.model.user!.edad = (this.model.user!.edad!) - 1;
       }
     }
 
-    if (this.model.year !== undefined && this.model.month !== undefined && this.model.day !== undefined) {
-      this.model.fechaNac = new Date(this.model.year + '/' + this.model.month + '/' + this.model.day);
+    if (this.model.user!.year !== undefined && this.model.user!.month !== undefined && this.model.user!.day !== undefined) {
+      this.model.user!.fechaNac = new Date(this.model.user!.year + '/' + this.model.user!.month + '/' + this.model.user!.day);
     }
 
   }
@@ -173,9 +174,9 @@ export class RegistroFormComponent implements OnInit {
       localStorage.setItem('toRegister', JSON.stringify(objectRegister));
       console.log(localStorage.getItem('toRegister'));
       var tutor = new Tutor();
-      tutor.tutorEmail = this.model.email;
-      tutor.tutorNombre = this.model.tutorNombre;
-      tutor.tutorTelefono = this.model.tutorTelefono;
+      tutor.tutorEmail = this.model.user!.email;
+      tutor.tutorNombre = this.model.user!.tutorNombre;
+      tutor.tutorTelefono = this.model.user!.tutorTelefono;
       this.submitted = false;
       this.registerForm?.reset();
       this.registerForm.controls['email'].setValue(tutor.tutorEmail);

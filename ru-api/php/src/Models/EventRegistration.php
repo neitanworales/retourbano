@@ -15,8 +15,11 @@ class EventRegistration extends BaseModel
     public $is_staff;
     public $is_admin;
     public $is_followup;
+    public $welcome_email_sent;
+    public $email_confirmed;
     public $requires_lodging;
     public $room_code;
+    public $reasons;
     public $created_at;
     public $updated_at;
 }

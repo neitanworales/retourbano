@@ -5,7 +5,7 @@ import { map, filter, tap, switchMap } from 'rxjs';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Event } from 'src/app/core/models/registro/Event';
-import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { User } from 'src/app/core/models/registro/User';
 
 @Component({
   selector: 'app-reinscripcion',
@@ -18,7 +18,7 @@ export class ReinscripcionComponent implements OnInit {
   registerForm!: FormGroup;
   registerFormEmail!: FormGroup;
   codigo: String = "";
-  guerrero!: Guerrero;
+  guerrero!: User;
   displayStyle?: String = "none";
   displayBackgroudStyle?: String = "";
   tituloModal?: String;

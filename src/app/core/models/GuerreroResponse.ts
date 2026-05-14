@@ -1,6 +1,6 @@
 import { DefaultResponse } from "./DefaultResponse";
-import { Guerrero } from "./registro/Guerrero";
+import { User } from "./registro/User";
 
 export class GuerreroResponse extends DefaultResponse{
-    resultado!: Guerrero;
+    resultado!: User;
 }

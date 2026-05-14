@@ -25,7 +25,7 @@ export class EventDao {
     }
 
     public getEventActivo(): Observable<EventResponse> {
-        return this.http.get<any>(environment.apiUrl+'retourbano/event-activo.php', { headers: this.utils.getHeaders() }).pipe(
+        return this.http.get<any>(this.utils.v1('/events')+"?active=1", { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
         );
     }

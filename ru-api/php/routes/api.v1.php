@@ -62,6 +62,18 @@ $router->add('GET', '/api/v1/users/profile', function ($request) use ($userContr
     });
 });
 
+$router->add('PATCH', '/api/v1/users/roles', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin'), function ($securedRequest) use ($userController) {
+        return $userController->updateRoles($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/users/event-roles', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin'), function ($securedRequest) use ($userController) {
+        return $userController->updateEventRoles($securedRequest);
+    });
+});
+
 $router->add('GET', '/api/v1/registrations/detail', function ($request) use ($registrationController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($registrationController) {
         return $registrationController->getById($securedRequest);

@@ -4,6 +4,7 @@ import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { MtoLogin } from 'src/app/core/models/login/MtoLogin';
 import { AsistenciaCampamentos, CampamentoGuerreros } from 'src/app/core/models/registro/CampamentoGuerreros';
 import { TumbaService } from 'src/app/core/services/tumbaService';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 
 @Component({
   selector: 'app-usuarios',
@@ -21,8 +22,8 @@ import { TumbaService } from 'src/app/core/services/tumbaService';
 export class UsuariosComponent implements OnInit {
 
   users?: MtoLogin[] = [];
-  repetidos?: CampamentoGuerreros[] = [];
-  expandedCampamentoGuerrero?: CampamentoGuerreros;
+  repetidos?: EventRegistration[] = [];
+  expandedCampamentoGuerrero?: EventRegistration;
   expandedUsers?: MtoLogin;
 
   columnsToDisplay = [
@@ -89,7 +90,7 @@ export class UsuariosComponent implements OnInit {
   loadDataRepetidos() {
     this.registroDao.obtenerRepetidos(0).subscribe(
       resultado => {
-        this.repetidos = resultado.resultado;
+        this.repetidos = resultado.data?.registrations || [];
       }
     );
   }

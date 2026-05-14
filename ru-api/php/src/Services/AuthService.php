@@ -165,6 +165,11 @@ class AuthService
             return false;
         }
 
+        // "super" acts as a global privileged role for role-protected endpoints.
+        if (in_array('super', $currentRoles, true)) {
+            return true;
+        }
+
         $roleAliases = array(
             'admin' => array('admin', 'administrador', 'administrator'),
             'staff' => array('staff', 'lider', 'leader'),

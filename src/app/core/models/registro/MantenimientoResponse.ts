@@ -1,5 +1,5 @@
-import { Guerrero } from "./Guerrero";
+import { User } from "./User";
 
 export class MantenimientoResponse {
-    resultado? : Guerrero[]
+    resultado? : User[]
 }

@@ -1,5 +1,5 @@
 import { DefaultResponse } from "../DefaultResponse";
-import { Guerrero } from "../registro/Guerrero";
+import { User } from "../registro/User";
 import { Session } from "./Session";
 
 export class LoginResponse extends DefaultResponse {

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
@@ -43,7 +43,7 @@ export class InscripcionesComponent implements OnInit {
   displayStyle: string = "none";
   chartsDisplayStyle = "";
 
-  dataSource?: Guerrero[];
+  dataSource?: EventRegistration[];
   columnsToDisplay = [
     'ID',
     'numero',
@@ -65,7 +65,7 @@ export class InscripcionesComponent implements OnInit {
     'email'
   ];
 
-  expandedGuerrero?: Guerrero;
+  expandedGuerrero?: EventRegistration;
   searchByName?: string = "";
   years = [
     2015,2016,2017,2018,2019,2021,2022,2023
@@ -190,7 +190,7 @@ export class InscripcionesComponent implements OnInit {
 
       this.registroDao.consultarHistorico(this.year, this.selectedEventoId!).subscribe(
         respuesta => {
-          this.dataSource = respuesta.resultado;
+          this.dataSource = respuesta.data?.registrations || [];
         }
       );
 
@@ -236,16 +236,16 @@ export class InscripcionesComponent implements OnInit {
         seg = true;
       }
 
-      this.registroDao.consultarGuerreros(opcion, activo, staff, admin, this.searchByName!, seg, this.selectedEventoId).subscribe(
+      this.registroDao.consultarInscritos(opcion, activo, staff, admin, this.searchByName!, seg, this.selectedEventoId).subscribe(
         respuesta => {
-          this.dataSource = respuesta.resultado;
+          this.dataSource = respuesta.data?.registrations || [];
         }
       );
     }
   }
 
-  actualizarStaff(isStaff: boolean, id: number) {
-    this.registroDao.actualizarStaff(isStaff, id, this.selectedEventoId!).subscribe(
+  actualizarStaff(eventRegistration: EventRegistration) {
+    this.registroDao.actualizarEventRol(eventRegistration.user!.id!, this.selectedEventoId!, !eventRegistration.is_staff!, eventRegistration.is_admin!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -254,8 +254,8 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  actualizarAdmin(isAdmin: boolean, id: number) {
-    this.registroDao.actualizarAdmin(isAdmin, id, this.selectedEventoId!).subscribe(
+  actualizarAdmin(eventRegistration: EventRegistration) {
+    this.registroDao.actualizarEventRol(eventRegistration.user!.id!, this.selectedEventoId!, true, !eventRegistration.is_admin!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -264,8 +264,8 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  actualizarStatus(isActive: boolean, id: number) {
-    this.registroDao.actualizarStatus(isActive, id, this.selectedEventoId!).subscribe(
+  actualizarStatus(isActive: boolean, registrationId: number) {
+    this.registroDao.actualizarStatus(isActive, registrationId).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -282,55 +282,55 @@ export class InscripcionesComponent implements OnInit {
     pagos.push(nuevoPago);
   }
 
-  guardarPago(pago: Pago, guerrero: Guerrero) {
-    this.registroDao.guardarPago(pago, guerrero.id!).subscribe(
+  guardarPago(pago: Pago, reg: EventRegistration) {
+    this.registroDao.guardarPago(pago, reg.user?.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
           pago.actualizar = false;
           pago.nuevo = false;
-          if (guerrero.pagado == null) {
-            guerrero.pagado = 0;
+          if (reg.pagado == null) {
+            reg.pagado = 0;
           }
-          guerrero.pagado = Number(guerrero.pagado) + Number(pago.cantidad!);
+          reg.pagado = Number(reg.pagado) + Number(pago.cantidad!);
         }
       }
     );
   }
 
-  confirmar(guerrero: Guerrero, confirma: boolean) {
-    this.registroDao.guardarConfirmacion(confirma, guerrero.id!).subscribe(
+  confirmar(reg: EventRegistration, confirma: boolean) {
+    this.registroDao.guardarConfirmacion(confirma, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar la confirmacion");
         } else {
-          guerrero.confirmado = confirma;
+          reg.confirmado = confirma;
         }
       }
     );
   }
 
-  asistir(guerrero: Guerrero, asiste: boolean) {
-    this.registroDao.guardarAsistencia(asiste, guerrero.id!).subscribe(
+  asistir(reg: EventRegistration, asiste: boolean) {
+    this.registroDao.guardarAsistencia(asiste, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          guerrero.asistencia = asiste;
+          reg.asistencia = asiste;
         }
       }
     );
   }
 
-  enviarConfirmarEmail(guerrero: Guerrero, enviar: boolean, confirmar: boolean) {
-    this.registroDao.enviarConfirmarEmail(enviar, confirmar, guerrero.id!).subscribe(
+  enviarConfirmarEmail(reg: EventRegistration, enviar: boolean, confirmar: boolean) {
+    this.registroDao.enviarConfirmarEmail(enviar, confirmar, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          guerrero.emailEnviado = enviar;
-          guerrero.emailConfirmado = confirmar;
+          reg.emailEnviado = enviar;
+          reg.emailConfirmado = confirmar;
         }
       }
     );
@@ -345,20 +345,20 @@ export class InscripcionesComponent implements OnInit {
     this.cargarDatos();
   }
 
-  seguimiento(guerrero: Guerrero, seguimiento: boolean) {
-    this.registroDao.guardarSeguimiento(seguimiento, guerrero.id!).subscribe(
+  seguimiento(reg: EventRegistration, seg: boolean) {
+    this.registroDao.guardarSeguimiento(seg, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          guerrero.seguimiento = seguimiento;
+          reg.seguimiento = seg;
         }
       }
     );
   }
 
-  cambiarContrasena(guerrero: Guerrero) {
-    this.registroDao.cambiarContrasena(guerrero.password!, guerrero.id!, this.selectedEventoId!).subscribe(
+  cambiarContrasena(reg: EventRegistration) {
+    this.registroDao.cambiarContrasena(reg.user?.password!, reg.user?.id!, this.selectedEventoId!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el cambio de contraseña");
@@ -367,12 +367,12 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  editarContrasena(guerrero: Guerrero) {
-    guerrero.updatePassword = true;
+  editarContrasena(reg: EventRegistration) {
+    reg.user!.updatePassword = true;
   }
 
-  cancelarContrasena(guerrero: Guerrero) {
-    guerrero.updatePassword = false;
+  cancelarContrasena(reg: EventRegistration) {
+    reg.user!.updatePassword = false;
   }
 
   changeYear(y: number) {

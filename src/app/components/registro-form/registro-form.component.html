@@ -7,7 +7,7 @@
                     <label>Nombre de tutor</label>
                     <input type="text" class="form-control" formControlName="tutorNombre"
                         placeholder="¿A quién conctactamos en caso de accidente?"
-                        [ngClass]="{'is-invalid': form['tutorNombre'].errors }" [(ngModel)]="model.tutorNombre" />
+                        [ngClass]="{'is-invalid': form['tutorNombre'].errors }" [(ngModel)]="model.user!.tutorNombre" />
                     <div *ngIf="form['tutorNombre'].errors" class="invalid-feedback">
                         <div *ngIf="form['tutorNombre'].errors">El nombre es obligatorio</div>
                     </div>
@@ -16,7 +16,7 @@
                     <label>Teléfono del tutor</label>
                     <input type="text" class="form-control" formControlName="tutorTelefono"
                         placeholder="Escribe Escribe el telefono de tu tutor"
-                        [ngClass]="{'is-invalid': form['tutorTelefono'].errors }" [(ngModel)]="model.tutorTelefono" />
+                        [ngClass]="{'is-invalid': form['tutorTelefono'].errors }" [(ngModel)]="model.user!.tutorTelefono" />
                     <div *ngIf="form['tutorTelefono'].errors" class="invalid-feedback">
                         <div *ngIf="form['tutorTelefono'].errors">El teléfono de tu tutor es obligatorio</div>
                     </div>
@@ -24,7 +24,7 @@
                 <div class="form-group">
                     <label>E-mail del tutor</label>
                     <input type="email" class="form-control" formControlName="email" placeholder="Escribe tu e-mail"
-                        [ngClass]="{'is-invalid': form['email'].errors }" [(ngModel)]="model.email" />
+                        [ngClass]="{'is-invalid': form['email'].errors }" [(ngModel)]="model.user!.email" />
                     <div *ngIf="form['email'].errors" class="invalid-feedback">
                         <div *ngIf="form['email'].errors">El e-mail es obligatorio</div>
                     </div>
@@ -56,7 +56,7 @@
             <div class="form-group">
                 <label>Nombre completo</label>
                 <input type="text" class="form-control" formControlName="nombre" placeholder="Escribe tu nombre"
-                    [ngClass]="{'is-invalid': form['nombre'].errors }" [(ngModel)]="model.nombre" />
+                    [ngClass]="{'is-invalid': form['nombre'].errors }" [(ngModel)]="model.user!.nombre" />
                 <div *ngIf="form['nombre'].errors" class="invalid-feedback">
                     <div *ngIf="form['nombre'].errors">El nombre es obligatorio</div>
                 </div>
@@ -64,7 +64,7 @@
             <div class="form-group">
                 <label>Nick (para tu gafete)</label>
                 <input type="text" class="form-control" formControlName="nick" placeholder="Escribe tu nick"
-                    [ngClass]="{'is-invalid': form['nick'].errors }" [(ngModel)]="model.nick" />
+                    [ngClass]="{'is-invalid': form['nick'].errors }" [(ngModel)]="model.user!.nick" />
                 <div *ngIf="form['nick'].errors" class="invalid-feedback">
                     <div *ngIf="form['nick'].errors">El nick es obligatorio</div>
                 </div>
@@ -72,7 +72,7 @@
 
             <div class="form-group">
                 <label for="nombre">Año de nacimiento</label>
-                <select class="form-control" formControlName="year" [(ngModel)]="model.year"
+                <select class="form-control" formControlName="year" [(ngModel)]="model.user!.year"
                     [ngClass]="{'is-invalid': form['year'].errors }" (change)="this.calculateEdad()">
                     <option value="0" disabled="true" selected="true">Selecciona tu año</option>
 
@@ -165,7 +165,7 @@
 
             <div class="form-group">
                 <label for="nombre">Mes de nacimiento</label>
-                <select class="form-control" formControlName="month" [(ngModel)]="model.month"
+                <select class="form-control" formControlName="month" [(ngModel)]="model.user!.month"
                     [ngClass]="{'is-invalid': form['month'].errors }" (change)="this.calculateEdad()">
                     <option value="0" disabled="true" selected="true">Selecciona tu mes</option>
                     <option value="1">Enero</option>
@@ -188,7 +188,7 @@
 
             <div class="form-group">
                 <label for="nombre">Día de nacimiento</label>
-                <select class="form-control" formControlName="day" [(ngModel)]="model.day"
+                <select class="form-control" formControlName="day" [(ngModel)]="model.user!.day"
                     [ngClass]="{'is-invalid': form['day'].errors }" (change)="this.calculateEdad()">
                     <option value="0" disabled="true" selected="true">Selecciona tu día</option>
                     <option value="1">1</option>
@@ -230,13 +230,13 @@
 
             <div class="form-group">
                 <label for="nombre">Edad</label>
-                <input class="form-control" placeholder="Edad" type="text" value={{model.edad}} id="edad" name="edad"
+                <input class="form-control" placeholder="Edad" type="text" value={{model.user!.edad}} id="edad" name="edad"
                     disabled />
             </div>
             <div class="form-group">
                 <label>Selecciona tu sexo</label>
                 <select class="form-control" formControlName="sexo" [ngClass]="{'is-invalid': form['sexo'].errors }"
-                    [(ngModel)]="model.sexo">
+                    [(ngModel)]="model.user!.sexo">
                     <option value="" disabled="" selected="true">Selecciona tu sexo / Gender</option>
                     <option value="M">Hombre</option>
                     <option value="F">Mujer</option>
@@ -248,7 +248,7 @@
             <div class="form-group">
                 <label>Selecciona tu talla</label>
                 <select class="form-control" formControlName="talla" [ngClass]="{'is-invalid': form['talla'].errors }"
-                    [(ngModel)]="model.talla">
+                    [(ngModel)]="model.user!.talla">
                     <option value="" disabled="" selected="">Talla de playera / T-shirt size</option>
                     <option value="XS">Extra-Chica / XS</option>
                     <option value="S">Chica / X</option>
@@ -277,7 +277,7 @@
                 <label>¿De donde vienes?</label>
                 <input type="text" class="form-control" formControlName="vienesDe"
                     placeholder="Escribe tu lugar de procedencia (CDMX, Pachuca, Huston, etc...)"
-                    [ngClass]="{'is-invalid': form['vienesDe'].errors }" [(ngModel)]="model.vienesDe" />
+                    [ngClass]="{'is-invalid': form['vienesDe'].errors }" [(ngModel)]="model.user!.vienesDe" />
                 <div *ngIf="form['vienesDe'].errors" class="invalid-feedback">
                     <div *ngIf="form['vienesDe'].errors">Esta dato es obligatorio</div>
                 </div>
@@ -285,12 +285,12 @@
             <div class="form-group">
                 <label>¿Tienes alergias?</label>
                 <input type="text" class="form-control" placeholder="Si tienes alergias escribe cuales"
-                    [(ngModel)]="model.alergias" [ngModelOptions]="{standalone: true}" />
+                    [(ngModel)]="model.user!.alergias" [ngModelOptions]="{standalone: true}" />
             </div>
             <div class="form-group">
                 <label>¿Estás tomando algún medicamento? Cuéntanos mas</label>
                 <input type="text" class="form-control" placeholder="Describe el tratamiento"
-                    [(ngModel)]="model.medicamentos" [ngModelOptions]="{standalone: true}" />
+                    [(ngModel)]="model.user!.medicamentos" [ngModelOptions]="{standalone: true}" />
             </div>
             <div class="form-group">
                 <label>¿Por que vienes a Reto Urbano?</label>
@@ -303,12 +303,12 @@
             <div class="form-group">
                 <label>En caso de que asistas a una iglesia, escribe su nombre</label>
                 <input type="text" class="form-control" placeholder="Escribe el nombre de tu iglesia"
-                    [(ngModel)]="model.iglesia" [ngModelOptions]="{standalone: true}" />
+                    [(ngModel)]="model.user!.iglesia" [ngModelOptions]="{standalone: true}" />
             </div>
             <div *ngIf="!saveInMemory" class="form-group">
                 <label>Tu e-mail</label>
                 <input type="email" class="form-control" formControlName="email" placeholder="Escribe tu e-mail"
-                    [ngClass]="{'is-invalid': form['email'].errors }" [(ngModel)]="model.email" />
+                    [ngClass]="{'is-invalid': form['email'].errors }" [(ngModel)]="model.user!.email" />
                 <div *ngIf="form['email'].errors" class="invalid-feedback">
                     <div *ngIf="form['email'].errors">El e-mail es obligatorio</div>
                 </div>
@@ -316,13 +316,13 @@
             <div class="form-group">
                 <label>¿Tienes Whatsapp?</label>
                 <input type="text" class="form-control" formControlName="whatsapp" placeholder="Escribe tu Whatsapp"
-                    [(ngModel)]="model.whatsapp" />
+                    [(ngModel)]="model.user!.whatsapp" />
             </div>
             <div class="form-group">
                 <label>¿Tienes teléfono?</label>
                 <input type="text" class="form-control" formControlName="telefono"
                     placeholder="Escribe tu número de teléfono" [ngClass]="{'is-invalid': form['telefono'].errors }"
-                    [(ngModel)]="model.telefono" />
+                    [(ngModel)]="model.user!.telefono" />
                 <div *ngIf="form['telefono'].errors" class="invalid-feedback">
                     <div *ngIf="form['telefono'].errors">Este dato es obligatorio</div>
                 </div>
@@ -330,12 +330,12 @@
             <div class="form-group">
                 <label>Facebook</label>
                 <input type="text" class="form-control" placeholder="Como te encontramos en facebook"
-                    [(ngModel)]="model.facebook" [ngModelOptions]="{standalone: true}" />
+                    [(ngModel)]="model.user!.facebook" [ngModelOptions]="{standalone: true}" />
             </div>
             <div class="form-group">
                 <label>Instagram</label>
                 <input type="text" class="form-control" placeholder="Como te encontramos en instagram"
-                    [(ngModel)]="model.instagram" [ngModelOptions]="{standalone: true}" />
+                    [(ngModel)]="model.user!.instagram" [ngModelOptions]="{standalone: true}" />
             </div>
 
             <div *ngIf="!saveInMemory">
@@ -345,7 +345,7 @@
                     <label>Nombre de tutor</label>
                     <input type="text" class="form-control" formControlName="tutorNombre"
                         placeholder="¿A quién conctactamos en caso de accidente?"
-                        [ngClass]="{'is-invalid': form['tutorNombre'].errors }" [(ngModel)]="model.tutorNombre" />
+                        [ngClass]="{'is-invalid': form['tutorNombre'].errors }" [(ngModel)]="model.user!.tutorNombre" />
                     <div *ngIf="form['tutorNombre'].errors" class="invalid-feedback">
                         <div *ngIf="form['tutorNombre'].errors">El nombre de tutor es obligatorio</div>
                     </div>
@@ -354,7 +354,7 @@
                     <label>Teléfono del tutor</label>
                     <input type="text" class="form-control" formControlName="tutorTelefono"
                         placeholder="Escribe Escribe el telefono de tu tutor"
-                        [ngClass]="{'is-invalid': form['tutorTelefono'].errors }" [(ngModel)]="model.tutorTelefono" />
+                        [ngClass]="{'is-invalid': form['tutorTelefono'].errors }" [(ngModel)]="model.user!.tutorTelefono" />
                     <div *ngIf="form['tutorTelefono'].errors" class="invalid-feedback">
                         <div *ngIf="form['tutorTelefono'].errors">El teléfono de tu tutor es obligatorio</div>
                     </div>
@@ -363,7 +363,7 @@
 
             <div class="form-check">
                 <input type="checkbox" formControlName="aceptaPoliticas" placeholder="Escribe aceptaPoliticas"
-                    [ngClass]="{'is-invalid': form['aceptaPoliticas'].errors }" [(ngModel)]="model.aceptaPoliticas" />
+                    [ngClass]="{'is-invalid': form['aceptaPoliticas'].errors }" [(ngModel)]="model.user!.aceptaPoliticas" />
                 <label> Aceptas los <a routerLink="/terminos-y-condiciones" target="_blank">Terminos y Condiciones del manejo de tu información</a></label>
                 <div *ngIf="form['aceptaPoliticas'].errors" class="invalid-feedback">
                     <div *ngIf="form['aceptaPoliticas'].errors">Es necesario aceptar los terminos y condiciones</div>

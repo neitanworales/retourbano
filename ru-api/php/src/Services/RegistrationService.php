@@ -15,7 +15,7 @@ class RegistrationService
         $this->registrations = new EventRegistrationRepository();
     }
 
-    public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null)
+    public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null, $reasons = null)
     {
         $event = $this->events->findModelById((int) $eventId);
         if (!$event) {
@@ -44,6 +44,7 @@ class RegistrationService
             'is_followup' => 0,
             'requires_lodging' => (int) $requiresLodging,
             'room_code' => $roomCode,
+            'reasons' => $reasons,
         ));
 
         $id = $this->registrations->create($registration);
@@ -61,14 +62,19 @@ class RegistrationService
         return $this->registrations->updateStatus((int) $registrationId, $status);
     }
 
+    public function updateFields($registrationId, $fields)
+    {
+        return $this->registrations->updateFields((int) $registrationId, is_array($fields) ? $fields : array());
+    }
+
     public function getById($registrationId)
     {
         return $this->registrations->findModelById((int) $registrationId);
     }
 
-    public function getByEvent($eventId, $limit = 100, $offset = 0)
+    public function getByEvent($eventId, $limit = 100, $offset = 0, $filters = array())
     {
-        return $this->registrations->findByEvent((int) $eventId, (int) $limit, (int) $offset);
+        return $this->registrations->findByEvent((int) $eventId, (int) $limit, (int) $offset, $filters);
     }
 
     public function getByUser($userId, $limit = 100, $offset = 0)

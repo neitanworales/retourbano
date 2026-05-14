@@ -1,7 +1,7 @@
-import { Guerrero } from "./Guerrero";
+import { User } from "./Guerrero";
 
 export class ToRegister {
-    guerreros! : Guerrero[]
+    guerreros! : User[]
 
     constructor(){
         this.guerreros = new Array();

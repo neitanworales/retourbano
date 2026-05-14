@@ -38,14 +38,14 @@
                     <ul class="list-group">
                         <li *ngFor="let person of personasSinHabitacion"
                             class="list-group-item d-flex justify-content-between align-items-start"
-                            ngClass="{{person.sexo=='M'?'persona-blue':'persona-pink'}}">
+                            ngClass="{{person.user?.gender=='M'?'persona-blue':'persona-pink'}}">
                             <div class="ms-2 me-auto">
-                                <div class="fw-bold"><strong>{{person.nombre}}</strong></div>
-                                <strong>{{person.staff==true?'STAFF':'Campero'}} <i
-                                        class="bi bi-{{person.staff==true?'flag-fill':'people-fill'}}"></i></strong>
+                                <div class="fw-bold"><strong>{{person.user?.nombre}}</strong></div>
+                                <strong>{{person.is_staff==true?'STAFF':'Campero'}} <i
+                                        class="bi bi-{{person.is_staff==true?'flag-fill':'people-fill'}}"></i></strong>
                             </div>
-                            <span class="badge text-bg-primary rounded-pill">{{person.edad}} <i
-                                    class="bi bi-person-standing{{person.sexo=='F'?'-dress':''}}"></i></span>
+                            <span class="badge text-bg-primary rounded-pill">{{person.user?.age}} <i
+                                    class="bi bi-person-standing{{person.user?.gender=='F'?'-dress':''}}"></i></span>
                         </li>
                     </ul>
                 </div>
@@ -61,14 +61,14 @@
                             <ul class="list-group list-group">
                                 <li *ngFor="let person of item.personas"
                                     class="list-group-item d-flex justify-content-between align-items-start"
-                                    ngClass="{{person.sexo=='M'?'persona-blue':'persona-pink'}}">
+                                    ngClass="{{person.user?.gender=='M'?'persona-blue':'persona-pink'}}">
                                     <div class="ms-2 me-auto">
-                                        <div class="fw-bold"><strong>{{person.nombre}}</strong></div>
-                                        <strong>{{person.staff==true?'STAFF':'Campero'}} <i
-                                                class="bi bi-{{person.staff==true?'flag-fill':'people-fill'}}"></i></strong>
+                                        <div class="fw-bold"><strong>{{person.user?.nombre}}</strong></div>
+                                        <strong>{{person.is_staff==true?'STAFF':'Campero'}} <i
+                                                class="bi bi-{{person.is_staff==true?'flag-fill':'people-fill'}}"></i></strong>
                                     </div>
-                                    <span class="badge text-bg-primary rounded-pill">{{person.sexo}} <i
-                                            class="bi bi-person-standing{{person.sexo=='F'?'-dress':''}}"></i></span>
+                                    <span class="badge text-bg-primary rounded-pill">{{person.user?.age}} <i
+                                            class="bi bi-person-standing{{person.user?.gender=='F'?'-dress':''}}"></i></span>
                                 </li>
                             </ul>
                         </div>

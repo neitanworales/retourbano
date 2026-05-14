@@ -121,7 +121,7 @@ export class LoginDao {
     public isAdmin(): Observable<boolean> {
         this.session = inject(AuthService).getSession()!;
         return this.http.get<SessionResponse>(this.utils.v1('/retourbano/session.php?id=' + this.getSessionUserId(this.session) + "&token=" + this.session?.token), { headers: this.utils.getHeaders() }).pipe(
-            map(response => !(response.session?.usuario?.admin ?? response.session?.guerrero?.admin))
+            map(response => !(response.session?.roles?.includes('admin') ?? response.session?.roles?.includes('staff') ?? false))
         );
     }
 

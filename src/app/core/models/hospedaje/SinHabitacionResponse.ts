@@ -1,6 +1,6 @@
 import { DefaultResponse } from "../DefaultResponse";
-import { Guerrero } from "../registro/Guerrero";
+import { User } from "../registro/User";
 
 export class SinHabitacionResponse extends DefaultResponse {
-    personas?: Guerrero[];
+    personas?: User[];
 }

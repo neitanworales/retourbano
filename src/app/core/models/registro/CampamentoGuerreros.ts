@@ -18,6 +18,3 @@ export class AsistenciaCampamentos {
     email_tutor?: String;
 }
 
-export class CampamentoGuerrerosResponse extends DefaultResponse {
-    resultado?: CampamentoGuerreros[];
-}
