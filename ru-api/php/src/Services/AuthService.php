@@ -2,16 +2,19 @@
 
 require_once __DIR__ . '/../Repository/UserRepository.php';
 require_once __DIR__ . '/../Repository/AuthTokenRepository.php';
+require_once __DIR__ . '/../Repository/UserRoleRepository.php';
 
 class AuthService
 {
     private $users;
     private $tokens;
+    private $roles;
 
     public function __construct()
     {
         $this->users = new UserRepository();
         $this->tokens = new AuthTokenRepository();
+        $this->roles = new UserRoleRepository();
     }
 
     public function login($email, $plainPassword)
@@ -60,17 +63,18 @@ class AuthService
     public function requestPasswordReset($email)
     {
         $expiresAt = date('Y-m-d H:i:s', strtotime('+30 minutes'));
-        $token = bin2hex(random_bytes(32));
         $user = $this->users->findByEmail($email);
 
         // Avoid account enumeration. Always return a valid-shaped response.
         if ($user) {
+            $token = bin2hex(random_bytes(32));
             $this->tokens->createPasswordResetToken((int) $user->id, $token, $expiresAt);
+            $this->sendPasswordResetEmail($user, $token, $expiresAt);
         }
 
         return array(
-            'reset_token' => $token,
             'expires_at' => $expiresAt,
+            'email_sent' => true,
         );
     }
 
@@ -90,6 +94,52 @@ class AuthService
         return true;
     }
 
+    private function sendPasswordResetEmail($user, $token, $expiresAt)
+    {
+        $to = isset($user->email) ? $user->email : null;
+        if (!$to) {
+            return false;
+        }
+
+        $subject = 'Recuperacion de contrasena - Reto Urbano';
+        $resetUrl = $this->buildPasswordResetUrl($token);
+        $safeName = isset($user->display_name) && $user->display_name !== ''
+            ? $user->display_name
+            : (isset($user->full_name) ? $user->full_name : 'participante');
+
+        $message = '<html><body style="font-family: Arial, sans-serif; color: #222;">'
+            . '<h2>Recuperacion de contrasena</h2>'
+            . '<p>Hola ' . htmlspecialchars($safeName, ENT_QUOTES, 'UTF-8') . ',</p>'
+            . '<p>Recibimos una solicitud para restablecer tu contrasena.</p>'
+            . '<p><a href="' . htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8') . '">Haz clic aqui para cambiar tu contrasena</a></p>'
+            . '<p>Este enlace expira el: <strong>' . htmlspecialchars($expiresAt, ENT_QUOTES, 'UTF-8') . '</strong></p>'
+            . '<p>Si no solicitaste este cambio, puedes ignorar este correo.</p>'
+            . '<p>Equipo Reto Urbano</p>'
+            . '</body></html>';
+
+        $headers = "From: Reto Urbano <reto@ywampachuca.org>\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+        $sent = @mail($to, $subject, $message, $headers);
+        if (!$sent) {
+            error_log('Password reset email failed for: ' . $to);
+        }
+
+        return $sent;
+    }
+
+    private function buildPasswordResetUrl($token)
+    {
+        $baseUrl = getenv('PASSWORD_RESET_URL_BASE');
+        if (!$baseUrl) {
+            $baseUrl = 'https://events.local/recovery-password';
+        }
+
+        $separator = (strpos($baseUrl, '?') === false) ? '?' : '&';
+        return $baseUrl . $separator . 'token=' . urlencode($token);
+    }
+
     public function hashPassword($plainPassword)
     {
         return password_hash($plainPassword, PASSWORD_BCRYPT, ['cost' => 12]);
@@ -99,6 +149,42 @@ class AuthService
     {
         $hash = $this->hashPassword($newPassword);
         return $this->users->updatePasswordHash((int) $userId, $hash);
+    }
+
+    public function userHasAnyRole($userId, $allowedRoles)
+    {
+        $allowed = array_map(function ($role) {
+            return strtolower(trim((string) $role));
+        }, (array) $allowedRoles);
+
+        $currentRoles = $this->roles->getRolesByUserId((int) $userId);
+        if (empty($currentRoles) || empty($allowed)) {
+            return false;
+        }
+
+        $roleAliases = array(
+            'admin' => array('admin', 'administrador', 'administrator'),
+            'staff' => array('staff', 'lider', 'leader'),
+        );
+
+        $expandedAllowed = array();
+        foreach ($allowed as $role) {
+            if (isset($roleAliases[$role])) {
+                $expandedAllowed = array_merge($expandedAllowed, $roleAliases[$role]);
+            } else {
+                $expandedAllowed[] = $role;
+            }
+        }
+
+        $expandedAllowed = array_values(array_unique($expandedAllowed));
+
+        foreach ($currentRoles as $role) {
+            if (in_array($role, $expandedAllowed, true)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private function verifyAndUpgradePassword($user, $plainPassword)

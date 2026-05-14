@@ -51,6 +51,10 @@ function request_data()
 {
     $data = request_json_body();
 
+    if (!empty($_GET)) {
+        $data = array_merge($data, $_GET);
+    }
+
     if (!empty($_POST)) {
         $data = array_merge($data, $_POST);
     }

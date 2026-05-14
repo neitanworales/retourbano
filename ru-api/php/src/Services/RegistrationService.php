@@ -60,4 +60,19 @@ class RegistrationService
     {
         return $this->registrations->updateStatus((int) $registrationId, $status);
     }
+
+    public function getById($registrationId)
+    {
+        return $this->registrations->findModelById((int) $registrationId);
+    }
+
+    public function getByEvent($eventId, $limit = 100, $offset = 0)
+    {
+        return $this->registrations->findByEvent((int) $eventId, (int) $limit, (int) $offset);
+    }
+
+    public function getByUser($userId, $limit = 100, $offset = 0)
+    {
+        return $this->registrations->findByUser((int) $userId, (int) $limit, (int) $offset);
+    }
 }

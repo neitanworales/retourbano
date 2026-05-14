@@ -39,6 +39,45 @@ class EventRepository extends BaseRepository
         }, $rows);
     }
 
+    public function findMany($year = null, $active = null, $limit = 100, $offset = 0)
+    {
+        $conditions = array();
+        $params = array();
+        $types = '';
+
+        if ($year !== null) {
+            $conditions[] = 'event_year = ?';
+            $params[] = (int) $year;
+            $types .= 'i';
+        }
+
+        if ($active !== null) {
+            $conditions[] = 'is_active = ?';
+            $params[] = (int) $active;
+            $types .= 'i';
+        }
+
+        $sql = 'SELECT * FROM events';
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+        $sql .= ' ORDER BY event_year DESC, start_at ASC LIMIT ? OFFSET ?';
+
+        $params[] = (int) $limit;
+        $params[] = (int) $offset;
+        $types .= 'ii';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            return new Event($row);
+        }, $rows);
+    }
+
     public function create(Event $event)
     {
         $sql = 'INSERT INTO events (legacy_event_id, organization_id, city_id, event_year, title, start_at, end_at, is_active, max_registrations, registration_deadline, registration_open_at, price_mxn, price_usd)

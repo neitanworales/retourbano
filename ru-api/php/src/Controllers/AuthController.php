@@ -62,14 +62,11 @@ class AuthController extends BaseController
             return $this->fail('email is required', 422);
         }
 
-        $result = $this->authService->requestPasswordReset($email);
+        $this->authService->requestPasswordReset($email);
 
         return $this->ok(
-            array(
-                'reset_token' => $result['reset_token'],
-                'expires_at' => $result['expires_at'],
-            ),
-            'if the email exists, password reset instructions were generated'
+            array(),
+            'if the email exists, password reset instructions were sent'
         );
     }
 

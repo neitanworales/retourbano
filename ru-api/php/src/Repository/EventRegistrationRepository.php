@@ -76,4 +76,32 @@ class EventRegistrationRepository extends BaseRepository
 
         return $ok;
     }
+
+    public function findByEvent($eventId, $limit = 100, $offset = 0)
+    {
+        $sql = 'SELECT * FROM event_registrations WHERE event_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('iii', $eventId, $limit, $offset);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            return new EventRegistration($row);
+        }, $rows);
+    }
+
+    public function findByUser($userId, $limit = 100, $offset = 0)
+    {
+        $sql = 'SELECT * FROM event_registrations WHERE user_id = ? ORDER BY created_at DESC LIMIT ? OFFSET ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('iii', $userId, $limit, $offset);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            return new EventRegistration($row);
+        }, $rows);
+    }
 }
