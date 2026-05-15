@@ -39,19 +39,31 @@ class UserRepository extends BaseRepository
 
     public function create(User $user)
     {
-        $sql = 'INSERT INTO users (legacy_user_id, full_name, display_name, birth_date, email, whatsapp, phone, password_hash, verification_code, user_status, accepted_policies)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO users (legacy_user_id, full_name, display_name, birth_date, age, gender, shirt_size, coming_from, email, whatsapp, phone, allergies, guardian_phone, guardian_name, guardian_email, facebook, instagram, church, medications, password_hash, verification_code, user_status, accepted_policies, registered_at)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())';
         $stmt = $this->db->prepare($sql);
 
         $stmt->bind_param(
-            'isssssssssi',
+            'isssisssssssssssssssssi',
             $user->legacy_user_id,
             $user->full_name,
             $user->display_name,
             $user->birth_date,
+            $user->age,
+            $user->gender,
+            $user->shirt_size,
+            $user->coming_from,
             $user->email,
             $user->whatsapp,
             $user->phone,
+            $user->allergies,
+            $user->guardian_phone,
+            $user->guardian_name,
+            $user->guardian_email,
+            $user->facebook,
+            $user->instagram,
+            $user->church,
+            $user->medications,
             $user->password_hash,
             $user->verification_code,
             $user->user_status,
@@ -68,19 +80,33 @@ class UserRepository extends BaseRepository
     public function update(User $user)
     {
         $sql = 'UPDATE users
-                SET full_name = ?, display_name = ?, birth_date = ?, email = ?, whatsapp = ?, phone = ?,
-                    password_hash = ?, verification_code = ?, user_status = ?, accepted_policies = ?
+                SET full_name = ?, display_name = ?, birth_date = ?, age = ?, gender = ?, shirt_size = ?,
+                    coming_from = ?, email = ?, whatsapp = ?, phone = ?, allergies = ?, guardian_phone = ?,
+                    guardian_name = ?, guardian_email = ?, facebook = ?, instagram = ?, church = ?,
+                    medications = ?, password_hash = ?, verification_code = ?, user_status = ?, accepted_policies = ?
                 WHERE id = ?';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param(
-            'sssssssssii',
+            'sssisssssssssssssssssii',
             $user->full_name,
             $user->display_name,
             $user->birth_date,
+            $user->age,
+            $user->gender,
+            $user->shirt_size,
+            $user->coming_from,
             $user->email,
             $user->whatsapp,
             $user->phone,
+            $user->allergies,
+            $user->guardian_phone,
+            $user->guardian_name,
+            $user->guardian_email,
+            $user->facebook,
+            $user->instagram,
+            $user->church,
+            $user->medications,
             $user->password_hash,
             $user->verification_code,
             $user->user_status,

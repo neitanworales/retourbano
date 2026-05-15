@@ -24,7 +24,9 @@ class EventController extends BaseController
 
         $items = $this->events->findMany($year, $active, $limit, $offset);
         $data = array_map(function ($event) {
-            return $event->toArray();
+            $eventArray = $event->toArray();
+            $eventArray['configuracion'] = $this->events->getConfiguracion((int) $event->id);
+            return $eventArray;
         }, $items);
 
         return $this->ok(array('events' => $data), 'events list');
@@ -42,7 +44,10 @@ class EventController extends BaseController
             return $this->fail('event not found', 404);
         }
 
-        return $this->ok(array('event' => $event->toArray()), 'event found');
+        $eventArray = $event->toArray();
+        $eventArray['configuracion'] = $this->events->getConfiguracion($eventId);
+
+        return $this->ok(array('event' => $eventArray), 'event found');
     }
 
     public function upcomingAvailability($request)
@@ -82,6 +87,7 @@ class EventController extends BaseController
             $row['is_registered'] = $isRegistered;
             $row['registration_id'] = $isRegistered ? (int) $registration->id : null;
             $row['registration_status'] = $isRegistered ? $registration->registration_status : null;
+            $row['configuracion'] = $this->events->getConfiguracion((int) $event->id);
             $items[] = $row;
         }
 

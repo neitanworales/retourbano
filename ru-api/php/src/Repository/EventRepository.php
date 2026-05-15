@@ -163,4 +163,40 @@ class EventRepository extends BaseRepository
 
         return $ok;
     }
+
+    public function getConfiguracion($eventId)
+    {
+        $sql = 'SELECT 
+                    e.registration_open_at AS fecha_apertura,
+                    e.registration_deadline AS fecha_maxima,
+                    e.threshold AS umbral,
+                    e.max_registrations AS maximo_inscr,
+                    COALESCE((SELECT COUNT(*) FROM event_registrations WHERE event_id = ? AND registration_status = "A"), 0) AS inscritos,
+                    COALESCE(FLOOR((100 * COALESCE((SELECT COUNT(*) FROM event_registrations WHERE event_id = ? AND registration_status = "A"), 0)) / NULLIF(e.max_registrations, 0)), 0) AS porcentaje,
+                    COALESCE(e.max_registrations - (SELECT COUNT(*) FROM event_registrations WHERE event_id = ? AND registration_status = "A"), 0) AS disponibles
+                FROM events e
+                WHERE e.id = ?
+                LIMIT 1';
+        
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('iiii', $eventId, $eventId, $eventId, $eventId);
+        $stmt->execute();
+        $result = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$result) {
+            return null;
+        }
+
+        $config = new \stdClass();
+        $config->fecha_apertura = $result['fecha_apertura'];
+        $config->fecha_maxima = $result['fecha_maxima'];
+        $config->umbral = (int) $result['umbral'];
+        $config->maximo_inscr = (int) $result['maximo_inscr'];
+        $config->inscritos = (int) $result['inscritos'];
+        $config->porcentaje = (int) $result['porcentaje'];
+        $config->disponibles = (int) $result['disponibles'];
+
+        return $config;
+    }
 }

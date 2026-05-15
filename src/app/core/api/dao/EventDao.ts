@@ -31,7 +31,7 @@ export class EventDao {
     }
 
     public getEventInfo(idEvent: number): Observable<EventResponse> {
-        return this.http.get<any>(environment.apiUrl+'retourbano/event-activo.php?id_event='+idEvent, { headers: this.utils.getHeaders() }).pipe(
+        return this.http.get<any>(this.utils.v1('/events/detail') + '?event_id=' + idEvent, { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
         );
     }

@@ -24,6 +24,7 @@ const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'registro', component: RegistroComponent },
+  { path: 'registro/:id_event', component: RegistroComponent },
   { path: 'registro-puro', component: RegistroFormComponent },
   { path: 'login', component: LoginComponent },
   { path: 'recovery-password', component: RecoveryPasswordComponent },

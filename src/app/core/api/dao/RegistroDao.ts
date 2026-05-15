@@ -32,12 +32,74 @@ export class RegistroDao {
         return this.http.get<AvanceResponse>(environment.apiUrl + 'retourbano/configuracion.php', { headers: this.utils.getHeaders() });
     }
 
-    public agregarGuerrero(guerrero: User, tutor: boolean, id_campamento: number): Observable<RegistroResponse> {
-        return this.http.post<RegistroResponse>(environment.apiUrl + 'retourbano/inscribir.php?tutor=' + (tutor ? "1" : "0") + '&id_campamento=' + id_campamento, guerrero, { headers: this.utils.getHeaders() });
+    public agregarGuerrero(guerrero: EventRegistration, tutor: boolean, event_id: number): Observable<RegistroResponse> {
+        const payload = {
+            nombre: guerrero?.user?.nombre,
+            nick: guerrero?.user?.nick,
+            fechaNac: guerrero?.user?.fechaNac,
+            edad: guerrero?.user?.edad,
+            sexo: guerrero?.user?.sexo,
+            talla: guerrero?.user?.talla,
+            vienesDe: guerrero?.user?.vienesDe,
+            alergias: guerrero?.user?.alergias,
+            razones: guerrero?.razones,
+            tutorNombre: guerrero?.user?.tutorNombre,
+            tutorTelefono: guerrero?.user?.tutorTelefono,
+            emailTutor: guerrero?.user?.emailTutor ?? guerrero?.user?.guardian_email,
+            iglesia: guerrero?.user?.iglesia,
+            email: guerrero?.user?.email,
+            whatsapp: guerrero?.user?.whatsapp,
+            telefono: guerrero?.user?.telefono,
+            facebook: guerrero?.user?.facebook,
+            medicamentos: guerrero?.user?.medicamentos,
+            instagram: guerrero?.user?.instagram,
+            aceptaPoliticas: guerrero?.user?.aceptaPoliticas,
+            hospedaje: guerrero?.hospedaje,
+            event_id: event_id,
+        };
+
+        return this.http.post<RegistroResponse>(
+            this.utils.v1('/registrations') + '?tutor=' + (tutor ? '1' : '0') + '&event_id=' + event_id,
+            payload,
+            { headers: this.utils.getHeaders() }
+        );
     }
 
-    public updateGuerrero(guerrero: User, id_campamento: number): Observable<RegistroResponse> {
-        return this.http.put<RegistroResponse>(environment.apiUrl + 'retourbano/reinscribir.php?id_campamento=' + id_campamento, guerrero, { headers: this.utils.getHeaders() });
+    public updateGuerrero(guerrero: EventRegistration, event_id: number): Observable<RegistroResponse> {
+        const payload = {
+            id: guerrero?.user?.id ?? guerrero?.user_id,
+            nombre: guerrero?.user?.nombre,
+            nick: guerrero?.user?.nick,
+            fechaNac: guerrero?.user?.fechaNac,
+            year: guerrero?.user?.year,
+            month: guerrero?.user?.month,
+            day: guerrero?.user?.day,
+            edad: guerrero?.user?.edad,
+            sexo: guerrero?.user?.sexo,
+            talla: guerrero?.user?.talla,
+            vienesDe: guerrero?.user?.vienesDe,
+            alergias: guerrero?.user?.alergias,
+            razones: guerrero?.razones,
+            tutorNombre: guerrero?.user?.tutorNombre,
+            tutorTelefono: guerrero?.user?.tutorTelefono,
+            emailTutor: guerrero?.user?.emailTutor ?? guerrero?.user?.guardian_email,
+            iglesia: guerrero?.user?.iglesia,
+            email: guerrero?.user?.email,
+            whatsapp: guerrero?.user?.whatsapp,
+            telefono: guerrero?.user?.telefono,
+            facebook: guerrero?.user?.facebook,
+            medicamentos: guerrero?.user?.medicamentos,
+            instagram: guerrero?.user?.instagram,
+            aceptaPoliticas: guerrero?.user?.aceptaPoliticas,
+            hospedaje: guerrero?.hospedaje,
+            event_id: event_id,
+        };
+
+        return this.http.put<RegistroResponse>(
+            this.utils.v1('/registrations') + '?event_id=' + event_id,
+            payload,
+            { headers: this.utils.getHeaders() }
+        );
     }
 
     public consultarInscritos(opcion: number, activo: boolean, staff: boolean, admin: boolean, byName: string, seg: boolean, event_id?: number): Observable<EventRegistrationResponse> {

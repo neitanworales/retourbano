@@ -32,6 +32,10 @@ $router->add('POST', '/api/v1/registrations', function ($request) use ($registra
     return $registrationController->register($request);
 });
 
+$router->add('PUT', '/api/v1/registrations', function ($request) use ($registrationController) {
+    return $registrationController->update($request);
+});
+
 $router->add('PATCH', '/api/v1/registrations/status', function ($request) use ($registrationController, $authGuard) {
     return $authGuard->protect($request, function ($securedRequest) use ($registrationController) {
         return $registrationController->updateStatus($securedRequest);

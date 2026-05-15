@@ -4,30 +4,48 @@ require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Services/RegistrationService.php';
 require_once __DIR__ . '/../Repository/UserRepository.php';
 require_once __DIR__ . '/../Repository/PaymentRepository.php';
+require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
+require_once __DIR__ . '/../Models/User.php';
 
 class RegistrationController extends BaseController
 {
     private $registrationService;
     private $users;
     private $payments;
+    private $eventRegistrations;
 
     public function __construct()
     {
         $this->registrationService = new RegistrationService();
         $this->users = new UserRepository();
         $this->payments = new PaymentRepository();
+        $this->eventRegistrations = new EventRegistrationRepository();
     }
 
     public function register($request)
     {
+        $eventId = $this->parseEventId($request);
         $userId = isset($request['user_id']) ? (int) $request['user_id'] : 0;
-        $eventId = isset($request['event_id']) ? (int) $request['event_id'] : 0;
-        $requiresLodging = isset($request['requires_lodging']) ? (int) $request['requires_lodging'] : 0;
-        $roomCode = isset($request['room_code']) ? trim($request['room_code']) : null;
-        $reasons = isset($request['reasons']) ? trim($request['reasons']) : (isset($request['razones']) ? trim($request['razones']) : null);
 
-        if ($userId <= 0 || $eventId <= 0) {
-            return $this->fail('user_id and event_id are required', 422);
+        $requiresLodging = $this->parseOptionalBoolean($request, 'requires_lodging');
+        if ($requiresLodging === null) {
+            $requiresLodging = $this->parseOptionalBoolean($request, 'hospedaje');
+        }
+        $requiresLodging = $requiresLodging === null ? 0 : (int) $requiresLodging;
+
+        $roomCode = isset($request['room_code']) ? trim((string) $request['room_code']) : null;
+        $reasons = isset($request['reasons']) ? trim((string) $request['reasons']) : (isset($request['razones']) ? trim((string) $request['razones']) : null);
+
+        if ($eventId <= 0) {
+            return $this->fail('event_id or id_campamento is required', 422);
+        }
+
+        if ($userId <= 0) {
+            $userOrError = $this->resolveOrCreatePublicUser($request);
+            if (is_array($userOrError) && isset($userOrError['error'])) {
+                return $this->fail($userOrError['error'], 400, $userOrError);
+            }
+            $userId = (int) $userOrError;
         }
 
         $result = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons);
@@ -36,6 +54,77 @@ class RegistrationController extends BaseController
         }
 
         return $this->ok($result, 'registration created');
+    }
+
+    public function update($request)
+    {
+        $userId = isset($request['user_id']) ? (int) $request['user_id'] : (isset($request['id']) ? (int) $request['id'] : 0);
+        $eventId = $this->parseEventId($request);
+
+        if ($userId <= 0) {
+            return $this->fail('id or user_id is required', 422);
+        }
+
+        $user = $this->users->findModelById($userId);
+        if (!$user) {
+            return $this->fail('user not found', 404);
+        }
+
+        $this->fillUserFromRequest($user, $request, true);
+        $saved = $this->users->update($user);
+        if (!$saved) {
+            return $this->fail('could not update user', 500);
+        }
+
+        $registrationId = null;
+        if ($eventId > 0) {
+            $existing = $this->eventRegistrations->findByEventAndUser($eventId, $userId);
+            if (!$existing) {
+                $requiresLodging = $this->parseOptionalBoolean($request, 'requires_lodging');
+                if ($requiresLodging === null) {
+                    $requiresLodging = $this->parseOptionalBoolean($request, 'hospedaje');
+                }
+                $requiresLodging = $requiresLodging === null ? 0 : (int) $requiresLodging;
+
+                $roomCode = isset($request['room_code']) ? trim((string) $request['room_code']) : null;
+                $reasons = isset($request['reasons']) ? trim((string) $request['reasons']) : (isset($request['razones']) ? trim((string) $request['razones']) : null);
+
+                $registerResult = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons);
+                if (isset($registerResult['error'])) {
+                    return $this->fail($registerResult['error'], 400, $registerResult);
+                }
+                $registrationId = isset($registerResult['id']) ? (int) $registerResult['id'] : null;
+            } else {
+                $registrationId = (int) $existing->id;
+
+                $updates = array();
+                $requiresLodging = $this->parseOptionalBoolean($request, 'requires_lodging');
+                if ($requiresLodging === null) {
+                    $requiresLodging = $this->parseOptionalBoolean($request, 'hospedaje');
+                }
+                if ($requiresLodging !== null) {
+                    $updates['requires_lodging'] = (int) $requiresLodging;
+                }
+
+                $reasons = isset($request['reasons']) ? trim((string) $request['reasons']) : (isset($request['razones']) ? trim((string) $request['razones']) : null);
+                if ($reasons !== null && $reasons !== '') {
+                    $updates['reasons'] = $reasons;
+                }
+
+                if (!empty($updates)) {
+                    $this->registrationService->updateFields($registrationId, $updates);
+                }
+            }
+        }
+
+        return $this->ok(
+            array(
+                'user_id' => $userId,
+                'event_id' => $eventId > 0 ? $eventId : null,
+                'registration_id' => $registrationId,
+            ),
+            'registration updated'
+        );
     }
 
     public function updateStatus($request)
@@ -201,6 +290,171 @@ class RegistrationController extends BaseController
             return $total + $amount;
         }, 0.0);
         return $item;
+    }
+
+    private function resolveOrCreatePublicUser($request)
+    {
+        $email = isset($request['email']) ? trim((string) $request['email']) : '';
+        $fullName = isset($request['nombre']) ? trim((string) $request['nombre']) : (isset($request['full_name']) ? trim((string) $request['full_name']) : '');
+
+        if ($email === '' || $fullName === '') {
+            return array('error' => 'nombre and email are required');
+        }
+
+        $isTutor = $this->parseOptionalBoolean($request, 'tutor') === 1;
+        $existingUser = $this->users->findByEmail($email);
+
+        if ($existingUser && !$isTutor) {
+            return array('error' => 'Ya existe un registro con ese correo electronico, por favor intenta reinscribirte');
+        }
+
+        if ($existingUser) {
+            return (int) $existingUser->id;
+        }
+
+        $newUser = new User();
+        $this->fillUserFromRequest($newUser, $request, false);
+        $newUser->user_status = $newUser->user_status ? $newUser->user_status : 'A';
+        $newUser->password_hash = isset($newUser->password_hash) ? $newUser->password_hash : '';
+        $newUser->verification_code = isset($newUser->verification_code) ? $newUser->verification_code : '';
+
+        $createdId = $this->users->create($newUser);
+        return $createdId > 0 ? (int) $createdId : array('error' => 'could not create user');
+    }
+
+    private function fillUserFromRequest($user, $request, $keepExistingWhenEmpty = true)
+    {
+        $fullName = isset($request['nombre']) ? trim((string) $request['nombre']) : (isset($request['full_name']) ? trim((string) $request['full_name']) : '');
+        if ($fullName !== '' || !$keepExistingWhenEmpty) {
+            $user->full_name = $fullName;
+        }
+
+        $displayName = isset($request['nick']) ? trim((string) $request['nick']) : (isset($request['display_name']) ? trim((string) $request['display_name']) : '');
+        if ($displayName !== '' || !$keepExistingWhenEmpty) {
+            $user->display_name = $displayName;
+        }
+
+        $email = isset($request['email']) ? trim((string) $request['email']) : '';
+        if ($email !== '' || !$keepExistingWhenEmpty) {
+            $user->email = $email;
+        }
+
+        $birthDate = $this->normalizeBirthDate($request);
+        if ($birthDate !== null || !$keepExistingWhenEmpty) {
+            $user->birth_date = $birthDate;
+        }
+
+        if (isset($request['edad']) || isset($request['age']) || !$keepExistingWhenEmpty) {
+            $ageRaw = isset($request['edad']) ? $request['edad'] : (isset($request['age']) ? $request['age'] : null);
+            $user->age = $ageRaw === null || $ageRaw === '' ? null : (int) $ageRaw;
+        }
+
+        $gender = isset($request['sexo']) ? trim((string) $request['sexo']) : (isset($request['gender']) ? trim((string) $request['gender']) : '');
+        if ($gender !== '' || !$keepExistingWhenEmpty) {
+            $user->gender = $gender;
+        }
+
+        $shirtSize = isset($request['talla']) ? trim((string) $request['talla']) : (isset($request['shirt_size']) ? trim((string) $request['shirt_size']) : '');
+        if ($shirtSize !== '' || !$keepExistingWhenEmpty) {
+            $user->shirt_size = $shirtSize;
+        }
+
+        $comingFrom = isset($request['vienesDe']) ? trim((string) $request['vienesDe']) : (isset($request['coming_from']) ? trim((string) $request['coming_from']) : '');
+        if ($comingFrom !== '' || !$keepExistingWhenEmpty) {
+            $user->coming_from = $comingFrom;
+        }
+
+        $allergies = isset($request['alergias']) ? trim((string) $request['alergias']) : (isset($request['allergies']) ? trim((string) $request['allergies']) : '');
+        if ($allergies !== '' || !$keepExistingWhenEmpty) {
+            $user->allergies = $allergies;
+        }
+
+        $guardianPhone = isset($request['tutorTelefono']) ? trim((string) $request['tutorTelefono']) : (isset($request['guardian_phone']) ? trim((string) $request['guardian_phone']) : '');
+        if ($guardianPhone !== '' || !$keepExistingWhenEmpty) {
+            $user->guardian_phone = $guardianPhone;
+        }
+
+        $guardianName = isset($request['tutorNombre']) ? trim((string) $request['tutorNombre']) : (isset($request['guardian_name']) ? trim((string) $request['guardian_name']) : '');
+        if ($guardianName !== '' || !$keepExistingWhenEmpty) {
+            $user->guardian_name = $guardianName;
+        }
+
+        $church = isset($request['iglesia']) ? trim((string) $request['iglesia']) : (isset($request['church']) ? trim((string) $request['church']) : '');
+        if ($church !== '' || !$keepExistingWhenEmpty) {
+            $user->church = $church;
+        }
+
+        $medications = isset($request['medicamentos']) ? trim((string) $request['medicamentos']) : (isset($request['medications']) ? trim((string) $request['medications']) : '');
+        if ($medications !== '' || !$keepExistingWhenEmpty) {
+            $user->medications = $medications;
+        }
+
+        $whatsapp = isset($request['whatsapp']) ? trim((string) $request['whatsapp']) : '';
+        if ($whatsapp !== '' || !$keepExistingWhenEmpty) {
+            $user->whatsapp = $whatsapp;
+        }
+
+        $phone = isset($request['telefono']) ? trim((string) $request['telefono']) : (isset($request['phone']) ? trim((string) $request['phone']) : '');
+        if ($phone !== '' || !$keepExistingWhenEmpty) {
+            $user->phone = $phone;
+        }
+
+        $acceptedPolicies = $this->parseOptionalBoolean($request, 'aceptaPoliticas');
+        if ($acceptedPolicies === null) {
+            $acceptedPolicies = $this->parseOptionalBoolean($request, 'accepted_policies');
+        }
+        if ($acceptedPolicies !== null || !$keepExistingWhenEmpty) {
+            $user->accepted_policies = $acceptedPolicies === null ? 0 : (int) $acceptedPolicies;
+        }
+
+        $facebook = isset($request['facebook']) ? trim((string) $request['facebook']) : '';
+        if ($facebook !== '' || !$keepExistingWhenEmpty) {
+            $user->facebook = $facebook;
+        }
+
+        $instagram = isset($request['instagram']) ? trim((string) $request['instagram']) : '';
+        if ($instagram !== '' || !$keepExistingWhenEmpty) {
+            $user->instagram = $instagram;
+        }
+
+        $guardianEmail = isset($request['emailTutor']) ? trim((string) $request['emailTutor']) : (isset($request['guardian_email']) ? trim((string) $request['guardian_email']) : '');
+        if ($guardianEmail !== '' || !$keepExistingWhenEmpty) {
+            $user->guardian_email = $guardianEmail;
+        }
+    }
+
+    private function parseEventId($request)
+    {
+        $eventId = isset($request['event_id']) ? (int) $request['event_id'] : 0;
+        if ($eventId > 0) {
+            return $eventId;
+        }
+
+        return isset($request['id_campamento']) ? (int) $request['id_campamento'] : 0;
+    }
+
+    private function normalizeBirthDate($request)
+    {
+        if (isset($request['year']) && isset($request['month']) && isset($request['day'])) {
+            $year = (int) $request['year'];
+            $month = (int) $request['month'];
+            $day = (int) $request['day'];
+            if ($year > 0 && $month > 0 && $day > 0 && checkdate($month, $day, $year)) {
+                return sprintf('%04d-%02d-%02d', $year, $month, $day);
+            }
+        }
+
+        $raw = isset($request['fechaNac']) ? trim((string) $request['fechaNac']) : (isset($request['birth_date']) ? trim((string) $request['birth_date']) : '');
+        if ($raw === '') {
+            return null;
+        }
+
+        $timestamp = strtotime($raw);
+        if ($timestamp === false) {
+            return null;
+        }
+
+        return date('Y-m-d', $timestamp);
     }
 
     private function parseOptionalBoolean($request, $key)

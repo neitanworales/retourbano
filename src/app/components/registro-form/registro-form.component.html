@@ -73,7 +73,7 @@
             <div class="form-group">
                 <label for="nombre">Año de nacimiento</label>
                 <select class="form-control" formControlName="year" [(ngModel)]="model.user!.year"
-                    [ngClass]="{'is-invalid': form['year'].errors }" (change)="this.calculateEdad()">
+                    [ngClass]="{'is-invalid': form['year'].errors }" (ngModelChange)="calculateEdad()">
                     <option value="0" disabled="true" selected="true">Selecciona tu año</option>
 
                     <option value="2011">2011</option>
@@ -166,7 +166,7 @@
             <div class="form-group">
                 <label for="nombre">Mes de nacimiento</label>
                 <select class="form-control" formControlName="month" [(ngModel)]="model.user!.month"
-                    [ngClass]="{'is-invalid': form['month'].errors }" (change)="this.calculateEdad()">
+                    [ngClass]="{'is-invalid': form['month'].errors }" (ngModelChange)="calculateEdad()">
                     <option value="0" disabled="true" selected="true">Selecciona tu mes</option>
                     <option value="1">Enero</option>
                     <option value="2">Febrero</option>
@@ -189,7 +189,7 @@
             <div class="form-group">
                 <label for="nombre">Día de nacimiento</label>
                 <select class="form-control" formControlName="day" [(ngModel)]="model.user!.day"
-                    [ngClass]="{'is-invalid': form['day'].errors }" (change)="this.calculateEdad()">
+                    [ngClass]="{'is-invalid': form['day'].errors }" (ngModelChange)="calculateEdad()">
                     <option value="0" disabled="true" selected="true">Selecciona tu día</option>
                     <option value="1">1</option>
                     <option value="2">2</option>
@@ -232,6 +232,9 @@
                 <label for="nombre">Edad</label>
                 <input class="form-control" placeholder="Edad" type="text" value={{model.user!.edad}} id="edad" name="edad"
                     disabled />
+                <small *ngIf="birthDateInvalid" class="text-danger d-block mt-1">
+                    La fecha de nacimiento no es valida. Revisa día, mes y año.
+                </small>
             </div>
             <div class="form-group">
                 <label>Selecciona tu sexo</label>

@@ -6,7 +6,7 @@
                 <h1 class="mx-auto my-0 text-uppercase">RETO URBANO</h1>
                 <h2 class="text-white-50 mx-auto mt-2 mb-5">reto ¿que somos?</h2>
                 <a *ngFor="let event of events" class="btn btn-primary" routerLink="/info"
-                    [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre}}</a>
+                    [queryParams]="{ id_event: event.id }">{{event.city_label}}</a>
             </div>
         </div>
     </div>
@@ -28,9 +28,8 @@
                 <h1 class="text-white mb-4">{{event.titulo}}</h1>
                 <div class="row">
                     <div class="text-white text-center col-md-12">
-                        <h2>{{event.ciudad?.nombre}}</h2>
-                        <h3>{{event.fecha_inicio | date:'dd MMMM' }} a {{event.fecha_termino | date:'dd MMMM'
-                            }}</h3>
+                        <h2>{{event.city_label}}</h2>
+                        <h3>{{event.start_at | date:'dd MMMM':'':'es-MX' }} a {{event.end_at | date:'dd MMMM':'':'es-MX'}}</h3>
                     </div>
                     <div class="text-center col-md-12 section">
                         <app-registro-avance [showForm]="false"

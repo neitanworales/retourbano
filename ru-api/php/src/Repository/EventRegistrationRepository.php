@@ -39,22 +39,23 @@ class EventRegistrationRepository extends BaseRepository
 
     public function create(EventRegistration $registration)
     {
-        $sql = 'INSERT INTO event_registrations (legacy_registration_id, event_id, user_id, event_year, registration_status, is_confirmed, attendance_confirmed, is_staff, is_admin, is_followup, requires_lodging, room_code, reasons)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO event_registrations (legacy_registration_id, event_id, user_id, event_year, registration_status, is_confirmed, attendance_confirmed, is_staff, is_admin, is_followup, welcome_email_sent, email_confirmed, requires_lodging, room_code, reasons)
+            VALUES (?, ?, ?, ?, \'A\', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param(
-            'iiiisiiiiisss',
+            'iiiiiiiiiiiiss',
             $registration->legacy_registration_id,
             $registration->event_id,
             $registration->user_id,
             $registration->event_year,
-            $registration->registration_status,
             $registration->is_confirmed,
             $registration->attendance_confirmed,
             $registration->is_staff,
             $registration->is_admin,
             $registration->is_followup,
+            $registration->welcome_email_sent,
+            $registration->email_confirmed,
             $registration->requires_lodging,
             $registration->room_code,
             $registration->reasons

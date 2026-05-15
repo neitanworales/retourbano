@@ -36,12 +36,14 @@ class RegistrationService
             'event_id' => (int) $eventId,
             'user_id' => (int) $userId,
             'event_year' => $event->event_year,
-            'registration_status' => 'active',
+            'registration_status' => 'A',
             'is_confirmed' => 0,
             'attendance_confirmed' => 0,
             'is_staff' => 0,
             'is_admin' => 0,
             'is_followup' => 0,
+            'welcome_email_sent' => 0,
+            'email_confirmed' => 0,
             'requires_lodging' => (int) $requiresLodging,
             'room_code' => $roomCode,
             'reasons' => $reasons,
@@ -53,7 +55,7 @@ class RegistrationService
             'id' => (int) $id,
             'event_id' => (int) $eventId,
             'user_id' => (int) $userId,
-            'registration_status' => 'active',
+            'registration_status' => 'A',
         );
     }
 

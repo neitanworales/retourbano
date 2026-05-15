@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './modules/home/home.component';
@@ -53,6 +55,9 @@ import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
 import { TumbaService } from './core/services/tumbaService';
 import { QueTraerComponent } from "./components/que-traer/que-traer.component";
 import { EventSummaryDashboardComponent } from "./components/event-summary-dashboard/event-summary-dashboard.component";
+import localeEsMx from '@angular/common/locales/es-MX';
+
+registerLocaleData(localeEsMx);
 
 @NgModule({
     declarations: [
@@ -105,6 +110,7 @@ import { EventSummaryDashboardComponent } from "./components/event-summary-dashb
         },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        { provide: LOCALE_ID, useValue: 'es-MX' },
         provideCharts(withDefaultRegisterables()),
         LoadingService,
         Utils,

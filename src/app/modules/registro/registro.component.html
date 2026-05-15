@@ -20,16 +20,15 @@
                     <h1>{{event!.titulo}}</h1>
                     <div class="card">
                         <div class="card-header">
-                            Registro al campamento {{event.titulo}}
+                            Registro al campamento {{event!.title}}
                         </div>
                         <div class="card-body">
-                            <p>Este campamento se llevará a cabo en {{event.ciudad?.nombre}}</p>
+                            <p>Este campamento se llevará a cabo en {{event!.city_label}}</p>
                         </div>
-                        <div class="card-footer">
+                        <div class="card-footer" *ngIf="events!.length > 1">
                             ¿Deseas registrarte a otro campamento?
-                            <a *ngFor="let event of events" class="btn btn-sm btn-outline-info"
-                                routerLink="/registro"
-                                [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
+                            <button *ngFor="let item of events" type="button" class="btn btn-sm btn-outline-info"
+                                (click)="selectEvent(item)">{{item.city_label +' -'+item.title}}</button>
                         </div>
                     </div>
                 </div>
@@ -56,8 +55,8 @@
             <div class="row">
                 <div class="col text-center">
                     <h2>¿A cual campamento quieres registrarte?</h2>
-                    <a *ngFor="let event of events" class="btn btn-primary" routerLink="/registro"
-                        [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
+                    <button *ngFor="let item of events" type="button" class="btn btn-primary"
+                        (click)="selectEvent(item)">{{item.city_label +' -'+item.title}}</button>
                 </div>
 
             </div>

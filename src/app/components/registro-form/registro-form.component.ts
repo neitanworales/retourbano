@@ -31,6 +31,7 @@ export class RegistroFormComponent implements OnInit {
   model = new EventRegistration();
 
   submitted = false;
+  birthDateInvalid = false;
 
   displayStyle?: String = "none";
   displayCommentsStyle?: String = "block";
@@ -48,9 +49,11 @@ export class RegistroFormComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
+    this.ensureUserModel();
     if (this.guerreroToEdit != undefined) {
       this.actualizar = true;
       this.model = this.guerreroToEdit;
+      this.ensureUserModel();
       const dateString = this.guerreroToEdit.user!.fechaNac + "";
       this.model.user!.year = Number(dateString?.substring(0, 4));
       this.model.user!.month = Number(dateString?.substring(5).substring(0, 2));
@@ -60,6 +63,7 @@ export class RegistroFormComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.ensureUserModel();
     if (!this.actualizar) {
       this.model.user!.sexo = "";      
       this.model.hospedaje = true;
@@ -72,28 +76,27 @@ export class RegistroFormComponent implements OnInit {
     this.model.user!.medicamentos = "";
     this.model.razones = "";
 
-    /*
-    this.model.nombre = "Jesús de Veracruz";
-    this.model.nick = "Mr. Corleone";
-    this.model.sexo = "M";
-    this.model.year = 2001;
-    this.model.month = 1;
-    this.model.day = 1;
-    this.model.talla = "XL";
-    this.model.vienesDe = "CMDX";
+    
+    this.model.user!.nombre = "Jesús de Veracruz";
+    this.model.user!.nick = "Mr. Corleone";
+    this.model.user!.sexo = "M";
+    this.model.user!.year = 2001;
+    this.model.user!.month = 1;
+    this.model.user!.day = 1;
+    this.model.user!.talla = "XL";
+    this.model.user!.vienesDe = "CMDX";
     this.model.razones = "Por mandato divino del yich";
-    this.model.tutorNombre = "Carlos Nopal";
-    this.model.tutorTelefono = "759783493";
-    this.model.email = "prueba.registro_1118@yopmail.com";
-    this.model.whatsapp = "2423423423423";
-    this.model.telefono = "2423423423423";
-    this.model.alergias = "A las bombas atómicas";
-    this.model.medicamentos = "Una pastilla de besos cada 2 horas";
-    this.model.aceptaPoliticas = true;
-    this.model.facebook = "No tengo brother";
-    this.model.instagram = "Para que o que?";
-    this.model.iglesia = "La sagrada familia";
-    */
+    this.model.user!.tutorNombre = "Carlos Nopal";
+    this.model.user!.tutorTelefono = "759783493";
+    this.model.user!.email = "prueba.registro_1118@yopmail.com";
+    this.model.user!.whatsapp = "2423423423423";
+    this.model.user!.telefono = "2423423423423";
+    this.model.user!.alergias = "A las bombas atómicas";
+    this.model.user!.medicamentos = "Una pastilla de besos cada 2 horas";
+    this.model.user!.aceptaPoliticas = true;
+    this.model.user!.facebook = "No tengo brother";
+    this.model.user!.instagram = "Para que o que?";
+    this.model.user!.iglesia = "La sagrada familia";
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],
@@ -145,22 +148,51 @@ export class RegistroFormComponent implements OnInit {
   }
 
   calculateEdad() {
-    let now = new Date();
+    this.ensureUserModel();
 
-    if (this.model.user!.year !== undefined) {
-      this.model.user!.edad = now.getFullYear() - this.model.user!.year;
+    const year = Number(this.model.user!.year);
+    const month = Number(this.model.user!.month);
+    const day = Number(this.model.user!.day);
+
+    if (!year || !month || !day) {
+      this.birthDateInvalid = false;
+      this.model.user!.edad = undefined;
+      this.model.user!.fechaNac = undefined;
+      return;
     }
 
-    if (this.model.user!.month !== undefined) {
-      if (this.model.user!.month < now.getMonth()) {
-        this.model.user!.edad = (this.model.user!.edad!) - 1;
-      }
+    const birthDate = new Date(year, month - 1, day);
+    const isValidDate =
+      birthDate.getFullYear() === year &&
+      birthDate.getMonth() === month - 1 &&
+      birthDate.getDate() === day;
+
+    if (!isValidDate) {
+      this.birthDateInvalid = true;
+      this.model.user!.edad = undefined;
+      this.model.user!.fechaNac = undefined;
+      return;
     }
 
-    if (this.model.user!.year !== undefined && this.model.user!.month !== undefined && this.model.user!.day !== undefined) {
-      this.model.user!.fechaNac = new Date(this.model.user!.year + '/' + this.model.user!.month + '/' + this.model.user!.day);
+    this.birthDateInvalid = false;
+
+    const today = new Date();
+    let age = today.getFullYear() - year;
+    const currentMonth = today.getMonth() + 1;
+    const hasNotHadBirthday = month > currentMonth || (month === currentMonth && day > today.getDate());
+
+    if (hasNotHadBirthday) {
+      age -= 1;
     }
 
+    this.model.user!.edad = age;
+    this.model.user!.fechaNac = birthDate;
+  }
+
+  private ensureUserModel() {
+    if (!this.model.user) {
+      this.model.user = new User();
+    }
   }
 
   newGuerrero() {
@@ -225,6 +257,12 @@ export class RegistroFormComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.calculateEdad();
+
+    if (this.birthDateInvalid) {
+      return;
+    }
+
     if (this.actualizar) {
       this.updateGuerrero();
     } else {
