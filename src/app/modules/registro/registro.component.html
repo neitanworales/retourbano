@@ -29,7 +29,7 @@
                             ¿Deseas registrarte a otro campamento?
                             <a *ngFor="let event of events" class="btn btn-sm btn-outline-info"
                                 routerLink="/registro"
-                                [queryParams]="{ id_campamento: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
+                                [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
                         </div>
                     </div>
                 </div>
@@ -57,7 +57,7 @@
                 <div class="col text-center">
                     <h2>¿A cual campamento quieres registrarte?</h2>
                     <a *ngFor="let event of events" class="btn btn-primary" routerLink="/registro"
-                        [queryParams]="{ id_campamento: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
+                        [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
                 </div>
 
             </div>

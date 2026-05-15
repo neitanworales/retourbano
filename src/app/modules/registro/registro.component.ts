@@ -29,7 +29,11 @@ export class RegistroComponent implements OnInit {
   private loadEvent() {
     this.route.queryParamMap
       .pipe(
-        map((params: ParamMap) => Number(params.get('id_event'))),
+        map((params: ParamMap) => {
+          const idEvent = Number(params.get('id_event'));
+          const idCampamento = Number(params.get('id_campamento'));
+          return !isNaN(idEvent) && idEvent > 0 ? idEvent : idCampamento;
+        }),
         filter((id) => !isNaN(id) && id > 0),
         tap((id) => {
           this.id_event = id;
@@ -51,6 +55,10 @@ export class RegistroComponent implements OnInit {
     this.eventDao.getEventActivo().subscribe({
       next: (result) => {
         this.events = result.data?.events!;
+        if (!this.event && this.events?.length === 1) {
+          this.event = this.events[0];
+          this.id_event = this.events[0]?.id;
+        }
       },
       error: (error) => {
         console.error('Error al cargar eventos    :', error);
