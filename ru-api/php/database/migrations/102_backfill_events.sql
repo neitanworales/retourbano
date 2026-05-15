@@ -4,6 +4,10 @@
 
 SET NAMES utf8mb4;
 
+-- cities is populated in 108, which runs after this script.
+-- Disable FK checks to allow city_id insertion before that backfill.
+SET FOREIGN_KEY_CHECKS = 0;
+
 INSERT INTO events (
     legacy_event_id,
     event_year,
@@ -33,7 +37,8 @@ INSERT INTO events (
     departure_coordinates,
     departure_note,
     cost_notes,
-    city_label
+    city_label,
+    crusade_place
 )
 SELECT
     c.id_campamento AS legacy_event_id,
@@ -64,7 +69,8 @@ SELECT
     NULLIF(TRIM(c.salida_coordenadas), '') AS departure_coordinates,
     NULLIF(TRIM(c.salida_nota), '') AS departure_note,
     NULLIF(TRIM(c.notas_costos), '') AS cost_notes,
-    NULLIF(TRIM(ci.nombre), '') AS city_label
+    NULLIF(TRIM(ci.nombre), '') AS city_label,
+    NULLIF(TRIM(c.cruzada_lugar), '') AS crusade_place
 FROM campamentos c
 LEFT JOIN ciudades ci ON ci.id = c.id_ciudad
 ON DUPLICATE KEY UPDATE
@@ -95,4 +101,7 @@ ON DUPLICATE KEY UPDATE
     departure_coordinates = VALUES(departure_coordinates),
     departure_note = VALUES(departure_note),
     cost_notes = VALUES(cost_notes),
-    city_label = VALUES(city_label);
+    city_label = VALUES(city_label),
+    crusade_place = VALUES(crusade_place);
+
+SET FOREIGN_KEY_CHECKS = 1;

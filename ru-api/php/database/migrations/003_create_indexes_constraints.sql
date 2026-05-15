@@ -1,9 +1,12 @@
 -- 003_create_indexes_constraints.sql
 -- Phase 2 / Wave A (Expand)
 -- Add relational constraints and final indexes to new English schema.
--- Run this after 001, 002, 004 and the backfill scripts.
+-- Run this after 001, 002, 004 and the backfill scripts (101-112).
 
 SET NAMES utf8mb4;
+
+-- Disable FK checks while adding constraints to tables that already have backfilled data.
+SET FOREIGN_KEY_CHECKS = 0;
 
 ALTER TABLE event_registrations
     ADD CONSTRAINT fk_event_registrations_event
@@ -73,3 +76,5 @@ ALTER TABLE payments
 ALTER TABLE events
     ADD KEY idx_events_org_active (organization_id, is_active),
     ADD KEY idx_events_city (city_id);
+
+SET FOREIGN_KEY_CHECKS = 1;

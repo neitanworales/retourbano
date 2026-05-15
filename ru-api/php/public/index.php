@@ -10,8 +10,10 @@ $method = isset($_SERVER['REQUEST_METHOD']) ? $_SERVER['REQUEST_METHOD'] : 'GET'
 $uri = isset($_SERVER['REQUEST_URI']) ? $_SERVER['REQUEST_URI'] : '/';
 $path = parse_url($uri, PHP_URL_PATH);
 
-// Normalize path for setups that include /public in URL.
-$path = preg_replace('#^/ru-api/php/public#', '', $path);
+// Normalize path: strip deployment prefix for both local and production.
+// Local:      /ru-api/php/public/api/v1/...   → /api/v1/...
+// Production: /php/public/api/v1/...           → /api/v1/...
+$path = preg_replace('#^(?:/ru-api)?/php/public#', '', $path);
 if ($path === '') {
     $path = '/';
 }

@@ -1,6 +1,8 @@
 -- 004_create_cities_schema.sql
--- Phase 2 / Wave A (Expand)
--- Create normalized cities catalog for events and organizations.
+-- SUPERSEDED: cities is now created in 001_create_core_english_schema.sql
+-- because events references it via FK and 003 runs before this file.
+-- This file is kept for reference only. The CREATE TABLE below is a no-op
+-- due to IF NOT EXISTS.
 
 SET NAMES utf8mb4;
 
