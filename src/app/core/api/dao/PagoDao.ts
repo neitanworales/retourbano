@@ -14,6 +14,9 @@ export class PagoDao {
         private utils: Utils
     ) { }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/pagos-mantenimiento.php. Migrate to v1 endpoints.
+     */
     consultarResumen(): Observable<IndicadoresResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<IndicadoresResponse>(environment.apiUrl + 'retourbano/pagos-mantenimiento.php'
@@ -23,6 +26,9 @@ export class PagoDao {
         , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/pagos-mantenimiento.php. Migrate to v1 endpoints.
+     */
     consultarPagos(): Observable<PagoResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<PagoResponse>(environment.apiUrl + 'retourbano/pagos-mantenimiento.php'
@@ -32,6 +38,9 @@ export class PagoDao {
         , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/pagos-mantenimiento.php. Migrate to v1 endpoints.
+     */
     consultarPagosAgrupados(): Observable<PagoResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<PagoResponse>(environment.apiUrl + 'retourbano/pagos-mantenimiento.php'
@@ -41,6 +50,9 @@ export class PagoDao {
         , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/pagos-mantenimiento.php. Migrate to v1 endpoints.
+     */
     consultarPagosPorGuerrero(): Observable<PagoResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<PagoResponse>(environment.apiUrl + 'retourbano/pagos-mantenimiento.php'

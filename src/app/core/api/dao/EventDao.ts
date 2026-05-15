@@ -14,6 +14,9 @@ export class EventDao {
         private utils: Utils
     ) { }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/events.php. Migrate to v1 endpoints.
+     */
     public getEvents(): Observable<EventResponse> {
         const user = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<any>(environment.apiUrl + 'retourbano/events.php'

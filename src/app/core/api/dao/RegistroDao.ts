@@ -28,6 +28,9 @@ export class RegistroDao {
         private autho: AuthService
     ) { }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/configuracion.php. Migrate to v1 endpoint.
+     */
     public getAvanceRegistro(): Observable<AvanceResponse> {
         return this.http.get<AvanceResponse>(environment.apiUrl + 'retourbano/configuracion.php', { headers: this.utils.getHeaders() });
     }
@@ -257,6 +260,9 @@ export class RegistroDao {
         } as User;
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public consultarIndicadores(opcion: number, campamentoId: number): Observable<IndicadoresResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<IndicadoresResponse>(environment.apiUrl
@@ -320,6 +326,9 @@ export class RegistroDao {
         return this.actualizarRegistro(registrationId, { status: (isActived ? 'A' : 'B') });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public cambiarContrasena(newPassword: String, id: number, campamentoId: number): Observable<DefaultResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
@@ -394,6 +403,9 @@ export class RegistroDao {
         return this.actualizarRegistro(registrationId, { is_followup: valor });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public consultarHistorico(year: number, campamentoId: number): Observable<EventRegistrationResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<any>(environment.apiUrl + 'retourbano/mantenimiento.php'
@@ -439,17 +451,12 @@ export class RegistroDao {
                     } as DefaultResponse);
                 }
 
-                return this.http.get<any>(
-                environment.apiUrl + 'retourbano/validar-email.php?email=' + encodeURIComponent(String(email || '')) + '&id_campamento=' + encodeURIComponent(String(id_campamento || '')),
-                { headers: this.utils.getHeaders() }
-            ).pipe(
-                map((legacy) => ({
-                    success: legacy?.success ?? !legacy?.error,
-                    error: !!legacy?.error,
-                    code: legacy?.code || 200,
-                    message: legacy?.message || legacy?.mensaje || 'Solicitud procesada',
-                } as DefaultResponse))
-                );
+                return of({
+                    success: false,
+                    error: true,
+                    code: error?.status || 500,
+                    message: 'No fue posible procesar la solicitud',
+                } as DefaultResponse);
             })
         );
     }
@@ -495,19 +502,14 @@ export class RegistroDao {
                     } as GuerreroResponse);
                 }
 
-                return this.http.get<any>(
-                environment.apiUrl + 'retourbano/validar-codigo.php?codigo=' + encodeURIComponent(String(code || '')),
-                { headers: this.utils.getHeaders() }
-            ).pipe(
-                map((legacy) => ({
-                    success: legacy?.success ?? !legacy?.error,
-                    error: !!legacy?.error,
-                    code: legacy?.code || 200,
-                    message: legacy?.message || legacy?.mensaje || 'Ok',
-                    resultado: this.normalizeUser(legacy?.resultado),
+                return of({
+                    success: false,
+                    error: true,
+                    code: error?.status || 500,
+                    message: 'No fue posible validar el codigo',
+                    resultado: {} as User,
                     already_registered: false,
-                } as GuerreroResponse))
-                );
+                } as GuerreroResponse);
             })
         );
     }
@@ -531,22 +533,20 @@ export class RegistroDao {
                     events: response?.data?.events || []
                 } as RegistroResponse;
             }),
-            catchError(() => this.http.get<any>(
-                this.utils.v1('/retourbano/validar-inscripcion.php?id=' + session?.id),
-                { headers: this.utils.getHeaders() }
-            ).pipe(
-                map((legacy) => ({
-                    success: legacy?.success ?? !legacy?.error,
-                    error: !!legacy?.error,
-                    message: legacy?.message || legacy?.mensaje || 'Disponibilidad consultada',
-                    code: legacy?.code || 200,
-                    inscrito: !!legacy?.inscrito,
-                    events: legacy?.events || []
-                } as RegistroResponse))
-            ))
+            catchError((error) => of({
+                success: false,
+                error: true,
+                message: error?.error?.message || 'No fue posible consultar disponibilidad',
+                code: error?.status || 500,
+                inscrito: false,
+                events: []
+            } as RegistroResponse))
         );
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public obtenerHospedajes(con_hospedaje: Boolean, campamentoId: number): Observable<HospedajeResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<HospedajeResponse>(environment.apiUrl
@@ -558,6 +558,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public obtenerHabitaciones(campamentoId: number): Observable<HabitacionResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<HabitacionResponse>(environment.apiUrl
@@ -568,6 +571,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public obtenerPersonasSinHabitacion(campamentoId: number): Observable<SinHabitacionResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<SinHabitacionResponse>(environment.apiUrl
@@ -578,6 +584,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public actualizarHabitacion(id: number, habitacion: string, campamentoId: number): Observable<DefaultResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
@@ -589,6 +598,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public actualizarHospedaje(id: number, hospedaje: boolean, campamentoId: number): Observable<DefaultResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
@@ -600,6 +612,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public obtenerUsuarios(campamentoId: number): Observable<MtoLoginResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<MtoLoginResponse>(environment.apiUrl
@@ -610,6 +625,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public obtenerRepetidos(campamentoId: number): Observable<EventRegistrationResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<EventRegistrationResponse>(environment.apiUrl
@@ -620,6 +638,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public updateEmailTutor(id: number, email: String, email_tutor: String, campamentoId: number): Observable<DefaultResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<DefaultResponse>(environment.apiUrl
@@ -633,6 +654,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public actualizarPassword(email: String, password: String, campamentoId: number): Observable<DefaultResponse> {
         const usernameSafe = encodeURIComponent(email.toString());
         const passwordSafe = encodeURIComponent(password.toString());
@@ -646,6 +670,9 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     */
     public getIndicadores(campamentoId: number): Observable<IndicadoresResponse> {
         const user = this.autho.getSessionValida();
         return this.http.get<IndicadoresResponse>(environment.apiUrl

@@ -18,21 +18,33 @@ export class RetoDao {
         private utils: Utils
     ) { }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/asistencia-reto.php. Migrate to v1 endpoints.
+     */
     public getAsistencia(): Observable<AsistenciaResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<AsistenciaResponse>(environment.apiUrl + 'retourbano/asistencia-reto.php', { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/seguimientos-by-guerrero.php. Migrate to v1 endpoints.
+     */
     public getSeguimientosByGuerror(): Observable<SeguimientoResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<SeguimientoResponse>(environment.apiUrl + 'retourbano/seguimientos-by-guerrero.php?id=' + this.session?.guerrero?.id, { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/asistencia.php. Migrate to v1 endpoints.
+     */
     public confirmaAsistencia(dia: string): Observable<DefaultResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/asistencia.php?id=' + this.session?.guerrero?.id + '&dia=' + dia, { headers: this.utils.getHeaders() });
     }
 
+    /**
+     * @deprecated Uses legacy endpoint retourbano/asistencia-hora.php. Migrate to v1 endpoints.
+     */
     public confirmaAsistenciaHora(hora: string): Observable<DefaultResponse> {
         this.session = JSON.parse(localStorage.getItem('session')!);
         return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/asistencia-hora.php?id=' + this.session?.guerrero?.id + '&hora=' + hora, { headers: this.utils.getHeaders() });
