@@ -3,6 +3,7 @@
 $authController = new AuthController();
 $registrationController = new RegistrationController();
 $eventController = new EventController();
+$eventDashboardController = new EventDashboardController();
 $userController = new UserController();
 $paymentController = new PaymentController();
 $authGuard = new AuthGuard();
@@ -48,6 +49,12 @@ $router->add('GET', '/api/v1/events/detail', function ($request) use ($eventCont
 $router->add('GET', '/api/v1/events/upcoming-availability', function ($request) use ($eventController, $authGuard) {
     return $authGuard->protect($request, function ($securedRequest) use ($eventController) {
         return $eventController->upcomingAvailability($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/events/dashboard', function ($request) use ($eventDashboardController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($eventDashboardController) {
+        return $eventDashboardController->getByEvent($securedRequest);
     });
 });
 

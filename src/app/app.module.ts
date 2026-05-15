@@ -52,6 +52,7 @@ import { AuthInterceptor } from './core/services/ auth.interceptor';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
 import { TumbaService } from './core/services/tumbaService';
 import { QueTraerComponent } from "./components/que-traer/que-traer.component";
+import { EventSummaryDashboardComponent } from "./components/event-summary-dashboard/event-summary-dashboard.component";
 
 @NgModule({
     declarations: [
@@ -89,6 +90,7 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         FormsModule,
         ReactiveFormsModule,
         PieChartComponent,
+        EventSummaryDashboardComponent,
         MatTableModule,
         MatNativeDateModule,
         MatFormFieldModule,

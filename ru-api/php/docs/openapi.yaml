@@ -257,6 +257,44 @@ paths:
               schema:
                 $ref: '#/components/schemas/ApiError'
 
+  /api/v1/events/dashboard:
+    get:
+      tags: [Events]
+      summary: Dashboard analitico por evento
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Dashboard calculado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessEventDashboard'
+        '401':
+          description: No autenticado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+        '404':
+          description: Evento no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
   /api/v1/users/detail:
     get:
       tags: [Users]
@@ -554,7 +592,7 @@ paths:
           required: false
           schema:
             type: string
-          description: Ejemplo: active, inactive, dropped.
+          description: Ej. active, inactive, dropped.
         - in: query
           name: token
           required: false
@@ -827,6 +865,97 @@ components:
               type: string
               nullable: true
 
+    DashboardChartItem:
+      type: object
+      properties:
+        key:
+          type: string
+        label:
+          type: string
+        count:
+          type: integer
+        total_amount:
+          type: number
+          format: float
+          nullable: true
+
+    EventDashboardSummary:
+      type: object
+      properties:
+        capacity:
+          type: integer
+        registered:
+          type: integer
+        inactive:
+          type: integer
+        available:
+          type: integer
+          nullable: true
+        occupancy_percentage:
+          type: number
+          format: float
+          nullable: true
+        confirmed:
+          type: integer
+        attendance_confirmed:
+          type: integer
+        total_revenue:
+          type: number
+          format: float
+        payments_count:
+          type: integer
+        registrations_with_payments:
+          type: integer
+        fully_paid_count:
+          type: integer
+          nullable: true
+
+    EventDashboardCharts:
+      type: object
+      properties:
+        availability:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        roles:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        gender:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        staff_gender:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        shirt_sizes:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        lodging:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        confirmation:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+        payment_methods:
+          type: array
+          items:
+            $ref: '#/components/schemas/DashboardChartItem'
+
+    EventDashboard:
+      type: object
+      properties:
+        event:
+          $ref: '#/components/schemas/Event'
+        summary:
+          $ref: '#/components/schemas/EventDashboardSummary'
+        charts:
+          $ref: '#/components/schemas/EventDashboardCharts'
+
     Registration:
       type: object
       properties:
@@ -922,6 +1051,16 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/EventWithAvailability'
+
+    ApiSuccessEventDashboard:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          $ref: '#/components/schemas/EventDashboard'
 
     ApiSuccessRegistration:
       type: object

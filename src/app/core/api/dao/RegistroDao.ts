@@ -7,6 +7,7 @@ import { User } from "src/app/core/models/registro/User";
 import { EventRegistration, EventRegistrationResponse } from "src/app/core/models/registro/EventRegistration";
 import { RegistroResponse } from "src/app/core/models/registro/RegistroResponse";
 import { IndicadoresResponse } from "src/app/core/models/registro/IndicadoresResponse";
+import { EventDashboardResponse } from "src/app/core/models/registro/EventDashboardResponse";
 import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { Pago } from "src/app/core/models/registro/Pago";
 import { HttpClient } from "@angular/common/http";
@@ -198,6 +199,16 @@ export class RegistroDao {
             + '&token=' + user?.token
             + '&campamento_id=' + campamentoId
             , { headers: this.utils.getHeaders() });
+    }
+
+    public getEventDashboard(eventId: number): Observable<EventDashboardResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.get<EventDashboardResponse>(
+            this.utils.v1('/events/dashboard') + '?token=' + token + '&event_id=' + encodeURIComponent(String(eventId)),
+            { headers: this.utils.getHeaders() }
+        );
     }
 
     public actualizarEventRol(user_id: number, event_id: number, event_is_staff: boolean, event_is_admin: boolean): Observable<DefaultResponse> {

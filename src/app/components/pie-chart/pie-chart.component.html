@@ -1,5 +1,10 @@
-<div class="chart">
-    <canvas baseChart [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions"
-        [plugins]="pieChartPlugins">
-    </canvas>
+<div class="chart card">
+    <div class="card-header">
+        <h5 class="text-center mb-3">{{ chartTitle }}</h5>
+    </div>
+    <div class="card-body">
+        <canvas baseChart [data]="pieChartData" [type]="pieChartType" [options]="pieChartOptions"
+            [plugins]="pieChartPlugins">
+        </canvas>
+    </div>
 </div>

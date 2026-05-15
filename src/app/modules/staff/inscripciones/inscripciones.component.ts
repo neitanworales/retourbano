@@ -31,6 +31,7 @@ export class InscripcionesComponent implements OnInit {
   tabsCampas? : boolean[] = [false, false];
   events?: Event[]
   selectedEventoId?: number;
+  selectedEvento?: Event;
 
   pageResumenActive = true;
   pageInscritosActive = false;
@@ -87,6 +88,10 @@ export class InscripcionesComponent implements OnInit {
         console.log("Eventos cargados: ", result.data?.events);
         this.events = result.data?.events;
         console.log("Tabs eventos asignados: ", this.tabsCampas);
+
+        if (this.events?.length === 1) {
+          this.tabCampamentos(0);
+        }
       },
       error: (error) => {
         console.error('Error al cargar eventos:', error);
@@ -405,6 +410,7 @@ export class InscripcionesComponent implements OnInit {
     this.tabsCampas = [false, false];
     this.tabsCampas[arg0] = true;
     this.selectedEventoId = this.events![arg0].id;
+    this.selectedEvento = this.events![arg0];
     console.log("Evento seleccionado: ", this.events![arg0]);
     console.log("ID evento seleccionado: ", this.selectedEventoId);
     this.actualizarGraficos();

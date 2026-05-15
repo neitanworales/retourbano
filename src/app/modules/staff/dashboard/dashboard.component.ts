@@ -5,8 +5,6 @@ import { Session } from 'src/app/core/models/login/Session';
 import { LoginDao } from 'src/app/core/api/dao/LoginDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { AuthService } from 'src/app/core/services/auth.service';
-import { Indicador } from 'src/app/core/models/registro/Indicador';
-import { Paquete } from 'src/app/core/models/registro/Paquete';
 import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
@@ -17,7 +15,6 @@ import { Event } from 'src/app/core/models/registro/Event';
 })
 export class DashboardComponent implements OnInit {
 
-  event?: Event;
   events?: Event[];
   upcomingEvents: Event[] = [];
   registeredEvents: Event[] = [];
@@ -28,7 +25,6 @@ export class DashboardComponent implements OnInit {
   showHorario?: boolean;
   horaSelected?: string
   showFormInscripcion?: boolean = false;
-  paquetes: Paquete[] = [];
 
   constructor(private retoDao: RetoDao, private loginDao: LoginDao, private registroDao: RegistroDao) {
     this.session = inject(AuthService).getSession()!;
@@ -37,7 +33,6 @@ export class DashboardComponent implements OnInit {
   ngOnInit(): void {
     this.validarInscricion();
     this.cargarHistorialEventos();
-    this.cargarIndicadores();
   }
 
   private validarInscricion() {
@@ -68,22 +63,6 @@ export class DashboardComponent implements OnInit {
       error => {
         console.error('Error loading registration history:', error);
         this.registeredEvents = [];
-      }
-    );
-  }
-
-  private cargarIndicadores() {
-    this.registroDao.getIndicadores(this.event?.id!).subscribe(
-      result => {
-        const maxPaquetes = Math.max(...result.reporte!.map(item => item.paquete!));
-        console.log("Max paquetotes: " + maxPaquetes);
-        for (let i = 0; i < maxPaquetes; i++) {
-          let pa = i + 1;
-          if (!this.paquetes[i]) {
-            this.paquetes[i] = new Paquete;
-          }
-          this.paquetes[i].indicadores = result!.reporte!.filter(p => p.paquete == pa)!;
-        }
       }
     );
   }
