@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
     this.registroDao.validarInscripcion(0).subscribe(
       result => {
         this.events = result.events;
-        this.upcomingEvents = result.events?.filter(e => !e.is_registered) || [];
+        this.upcomingEvents = result.events! || [];
       }
     );
   }
