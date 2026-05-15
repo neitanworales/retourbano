@@ -3,18 +3,21 @@
 require_once __DIR__ . '/../Repository/UserRepository.php';
 require_once __DIR__ . '/../Repository/AuthTokenRepository.php';
 require_once __DIR__ . '/../Repository/UserRoleRepository.php';
+require_once __DIR__ . '/EmailService.php';
 
 class AuthService
 {
     private $users;
     private $tokens;
     private $roles;
+    private $email;
 
     public function __construct()
     {
         $this->users = new UserRepository();
         $this->tokens = new AuthTokenRepository();
         $this->roles = new UserRoleRepository();
+        $this->email = new EmailService();
     }
 
     public function login($email, $plainPassword)
@@ -99,36 +102,11 @@ class AuthService
 
     private function sendPasswordResetEmail($user, $token, $expiresAt)
     {
-        $to = isset($user->email) ? $user->email : null;
-        if (!$to) {
-            return false;
-        }
-
-        $subject = 'Recuperacion de contrasena - Reto Urbano';
         $resetUrl = $this->buildPasswordResetUrl($token);
-        $safeName = isset($user->display_name) && $user->display_name !== ''
-            ? $user->display_name
-            : (isset($user->full_name) ? $user->full_name : 'participante');
-
-        $message = '<html><body style="font-family: Arial, sans-serif; color: #222;">'
-            . '<h2>Recuperacion de contrasena</h2>'
-            . '<p>Hola ' . htmlspecialchars($safeName, ENT_QUOTES, 'UTF-8') . ',</p>'
-            . '<p>Recibimos una solicitud para restablecer tu contrasena.</p>'
-            . '<p><a href="' . htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8') . '">Haz clic aqui para cambiar tu contrasena</a></p>'
-            . '<p>Este enlace expira el: <strong>' . htmlspecialchars($expiresAt, ENT_QUOTES, 'UTF-8') . '</strong></p>'
-            . '<p>Si no solicitaste este cambio, puedes ignorar este correo.</p>'
-            . '<p>Equipo Reto Urbano</p>'
-            . '</body></html>';
-
-        $headers = "From: Reto Urbano <reto@ywampachuca.org>\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-        $sent = @mail($to, $subject, $message, $headers);
+        $sent = $this->email->sendPasswordResetEmail($user, $resetUrl, $expiresAt);
         if (!$sent) {
-            error_log('Password reset email failed for: ' . $to);
+            error_log('Password reset email failed for: ' . (isset($user->email) ? $user->email : 'unknown'));
         }
-
         return $sent;
     }
 

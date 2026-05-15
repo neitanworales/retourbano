@@ -3,16 +3,22 @@
 require_once __DIR__ . '/../Models/EventRegistration.php';
 require_once __DIR__ . '/../Repository/EventRepository.php';
 require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
+require_once __DIR__ . '/../Repository/UserRepository.php';
+require_once __DIR__ . '/EmailService.php';
 
 class RegistrationService
 {
     private $events;
     private $registrations;
+    private $users;
+    private $email;
 
     public function __construct()
     {
         $this->events = new EventRepository();
         $this->registrations = new EventRegistrationRepository();
+        $this->users = new UserRepository();
+        $this->email = new EmailService();
     }
 
     public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null, $reasons = null, $legacyRegistrationId = null)
@@ -50,6 +56,14 @@ class RegistrationService
         ));
 
         $id = $this->registrations->create($registration);
+
+        $user = $this->users->findModelById((int) $userId);
+        if ($user) {
+            $emailSent = $this->email->sendRegistrationEmail($user, $event, $requiresLodging, $reasons) ? 1 : 0;
+            if ($emailSent) {
+                $this->registrations->updateFields((int) $id, array('welcome_email_sent' => 1));
+            }
+        }
 
         return array(
             'id' => (int) $id,

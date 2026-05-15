@@ -2,7 +2,9 @@
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Services/RegistrationService.php';
+require_once __DIR__ . '/../Services/EmailService.php';
 require_once __DIR__ . '/../Repository/UserRepository.php';
+require_once __DIR__ . '/../Repository/EventRepository.php';
 require_once __DIR__ . '/../Repository/PaymentRepository.php';
 require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
 require_once __DIR__ . '/../Models/User.php';
@@ -11,15 +13,19 @@ class RegistrationController extends BaseController
 {
     private $registrationService;
     private $users;
+    private $events;
     private $payments;
     private $eventRegistrations;
+    private $email;
 
     public function __construct()
     {
         $this->registrationService = new RegistrationService();
         $this->users = new UserRepository();
+        $this->events = new EventRepository();
         $this->payments = new PaymentRepository();
         $this->eventRegistrations = new EventRegistrationRepository();
+        $this->email = new EmailService();
     }
 
     public function register($request)
@@ -544,48 +550,11 @@ class RegistrationController extends BaseController
 
     private function sendReenrollmentCodeEmail($user, $code, $eventId = null)
     {
-        $to = isset($user->email) ? trim((string) $user->email) : '';
-        if ($to === '') {
-            return false;
-        }
+        $event = ($eventId !== null && (int) $eventId > 0)
+            ? $this->events->findModelById((int) $eventId)
+            : null;
 
-        $baseUrl = getenv('REENROLLMENT_URL_BASE');
-        if (!$baseUrl) {
-            $baseUrl = 'https://ywampachuca.org/retourbano/reinscripcion';
-        }
-
-        $query = 'code=' . urlencode($code);
-        if ($eventId !== null && (int) $eventId > 0) {
-            $query .= '&id_event=' . (int) $eventId;
-        }
-        $separator = (strpos($baseUrl, '?') === false) ? '?' : '&';
-        $reinscriptionUrl = $baseUrl . $separator . $query;
-
-        $safeName = isset($user->display_name) && trim((string) $user->display_name) !== ''
-            ? trim((string) $user->display_name)
-            : (isset($user->full_name) ? trim((string) $user->full_name) : 'participante');
-
-        $subject = 'Reinscripcion Reto Urbano - Codigo de verificacion';
-        $message = '<html><body style="font-family: Arial, sans-serif; color: #222;">'
-            . '<h2>Reinscripcion Reto Urbano</h2>'
-            . '<p>Hola ' . htmlspecialchars($safeName, ENT_QUOTES, 'UTF-8') . ',</p>'
-            . '<p>Tu codigo de verificacion para reinscripcion es:</p>'
-            . '<p style="font-size: 24px; font-weight: bold; letter-spacing: 2px;">' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</p>'
-            . '<p>Tambien puedes abrir este enlace directo:</p>'
-            . '<p><a href="' . htmlspecialchars($reinscriptionUrl, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($reinscriptionUrl, ENT_QUOTES, 'UTF-8') . '</a></p>'
-            . '<p>Equipo Reto Urbano</p>'
-            . '</body></html>';
-
-        $headers = "From: Reto Urbano <reto@ywampachuca.org>\r\n";
-        $headers .= "MIME-Version: 1.0\r\n";
-        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
-
-        $sent = @mail($to, $subject, $message, $headers);
-        if (!$sent) {
-            error_log('Reenrollment code email failed for: ' . $to);
-        }
-
-        return $sent;
+        return $this->email->sendReenrollmentEmail($user, $event, $code);
     }
 
     private function normalizeBirthDate($request)
