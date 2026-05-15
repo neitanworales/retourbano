@@ -60,7 +60,7 @@
                 <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
                     <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm">
                         <div class="input-group mb-3">
-                            <input class="form-control" type="text" placeholder="Ingresa el código"
+                            <input #codigoInput class="form-control" type="text" placeholder="Ingresa el código"
                                 formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
                                 [(ngModel)]="codigo" />
                             <button type="submit" class="btn btn-success"

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 import { map, filter, tap, switchMap } from 'rxjs';
@@ -15,6 +15,8 @@ import { User } from 'src/app/core/models/registro/User';
   standalone: false
 })
 export class ReinscripcionComponent implements OnInit {
+
+  @ViewChild('codigoInput') codigoInput?: ElementRef<HTMLInputElement>;
 
   registerForm!: FormGroup;
   registerFormEmail!: FormGroup;
@@ -79,6 +81,8 @@ export class ReinscripcionComponent implements OnInit {
           this.existingRegistration = undefined;
           this.alreadyRegisteredInEvent = false;
           this.registrationNotice = '';
+          this.codigo = '';
+          this.registerForm?.controls['codigo']?.setValue('');
           this.tituloModal = 'Reinscripción';
           this.mensajeModal = invalidCodeMessage;
           this.openPopup();
@@ -100,6 +104,8 @@ export class ReinscripcionComponent implements OnInit {
         this.existingRegistration = undefined;
         this.alreadyRegisteredInEvent = false;
         this.registrationNotice = '';
+        this.codigo = '';
+        this.registerForm?.controls['codigo']?.setValue('');
         this.tituloModal = 'Reinscripción';
         this.mensajeModal = invalidCodeMessage;
         this.openPopup();
@@ -137,6 +143,12 @@ export class ReinscripcionComponent implements OnInit {
   closePopup() {
     this.displayBackgroudStyle = "";
     this.displayStyle = "none";
+
+    if (!this.user) {
+      setTimeout(() => {
+        this.codigoInput?.nativeElement?.focus();
+      }, 0);
+    }
   }
 
   private loadEvent() {
