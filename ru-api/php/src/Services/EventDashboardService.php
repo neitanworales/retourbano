@@ -29,6 +29,12 @@ class EventDashboardService
         $activeRegistrations = isset($core['active_registrations']) ? (int) $core['active_registrations'] : 0;
         $available = $capacity > 0 ? max($capacity - $activeRegistrations, 0) : null;
         $occupancy = $capacity > 0 ? round(($activeRegistrations * 100) / $capacity, 2) : null;
+        $participantsBirthDates = $this->dashboard->getParticipantBirthDates((int) $eventId);
+        $birthdaysDuringEvent = $this->buildBirthdayCelebrants(
+            $participantsBirthDates,
+            isset($eventData['start_at']) ? $eventData['start_at'] : null,
+            isset($eventData['end_at']) ? $eventData['end_at'] : null
+        );
 
         $payments = $this->dashboard->getPaymentSummary((int) $eventId, $targetAmount, $activeRegistrations);
         $confirmation = $this->dashboard->getConfirmationBreakdown((int) $eventId);
@@ -87,7 +93,89 @@ class EventDashboardService
                 'confirmation' => $this->mapLabelCountBreakdown($confirmation),
                 'payment_methods' => $this->mapPaymentMethodBreakdown($paymentMethods),
             ),
+            'birthdays_during_event' => $birthdaysDuringEvent,
         );
+    }
+
+    private function buildBirthdayCelebrants($rows, $startAt, $endAt)
+    {
+        if (!$startAt || !$endAt) {
+            return array();
+        }
+
+        try {
+            $start = new DateTimeImmutable((string) $startAt);
+            $end = new DateTimeImmutable((string) $endAt);
+        } catch (Exception $e) {
+            return array();
+        }
+
+        if ($end < $start) {
+            $tmp = $start;
+            $start = $end;
+            $end = $tmp;
+        }
+
+        $items = array();
+        foreach (is_array($rows) ? $rows : array() as $row) {
+            if (!isset($row['birth_date']) || !$row['birth_date']) {
+                continue;
+            }
+
+            try {
+                $birthDate = new DateTimeImmutable((string) $row['birth_date']);
+            } catch (Exception $e) {
+                continue;
+            }
+
+            $birthdayDate = $this->buildBirthdayDateForYear($birthDate, (int) $start->format('Y'));
+            if ($birthdayDate < $start) {
+                $birthdayDate = $this->buildBirthdayDateForYear($birthDate, (int) $start->format('Y') + 1);
+            }
+
+            if ($birthdayDate < $start || $birthdayDate > $end) {
+                continue;
+            }
+
+            $displayName = isset($row['display_name']) ? trim((string) $row['display_name']) : '';
+            $fullName = isset($row['full_name']) ? trim((string) $row['full_name']) : '';
+            $name = $displayName !== '' ? $displayName : $fullName;
+            $ageTurning = (int) $birthdayDate->format('Y') - (int) $birthDate->format('Y');
+
+            $items[] = array(
+                'user_id' => isset($row['user_id']) ? (int) $row['user_id'] : 0,
+                'name' => $name,
+                'full_name' => $fullName,
+                'display_name' => $displayName,
+                'birth_date' => $birthDate->format('Y-m-d'),
+                'birthday_on' => $birthdayDate->format('Y-m-d'),
+                'birthday_label' => $birthdayDate->format('d/m'),
+                'age_turning' => $ageTurning,
+            );
+        }
+
+        usort($items, function ($a, $b) {
+            $dateCompare = strcmp((string) $a['birthday_on'], (string) $b['birthday_on']);
+            if ($dateCompare !== 0) {
+                return $dateCompare;
+            }
+
+            return strcmp((string) $a['name'], (string) $b['name']);
+        });
+
+        return $items;
+    }
+
+    private function buildBirthdayDateForYear($birthDate, $year)
+    {
+        $month = (int) $birthDate->format('m');
+        $day = (int) $birthDate->format('d');
+
+        if (!checkdate($month, $day, $year)) {
+            $day = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        }
+
+        return new DateTimeImmutable(sprintf('%04d-%02d-%02d', (int) $year, $month, $day));
     }
 
     private function mapGenderBreakdown($rows)

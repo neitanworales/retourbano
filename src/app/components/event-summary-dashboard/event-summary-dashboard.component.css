@@ -96,6 +96,10 @@
   border-top: 4px solid #198754;
 }
 
+.summary-panel--birthdays {
+  border-top: 4px solid #fd7e14;
+}
+
 .summary-panel__header {
   margin-bottom: 1rem;
 }
@@ -169,6 +173,12 @@
 
 .summary-dashboard__charts-header {
   margin-bottom: 1rem;
+}
+
+.summary-empty-note {
+  color: #64748b;
+  font-weight: 600;
+  padding: 0.25rem 0;
 }
 
 @media (max-width: 992px) {

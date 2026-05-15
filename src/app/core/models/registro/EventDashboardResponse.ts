@@ -44,6 +44,18 @@ export interface EventDashboardData {
     event?: Event;
     summary?: EventDashboardSummary;
     charts?: EventDashboardCharts;
+    birthdays_during_event?: EventDashboardBirthdayItem[];
+}
+
+export interface EventDashboardBirthdayItem {
+    user_id: number;
+    name: string;
+    full_name?: string;
+    display_name?: string;
+    birth_date: string;
+    birthday_on: string;
+    birthday_label: string;
+    age_turning: number;
 }
 
 export class EventDashboardResponse extends DefaultResponse {

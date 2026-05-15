@@ -11,23 +11,23 @@
             <div class="col">
                 <div class="card">
                     <div class="card-header">
-                        Reinscripción al campamento {{event.titulo}}
+                        Reinscripción al campamento {{event.title}}
                     </div>
                     <div class="card-body">
-                        <p>Este campamento se llevará a cabo en {{event.ciudad?.nombre}}</p>
+                        <p>Este campamento se llevará a cabo en {{event.city_label}}</p>
                     </div>
-                    <div class="card-footer">
+                    <div class="card-footer" *ngIf="events!.length > 1">
                         ¿Deseas reinscribirte a otro campamento?
                         <a *ngFor="let event of events" class="btn btn-sm btn-outline-info"
                             routerLink="/reinscripcion"
-                            [queryParams]="{ id_campamento: event.id }">{{event.ciudad?.nombre +' -'+event.titulo}}</a>
+                            [queryParams]="{ id_event: event.id }">{{event.city_label +' -'+event.title}}</a>
                     </div>
                 </div>
             </div>
         </div>
 
-        <hr *ngIf="!guerrero" />
-        <div class="card" *ngIf="!guerrero">
+        <hr *ngIf="!user" />
+        <div class="card" *ngIf="!user">
             <div class="card-body">
                 <p>Si no tienes un código, escribe tu correo con el que ya te habías inscrito en Reto Urbano y se te
                     enviará un
@@ -53,8 +53,8 @@
                 </div>
             </div>
         </div>
-        <hr *ngIf="!guerrero" />
-        <div class="card" *ngIf="!guerrero">
+        <hr *ngIf="!user" />
+        <div class="card" *ngIf="!user">
             <div class="card-body">
                 <p>Si ya tienes un código, ingresa el código que recibiste en tu correo.</p>
                 <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
@@ -74,12 +74,15 @@
             </div>
         </div>
         <hr />
-        <div class="row" *ngIf="guerrero">
+        <div class="row" *ngIf="user">
             <div class="col-1"></div>
             <div class="col-10">
+                <div class="alert" [ngClass]="alreadyRegisteredInEvent ? 'alert-info' : 'alert-success'" role="alert" *ngIf="registrationNotice">
+                    {{registrationNotice}}
+                </div>
                 <h3>Guerrero encontrado:</h3>
-                <app-registro-form [saveInMemory]="false" [guerreroToEdit]="guerrero"
-                    [event]="event!"></app-registro-form>
+                <app-registro-form [saveInMemory]="false" [userToEdit]="user"
+                    [registrationToEdit]="existingRegistration" [event]="event!"></app-registro-form>
             </div>
             <div class="col-1"></div>
         </div>
@@ -89,7 +92,7 @@
             <div class="col text-center">
                 <h2>¿A cual campamento quieres registrarte?</h2>
                 <a *ngFor="let event of events" class="btn btn-primary" routerLink="/reinscripcion"
-                    [queryParams]="{ id_campamento: event.id }">{{event.ciudad?.nombre +' -
+                    [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -
                     '+event.titulo}}</a>
             </div>
         </div>

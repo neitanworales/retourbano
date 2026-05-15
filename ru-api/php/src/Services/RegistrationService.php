@@ -15,7 +15,7 @@ class RegistrationService
         $this->registrations = new EventRegistrationRepository();
     }
 
-    public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null, $reasons = null)
+    public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null, $reasons = null, $legacyRegistrationId = null)
     {
         $event = $this->events->findModelById((int) $eventId);
         if (!$event) {
@@ -32,7 +32,7 @@ class RegistrationService
         }
 
         $registration = new EventRegistration(array(
-            'legacy_registration_id' => null,
+            'legacy_registration_id' => $legacyRegistrationId,
             'event_id' => (int) $eventId,
             'user_id' => (int) $userId,
             'event_year' => $event->event_year,

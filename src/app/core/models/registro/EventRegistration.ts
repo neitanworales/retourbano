@@ -5,6 +5,7 @@ import { User } from "./User";
 export class EventRegistration {
     // DB fields from event_registrations
     id?: number;
+    legacy_registration_id?: number;
     event_id?: number;
     user_id?: number;
     registration_status?: string;

@@ -36,6 +36,14 @@ $router->add('PUT', '/api/v1/registrations', function ($request) use ($registrat
     return $registrationController->update($request);
 });
 
+$router->add('POST', '/api/v1/re-enrollment/request-code', function ($request) use ($registrationController) {
+    return $registrationController->requestReenrollmentCode($request);
+});
+
+$router->add('GET', '/api/v1/re-enrollment/validate-code', function ($request) use ($registrationController) {
+    return $registrationController->validateReenrollmentCode($request);
+});
+
 $router->add('PATCH', '/api/v1/registrations/status', function ($request) use ($registrationController, $authGuard) {
     return $authGuard->protect($request, function ($securedRequest) use ($registrationController) {
         return $registrationController->updateStatus($securedRequest);

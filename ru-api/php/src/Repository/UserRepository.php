@@ -37,6 +37,29 @@ class UserRepository extends BaseRepository
         return $row ? new User($row) : null;
     }
 
+    public function findByVerificationCode($code)
+    {
+        $sql = 'SELECT * FROM users WHERE verification_code = ? LIMIT 1';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('s', $code);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        return $row ? new User($row) : null;
+    }
+
+    public function updateVerificationCode($userId, $verificationCode)
+    {
+        $sql = 'UPDATE users SET verification_code = ? WHERE id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('si', $verificationCode, $userId);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
+    }
+
     public function create(User $user)
     {
         $sql = 'INSERT INTO users (legacy_user_id, full_name, display_name, birth_date, age, gender, shirt_size, coming_from, email, whatsapp, phone, allergies, guardian_phone, guardian_name, guardian_email, facebook, instagram, church, medications, password_hash, verification_code, user_status, accepted_policies, registered_at)

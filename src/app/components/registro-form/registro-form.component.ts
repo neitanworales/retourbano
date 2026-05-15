@@ -17,7 +17,10 @@ import { EventRegistration } from 'src/app/core/models/registro/EventRegistratio
 export class RegistroFormComponent implements OnInit {
 
   @Input()
-  guerreroToEdit!: EventRegistration;
+  userToEdit!: User;
+
+  @Input()
+  registrationToEdit?: EventRegistration;
 
   @Input({ required: true })
   saveInMemory!: boolean;
@@ -50,15 +53,28 @@ export class RegistroFormComponent implements OnInit {
 
   ngOnChanges(changes: SimpleChanges) {
     this.ensureUserModel();
-    if (this.guerreroToEdit != undefined) {
+    if (this.userToEdit != undefined) {
       this.actualizar = true;
-      this.model = this.guerreroToEdit;
+      if (this.registrationToEdit) {
+        this.model = { ...this.registrationToEdit };
+      }
+
+      this.model.user = this.userToEdit;
       this.ensureUserModel();
-      const dateString = this.guerreroToEdit.user!.fechaNac + "";
+
+      if (this.registrationToEdit) {
+        this.model.razones = this.registrationToEdit.razones ?? this.registrationToEdit.reasons ?? this.model.razones;
+        this.model.reasons = this.model.razones;
+        const hospedaje = this.registrationToEdit.hospedaje ?? this.registrationToEdit.requires_lodging;
+        this.model.hospedaje = typeof hospedaje === 'boolean' ? hospedaje : !!hospedaje;
+      }
+
+      const dateString = this.userToEdit.fechaNac + "";
       this.model.user!.year = Number(dateString?.substring(0, 4));
       this.model.user!.month = Number(dateString?.substring(5).substring(0, 2));
       this.model.user!.day = Number(dateString?.substring(8));
       this.model.user!.aceptaPoliticas = false;
+      this.calculateEdad();
     }
   }
 
@@ -71,12 +87,20 @@ export class RegistroFormComponent implements OnInit {
       this.model.user!.month = 0;
       this.model.user!.day = 0;
     } 
-    this.model.user!.talla = "";
-    this.model.user!.alergias = "";
-    this.model.user!.medicamentos = "";
-    this.model.razones = "";
+    if (!this.model.user!.talla) {
+      this.model.user!.talla = "";
+    }
+    if (!this.model.user!.alergias) {
+      this.model.user!.alergias = "";
+    }
+    if (!this.model.user!.medicamentos) {
+      this.model.user!.medicamentos = "";
+    }
+    if (!this.model.razones) {
+      this.model.razones = "";
+    }
 
-    
+   /* 
     this.model.user!.nombre = "Jesús de Veracruz";
     this.model.user!.nick = "Mr. Corleone";
     this.model.user!.sexo = "M";
@@ -97,6 +121,7 @@ export class RegistroFormComponent implements OnInit {
     this.model.user!.facebook = "No tengo brother";
     this.model.user!.instagram = "Para que o que?";
     this.model.user!.iglesia = "La sagrada familia";
+    */
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],

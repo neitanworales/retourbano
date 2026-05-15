@@ -26,6 +26,7 @@ class RegistrationController extends BaseController
     {
         $eventId = $this->parseEventId($request);
         $userId = isset($request['user_id']) ? (int) $request['user_id'] : 0;
+        $legacyRegistrationId = $this->parseLegacyRegistrationId($request);
 
         $requiresLodging = $this->parseOptionalBoolean($request, 'requires_lodging');
         if ($requiresLodging === null) {
@@ -48,7 +49,7 @@ class RegistrationController extends BaseController
             $userId = (int) $userOrError;
         }
 
-        $result = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons);
+        $result = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons, $legacyRegistrationId);
         if (isset($result['error'])) {
             return $this->fail($result['error'], 400, $result);
         }
@@ -88,8 +89,9 @@ class RegistrationController extends BaseController
 
                 $roomCode = isset($request['room_code']) ? trim((string) $request['room_code']) : null;
                 $reasons = isset($request['reasons']) ? trim((string) $request['reasons']) : (isset($request['razones']) ? trim((string) $request['razones']) : null);
+                $legacyRegistrationId = $this->parseLegacyRegistrationId($request);
 
-                $registerResult = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons);
+                $registerResult = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons, $legacyRegistrationId);
                 if (isset($registerResult['error'])) {
                     return $this->fail($registerResult['error'], 400, $registerResult);
                 }
@@ -123,7 +125,7 @@ class RegistrationController extends BaseController
                 'event_id' => $eventId > 0 ? $eventId : null,
                 'registration_id' => $registrationId,
             ),
-            'registration updated'
+            'Registro añadido/actualizado exitosamente'
         );
     }
 
@@ -178,6 +180,78 @@ class RegistrationController extends BaseController
         }
 
         return $this->ok(array('registration_id' => $registrationId, 'updated' => $updates), 'registration updated');
+    }
+
+    public function requestReenrollmentCode($request)
+    {
+        $email = isset($request['email']) ? trim((string) $request['email']) : '';
+        if ($email === '') {
+            return $this->fail('email is required', 422);
+        }
+
+        $eventId = $this->parseEventId($request);
+        $user = $this->users->findByEmail($email);
+        if (!$user) {
+            return $this->fail("No se encontro este correo: $email - favor de validar.", 404);
+        }
+
+        $verificationCode = bin2hex(random_bytes(4));
+        $updated = $this->users->updateVerificationCode((int) $user->id, $verificationCode);
+        if (!$updated) {
+            return $this->fail('could not generate verification code', 500);
+        }
+
+        $sent = $this->sendReenrollmentCodeEmail($user, $verificationCode, $eventId > 0 ? $eventId : null);
+        if (!$sent) {
+            return $this->fail("Error al enviar correo de verificacion a $email", 500);
+        }
+
+        return $this->ok(
+            array('email' => $email),
+            "Se envio correo de verificacion a $email, recuerda revisar tu bandeja de SPAM o correo no deseado"
+        );
+    }
+
+    public function validateReenrollmentCode($request)
+    {
+        $code = isset($request['code']) ? trim((string) $request['code']) : '';
+        if ($code === '' && isset($request['codigo'])) {
+            $code = trim((string) $request['codigo']);
+        }
+        $eventId = $this->parseEventId($request);
+
+        if ($code === '') {
+            return $this->fail('code is required', 422);
+        }
+
+        if ($eventId <= 0) {
+            return $this->fail('event_id or id_campamento is required', 422);
+        }
+
+        $user = $this->users->findByVerificationCode($code);
+        if (!$user) {
+            return $this->fail("Not found $code", 404);
+        }
+
+        $existingRegistration = null;
+        $alreadyRegistered = false;
+
+        $existingRegistration = $this->eventRegistrations->findByEventAndUser($eventId, (int) $user->id);
+        $alreadyRegistered = $existingRegistration ? true : false;
+
+        $registrationPayload = null;
+        if ($existingRegistration) {
+            $registrationPayload = $this->attachUserToItem($existingRegistration->toArray());
+        }
+
+        return $this->ok(
+            array(
+                'user' => $user->toArray(),
+                'already_registered' => $alreadyRegistered,
+                'registration' => $registrationPayload,
+            ),
+            'Ok'
+        );
     }
 
     public function getById($request)
@@ -421,6 +495,21 @@ class RegistrationController extends BaseController
         if ($guardianEmail !== '' || !$keepExistingWhenEmpty) {
             $user->guardian_email = $guardianEmail;
         }
+
+        $legacyUserId = null;
+        if (isset($request['legacy_user_id'])) {
+            $legacyUserId = (int) $request['legacy_user_id'];
+        } elseif (isset($request['id_guerrero'])) {
+            $legacyUserId = (int) $request['id_guerrero'];
+        } elseif (isset($request['legacyUserId'])) {
+            $legacyUserId = (int) $request['legacyUserId'];
+        }
+
+        if ($legacyUserId !== null && $legacyUserId > 0) {
+            $user->legacy_user_id = $legacyUserId;
+        } elseif (!$keepExistingWhenEmpty) {
+            $user->legacy_user_id = null;
+        }
     }
 
     private function parseEventId($request)
@@ -431,6 +520,72 @@ class RegistrationController extends BaseController
         }
 
         return isset($request['id_campamento']) ? (int) $request['id_campamento'] : 0;
+    }
+
+    private function parseLegacyRegistrationId($request)
+    {
+        if (isset($request['legacy_registration_id'])) {
+            $value = (int) $request['legacy_registration_id'];
+            return $value > 0 ? $value : null;
+        }
+
+        if (isset($request['id_campamento_guerrero'])) {
+            $value = (int) $request['id_campamento_guerrero'];
+            return $value > 0 ? $value : null;
+        }
+
+        if (isset($request['legacyRegistrationId'])) {
+            $value = (int) $request['legacyRegistrationId'];
+            return $value > 0 ? $value : null;
+        }
+
+        return null;
+    }
+
+    private function sendReenrollmentCodeEmail($user, $code, $eventId = null)
+    {
+        $to = isset($user->email) ? trim((string) $user->email) : '';
+        if ($to === '') {
+            return false;
+        }
+
+        $baseUrl = getenv('REENROLLMENT_URL_BASE');
+        if (!$baseUrl) {
+            $baseUrl = 'https://ywampachuca.org/retourbano/reinscripcion';
+        }
+
+        $query = 'code=' . urlencode($code);
+        if ($eventId !== null && (int) $eventId > 0) {
+            $query .= '&id_event=' . (int) $eventId;
+        }
+        $separator = (strpos($baseUrl, '?') === false) ? '?' : '&';
+        $reinscriptionUrl = $baseUrl . $separator . $query;
+
+        $safeName = isset($user->display_name) && trim((string) $user->display_name) !== ''
+            ? trim((string) $user->display_name)
+            : (isset($user->full_name) ? trim((string) $user->full_name) : 'participante');
+
+        $subject = 'Reinscripcion Reto Urbano - Codigo de verificacion';
+        $message = '<html><body style="font-family: Arial, sans-serif; color: #222;">'
+            . '<h2>Reinscripcion Reto Urbano</h2>'
+            . '<p>Hola ' . htmlspecialchars($safeName, ENT_QUOTES, 'UTF-8') . ',</p>'
+            . '<p>Tu codigo de verificacion para reinscripcion es:</p>'
+            . '<p style="font-size: 24px; font-weight: bold; letter-spacing: 2px;">' . htmlspecialchars($code, ENT_QUOTES, 'UTF-8') . '</p>'
+            . '<p>Tambien puedes abrir este enlace directo:</p>'
+            . '<p><a href="' . htmlspecialchars($reinscriptionUrl, ENT_QUOTES, 'UTF-8') . '">' . htmlspecialchars($reinscriptionUrl, ENT_QUOTES, 'UTF-8') . '</a></p>'
+            . '<p>Equipo Reto Urbano</p>'
+            . '</body></html>';
+
+        $headers = "From: Reto Urbano <reto@ywampachuca.org>\r\n";
+        $headers .= "MIME-Version: 1.0\r\n";
+        $headers .= "Content-Type: text/html; charset=UTF-8\r\n";
+
+        $sent = @mail($to, $subject, $message, $headers);
+        if (!$sent) {
+            error_log('Reenrollment code email failed for: ' . $to);
+        }
+
+        return $sent;
     }
 
     private function normalizeBirthDate($request)

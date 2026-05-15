@@ -5,6 +5,7 @@ import { map, filter, tap, switchMap } from 'rxjs';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Event } from 'src/app/core/models/registro/Event';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 import { User } from 'src/app/core/models/registro/User';
 
 @Component({
@@ -18,13 +19,16 @@ export class ReinscripcionComponent implements OnInit {
   registerForm!: FormGroup;
   registerFormEmail!: FormGroup;
   codigo: String = "";
-  guerrero!: User;
+  user!: User;
+  existingRegistration?: EventRegistration;
+  alreadyRegisteredInEvent = false;
+  registrationNotice = '';
   displayStyle?: String = "none";
   displayBackgroudStyle?: String = "";
   tituloModal?: String;
   mensajeModal?: String;
   email!: string;
-  events?: Event[];
+  events?: Event[] = [];
   id_event?: number;
   event?: Event;
 
@@ -37,7 +41,6 @@ export class ReinscripcionComponent implements OnInit {
     this.route.queryParams.subscribe(params => {
       this.codigo = params['code'];
     });
-    this.validarCodigo();
   }
   ngOnInit(): void {
     this.loadCampamentos();
@@ -61,17 +64,66 @@ export class ReinscripcionComponent implements OnInit {
   }
 
   validarCodigo() {
-    this.registroDao.validarCodigo(this.codigo).subscribe(
+    const invalidCodeMessage = 'No fue posible validar el codigo para el evento seleccionado.';
+    const eventId = this.id_event || this.event?.id;
+    if (!eventId) {
+      this.registrationNotice = 'Necesitas seleccionar un evento antes de validar el codigo.';
+      this.alreadyRegisteredInEvent = false;
+      return;
+    }
+
+    this.registroDao.validarCodigo(this.codigo, eventId).subscribe(
       result => {
-        this.guerrero = result.resultado
+        if (result.error || !result.resultado || !result.resultado.id) {
+          this.user = undefined as any;
+          this.existingRegistration = undefined;
+          this.alreadyRegisteredInEvent = false;
+          this.registrationNotice = '';
+          this.tituloModal = 'Reinscripción';
+          this.mensajeModal = invalidCodeMessage;
+          this.openPopup();
+          return;
+        }
+
+        this.user = result.resultado;
+        this.alreadyRegisteredInEvent = !!result.already_registered;
+        this.existingRegistration = result.registration;
+
+        if (this.alreadyRegisteredInEvent) {
+          this.registrationNotice = 'Ya estabas inscrito en este evento. Cargamos tus datos actuales para que puedas actualizarlos y reenviar tu reinscripcion.';
+        } else {
+          this.registrationNotice = 'Codigo valido. Completa los datos para finalizar tu reinscripcion al evento seleccionado.';
+        }
+      },
+      () => {
+        this.user = undefined as any;
+        this.existingRegistration = undefined;
+        this.alreadyRegisteredInEvent = false;
+        this.registrationNotice = '';
+        this.tituloModal = 'Reinscripción';
+        this.mensajeModal = invalidCodeMessage;
+        this.openPopup();
       });
   }
 
   validarEmail() {
-    this.registroDao.validarEmail(this.email, this.id_event!).subscribe(
+    const eventId = this.id_event || this.event?.id;
+    if (!eventId) {
+      this.tituloModal = "Reinscripción";
+      this.mensajeModal = "Selecciona un evento antes de solicitar el código.";
+      this.openPopup();
+      return;
+    }
+
+    this.registroDao.validarEmail(this.email, eventId).subscribe(
       result => {
         this.mensajeModal = result.message;
         this.tituloModal = "Reinscripción";
+        this.openPopup();
+      },
+      (error) => {
+        this.tituloModal = "Reinscripción";
+        this.mensajeModal = error?.error?.message || error?.error?.mensaje || "No se pudo validar el correo. Intenta nuevamente.";
         this.openPopup();
       }
     );
@@ -90,7 +142,15 @@ export class ReinscripcionComponent implements OnInit {
   private loadEvent() {
     this.route.queryParamMap
       .pipe(
-        map((params: ParamMap) => Number(params.get('id_event'))),
+        map((params: ParamMap) => {
+          const idEvent = Number(params.get('id_event'));
+          if (!isNaN(idEvent) && idEvent > 0) {
+            return idEvent;
+          }
+
+          const idCampamento = Number(params.get('id_campamento'));
+          return idCampamento;
+        }),
         filter((id) => !isNaN(id) && id > 0),
         tap((id) => {
           this.id_event = id;
@@ -100,6 +160,10 @@ export class ReinscripcionComponent implements OnInit {
       .subscribe({
         next: (result) => {
           this.event = result.data?.events?.[0];
+          this.id_event = this.event?.id || this.id_event;
+          if (this.codigo) {
+            this.validarCodigo();
+          }
         },
         error: (error) => {
           console.error('Error al cargar campamento:', error);
@@ -111,6 +175,7 @@ export class ReinscripcionComponent implements OnInit {
   private loadCampamentos() {
     this.eventDao.getEventActivo().subscribe({
       next: (result) => {
+        this.events = result.data?.events || [];
         this.event = result.data?.events?.[0];
       },
       error: (error) => {

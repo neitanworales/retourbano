@@ -64,6 +64,31 @@
     </section>
   </div>
 
+  <section class="summary-panel summary-panel--birthdays">
+    <div class="summary-panel__header">
+      <h4>Cumpleanos durante el evento</h4>
+      <p>Participantes que cumplen anos entre la fecha de inicio y fin del evento</p>
+    </div>
+
+    <div class="summary-list-card" *ngIf="birthdaysDuringEvent.length > 0; else noBirthdays">
+      <ol class="list-group list-group-numbered summary-list">
+        <li *ngFor="let item of birthdaysDuringEvent" class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{ item.name || item.full_name || 'Sin nombre' }}</div>
+            <small class="text-muted">Cumple: {{ item.birthday_on | date:'dd/MM/yyyy' }}</small>
+          </div>
+          <span class="badge bg-success rounded-pill">{{ item.age_turning }} anios</span>
+        </li>
+      </ol>
+    </div>
+
+    <ng-template #noBirthdays>
+      <div class="summary-empty-note">
+        No hay cumpleanos registrados durante las fechas del evento.
+      </div>
+    </ng-template>
+  </section>
+
   <div class="summary-dashboard__charts">
     <div class="summary-dashboard__charts-header">
       <h4>Graficas</h4>

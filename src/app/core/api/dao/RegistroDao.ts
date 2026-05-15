@@ -34,6 +34,8 @@ export class RegistroDao {
 
     public agregarGuerrero(guerrero: EventRegistration, tutor: boolean, event_id: number): Observable<RegistroResponse> {
         const payload = {
+            legacy_user_id: guerrero?.user?.legacy_user_id,
+            legacy_registration_id: guerrero?.legacy_registration_id,
             nombre: guerrero?.user?.nombre,
             nick: guerrero?.user?.nick,
             fechaNac: guerrero?.user?.fechaNac,
@@ -68,6 +70,8 @@ export class RegistroDao {
     public updateGuerrero(guerrero: EventRegistration, event_id: number): Observable<RegistroResponse> {
         const payload = {
             id: guerrero?.user?.id ?? guerrero?.user_id,
+            legacy_user_id: guerrero?.user?.legacy_user_id,
+            legacy_registration_id: guerrero?.legacy_registration_id,
             nombre: guerrero?.user?.nombre,
             nick: guerrero?.user?.nick,
             fechaNac: guerrero?.user?.fechaNac,
@@ -410,11 +414,102 @@ export class RegistroDao {
     }
 
     public validarEmail(email: String, id_campamento: number): Observable<DefaultResponse> {
-        return this.http.get<DefaultResponse>(environment.apiUrl + 'retourbano/validar-email.php?email=' + email + '&id_campamento=' + id_campamento, { headers: this.utils.getHeaders() });
+        return this.http.post<any>(
+            this.utils.v1('/re-enrollment/request-code'),
+            {
+                email,
+                event_id: id_campamento,
+            },
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                code: response?.code || 200,
+                message: response?.message || 'Solicitud procesada',
+            } as DefaultResponse)),
+            catchError((error) => {
+                const apiMessage = error?.error?.message || error?.error?.mensaje;
+                if (apiMessage) {
+                    return of({
+                        success: false,
+                        error: true,
+                        code: error?.status || error?.error?.code || 500,
+                        message: apiMessage,
+                    } as DefaultResponse);
+                }
+
+                return this.http.get<any>(
+                environment.apiUrl + 'retourbano/validar-email.php?email=' + encodeURIComponent(String(email || '')) + '&id_campamento=' + encodeURIComponent(String(id_campamento || '')),
+                { headers: this.utils.getHeaders() }
+            ).pipe(
+                map((legacy) => ({
+                    success: legacy?.success ?? !legacy?.error,
+                    error: !!legacy?.error,
+                    code: legacy?.code || 200,
+                    message: legacy?.message || legacy?.mensaje || 'Solicitud procesada',
+                } as DefaultResponse))
+                );
+            })
+        );
     }
 
-    public validarCodigo(email: String): Observable<GuerreroResponse> {
-        return this.http.get<GuerreroResponse>(environment.apiUrl + 'retourbano/validar-codigo.php?codigo=' + email, { headers: this.utils.getHeaders() });
+    public validarCodigo(code: String, eventId?: number): Observable<GuerreroResponse> {
+        const eventQuery = eventId && eventId > 0 ? '&event_id=' + encodeURIComponent(String(eventId)) : '';
+        return this.http.get<any>(
+            this.utils.v1('/re-enrollment/validate-code') + '?code=' + encodeURIComponent(String(code || '')) + eventQuery,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => {
+                const rawUser = response?.data?.user || response?.resultado || null;
+                const rawRegistration = response?.data?.registration || null;
+                const normalizedRegistration = rawRegistration
+                    ? ({
+                        ...rawRegistration,
+                        user: this.normalizeUser(rawRegistration?.user || rawUser),
+                        razones: rawRegistration?.razones ?? rawRegistration?.reasons,
+                        hospedaje: (rawRegistration?.hospedaje ?? rawRegistration?.requires_lodging ?? 0) === 1,
+                    } as EventRegistration)
+                    : undefined;
+
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    code: response?.code || 200,
+                    message: response?.message || 'Ok',
+                    resultado: this.normalizeUser(rawUser),
+                    already_registered: !!response?.data?.already_registered,
+                    registration: normalizedRegistration,
+                } as GuerreroResponse;
+            }),
+            catchError((error) => {
+                const apiMessage = error?.error?.message || error?.error?.mensaje;
+                if (apiMessage) {
+                    return of({
+                        success: false,
+                        error: true,
+                        code: error?.status || error?.error?.code || 500,
+                        message: apiMessage,
+                        resultado: {} as User,
+                        already_registered: false,
+                    } as GuerreroResponse);
+                }
+
+                return this.http.get<any>(
+                environment.apiUrl + 'retourbano/validar-codigo.php?codigo=' + encodeURIComponent(String(code || '')),
+                { headers: this.utils.getHeaders() }
+            ).pipe(
+                map((legacy) => ({
+                    success: legacy?.success ?? !legacy?.error,
+                    error: !!legacy?.error,
+                    code: legacy?.code || 200,
+                    message: legacy?.message || legacy?.mensaje || 'Ok',
+                    resultado: this.normalizeUser(legacy?.resultado),
+                    already_registered: false,
+                } as GuerreroResponse))
+                );
+            })
+        );
     }
 
     public validarInscripcion(eventId?: number): Observable<RegistroResponse> {

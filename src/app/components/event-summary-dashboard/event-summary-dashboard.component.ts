@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
-import { EventDashboardChartItem, EventDashboardResponse } from 'src/app/core/models/registro/EventDashboardResponse';
+import { EventDashboardBirthdayItem, EventDashboardChartItem, EventDashboardResponse } from 'src/app/core/models/registro/EventDashboardResponse';
 import { Indicador } from 'src/app/core/models/registro/Indicador';
 import { PieChartComponent } from '../pie-chart/pie-chart.component';
 
@@ -23,6 +23,7 @@ export class EventSummaryDashboardComponent implements OnChanges {
   cardsOperacion: Array<{ label: string; value: number | null | undefined; tone: string }> = [];
   cardsFinanzas: Array<{ label: string; value: number | null | undefined; tone: string }> = [];
   paquetes: Array<{ title: string; option: number }> = [];
+  birthdaysDuringEvent: EventDashboardBirthdayItem[] = [];
 
   constructor(private registroDao: RegistroDao) {}
 
@@ -40,12 +41,14 @@ export class EventSummaryDashboardComponent implements OnChanges {
       this.cardsOperacion = [];
       this.cardsFinanzas = [];
       this.paquetes = [];
+      this.birthdaysDuringEvent = [];
       return;
     }
 
     this.registroDao.getEventDashboard(this.eventId).subscribe(result => {
       this.eventDashboard = result;
       const summary = result.data?.summary;
+      this.birthdaysDuringEvent = result.data?.birthdays_during_event || [];
 
       this.indicadoresOperacion = [
         { valor: 'Capacidad', count: summary?.capacity ?? 0 },

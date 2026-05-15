@@ -83,6 +83,30 @@ class EventDashboardRepository extends BaseRepository
         return $rows;
     }
 
+    public function getParticipantBirthDates($eventId)
+    {
+        $activeCondition = $this->getActiveRegistrationCondition();
+        $sql = "SELECT
+                    u.id AS user_id,
+                    u.full_name,
+                    u.display_name,
+                    u.birth_date
+                FROM event_registrations er
+                INNER JOIN users u ON u.id = er.user_id
+                WHERE er.event_id = ?
+                  AND $activeCondition
+                  AND u.birth_date IS NOT NULL
+                ORDER BY u.birth_date ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $eventId);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return $rows;
+    }
+
     public function getPaymentSummary($eventId, $fullPaymentAmount = null, $activeRegistrations = null)
     {
         $activeCondition = $this->getActiveRegistrationCondition();
