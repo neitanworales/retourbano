@@ -10,8 +10,8 @@
                 </div>
                 <div class="generic_price_tag clearfix">
                     <span class="price">
-                        <span class="currency">{{costo.cantidad | currency }}</span>
-                        <span class="month">/{{costo.divisa}}</span>
+                        <span class="currency">{{costo.cantidad | currency:(costo.divisa || 'MXN') }}</span>
+                        <span class="month">/{{getEventDurationDays()}} días</span>
                     </span>
                 </div>
             </div>

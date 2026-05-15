@@ -1,7 +1,10 @@
 <section class="container section main-section">
-    <h1>+ Info - {{event.ciudad?.nombre}}</h1>
-    <h1>{{event.titulo}}</h1>
-    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{event.year}} está por comenzar!</h2>
+    <h1>+ Info - {{event.city_label}}</h1>
+    <h1>{{event.title}}</h1>
+    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{event.event_year}} está por comenzar!</h2>
+    <p class="duration-info" *ngIf="getEventDurationDays() > 0">
+      <i class="bi bi-calendar-check"></i> <strong>Duración:</strong> {{getEventDurationDays()}} días
+    </p>
     <hr>
     <ul>
         <li>
@@ -11,28 +14,28 @@
         <li>
             <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
             <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de
-                <b>${{event.pago_minimoMX}}
+                <b>${{event.minimum_payment_mxn}}
                     MXN</b></p>
             <p>Realiza tu depósito a:</p>
-            <p *ngIf="event.banco">
-                <i class="bi bi-bank"></i> {{event.banco}}
+            <p *ngIf="event.bank_name">
+                <i class="bi bi-bank"></i> {{event.bank_name}}
             </p>
-            <p *ngIf="event.titularCuenta">
-                <i class="bi bi-file-person"></i> {{event.titularCuenta}}
+            <p *ngIf="event.account_holder">
+                <i class="bi bi-file-person"></i> {{event.account_holder}}
             </p>
-            <p *ngIf="event.cuenta">
-                <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{event.cuenta}}
+            <p *ngIf="event.bank_account">
+                <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{event.bank_account}}
             </p>
-            <p *ngIf="event.clabe">
-                <i class="bi bi-credit-card-2-back"></i> CLABE: {{event.clabe}}
+            <p *ngIf="event.bank_clabe">
+                <i class="bi bi-credit-card-2-back"></i> CLABE: {{event.bank_clabe}}
             </p>
-            <p *ngIf="event.email_contacto">
+            <p *ngIf="event.contact_email">
                 <i class="bi bi-envelope-at"></i> Una vez realizado tu pago, Es importante que nos notifiques tus
                 dep&oacute;sitos en
-                <b>{{event.email_contacto}}</b> o al los whatsapps <b><a
-                        href="https://wa.me/52{{event.contacto1}}" target="_blank">{{event.contacto1}}</a></b>
+                <b>{{event.contact_email}}</b> o al los whatsapps <b><a
+                        href="https://wa.me/52{{event.contact_phone_1}}" target="_blank">{{event.contact_phone_1}}</a></b>
                 y/o
-                <b>{{event.contacto2}}</b> enviando tus
+                <b>{{event.contact_phone_2}}</b> enviando tus
                 fichas de depósito y el nombre de la persona inscrita.
             </p>
             <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes
@@ -42,15 +45,15 @@
         </li>
         <li>
             <h3>2. <i class="bi bi-car-front-fill"></i> Día de llegada:</h3>
-            <p *ngIf="event.fecha_inicio"><i class="bi bi-calendar-event"></i> {{event.fecha_inicio | date}}</p>
-            <p *ngIf="event.fecha_inicio"><i class="bi bi-clock"></i> {{event.fecha_inicio | date:'shortTime'}}
+            <p *ngIf="event.start_at"><i class="bi bi-calendar-event"></i> {{event.start_at | date}}</p>
+            <p *ngIf="event.start_at"><i class="bi bi-clock"></i> {{event.start_at | date:'shortTime'}}
             </p>
-            <p *ngIf="event.llegada_lugar"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b>
-                {{event.llegada_lugar}}</p>
-            <iframe *ngIf="event.llegada_coordenadas" [src]="getSafeUrl(event.llegada_coordenadas)" width="600"
+            <p *ngIf="event.arrival_place"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b>
+                {{event.arrival_place}}</p>
+            <iframe *ngIf="event.arrival_coordinates" [src]="getSafeUrl(event.arrival_coordinates)" width="600"
                 height="450" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <p *ngIf="event.llegada_nota">{{event.llegada_nota}}</p>
+            <p *ngIf="event.arrival_note">{{event.arrival_note}}</p>
         </li>
         <li>
             <h3>3. <i class="bi bi-backpack2"></i> Viaje Misionero:</h3>
@@ -62,15 +65,15 @@
         </li>
         <li>
             <h3>4. <i class="bi bi-car-front-fill"></i> Día de salida:</h3>
-            <p *ngIf="event.fecha_termino"><i class="bi bi-calendar-event"></i> {{event.fecha_termino | date}}</p>
-            <p *ngIf="event.fecha_termino"><i class="bi bi-clock"></i> {{event.fecha_termino | date:'shortTime'}}
+            <p *ngIf="event.end_at"><i class="bi bi-calendar-event"></i> {{event.end_at | date}}</p>
+            <p *ngIf="event.end_at"><i class="bi bi-clock"></i> {{event.end_at | date:'shortTime'}}
             </p>
-            <p *ngIf="event.salida_lugar"><i class="bi bi-geo"></i> <b>Lugar de entrega:</b>
-                {{event.salida_lugar}}</p>
-            <iframe *ngIf="event.salida_coordenadas" [src]="getSafeUrl(event.salida_coordenadas)" width="600"
+            <p *ngIf="event.departure_place"><i class="bi bi-geo"></i> <b>Lugar de entrega:</b>
+                {{event.departure_place}}</p>
+            <iframe *ngIf="event.departure_coordinates" [src]="getSafeUrl(event.departure_coordinates)" width="600"
                 height="450" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <p *ngIf="event.salida_nota">{{event.salida_nota}}</p>
+            <p *ngIf="event.departure_note">{{event.departure_note}}</p>
         </li>
     </ul>
 </section>

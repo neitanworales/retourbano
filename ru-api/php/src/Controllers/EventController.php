@@ -26,6 +26,7 @@ class EventController extends BaseController
         $data = array_map(function ($event) {
             $eventArray = $event->toArray();
             $eventArray['configuracion'] = $this->events->getConfiguracion((int) $event->id);
+            $eventArray['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : (int) $event->id);
             return $eventArray;
         }, $items);
 
@@ -46,6 +47,7 @@ class EventController extends BaseController
 
         $eventArray = $event->toArray();
         $eventArray['configuracion'] = $this->events->getConfiguracion($eventId);
+        $eventArray['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : $eventId);
 
         return $this->ok(array('event' => $eventArray), 'event found');
     }
@@ -88,6 +90,7 @@ class EventController extends BaseController
             $row['registration_id'] = $isRegistered ? (int) $registration->id : null;
             $row['registration_status'] = $isRegistered ? $registration->registration_status : null;
             $row['configuracion'] = $this->events->getConfiguracion((int) $event->id);
+            $row['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : (int) $event->id);
             $items[] = $row;
         }
 

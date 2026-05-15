@@ -199,4 +199,41 @@ class EventRepository extends BaseRepository
 
         return $config;
     }
+
+    public function getCostos($legacyEventId)
+    {
+        $legacyEventId = (int) $legacyEventId;
+        if ($legacyEventId <= 0) {
+            return array();
+        }
+
+        $sql = 'SELECT id, campamento_id, divisa, cantidad, descripcion, incluye
+                FROM campamento_costos
+                WHERE campamento_id = ?
+                ORDER BY id ASC';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $legacyEventId);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            $includes = array();
+            if (isset($row['incluye']) && $row['incluye'] !== null && trim((string) $row['incluye']) !== '') {
+                $includes = array_values(array_filter(array_map('trim', explode(',', (string) $row['incluye'])), function ($item) {
+                    return $item !== '';
+                }));
+            }
+
+            return array(
+                'id' => isset($row['id']) ? (int) $row['id'] : null,
+                'campamento_id' => isset($row['campamento_id']) ? (int) $row['campamento_id'] : null,
+                'divisa' => isset($row['divisa']) ? (string) $row['divisa'] : null,
+                'cantidad' => isset($row['cantidad']) ? (float) $row['cantidad'] : null,
+                'descripcion' => isset($row['descripcion']) ? (string) $row['descripcion'] : null,
+                'incluye' => $includes,
+            );
+        }, $rows);
+    }
 }

@@ -36,7 +36,7 @@ export class InfoCampaComponent implements OnInit {
       )
       .subscribe({
         next: (result) => {
-          this.event = result.data?.events?.[0]!;
+          this.event = result.data?.events?.[0] || new Event();
           this.isLoading = false;
         },
         error: (error) => {
@@ -71,6 +71,19 @@ export class InfoCampaComponent implements OnInit {
       console.warn('Mapa URL normalizada desde HTML escapado.');
     }
     return this.sanitizer.bypassSecurityTrustResourceUrl(normalizedUrl);
+  }
+
+  getEventDurationDays(): number {
+    if (!this.event?.start_at || !this.event?.end_at) {
+      return 0;
+    }
+
+    const startDate = new Date(this.event.start_at);
+    const endDate = new Date(this.event.end_at);
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const durationInDays = Math.ceil((endDate.getTime() - startDate.getTime()) / millisecondsPerDay);
+
+    return durationInDays > 0 ? durationInDays : 0;
   }
 
 }
