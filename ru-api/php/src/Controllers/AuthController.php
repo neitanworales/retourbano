@@ -2,14 +2,17 @@
 
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Services/AuthService.php';
+require_once __DIR__ . '/../Repository/UserRoleRepository.php';
 
 class AuthController extends BaseController
 {
     private $authService;
+    private $userRoles;
 
     public function __construct()
     {
         $this->authService = new AuthService();
+        $this->userRoles = new UserRoleRepository();
     }
 
     public function login($request)
@@ -41,7 +44,12 @@ class AuthController extends BaseController
             return $this->fail('invalid or expired token', 401);
         }
 
-        return $this->ok(array('user' => $user->toArray()), 'token valid');
+        $roles = $this->userRoles->getRolesByUserId((int) $user->id);
+
+        return $this->ok(array(
+            'user' => $user->toArray(),
+            'roles' => $roles
+        ), 'token valid');
     }
 
     public function logout($request)

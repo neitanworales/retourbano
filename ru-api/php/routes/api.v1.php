@@ -6,6 +6,7 @@ $eventController = new EventController();
 $eventDashboardController = new EventDashboardController();
 $userController = new UserController();
 $paymentController = new PaymentController();
+$lodgingController = new LodgingController();
 $authGuard = new AuthGuard();
 
 $router->add('POST', '/api/v1/auth/login', function ($request) use ($authController) {
@@ -139,5 +140,36 @@ $router->add('GET', '/api/v1/payments/detail', function ($request) use ($payment
 $router->add('GET', '/api/v1/payments/by-registration', function ($request) use ($paymentController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
         return $paymentController->getByRegistration($securedRequest);
+    });
+});
+
+// Lodging endpoints
+$router->add('GET', '/api/v1/lodging/registrations', function ($request) use ($lodgingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($lodgingController) {
+        return $lodgingController->getRegistrationsByLodging($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/lodging/rooms', function ($request) use ($lodgingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($lodgingController) {
+        return $lodgingController->getRoomsList($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/lodging/unassigned', function ($request) use ($lodgingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($lodgingController) {
+        return $lodgingController->getUnassignedRegistrations($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/lodging/room-assignment', function ($request) use ($lodgingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($lodgingController) {
+        return $lodgingController->updateRoomAssignment($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/lodging/lodging-requirement', function ($request) use ($lodgingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($lodgingController) {
+        return $lodgingController->updateLodgingRequirement($securedRequest);
     });
 });

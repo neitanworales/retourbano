@@ -46,7 +46,7 @@ class EmailService
      * Sends the registration confirmation email to the user
      * and a staff notification to the event contact email.
      */
-    public function sendRegistrationEmail($user, $event, $requiresLodging = 0, $reasons = null)
+    public function sendRegistrationEmail($user, $event, $requiresLodging = 0, $reasons = null, $reinscription = false)
     {
         $to = isset($user->email) ? trim((string) $user->email) : '';
         if ($to === '') {
@@ -78,6 +78,12 @@ class EmailService
             'medicamentos'  => isset($user->medications) ? $user->medications : '',
             'tutorNombre'   => isset($user->guardian_name) ? $user->guardian_name : '',
             'tutorTelefono' => isset($user->guardian_phone) ? $user->guardian_phone : '',
+            'banco'         => isset($event->bank_name) ? $event->bank_name : '',
+            'cuenta'        => isset($event->bank_account) ? $event->bank_account : '',
+            'titularCuenta'  => isset($event->account_holder) ? $event->account_holder : '',
+            'pago_minimoMX' => isset($event->minimum_payment_mxn) ? $event->minimum_payment_mxn : '',
+            'contacto1'      => isset($event->contact_phone_1) ? $event->contact_phone_1 : '',
+            'contacto2'      => isset($event->contact_phone_2) ? $event->contact_phone_2 : '',
         );
 
         $subject = 'Bienvenido a Reto Urbano ' . $variables['year'] . ' - ' . $variables['ciudad'];
@@ -87,7 +93,7 @@ class EmailService
         $staffEmail = isset($event->contact_email) ? trim((string) $event->contact_email) : '';
         if ($staffEmail !== '') {
             $staffHtml = $this->renderTemplate('inscripcion-staff.html', $variables);
-            $this->send($staffEmail, '[NUEVO GUERRERO] ' . $subject, $staffHtml);
+            $this->send($staffEmail, '[REPORTE A STAFF][' . $variables['ciudad'] . '] '. ($reinscription ? 'Reinscripcion' : 'Nuevo') . ' a Reto Urbano ' . $variables['year'] . ' - ' . $variables['ciudad'], $staffHtml);
         }
 
         return $sent;
@@ -105,7 +111,7 @@ class EmailService
 
         $baseUrl = getenv('REENROLLMENT_URL_BASE');
         if (!$baseUrl) {
-            $baseUrl = 'https://ywampachuca.org/retourbano/reinscripcion';
+            $baseUrl = 'https://ywampachuca.org/retourbano';
         }
 
         $eventId = ($event && isset($event->id)) ? (int) $event->id : 0;

@@ -22,6 +22,7 @@ export class AuthService {
         result => {
           console.log("SE OBTIENE SESSIÓN DESDE EL BACKEND");
           localStorage.setItem('session', JSON.stringify(result.session));
+          this.setSession(result.session || null);
         }, error => {
           console.log("ERROR AL HACER REQUEST: " + error);
           this.setSession(null);

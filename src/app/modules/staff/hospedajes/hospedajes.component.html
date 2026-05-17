@@ -17,7 +17,17 @@
     </ul>
 
     <div [ngStyle]="{'display':pageHabitacionesDisplayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
-        <div class="row">
+        <div *ngIf="errorHabitaciones" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> {{errorHabitaciones}}
+            <button type="button" class="btn-close" (click)="errorHabitaciones = null" aria-label="Cerrar"></button>
+        </div>
+        <div *ngIf="cargandoHabitaciones" class="alert alert-info" role="alert">
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            Cargando habitaciones...
+        </div>
+        <div class="row" *ngIf="!cargandoHabitaciones">
             <div class="title-table mat-elevation-z8">
                 <div class="row d-flex">
                     <div class="col elevado">
@@ -79,15 +89,26 @@
     </div>
 
     <div [ngStyle]="{'display':pageHospedajesDisplayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
-        <div class="row">
+        <div *ngIf="errorHospedajes" class="alert alert-danger alert-dismissible fade show" role="alert">
+            <strong>Error:</strong> {{errorHospedajes}}
+            <button type="button" class="btn-close" (click)="errorHospedajes = null" aria-label="Cerrar"></button>
+        </div>
+        <div *ngIf="cargandoHospedajes" class="alert alert-info" role="alert">
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+                <span class="visually-hidden">Cargando...</span>
+            </div>
+            Cargando hospedajes...
+        </div>
+        <div class="row" *ngIf="!cargandoHospedajes">
             <div class="title-table mat-elevation-z8">
                 <div class="row d-flex">
                     <div class="col elevado">
                         <p>Registros {{hospedajes.length}}</p>
                     </div>
                     <div class="col elevado">
-                        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
-                            <i class="bi bi-arrow-clockwise"></i> Cargar todos
+                        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()" [disabled]="guardando">
+                            <span *ngIf="!guardando"><i class="bi bi-arrow-clockwise"></i> Cargar todos</span>
+                            <span *ngIf="guardando"><span class="spinner-border spinner-border-sm me-1" role="status" aria-hidden="true"></span> Cargando...</span>
                         </button>
                     </div>
                     <div class="col elevado">

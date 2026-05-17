@@ -39,13 +39,12 @@ class EventRegistrationRepository extends BaseRepository
 
     public function create(EventRegistration $registration)
     {
-        $sql = 'INSERT INTO event_registrations (legacy_registration_id, event_id, user_id, event_year, registration_status, is_confirmed, attendance_confirmed, is_staff, is_admin, is_followup, welcome_email_sent, email_confirmed, requires_lodging, room_code, reasons)
-            VALUES (?, ?, ?, ?, \'A\', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO event_registrations (event_id, user_id, event_year, registration_status, is_confirmed, attendance_confirmed, is_staff, is_admin, is_followup, welcome_email_sent, email_confirmed, requires_lodging, room_code, reasons)
+            VALUES (?, ?, ?, \'A\', ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
 
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param(
-            'iiiiiiiiiiiiss',
-            $registration->legacy_registration_id,
+            'iiiiiiiiiiiss',
             $registration->event_id,
             $registration->user_id,
             $registration->event_year,
@@ -197,6 +196,9 @@ class EventRegistrationRepository extends BaseRepository
         $params[] = (int) $limit;
         $params[] = (int) $offset;
 
+        //echo "SQL: $sql\n";
+        //echo "Params: " . implode(', ', $params) . "\n";
+
         $stmt = $this->db->prepare($sql);
 
         $bindParams = array($types);
@@ -205,6 +207,82 @@ class EventRegistrationRepository extends BaseRepository
         }
 
         call_user_func_array(array($stmt, 'bind_param'), $bindParams);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            return new EventRegistration($row);
+        }, $rows);
+    }
+
+    /**
+     * Flexible query builder for complex filters
+     * @param array $filters Key-value pairs of filters (e.g., event_id, requires_lodging, room_code_null, etc.)
+     */
+    public function findByFilters($filters = array())
+    {
+        $sql = 'SELECT * FROM event_registrations WHERE 1=1';
+        $types = '';
+        $params = array();
+
+        if (array_key_exists('event_id', $filters) && $filters['event_id'] !== null) {
+            $sql .= ' AND event_id = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['event_id'];
+        }
+
+        if (array_key_exists('user_id', $filters) && $filters['user_id'] !== null) {
+            $sql .= ' AND user_id = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['user_id'];
+        }
+
+        if (array_key_exists('requires_lodging', $filters) && $filters['requires_lodging'] !== null) {
+            $sql .= ' AND requires_lodging = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['requires_lodging'];
+        }
+
+        if (array_key_exists('registration_status', $filters) && $filters['registration_status'] !== null) {
+            $sql .= ' AND registration_status = ?';
+            $types .= 's';
+            $params[] = trim((string) $filters['registration_status']);
+        }
+
+        if (array_key_exists('is_staff', $filters) && $filters['is_staff'] !== null) {
+            $sql .= ' AND is_staff = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['is_staff'];
+        }
+
+        if (array_key_exists('is_admin', $filters) && $filters['is_admin'] !== null) {
+            $sql .= ' AND is_admin = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['is_admin'];
+        }
+
+        // Handle room_code_null and room_code_not_null special filters
+        if (array_key_exists('room_code_null', $filters) && $filters['room_code_null'] === true) {
+            $sql .= ' AND (room_code IS NULL OR room_code = "")';
+        }
+
+        if (array_key_exists('room_code_not_null', $filters) && $filters['room_code_not_null'] === true) {
+            $sql .= ' AND room_code IS NOT NULL AND room_code != ""';
+        }
+
+        $sql .= ' ORDER BY created_at DESC';
+
+        $stmt = $this->db->prepare($sql);
+
+        if (!empty($params)) {
+            $bindParams = array($types);
+            foreach ($params as $key => $value) {
+                $bindParams[] = &$params[$key];
+            }
+            call_user_func_array(array($stmt, 'bind_param'), $bindParams);
+        }
+
         $stmt->execute();
         $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
         $stmt->close();

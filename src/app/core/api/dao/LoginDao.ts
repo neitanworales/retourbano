@@ -22,6 +22,11 @@ interface V1LoginPayload {
     roles?: UserRole[];
 }
 
+interface V1ValidatePayload {
+    user: V1LoginUser;
+    roles?: UserRole[];
+}
+
 interface V1Response<T> {
     success?: boolean;
     message?: string;
@@ -68,9 +73,10 @@ export class LoginDao {
         this.session = JSON.parse(localStorage.getItem('session')!);
         const body = { token: this.session?.token?.toString() || '' };
 
-        return this.http.post<V1Response<{ user: V1LoginUser }>>(this.utils.v1('/auth/validate'), body, { headers: this.utils.getHeaders() }).pipe(
+        return this.http.post<V1Response<V1ValidatePayload>>(this.utils.v1('/auth/validate'), body, { headers: this.utils.getHeaders() }).pipe(
             map((response) => {
                 const user = response?.data?.user;
+                const roles = response?.data?.roles || this.session?.roles || [];
                 const usuario = new Usuario();
                 usuario.id = user?.id;
                 usuario.nombre = user?.full_name || '';
@@ -82,7 +88,7 @@ export class LoginDao {
                     token: this.session?.token,
                     usuario: usuario,
                     guerrero: usuario,
-                    roles: this.session?.roles || []
+                    roles: roles
                 };
 
                 return {

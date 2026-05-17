@@ -1,164 +1,168 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <style>
-        .correoreto {
-            padding: 20px;
-            background-color: whitesmoke;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        h3 {
-            padding: 10px;
-            background-color: lavender;
-        }
-
-        p {
-            color: brown;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Confirmaci&oacute;n de Inscripci&oacute;n - Reto Urbano {{year}}</title>
 </head>
+<body style="margin:0;padding:0;background-color:#F0F4F8;font-family:Arial,Helvetica,sans-serif;">
 
-<body>
-    <div class="correoreto">
-        <h1>RETO URBANO {{year}} - {{ciudad}}</h1>
-        <h2>{{titulo}}<h2>
-                <h3>Hola {{nick}}, te has registrado correctamente a Reto Urbano {{year}}</h3>
-                <p>Con los siguientes datos:</p>
-                <table class="tabla">
-                    <tr>
-                        <td>Nombre</td>
-                        <td> {{nombre}}</td>
-                    </tr>
-                    <tr>
-                        <td>Gafete</td>
-                        <td>{{nick}}</td>
-                    </tr>
-                    <tr>
-                        <td>Fecha de Nac</td>
-                        <td>{{fechanac}}</td>
-                    </tr>
-                    <tr>
-                        <td>Edad</td>
-                        <td>{{edad}}</td>
-                    </tr>
-                    <tr>
-                        <td>Sexo</td>
-                        <td>{{sexo}}</td>
-                    </tr>
-                    <tr>
-                        <td>Talla</td>
-                        <td>{{talla}}</td>
-                    </tr>
-                    <tr>
-                        <td>Hospedaje</td>
-                        <td>{{hospedaje}}</td>
-                    </tr>
-                    <tr>
-                        <td>Vienes de</td>
-                        <td>{{vienesDe}}</td>
-                    </tr>
-                    <tr>
-                        <td>Alergias</td>
-                        <td>{{alergias}}</td>
-                    </tr>
-                    <tr>
-                        <td>Raz&oacute;n de asistir a RU</td>
-                        <td>{{razones}}</td>
-                    </tr>
-                    <tr>
-                        <td>Iglesia</td>
-                        <td>{{iglesia}}</td>
-                    </tr>
-                    <tr>
-                        <td>email</td>
-                        <td>{{email}}</td>
-                    </tr>
-                    <tr>
-                        <td>Whatsapp</td>
-                        <td>{{whatsapp}}</td>
-                    </tr>
-                    <tr>
-                        <td>Tel&eacute;fono</td>
-                        <td>{{telefono}}</td>
-                    </tr>
-                    <tr>
-                        <td>Facebook</td>
-                        <td>{{facebook}}</td>
-                    </tr>
-                    <tr>
-                        <td>Instagram</td>
-                        <td>{{instagram}}</td>
-                    </tr>
-                    <tr>
-                        <td>Medicamentos</td>
-                        <td>{{medicamentos}}</td>
-                    </tr>
-                    <tr>
-                        <td>Tutor</td>
-                        <td>{{tutorNombre}}</td>
-                    </tr>
-                    <tr>
-                        <td>Contacto Tutor</td>
-                        <td>{{tutorTelefono}}</td>
-                    </tr>
-                </table>
-                <p>Tus datos quedan resguardados para su uso en la log&iacute;stica del campamento.<br>
-                    tambi&eacute;n estaremos orando por ti.</p>
+  <!-- Wrapper -->
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F0F4F8;padding:30px 0;">
+    <tr>
+      <td align="center">
+        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-                <p>Es importante que hagas tu dep&oacute;sito:</p>
-                <h2>Costos</h2>
-                <p>Estos son los costos</p>
-                <table>
-                    <tr>
-                        <th></th>
-                        <th>Costo</th>
-                        <th></th>
-                    </tr>
-                    <tr>
-                        <td>Sin Hospedaje</td> 
-                        <td>$1,900</td>      
-                        <td>MXN</td>                
-                    </tr>
-                    <tr>
-                        <td>Con hospedaje</td> 
-                        <td>$2,900</td>      
-                        <td>MXN</td>                
-                    </tr>
-                </table>
-                <h2>Informaci&oacute;n de pago</h2>
-                <ul>
-                    <li>
-                        <p>
-                            <b>{{banco}}</b>
-                            <br><b>{{cuenta}}</b>
-                            <br><b>{{titularCuenta}}</b>
-                        </p>
-                    </li>
-                    <li>
-                        Puedes hacer un dep&oacute;sito m&iacute;nimo de ${{pago_minimoMX}} (no reembolsable) para apartar tu lugar...<br>
-                        y pagar el resto por medio de mas dep&oacute;sitos o hasta el d&iacute;a del campamento.
-                    </li>
-                    <li>
-                        Puedes hacer el pago total del campamento.
-                    </li>
-                    <li>
-                        El costo del campamento incluye: Hospedaje, alimentaci&oacute;n, playera, materiales para
-                        ministerio y m&aacute;s.
-                    </li>
-                    <li>
-                        El dep&oacute;sito lo puedes hacer en alguna sucursal de {{banco}} o por transferencia
-                        bancaria.
-                    </li>
-                    Una vez realizado tu pago, Es importante que nos notifiques tus dep&oacute;sitos en
-                    <b>reto&#64;ywampachuca.org</b> o al los whatsapps <b>{{contacto1}}</b> y/o <b>{{contacto2}}</b> enviando
-                    tus fichas de dep&oacute;sito y el nombre de la persona inscrita.
-                    Puedes notificar igualemente por el chat de la p&aacute;gina de <a
-                        href="https://www.facebook.com/Retourbanojucumpachuca/">Reto Urbano</a>
-                    </li>
-                </ul>
-                <h2>Atentamente: Staff de Reto Urbano {{year}}</h2>
-    </div>
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#1A3A5C 0%,#2E6DA4 100%);border-radius:10px 10px 0 0;padding:36px 40px;text-align:center;">
+              <p style="margin:0 0 4px 0;font-size:12px;color:#A8C8E8;letter-spacing:3px;text-transform:uppercase;">CAMPAMENTO</p>
+              <h1 style="margin:0;font-size:28px;color:#FFFFFF;font-weight:700;letter-spacing:1px;">RETO URBANO {{year}}</h1>
+              <p style="margin:8px 0 0 0;font-size:16px;color:#A8C8E8;">{{titulo}} &bull; {{ciudad}}</p>
+            </td>
+          </tr>
+
+          <!-- Welcome banner -->
+          <tr>
+            <td style="background-color:#2E6DA4;padding:16px 40px;text-align:center;">
+              <p style="margin:0;font-size:15px;color:#E8F4FF;">&#127881; &nbsp;<strong>&#161;Hola {{nick}}! Te has registrado correctamente.</strong>&nbsp; &#127881;</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background-color:#FFFFFF;padding:36px 40px;">
+
+              <p style="margin:0 0 20px 0;font-size:14px;color:#4A5568;">Tus datos quedan resguardados para la log&iacute;stica del campamento. A continuaci&oacute;n el resumen de tu inscripci&oacute;n:</p>
+
+              <!-- Data table -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;font-size:14px;">
+                <tr style="background-color:#EBF4FF;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;width:38%;">Nombre</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{nombre}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Gafete</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{nick}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Fecha de Nac.</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{fechanac}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Edad</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{edad}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Sexo</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{sexo}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Talla</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{talla}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Hospedaje</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{hospedaje}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Vienes de</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{vienesDe}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Alergias</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{alergias}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Raz&oacute;n de asistir</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{razones}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Iglesia</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{iglesia}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Email</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{email}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">WhatsApp</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{whatsapp}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Tel&eacute;fono</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{telefono}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Medicamentos</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{medicamentos}}</td>
+                </tr>
+                <tr>
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">Tutor</td>
+                  <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">{{tutorNombre}}</td>
+                </tr>
+                <tr style="background-color:#F7FAFC;">
+                  <td style="padding:10px 14px;color:#2D3748;font-weight:700;">Contacto Tutor</td>
+                  <td style="padding:10px 14px;color:#4A5568;">{{tutorTelefono}}</td>
+                </tr>
+              </table>
+
+              <!-- Divider -->
+              <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+              <!-- Payment section -->
+              <h2 style="margin:0 0 6px 0;font-size:18px;color:#1A3A5C;">&#128179;&nbsp; Informaci&oacute;n de Pago</h2>
+              <p style="margin:0 0 18px 0;font-size:13px;color:#718096;">Es importante que realices tu dep&oacute;sito para confirmar tu lugar.</p>
+
+              <!-- Cost cards -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:8px;">
+                <tr>
+                  <td style="background-color:#EBF4FF;border:1px solid #BEE3F8;border-radius:8px;padding:14px 18px;text-align:center;">
+                    <p style="margin:0 0 4px 0;font-size:12px;color:#2E6DA4;font-weight:700;text-transform:uppercase;">Sin Hospedaje</p>
+                    <p style="margin:0;font-size:22px;font-weight:700;color:#1A3A5C;">$1,900 <span style="font-size:13px;color:#718096;">MXN</span></p>
+                  </td>
+                  <td style="background-color:#EBF8F0;border:1px solid #9AE6B4;border-radius:8px;padding:14px 18px;text-align:center;">
+                    <p style="margin:0 0 4px 0;font-size:12px;color:#2F855A;font-weight:700;text-transform:uppercase;">Con Hospedaje</p>
+                    <p style="margin:0;font-size:22px;font-weight:700;color:#22543D;">$2,900 <span style="font-size:13px;color:#718096;">MXN</span></p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- Bank info -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:20px;background-color:#F7FAFC;border:1px solid #E2E8F0;border-radius:8px;">
+                <tr>
+                  <td style="padding:18px 20px;">
+                    <p style="margin:0 0 8px 0;font-size:13px;font-weight:700;color:#2D3748;">Datos bancarios:</p>
+                    <p style="margin:0;font-size:14px;color:#2E6DA4;font-weight:700;">{{banco}}</p>
+                    <p style="margin:4px 0;font-size:14px;color:#4A5568;">Cuenta: <strong>{{cuenta}}</strong></p>
+                    <p style="margin:0;font-size:14px;color:#4A5568;">Titular: <strong>{{titularCuenta}}</strong></p>
+                  </td>
+                </tr>
+              </table>
+
+              <ul style="margin:20px 0;padding-left:20px;font-size:14px;color:#4A5568;line-height:1.8;">
+                <li>Dep&oacute;sito m&iacute;nimo de <strong>${{pago_minimoMX}}</strong> (no reembolsable) para apartar tu lugar, puedes liquidar el resto despu&eacute;s o el d&iacute;a del campamento.</li>
+                <li>El costo incluye hospedaje, alimentaci&oacute;n, playera y materiales de ministerio.</li>
+                <li>Dep&oacute;sito en sucursal {{banco}} o por transferencia bancaria.</li>
+                <li>Una vez realizado el pago, notif&iacute;canos a <strong>reto&#64;ywampachuca.org</strong> o por WhatsApp al <strong>{{contacto1}}</strong> y/o <strong>{{contacto2}}</strong> con tu ficha de dep&oacute;sito y el nombre del inscrito.</li>
+              </ul>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#1A3A5C;border-radius:0 0 10px 10px;padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 6px 0;font-size:13px;color:#A8C8E8;">Con cari&ntilde;o desde el Staff de</p>
+              <p style="margin:0;font-size:16px;font-weight:700;color:#FFFFFF;">Reto Urbano {{year}}</p>
+              <p style="margin:10px 0 0 0;font-size:12px;color:#718096;">&#128338; Estaremos orando por ti.</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
 </body>
-
 </html>

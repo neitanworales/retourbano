@@ -64,7 +64,7 @@ export class RegistroDao {
         };
 
         return this.http.post<RegistroResponse>(
-            this.utils.v1('/registrations') + '?tutor=' + (tutor ? '1' : '0') + '&event_id=' + event_id,
+            this.utils.v1('/registrations') + '?tutor=' + (tutor ? '1' : '0') + '&event_id=' + event_id+'&reinscription=0',
             payload,
             { headers: this.utils.getHeaders() }
         );
@@ -545,71 +545,122 @@ export class RegistroDao {
     }
 
     /**
-     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     * GET /api/v1/lodging/registrations
+     * Get registrations filtered by lodging requirement
      */
     public obtenerHospedajes(con_hospedaje: Boolean, campamentoId: number): Observable<HospedajeResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<HospedajeResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=12'
-            + '&con_hospedaje=' + (con_hospedaje ? '1' : '0')
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const params = [
+            'event_id=' + encodeURIComponent(String(campamentoId || '')),
+            'token=' + encodeURIComponent(String(session?.token || '')),
+        ];
+
+        if (con_hospedaje !== null && con_hospedaje !== undefined) {
+            params.push('with_lodging=' + (con_hospedaje ? '1' : '0'));
+        }
+
+        return this.http.get<any>(this.utils.v1('/lodging/registrations') + '?' + params.join('&'),
+            { headers: this.utils.getHeaders() }).pipe(
+            map((response) => {
+                const registrations = response?.registrations || [];
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'OK',
+                    code: response?.code || 200,
+                    resultado: registrations
+                } as HospedajeResponse;
+            })
+        );
     }
 
     /**
-     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     * GET /api/v1/lodging/rooms
+     * Get all rooms with their occupants
      */
     public obtenerHabitaciones(campamentoId: number): Observable<HabitacionResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<HabitacionResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=19'
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const params = [
+            'event_id=' + encodeURIComponent(String(campamentoId || '')),
+            'token=' + encodeURIComponent(String(session?.token || ''))
+        ];
+
+        return this.http.get<any>(this.utils.v1('/lodging/rooms') + '?' + params.join('&'),
+            { headers: this.utils.getHeaders() }).pipe(
+            map((response) => {
+                const rooms = response?.rooms || [];
+                const habitaciones = rooms.map((room: any) => ({
+                    habitacion: room.room_code,
+                    count: room.occupants_count,
+                    personas: room.registrations
+                }));
+
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'OK',
+                    code: response?.code || 200,
+                    resultado: habitaciones
+                } as HabitacionResponse;
+            })
+        );
     }
 
     /**
-     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     * GET /api/v1/lodging/unassigned
+     * Get registrations without room assignment
      */
     public obtenerPersonasSinHabitacion(campamentoId: number): Observable<SinHabitacionResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<SinHabitacionResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=20'
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const params = [
+            'event_id=' + encodeURIComponent(String(campamentoId || '')),
+            'token=' + encodeURIComponent(String(session?.token || ''))
+        ];
+
+        return this.http.get<any>(this.utils.v1('/lodging/unassigned') + '?' + params.join('&'),
+            { headers: this.utils.getHeaders() }).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'OK',
+                code: response?.code || 200,
+                personas: response?.registrations || []
+            } as SinHabitacionResponse))
+        );
     }
 
     /**
-     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     * PATCH /api/v1/lodging/room-assignment
+     * Update room assignment for a registration
      */
     public actualizarHabitacion(id: number, habitacion: string, campamentoId: number): Observable<DefaultResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=13&id=' + id
-            + '&habitacion=' + habitacion
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const payload = {
+            registration_id: id,
+            room_code: habitacion,
+            token: session?.token
+        };
+
+        return this.http.patch<DefaultResponse>(this.utils.v1('/lodging/room-assignment'),
+            payload,
+            { headers: this.utils.getHeaders() });
     }
 
     /**
-     * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
+     * PATCH /api/v1/lodging/lodging-requirement
+     * Update lodging requirement for a registration
      */
     public actualizarHospedaje(id: number, hospedaje: boolean, campamentoId: number): Observable<DefaultResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=21&id=' + id
-            + '&hospedaje=' + (hospedaje ? '1' : '0')
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const payload = {
+            registration_id: id,
+            requires_lodging: hospedaje ? 1 : 0,
+            token: session?.token
+        };
+
+        return this.http.patch<DefaultResponse>(this.utils.v1('/lodging/lodging-requirement'),
+            payload,
+            { headers: this.utils.getHeaders() });
     }
 
     /**

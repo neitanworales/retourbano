@@ -21,7 +21,7 @@ class RegistrationService
         $this->email = new EmailService();
     }
 
-    public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null, $reasons = null, $legacyRegistrationId = null)
+    public function register($userId, $eventId, $requiresLodging = 0, $roomCode = null, $reasons = null, $reinscription = false)
     {
         $event = $this->events->findModelById((int) $eventId);
         if (!$event) {
@@ -38,7 +38,7 @@ class RegistrationService
         }
 
         $registration = new EventRegistration(array(
-            'legacy_registration_id' => $legacyRegistrationId,
+            'reinscription' => (int) $reinscription,
             'event_id' => (int) $eventId,
             'user_id' => (int) $userId,
             'event_year' => $event->event_year,
@@ -59,7 +59,7 @@ class RegistrationService
 
         $user = $this->users->findModelById((int) $userId);
         if ($user) {
-            $emailSent = $this->email->sendRegistrationEmail($user, $event, $requiresLodging, $reasons) ? 1 : 0;
+            $emailSent = $this->email->sendRegistrationEmail($user, $event, $requiresLodging, $reasons, $reinscription) ? 1 : 0;
             if ($emailSent) {
                 $this->registrations->updateFields((int) $id, array('welcome_email_sent' => 1));
             }

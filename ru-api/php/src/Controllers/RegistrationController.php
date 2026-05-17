@@ -32,7 +32,7 @@ class RegistrationController extends BaseController
     {
         $eventId = $this->parseEventId($request);
         $userId = isset($request['user_id']) ? (int) $request['user_id'] : 0;
-        $legacyRegistrationId = $this->parseLegacyRegistrationId($request);
+        $reinscription = isset($request['reinscription']) ? (int) $request['reinscription'] : 0;
 
         $requiresLodging = $this->parseOptionalBoolean($request, 'requires_lodging');
         if ($requiresLodging === null) {
@@ -55,7 +55,7 @@ class RegistrationController extends BaseController
             $userId = (int) $userOrError;
         }
 
-        $result = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons, $legacyRegistrationId);
+        $result = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons, false);
         if (isset($result['error'])) {
             return $this->fail($result['error'], 400, $result);
         }
@@ -95,9 +95,9 @@ class RegistrationController extends BaseController
 
                 $roomCode = isset($request['room_code']) ? trim((string) $request['room_code']) : null;
                 $reasons = isset($request['reasons']) ? trim((string) $request['reasons']) : (isset($request['razones']) ? trim((string) $request['razones']) : null);
-                $legacyRegistrationId = $this->parseLegacyRegistrationId($request);
+                $reinscription = true;
 
-                $registerResult = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons, $legacyRegistrationId);
+                $registerResult = $this->registrationService->register($userId, $eventId, $requiresLodging, $roomCode, $reasons, true);
                 if (isset($registerResult['error'])) {
                     return $this->fail($registerResult['error'], 400, $registerResult);
                 }
@@ -526,26 +526,6 @@ class RegistrationController extends BaseController
         }
 
         return isset($request['id_campamento']) ? (int) $request['id_campamento'] : 0;
-    }
-
-    private function parseLegacyRegistrationId($request)
-    {
-        if (isset($request['legacy_registration_id'])) {
-            $value = (int) $request['legacy_registration_id'];
-            return $value > 0 ? $value : null;
-        }
-
-        if (isset($request['id_campamento_guerrero'])) {
-            $value = (int) $request['id_campamento_guerrero'];
-            return $value > 0 ? $value : null;
-        }
-
-        if (isset($request['legacyRegistrationId'])) {
-            $value = (int) $request['legacyRegistrationId'];
-            return $value > 0 ? $value : null;
-        }
-
-        return null;
     }
 
     private function sendReenrollmentCodeEmail($user, $code, $eventId = null)

@@ -20,12 +20,13 @@
                         <div *ngIf="form['username'].errors">El password es obligatorio</div>
                     </div>
                 </div>
+                <div *ngIf="loginError" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    {{ loginErrorMessage }}
+                    <button type="button" class="btn-close" (click)="loginError = false" aria-label="Cerrar"></button>
+                </div>
                 <div class="row mb-3">
                     <div class="col">
                         <button type="submit" class="btn btn-primary">Entrar</button>
-                        <div *ngIf="loginError">
-                            Usuario y/o contraseña son incorrectos
-                        </div>
                     </div>
                     <div class="col">
                         <p class="text-right">
