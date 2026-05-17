@@ -1,10 +1,11 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Habitacion } from 'src/app/core/models/hospedaje/Habitacion';
 import { HospedajeTable } from 'src/app/core/models/hospedaje/HospedajeTable';
 import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
-import { User } from 'src/app/core/models/registro/User';
+import { Event } from 'src/app/core/models/registro/Event';
 import * as XLSX from 'xlsx';
 
 @Component({
@@ -16,11 +17,15 @@ import * as XLSX from 'xlsx';
 })
 export class HospedajesComponent implements OnInit {
 
-  eventSeleccionadoId?: number;
+  selectedEventoId?: number;
+  selectedEvento?: Event;
 
-  pageHabitaciones : boolean = true;
-  pageHospedajes! : boolean;
-  pageNoHospedajes! : boolean;
+  events?: Event[];
+  tabsCampas?: boolean[];
+
+  pageHabitaciones: boolean = true;
+  pageHospedajes!: boolean;
+  pageNoHospedajes!: boolean;
 
   pageHabitacionesDisplayStyle = 'block';
   pageHospedajesDisplayStyle = 'none';
@@ -50,26 +55,62 @@ export class HospedajesComponent implements OnInit {
 
   constructor(
     private registroDao: RegistroDao,
-    private datePipe: DatePipe
+    private datePipe: DatePipe, 
+    private eventDao: EventDao
   ) {
 
   }
 
+  loadCampamentos() {
+    this.eventDao.getEventActivo().subscribe({
+      next: (result) => {
+        console.log("Eventos cargados: ", result.data?.events);
+        this.events = result.data?.events;
+        console.log("Tabs eventos asignados: ", this.tabsCampas);
+
+        if (this.events?.length === 1) {
+          this.tabCampamentos(0);
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar eventos:', error);
+      }
+    });
+  }
+
   ngOnInit(): void {
+    this.loadCampamentos();
     this.cargarDatosHabitaciones();
   }
 
   private cargarDatosHospedajes() {
     this.cargandoHospedajes = true;
     this.errorHospedajes = null;
-    
-    this.registroDao.obtenerHospedajes(this.pageHospedajes, this.eventSeleccionadoId!).subscribe(
+
+    this.registroDao.obtenerHospedajes(this.pageHospedajes, this.selectedEventoId!).subscribe(
       result => {
-        if (result.error) {
+        if (!result.success) {
           this.errorHospedajes = result.message || 'Error al cargar hospedajes';
           console.error('Error loading hospedajes:', result.message);
         } else {
-          this.hospedajes = result.resultado;
+          console.log('Hospedajes obtenidos del backend:', result.data?.registrations);
+          this.hospedajes = result.data?.registrations?.map(reg => {
+            const hospedajeTable = new HospedajeTable();
+            hospedajeTable.id = reg.id;
+            hospedajeTable.nombre = reg.user?.full_name;
+            hospedajeTable.confirmado = reg.is_confirmed;
+            hospedajeTable.asistencia = reg.attendance_confirmed;
+            hospedajeTable.hospedaje = reg.requires_lodging;
+            hospedajeTable.sexo = reg.user?.gender || '';
+            hospedajeTable.edad = reg.user?.age;
+            hospedajeTable.habitacion = reg.room_code || '';
+            hospedajeTable.is_staff = reg.is_staff;
+            hospedajeTable.is_admin = reg.is_admin;
+            return hospedajeTable;
+          }) || [];
+
+          console.log('Hospedajes cargados:', this.hospedajes);
+
           this.hospedajes.map((p) => {
             p.editar = false;
             return p;
@@ -86,17 +127,17 @@ export class HospedajesComponent implements OnInit {
     );
   }
 
-  cargarHabitaciones(){
+  cargarHabitaciones() {
     this.cargarDatosHabitaciones();
   }
 
-  private cargarDatosHabitaciones(){
+  private cargarDatosHabitaciones() {
     this.cargandoHabitaciones = true;
     this.errorHabitaciones = null;
 
-    this.registroDao.obtenerHabitaciones(this.eventSeleccionadoId!).subscribe(
+    this.registroDao.obtenerHabitaciones(this.selectedEventoId!).subscribe(
       result => {
-        if (result.error) {
+        if (!result.success) {
           this.errorHabitaciones = result.message || 'Error al cargar habitaciones';
           console.error('Error loading habitaciones:', result.message);
           this.habitaciones = [];
@@ -114,7 +155,7 @@ export class HospedajesComponent implements OnInit {
       }
     );
 
-    this.registroDao.obtenerPersonasSinHabitacion(this.eventSeleccionadoId!).subscribe(
+    this.registroDao.obtenerPersonasSinHabitacion(this.selectedEventoId!).subscribe(
       result => {
         if (result.error) {
           console.error('Error loading unassigned people:', result.message);
@@ -146,7 +187,7 @@ export class HospedajesComponent implements OnInit {
     }
 
     this.guardando = true;
-    this.registroDao.actualizarHabitacion(hosp.id, hosp.habitacion, this.eventSeleccionadoId!).subscribe(
+    this.registroDao.actualizarHabitacion(hosp.id, hosp.habitacion, this.selectedEventoId!).subscribe(
       result => {
         if (result.error) {
           alert('Error: ' + (result.message || 'No se pudo actualizar la habitación'));
@@ -176,14 +217,14 @@ export class HospedajesComponent implements OnInit {
     }
   }
 
-  guardarHospedaje(hosp: HospedajeTable) { 
+  guardarHospedaje(hosp: HospedajeTable) {
     if (!hosp.id || hosp.hospedaje === undefined || hosp.hospedaje === null) {
       alert('ID o valor de hospedaje no válidos');
       return;
     }
 
     this.guardando = true;
-    this.registroDao.actualizarHospedaje(hosp.id, hosp.hospedaje, this.eventSeleccionadoId!).subscribe(
+    this.registroDao.actualizarHospedaje(hosp.id, hosp.hospedaje, this.selectedEventoId!).subscribe(
       result => {
         if (result.error) {
           alert('Error: ' + (result.message || 'No se pudo actualizar el hospedaje'));
@@ -226,7 +267,7 @@ export class HospedajesComponent implements OnInit {
     this.cargarDatosHospedajes();
   }
 
-  activarPageHabitaciones(){
+  activarPageHabitaciones() {
     this.pageHospedajesDisplayStyle = 'none';
     this.pageHabitacionesDisplayStyle = 'block';
     this.pageHabitaciones = true;
@@ -235,7 +276,7 @@ export class HospedajesComponent implements OnInit {
     this.cargarDatosHabitaciones();
   }
 
-  activarPageHospedajes(){
+  activarPageHospedajes() {
     this.pageHospedajesDisplayStyle = 'block';
     this.pageHabitacionesDisplayStyle = 'none';
     this.pageHabitaciones = false;
@@ -244,13 +285,22 @@ export class HospedajesComponent implements OnInit {
     this.cargarDatosHospedajes();
   }
 
-  activarPageNoHospedajes(){
+  activarPageNoHospedajes() {
     this.pageHospedajesDisplayStyle = 'block';
     this.pageHabitacionesDisplayStyle = 'none';
     this.pageHabitaciones = false;
     this.pageHospedajes = false;
     this.pageNoHospedajes = true;
     this.cargarDatosHospedajes();
+  }
+
+  tabCampamentos(arg0: number) {
+    this.tabsCampas = [false, false];
+    this.tabsCampas[arg0] = true;
+    this.selectedEventoId = this.events![arg0].id;
+    this.selectedEvento = this.events![arg0];
+    console.log("Evento seleccionado: ", this.events![arg0]);
+    console.log("ID evento seleccionado: ", this.selectedEventoId);
   }
 
 }

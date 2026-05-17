@@ -6,9 +6,12 @@ class LodgingController extends BaseController
 {
     private $lodgingService;
 
+    private $users;
+
     public function __construct()
     {
         $this->lodgingService = new LodgingService();
+        $this->users = new UserRepository();
     }
 
     /**
@@ -27,8 +30,10 @@ class LodgingController extends BaseController
             }
 
             $registrations = $this->lodgingService->getRegistrationsByLodging($eventId, $withLodging);
+
             $items = array_map(function ($registration) {
-                return $registration->toArray();
+                $item = $this->attachUserToItem($registration->toArray());
+                return $item;
             }, $registrations);
 
             return $this->ok(array('registrations' => $items), 'lodging registrations');
@@ -176,5 +181,27 @@ class LodgingController extends BaseController
         }
 
         return null;
+    }
+
+    private function attachUserToItem($item)
+    {
+        if (!is_array($item) || !isset($item['user_id'])) {
+            return $item;
+        }
+
+        $userId = (int) $item['user_id'];
+        if ($userId <= 0) {
+            $item['user'] = null;
+            return $item;
+        }
+
+        static $cache = array();
+        if (!array_key_exists($userId, $cache)) {
+            $user = $this->users->findModelById($userId);
+            $cache[$userId] = $user ? $user->toArray() : null;
+        }
+
+        $item['user'] = $cache[$userId];
+        return $item;
     }
 }

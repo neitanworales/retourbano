@@ -548,11 +548,11 @@ export class RegistroDao {
      * GET /api/v1/lodging/registrations
      * Get registrations filtered by lodging requirement
      */
-    public obtenerHospedajes(con_hospedaje: Boolean, campamentoId: number): Observable<HospedajeResponse> {
+    public obtenerHospedajes(con_hospedaje: Boolean, campamentoId: number): Observable<EventRegistrationResponse> {
         const session = this.autho.getSessionValida();
         const params = [
-            'event_id=' + encodeURIComponent(String(campamentoId || '')),
-            'token=' + encodeURIComponent(String(session?.token || '')),
+            'event_id=' + String(campamentoId || ''),
+            'token=' + String(session?.token || ''),
         ];
 
         if (con_hospedaje !== null && con_hospedaje !== undefined) {
@@ -562,14 +562,13 @@ export class RegistroDao {
         return this.http.get<any>(this.utils.v1('/lodging/registrations') + '?' + params.join('&'),
             { headers: this.utils.getHeaders() }).pipe(
             map((response) => {
-                const registrations = response?.registrations || [];
                 return {
                     success: !!response?.success,
                     error: !response?.success,
                     message: response?.message || 'OK',
                     code: response?.code || 200,
-                    resultado: registrations
-                } as HospedajeResponse;
+                    data: response?.data
+                } as EventRegistrationResponse;
             })
         );
     }
@@ -633,7 +632,7 @@ export class RegistroDao {
      * PATCH /api/v1/lodging/room-assignment
      * Update room assignment for a registration
      */
-    public actualizarHabitacion(id: number, habitacion: string, campamentoId: number): Observable<DefaultResponse> {
+    public actualizarHabitacion(id: number, habitacion: String, campamentoId: number): Observable<DefaultResponse> {
         const session = this.autho.getSessionValida();
         const payload = {
             registration_id: id,

@@ -110,7 +110,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["medicamentos"] = $medicamentos;
                         $variables["telefono"] = $telefono;
                         $variables["hospedaje"] = $hospedaje;
-                        $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray($id_campamento));
+                        $indicadores = $datos->getIndicadoresArray($id_campamento);
+                        $variables["reporteResumen"] = $datos->generarResumenIndicadores($indicadores);
+                        $variables["reporte"] = $datos->recorrerArray($indicadores);
 
                         $variables["year"] = $campamento[0]["year"];
                         $variables["titulo"] = $campamento[0]["titulo"];

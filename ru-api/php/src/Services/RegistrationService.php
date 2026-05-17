@@ -4,6 +4,7 @@ require_once __DIR__ . '/../Models/EventRegistration.php';
 require_once __DIR__ . '/../Repository/EventRepository.php';
 require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
 require_once __DIR__ . '/../Repository/UserRepository.php';
+require_once __DIR__ . '/EventDashboardService.php';
 require_once __DIR__ . '/EmailService.php';
 
 class RegistrationService
@@ -11,6 +12,7 @@ class RegistrationService
     private $events;
     private $registrations;
     private $users;
+    private $dashboard;
     private $email;
 
     public function __construct()
@@ -18,6 +20,7 @@ class RegistrationService
         $this->events = new EventRepository();
         $this->registrations = new EventRegistrationRepository();
         $this->users = new UserRepository();
+        $this->dashboard = new EventDashboardService();
         $this->email = new EmailService();
     }
 
@@ -59,7 +62,12 @@ class RegistrationService
 
         $user = $this->users->findModelById((int) $userId);
         if ($user) {
-            $emailSent = $this->email->sendRegistrationEmail($user, $event, $requiresLodging, $reasons, $reinscription) ? 1 : 0;
+            $dashboardData = $this->dashboard->getByEvent((int) $eventId);
+            if (!is_array($dashboardData) || (isset($dashboardData['error']) && $dashboardData['error'])) {
+                $dashboardData = null;
+            }
+
+            $emailSent = $this->email->sendRegistrationEmail($user, $event, $requiresLodging, $reasons, $reinscription, $dashboardData) ? 1 : 0;
             if ($emailSent) {
                 $this->registrations->updateFields((int) $id, array('welcome_email_sent' => 1));
             }

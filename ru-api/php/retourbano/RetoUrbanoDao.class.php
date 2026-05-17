@@ -390,6 +390,57 @@ class RetoUrbanoDao
         return $cadena;
     }
 
+    public function generarResumenIndicadores($array)
+    {
+        $valores = array();
+        foreach ($array as $item) {
+            $clave = isset($item['valor']) ? trim((string) $item['valor']) : '';
+            $valor = isset($item['count']) ? (int) $item['count'] : 0;
+            if ($clave !== '') {
+                $valores[$clave] = $valor;
+            }
+        }
+
+        $inscritos = isset($valores['Inscritos']) ? $valores['Inscritos'] : 0;
+        $capacidad = isset($valores['Lugares']) ? $valores['Lugares'] : 0;
+        $disponibles = isset($valores['Disponibles']) ? $valores['Disponibles'] : 0;
+        $ocupacion = $capacidad > 0 ? (int) round(($inscritos * 100) / $capacidad) : 0;
+
+        $cards = array(
+            array('label' => 'Inscritos', 'value' => $inscritos, 'color' => '#2B6CB0', 'bg' => '#EBF8FF'),
+            array('label' => 'Disponibles', 'value' => $disponibles, 'color' => '#2F855A', 'bg' => '#F0FFF4'),
+            array('label' => 'Capacidad', 'value' => $capacidad, 'color' => '#4A5568', 'bg' => '#F7FAFC'),
+            array('label' => 'Ocupacion', 'value' => $ocupacion . '%', 'color' => '#C05621', 'bg' => '#FFFAF0'),
+            array('label' => 'Guerreros', 'value' => isset($valores['Guerreros']) ? $valores['Guerreros'] : 0, 'color' => '#2D3748', 'bg' => '#EDF2F7'),
+            array('label' => 'Staff', 'value' => isset($valores['Staff']) ? $valores['Staff'] : 0, 'color' => '#6B46C1', 'bg' => '#FAF5FF'),
+            array('label' => 'Hombres', 'value' => isset($valores['Hombres']) ? $valores['Hombres'] : 0, 'color' => '#1A365D', 'bg' => '#EBF4FF'),
+            array('label' => 'Mujeres', 'value' => isset($valores['Mujeres']) ? $valores['Mujeres'] : 0, 'color' => '#97266D', 'bg' => '#FFF5F7'),
+            array('label' => 'Con hospedaje', 'value' => isset($valores['Con hospedaje']) ? $valores['Con hospedaje'] : 0, 'color' => '#2F855A', 'bg' => '#F0FFF4'),
+            array('label' => 'Hospedaje aparte', 'value' => isset($valores['Hospedaje aparte']) ? $valores['Hospedaje aparte'] : 0, 'color' => '#B7791F', 'bg' => '#FFFAF0'),
+            array('label' => 'Admins', 'value' => isset($valores['Admins']) ? $valores['Admins'] : 0, 'color' => '#553C9A', 'bg' => '#FAF5FF'),
+            array('label' => 'Bajas', 'value' => isset($valores['Bajas']) ? $valores['Bajas'] : 0, 'color' => '#C53030', 'bg' => '#FFF5F5')
+        );
+
+        $html = '<table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:10px 10px;margin:0 -10px;">';
+        $totalCards = count($cards);
+        for ($index = 0; $index < $totalCards; $index += 4) {
+            $html .= '<tr>';
+            for ($column = 0; $column < 4; $column++) {
+                $cardIndex = $index + $column;
+                if ($cardIndex < $totalCards) {
+                    $card = $cards[$cardIndex];
+                    $html .= '<td width="25%" valign="top"><table width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background-color:' . $card['bg'] . ';border:1px solid #E2E8F0;border-radius:10px;"><tr><td style="padding:14px 12px;text-align:center;"><div style="font-size:12px;line-height:1.4;color:#718096;text-transform:uppercase;letter-spacing:1px;">' . $card['label'] . '</div><div style="margin-top:6px;font-size:24px;line-height:1.2;color:' . $card['color'] . ';font-weight:700;">' . $card['value'] . '</div></td></tr></table></td>';
+                } else {
+                    $html .= '<td width="25%"></td>';
+                }
+            }
+            $html .= '</tr>';
+        }
+        $html .= '</table>';
+
+        return $html;
+    }
+
     public function obtenerConfiguracion($id_campamento, $id_ciudad)
     {
         $que = "SELECT c.fecha_apertura, c.fecha_maxima, c.umbral, c.maximo_inscr, 
