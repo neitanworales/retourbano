@@ -21,7 +21,10 @@ tags:
   - name: Events
   - name: Users
   - name: Registrations
+  - name: ReEnrollment
   - name: Payments
+  - name: Lodging
+  - name: Accounting
 
 paths:
   /api/v1/auth/login:
@@ -288,6 +291,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiError'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '404':
           description: Evento no encontrado
           content:
@@ -435,6 +444,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
         '404':
           description: Usuario o inscripcion del evento no encontrada
           content:
@@ -458,9 +473,16 @@ paths:
                   type: integer
                 event_id:
                   type: integer
+                id_campamento:
+                  type: integer
+                  description: Alias legacy de event_id
                 requires_lodging:
                   type: integer
                   enum: [0, 1]
+                hospedaje:
+                  type: integer
+                  enum: [0, 1]
+                  description: Alias legacy de requires_lodging
                 room_code:
                   type: string
                 reasons:
@@ -475,6 +497,146 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccessRegistration'
+
+    put:
+      tags: [Registrations]
+      summary: Actualizar datos de usuario y registro
+      description: |
+        Actualiza datos del usuario y, si se envia event_id (o id_campamento),
+        crea o actualiza la inscripcion del evento.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [user_id]
+              properties:
+                user_id:
+                  type: integer
+                id:
+                  type: integer
+                  description: Alias legacy de user_id
+                event_id:
+                  type: integer
+                id_campamento:
+                  type: integer
+                  description: Alias legacy de event_id
+                requires_lodging:
+                  type: integer
+                  enum: [0, 1]
+                hospedaje:
+                  type: integer
+                  enum: [0, 1]
+                  description: Alias legacy de requires_lodging
+                room_code:
+                  type: string
+                reasons:
+                  type: string
+                razones:
+                  type: string
+                full_name:
+                  type: string
+                nombre:
+                  type: string
+                  description: Alias legacy de full_name
+                display_name:
+                  type: string
+                nick:
+                  type: string
+                  description: Alias legacy de display_name
+                email:
+                  type: string
+                  format: email
+                birth_date:
+                  type: string
+                  format: date
+                fechaNac:
+                  type: string
+                  format: date
+                  description: Alias legacy de birth_date
+                year:
+                  type: integer
+                month:
+                  type: integer
+                day:
+                  type: integer
+                age:
+                  type: integer
+                edad:
+                  type: integer
+                gender:
+                  type: string
+                sexo:
+                  type: string
+                shirt_size:
+                  type: string
+                talla:
+                  type: string
+                coming_from:
+                  type: string
+                vienesDe:
+                  type: string
+                allergies:
+                  type: string
+                alergias:
+                  type: string
+                guardian_phone:
+                  type: string
+                tutorTelefono:
+                  type: string
+                church:
+                  type: string
+                iglesia:
+                  type: string
+                guardian_name:
+                  type: string
+                tutorNombre:
+                  type: string
+                guardian_email:
+                  type: string
+                  format: email
+                emailTutor:
+                  type: string
+                  format: email
+                medications:
+                  type: string
+                medicamentos:
+                  type: string
+                phone:
+                  type: string
+                telefono:
+                  type: string
+                accepted_policies:
+                  type: integer
+                  enum: [0, 1]
+                aceptaPoliticas:
+                  type: integer
+                  enum: [0, 1]
+                facebook:
+                  type: string
+                instagram:
+                  type: string
+                whatsapp:
+                  type: string
+                legacy_user_id:
+                  type: integer
+                id_guerrero:
+                  type: integer
+                  description: Alias legacy de legacy_user_id
+      responses:
+        '200':
+          description: Registro actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessRegistrationUpdate'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /api/v1/registrations/status:
     patch:
@@ -605,6 +767,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccessRegistrations'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /api/v1/registrations/by-user:
     get:
@@ -676,6 +844,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
     patch:
       tags: [Payments]
@@ -710,6 +884,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
     delete:
       tags: [Payments]
@@ -729,6 +909,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /api/v1/payments/detail:
     get:
@@ -749,6 +935,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
   /api/v1/payments/by-registration:
     get:
@@ -769,6 +961,527 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/re-enrollment/request-code:
+    post:
+      tags: [ReEnrollment]
+      summary: Solicitar codigo de reinscripcion
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email]
+              properties:
+                email:
+                  type: string
+                  format: email
+                event_id:
+                  type: integer
+                id_campamento:
+                  type: integer
+                  description: Alias legacy de event_id
+      responses:
+        '200':
+          description: Codigo enviado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+        '404':
+          description: Usuario no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/re-enrollment/validate-code:
+    get:
+      tags: [ReEnrollment]
+      summary: Validar codigo de reinscripcion
+      parameters:
+        - in: query
+          name: code
+          required: true
+          schema:
+            type: string
+        - in: query
+          name: codigo
+          required: false
+          schema:
+            type: string
+          description: Alias legacy de code
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+      responses:
+        '200':
+          description: Codigo valido
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessReEnrollmentValidate'
+        '404':
+          description: Codigo no encontrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/lodging/registrations:
+    get:
+      tags: [Lodging]
+      summary: Listar inscripciones filtradas por hospedaje
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: with_lodging
+          required: false
+          schema:
+            type: boolean
+          description: Filtrar por requiere hospedaje
+      responses:
+        '200':
+          description: Inscripciones por hospedaje
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessLodgingRegistrations'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/lodging/rooms:
+    get:
+      tags: [Lodging]
+      summary: Listar cuartos y ocupantes por evento
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Lista de cuartos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessLodgingRooms'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/lodging/unassigned:
+    get:
+      tags: [Lodging]
+      summary: Listar inscripciones sin cuarto asignado
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Inscripciones sin cuarto
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessLodgingRegistrations'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/lodging/room-assignment:
+    patch:
+      tags: [Lodging]
+      summary: Actualizar cuarto asignado
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registration_id, room_code]
+              properties:
+                registration_id:
+                  type: integer
+                room_code:
+                  type: string
+                  maxLength: 50
+      responses:
+        '200':
+          description: Cuarto actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/lodging/lodging-requirement:
+    patch:
+      tags: [Lodging]
+      summary: Actualizar requiere hospedaje
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [registration_id, requires_lodging]
+              properties:
+                registration_id:
+                  type: integer
+                requires_lodging:
+                  type: boolean
+      responses:
+        '200':
+          description: Requiere hospedaje actualizado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccess'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/summary:
+    get:
+      tags: [Accounting]
+      summary: Resumen de contabilidad por evento
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: full_payment_amount
+          required: false
+          schema:
+            type: number
+            format: float
+          description: Monto esperado por registro para calcular saldos
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Resumen contable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingSummary'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/payments:
+    get:
+      tags: [Accounting]
+      summary: Pagos detallados por evento
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Pagos encontrados
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingPayments'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/payments-by-user:
+    get:
+      tags: [Accounting]
+      summary: Pagos agrupados por usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Pagos por usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingPaymentsByUser'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/payments-by-description:
+    get:
+      tags: [Accounting]
+      summary: Pagos agrupados por descripcion
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Pagos por descripcion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingPaymentsByDescription'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/payment-methods:
+    get:
+      tags: [Accounting]
+      summary: Totales por metodo de pago
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Metodos de pago
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingPaymentMethods'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/pending-by-user:
+    get:
+      tags: [Accounting]
+      summary: Saldos pendientes por usuario
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: full_payment_amount
+          required: false
+          schema:
+            type: number
+            format: float
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Pendientes por usuario
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingPending'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
+
+  /api/v1/accounting/cashflow:
+    get:
+      tags: [Accounting]
+      summary: Flujo de caja por fecha
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: query
+          name: event_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: id_campamento
+          required: false
+          schema:
+            type: integer
+          description: Alias legacy de event_id
+        - in: query
+          name: start_date
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: end_date
+          required: false
+          schema:
+            type: string
+            format: date
+        - in: query
+          name: token
+          required: false
+          schema:
+            type: string
+          description: Compatibilidad legacy (preferir Bearer token).
+      responses:
+        '200':
+          description: Flujo por fecha
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiSuccessAccountingCashflow'
+        '403':
+          description: Sin permisos
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiError'
 
 components:
   securitySchemes:
@@ -809,14 +1522,126 @@ components:
       properties:
         id:
           type: integer
+        legacy_user_id:
+          type: integer
+          nullable: true
         full_name:
           type: string
         display_name:
           type: string
+        birth_date:
+          type: string
+          format: date
+          nullable: true
+        age:
+          type: integer
+          nullable: true
+        gender:
+          type: string
+          nullable: true
+        shirt_size:
+          type: string
+          nullable: true
+        coming_from:
+          type: string
+          nullable: true
+        whatsapp:
+          type: string
+          nullable: true
         email:
           type: string
+        allergies:
+          type: string
+          nullable: true
+        guardian_phone:
+          type: string
+          nullable: true
+        church:
+          type: string
+          nullable: true
+        registered_at:
+          type: string
+          format: date-time
+          nullable: true
+        guardian_name:
+          type: string
+          nullable: true
+        facebook:
+          type: string
+          nullable: true
+        instagram:
+          type: string
+          nullable: true
+        accepted_policies:
+          type: boolean
+          nullable: true
+        medications:
+          type: string
+          nullable: true
+        phone:
+          type: string
+          nullable: true
+        guardian_email:
+          type: string
+          format: email
+          nullable: true
         user_status:
           type: string
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+        nombre:
+          type: string
+          nullable: true
+        nick:
+          type: string
+          nullable: true
+        fechaNac:
+          type: string
+          format: date
+          nullable: true
+        edad:
+          type: integer
+          nullable: true
+        sexo:
+          type: string
+          nullable: true
+        talla:
+          type: string
+          nullable: true
+        vienesDe:
+          type: string
+          nullable: true
+        alergias:
+          type: string
+          nullable: true
+        tutorTelefono:
+          type: string
+          nullable: true
+        iglesia:
+          type: string
+          nullable: true
+        tutorNombre:
+          type: string
+          nullable: true
+        emailTutor:
+          type: string
+          format: email
+          nullable: true
+        medicamentos:
+          type: string
+          nullable: true
+        telefono:
+          type: string
+          nullable: true
+        aceptaPoliticas:
+          type: boolean
+          nullable: true
 
     Event:
       type: object
@@ -849,6 +1674,83 @@ components:
           type: integer
         max_registrations:
           type: integer
+          nullable: true
+        threshold:
+          type: integer
+          nullable: true
+        registration_deadline:
+          type: string
+          format: date-time
+          nullable: true
+        registration_open_at:
+          type: string
+          format: date-time
+          nullable: true
+        price_mxn:
+          type: number
+          format: float
+          nullable: true
+        price_usd:
+          type: number
+          format: float
+          nullable: true
+        minimum_payment_mxn:
+          type: number
+          format: float
+          nullable: true
+        bank_name:
+          type: string
+          nullable: true
+        bank_account:
+          type: string
+          nullable: true
+        bank_clabe:
+          type: string
+          nullable: true
+        account_holder:
+          type: string
+          nullable: true
+        contact_phone_1:
+          type: string
+          nullable: true
+        contact_phone_2:
+          type: string
+          nullable: true
+        contact_email:
+          type: string
+          format: email
+          nullable: true
+        arrival_place:
+          type: string
+          nullable: true
+        arrival_coordinates:
+          type: string
+          nullable: true
+        arrival_note:
+          type: string
+          nullable: true
+        departure_place:
+          type: string
+          nullable: true
+        departure_coordinates:
+          type: string
+          nullable: true
+        departure_note:
+          type: string
+          nullable: true
+        cost_notes:
+          type: string
+          nullable: true
+        city_label:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
           nullable: true
 
     EventWithAvailability:
@@ -961,18 +1863,129 @@ components:
       properties:
         id:
           type: integer
+        legacy_registration_id:
+          type: integer
+          nullable: true
         event_id:
           type: integer
         user_id:
           type: integer
+        event_year:
+          type: integer
+          nullable: true
         registration_status:
           type: string
+        is_confirmed:
+          type: integer
+          nullable: true
+        attendance_confirmed:
+          type: integer
+          nullable: true
+        is_staff:
+          type: integer
+          nullable: true
+        is_admin:
+          type: integer
+          nullable: true
+        is_followup:
+          type: integer
+          nullable: true
+        welcome_email_sent:
+          type: integer
+          nullable: true
+        email_confirmed:
+          type: integer
+          nullable: true
         requires_lodging:
           type: integer
           nullable: true
         room_code:
           type: string
           nullable: true
+        reasons:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    Payment:
+      type: object
+      properties:
+        id:
+          type: integer
+        legacy_payment_id:
+          type: integer
+          nullable: true
+        event_registration_id:
+          type: integer
+        amount:
+          type: number
+          format: float
+        description:
+          type: string
+        currency:
+          type: string
+          nullable: true
+        receipt_number:
+          type: string
+          nullable: true
+        payment_method:
+          type: string
+          nullable: true
+        paid_at:
+          type: string
+          format: date-time
+          nullable: true
+        created_by_user_id:
+          type: integer
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    RegistrationWithUser:
+      allOf:
+        - $ref: '#/components/schemas/Registration'
+        - type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+
+    RegistrationWithUserPayments:
+      allOf:
+        - $ref: '#/components/schemas/RegistrationWithUser'
+        - type: object
+          properties:
+            pagos:
+              type: array
+              items:
+                $ref: '#/components/schemas/Payment'
+            pagado:
+              type: number
+              format: float
+
+    LodgingRoom:
+      type: object
+      properties:
+        room_code:
+          type: string
+        occupants_count:
+          type: integer
+        registrations:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegistrationWithUser'
 
     ApiSuccessAuthLogin:
       type: object
@@ -1083,7 +2096,7 @@ components:
           type: object
           properties:
             registration:
-              $ref: '#/components/schemas/Registration'
+              $ref: '#/components/schemas/RegistrationWithUserPayments'
 
     ApiSuccessRegistrations:
       type: object
@@ -1098,4 +2111,344 @@ components:
             registrations:
               type: array
               items:
-                $ref: '#/components/schemas/Registration'
+                $ref: '#/components/schemas/RegistrationWithUserPayments'
+
+    ApiSuccessRegistrationUpdate:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            user_id:
+              type: integer
+            event_id:
+              type: integer
+              nullable: true
+            registration_id:
+              type: integer
+              nullable: true
+
+    ApiSuccessReEnrollmentValidate:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            already_registered:
+              type: boolean
+            registration:
+              $ref: '#/components/schemas/RegistrationWithUser'
+
+    ApiSuccessLodgingRegistrations:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            registrations:
+              type: array
+              items:
+                $ref: '#/components/schemas/RegistrationWithUser'
+
+    ApiSuccessLodgingRooms:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            rooms:
+              type: array
+              items:
+                $ref: '#/components/schemas/LodgingRoom'
+
+    AccountingEventRef:
+      type: object
+      properties:
+        id:
+          type: integer
+        legacy_event_id:
+          type: integer
+          nullable: true
+        title:
+          type: string
+          nullable: true
+        event_year:
+          type: integer
+          nullable: true
+        price_mxn:
+          type: number
+          format: float
+          nullable: true
+
+    AccountingSummary:
+      type: object
+      properties:
+        total_revenue:
+          type: number
+          format: float
+        payments_count:
+          type: integer
+        registrations_with_payments:
+          type: integer
+        fully_paid_count:
+          type: integer
+          nullable: true
+        average_payment:
+          type: number
+          format: float
+          nullable: true
+        expected_revenue:
+          type: number
+          format: float
+          nullable: true
+        payment_coverage_percentage:
+          type: number
+          format: float
+          nullable: true
+        pending_balance:
+          type: number
+          format: float
+          nullable: true
+
+    AccountingIndicator:
+      type: object
+      properties:
+        valor:
+          type: string
+        count:
+          type: number
+        paquete:
+          type: integer
+
+    AccountingPaymentEntry:
+      type: object
+      properties:
+        id_pago:
+          type: integer
+        event_registration_id:
+          type: integer
+        cantidad:
+          type: number
+          format: float
+        descripcion:
+          type: string
+        divisa:
+          type: string
+          nullable: true
+        no_ticket:
+          type: string
+          nullable: true
+        nombre:
+          type: string
+
+    AccountingPaymentByUser:
+      type: object
+      properties:
+        nombre:
+          type: string
+        descripcion:
+          type: integer
+          description: Flag staff (1) o no (0)
+        cantidad:
+          type: number
+          format: float
+        pagos:
+          type: integer
+
+    AccountingPaymentByDescription:
+      type: object
+      properties:
+        descripcion:
+          type: string
+        total:
+          type: number
+          format: float
+
+    AccountingPaymentMethod:
+      type: object
+      properties:
+        payment_method:
+          type: string
+        count:
+          type: integer
+        total_amount:
+          type: number
+          format: float
+
+    AccountingPendingItem:
+      type: object
+      properties:
+        user_id:
+          type: integer
+        nombre:
+          type: string
+        is_staff:
+          type: integer
+        total_paid:
+          type: number
+          format: float
+        expected_amount:
+          type: number
+          format: float
+          nullable: true
+        pending_amount:
+          type: number
+          format: float
+          nullable: true
+        payment_count:
+          type: integer
+        last_payment_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    AccountingCashflowItem:
+      type: object
+      properties:
+        fecha:
+          type: string
+          format: date
+        total_amount:
+          type: number
+          format: float
+        payments_count:
+          type: integer
+
+    ApiSuccessAccountingSummary:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            summary:
+              $ref: '#/components/schemas/AccountingSummary'
+            indicators:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingIndicator'
+
+    ApiSuccessAccountingPayments:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            payments:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingPaymentEntry'
+
+    ApiSuccessAccountingPaymentsByUser:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            payments:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingPaymentByUser'
+
+    ApiSuccessAccountingPaymentsByDescription:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            payments:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingPaymentByDescription'
+
+    ApiSuccessAccountingPaymentMethods:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            methods:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingPaymentMethod'
+
+    ApiSuccessAccountingPending:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            pending:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingPendingItem'
+
+    ApiSuccessAccountingCashflow:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+        data:
+          type: object
+          properties:
+            event:
+              $ref: '#/components/schemas/AccountingEventRef'
+            cashflow:
+              type: array
+              items:
+                $ref: '#/components/schemas/AccountingCashflowItem'

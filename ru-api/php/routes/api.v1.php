@@ -7,6 +7,7 @@ $eventDashboardController = new EventDashboardController();
 $userController = new UserController();
 $paymentController = new PaymentController();
 $lodgingController = new LodgingController();
+$accountingController = new AccountingController();
 $authGuard = new AuthGuard();
 
 $router->add('POST', '/api/v1/auth/login', function ($request) use ($authController) {
@@ -140,6 +141,49 @@ $router->add('GET', '/api/v1/payments/detail', function ($request) use ($payment
 $router->add('GET', '/api/v1/payments/by-registration', function ($request) use ($paymentController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($paymentController) {
         return $paymentController->getByRegistration($securedRequest);
+    });
+});
+
+// Accounting endpoints
+$router->add('GET', '/api/v1/accounting/summary', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->summary($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/accounting/payments', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->payments($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/accounting/payments-by-user', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->paymentsByUser($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/accounting/payments-by-description', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->paymentsByDescription($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/accounting/payment-methods', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->paymentMethods($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/accounting/pending-by-user', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->pendingByUser($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/accounting/cashflow', function ($request) use ($accountingController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($accountingController) {
+        return $accountingController->cashflow($securedRequest);
     });
 });
 

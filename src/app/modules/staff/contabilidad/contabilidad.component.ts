@@ -24,14 +24,20 @@ export class ContabilidadComponent {
   pageResumenActive = true;
   pageEntradasActive = false;
   pagePrCamperoActive = false;
+  pageMetodosActive = false;
+  pagePendientesActive = false;
+  pageFlujoActive = false;
   
   displayStyle: string = "none";
   displayStylePorGuerrero: string = "none";
   chartsDisplayStyle = "";
   searchByName?: string = "";
 
-  dataSource?: Pago[];
-  dataSourcePorGuerrero?: Pago[];
+  dataSource?: any[];
+  dataSourcePorGuerrero?: any[];
+  dataSourceMetodos?: any[];
+  dataSourcePendientes?: any[];
+  dataSourceFlujo?: any[];
 
   columnsToDisplay = [
     'ID',
@@ -49,6 +55,28 @@ export class ContabilidadComponent {
     'pagos'
   ];
 
+  columnsToDisplayMetodos = [
+    'metodo',
+    'cantidad',
+    'total'
+  ];
+
+  columnsToDisplayPendientes = [
+    'nombre',
+    'tipo',
+    'pagado',
+    'esperado',
+    'pendiente',
+    'pagos',
+    'ultimo_pago'
+  ];
+
+  columnsToDisplayFlujo = [
+    'fecha',
+    'pagos',
+    'total'
+  ];
+
   ngOnInit(): void {
     this.cargarDatos();
   }
@@ -57,6 +85,9 @@ export class ContabilidadComponent {
     this.pageResumenActive = true;
     this.pageEntradasActive = false;
     this.pagePrCamperoActive = false;
+    this.pageMetodosActive = false;
+    this.pagePendientesActive = false;
+    this.pageFlujoActive = false;
     this.cargarDatos();
   }
 
@@ -64,6 +95,9 @@ export class ContabilidadComponent {
     this.pageResumenActive = false;
     this.pageEntradasActive = true;
     this.pagePrCamperoActive = false;
+    this.pageMetodosActive = false;
+    this.pagePendientesActive = false;
+    this.pageFlujoActive = false;
     this.cargarDatos();
   }
 
@@ -71,6 +105,39 @@ export class ContabilidadComponent {
     this.pageResumenActive = false;
     this.pageEntradasActive = false;
     this.pagePrCamperoActive = true;
+    this.pageMetodosActive = false;
+    this.pagePendientesActive = false;
+    this.pageFlujoActive = false;
+    this.cargarDatos();
+  }
+
+  activarPageMetodos(){
+    this.pageResumenActive = false;
+    this.pageEntradasActive = false;
+    this.pagePrCamperoActive = false;
+    this.pageMetodosActive = true;
+    this.pagePendientesActive = false;
+    this.pageFlujoActive = false;
+    this.cargarDatos();
+  }
+
+  activarPagePendientes(){
+    this.pageResumenActive = false;
+    this.pageEntradasActive = false;
+    this.pagePrCamperoActive = false;
+    this.pageMetodosActive = false;
+    this.pagePendientesActive = true;
+    this.pageFlujoActive = false;
+    this.cargarDatos();
+  }
+
+  activarPageFlujo(){
+    this.pageResumenActive = false;
+    this.pageEntradasActive = false;
+    this.pagePrCamperoActive = false;
+    this.pageMetodosActive = false;
+    this.pagePendientesActive = false;
+    this.pageFlujoActive = true;
     this.cargarDatos();
   }
 
@@ -81,14 +148,18 @@ export class ContabilidadComponent {
     let staff: boolean = false;
     let admin: boolean = false;
     let seg: boolean = false;
+    const eventId = this.selectedEvento?.id;
 
     if (this.pageResumenActive) {
       this.dataSource = [];
+      this.dataSourceMetodos = [];
+      this.dataSourcePendientes = [];
+      this.dataSourceFlujo = [];
       this.displayStylePorGuerrero = "none";
       this.displayStyle = "none";
       this.chartsDisplayStyle = "";
 
-      this.pagoDao.consultarResumen().subscribe(
+      this.pagoDao.consultarResumen(eventId).subscribe(
         respuesta => {
           this.indicadores = respuesta.resultado;
           console.log(this.indicadores);
@@ -99,10 +170,52 @@ export class ContabilidadComponent {
       this.chartsDisplayStyle = "none";
       this.displayStyle = "none";
       this.displayStylePorGuerrero = "";
-      this.pagoDao.consultarPagosPorGuerrero().subscribe(
+      this.dataSourceMetodos = [];
+      this.dataSourcePendientes = [];
+      this.dataSourceFlujo = [];
+      this.pagoDao.consultarPagosPorGuerrero(eventId).subscribe(
         respuesta => {
           console.log(respuesta.resultado);
           this.dataSourcePorGuerrero = respuesta.resultado;
+        }
+      );
+
+    } else if (this.pageMetodosActive) {
+      this.chartsDisplayStyle = "none";
+      this.displayStyle = "none";
+      this.displayStylePorGuerrero = "none";
+      this.dataSourcePendientes = [];
+      this.dataSourceFlujo = [];
+
+      this.pagoDao.consultarMetodosPago(eventId).subscribe(
+        respuesta => {
+          this.dataSourceMetodos = respuesta.resultado;
+        }
+      );
+
+    } else if (this.pagePendientesActive) {
+      this.chartsDisplayStyle = "none";
+      this.displayStyle = "none";
+      this.displayStylePorGuerrero = "none";
+      this.dataSourceMetodos = [];
+      this.dataSourceFlujo = [];
+
+      this.pagoDao.consultarPendientes(eventId).subscribe(
+        respuesta => {
+          this.dataSourcePendientes = respuesta.resultado;
+        }
+      );
+
+    } else if (this.pageFlujoActive) {
+      this.chartsDisplayStyle = "none";
+      this.displayStyle = "none";
+      this.displayStylePorGuerrero = "none";
+      this.dataSourceMetodos = [];
+      this.dataSourcePendientes = [];
+
+      this.pagoDao.consultarFlujo(eventId).subscribe(
+        respuesta => {
+          this.dataSourceFlujo = respuesta.resultado;
         }
       );
 
@@ -110,6 +223,9 @@ export class ContabilidadComponent {
       this.chartsDisplayStyle = "none";
       this.displayStylePorGuerrero = "none";
       this.displayStyle = "";
+      this.dataSourceMetodos = [];
+      this.dataSourcePendientes = [];
+      this.dataSourceFlujo = [];
 
       if (this.pageEntradasActive) {
         opcion = 1;
@@ -119,7 +235,7 @@ export class ContabilidadComponent {
         seg=false;
       }      
 
-      this.pagoDao.consultarPagos().subscribe(
+      this.pagoDao.consultarPagos(eventId).subscribe(
         respuesta => {
           console.log(respuesta.resultado);
           this.dataSource = respuesta.resultado;
@@ -133,7 +249,7 @@ export class ContabilidadComponent {
     this.cargarDatos();
   }
 
-  exportToExcel(isPorGuerrero: boolean){
+  exportToExcel(dataset: 'entradas' | 'porGuerrero' | 'metodos' | 'pendientes' | 'flujo'){
     let myDate = new Date();
     let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
     let fileName= 'PAGOS-RETO-URBANO-2024_'+dateString+'.xlsx';
@@ -141,7 +257,16 @@ export class ContabilidadComponent {
     //let element = document.getElementById('excel-table');
     //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
  
-    const ws: XLSX.WorkSheet =XLSX.utils.json_to_sheet(isPorGuerrero?this.dataSourcePorGuerrero!:this.dataSource!);
+    const dataMap: Record<string, any[] | undefined> = {
+      entradas: this.dataSource,
+      porGuerrero: this.dataSourcePorGuerrero,
+      metodos: this.dataSourceMetodos,
+      pendientes: this.dataSourcePendientes,
+      flujo: this.dataSourceFlujo,
+    };
+
+    const rows = dataMap[dataset] || [];
+    const ws: XLSX.WorkSheet =XLSX.utils.json_to_sheet(rows);
 
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
