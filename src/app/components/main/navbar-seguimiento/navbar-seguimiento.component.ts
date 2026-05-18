@@ -35,14 +35,14 @@ export class NavbarSeguimientoComponent implements OnInit {
     const parsed = stored != null ? Number(stored) : null;
     this.selectedEventoId = parsed != null && !isNaN(parsed) && parsed > 0 ? parsed : undefined;
     console.log('Evento seleccionado cargado:', this.selectedEventoId);
-    /*this.eventDao.getEventActivo().subscribe({
+    this.eventDao.getEventActivo().subscribe({
       next: (resp) => {
-        this.event = resp.data?.events ?? [];
+        this.eventos = resp.data?.events ?? [];
       },
       error: (err) => {
         console.error('Error al cargar eventos:', err);
       }
-    });*/
+    });
   }
 
   cerrarSesion() {

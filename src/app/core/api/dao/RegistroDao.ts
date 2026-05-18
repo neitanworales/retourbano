@@ -587,7 +587,7 @@ export class RegistroDao {
         return this.http.get<any>(this.utils.v1('/lodging/rooms') + '?' + params.join('&'),
             { headers: this.utils.getHeaders() }).pipe(
             map((response) => {
-                const rooms = response?.rooms || [];
+                const rooms = response?.data.rooms || [];
                 const habitaciones = rooms.map((room: any) => ({
                     habitacion: room.room_code,
                     count: room.occupants_count,

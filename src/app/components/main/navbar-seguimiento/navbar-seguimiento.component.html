@@ -17,13 +17,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" aria-current="page" routerLink="/">Home</a>
                             </li>
-                            <li class="nav-item">
+                            <li class="nav-item" *ngFor="let c of eventos">
                                 <a class="nav-link" routerLink="/info"
-                                    [queryParams]="{ id_campamento: '11' }">Pachuca</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" routerLink="/info"
-                                    [queryParams]="{ id_campamento: '12' }">Puebla</a>
+                                    [queryParams]="{ event_id: c.id }">{{ c.city_label }}</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" routerLink="/registro">Inscripcion/Register</a>
@@ -46,6 +42,12 @@
                     }
                     @if(hasRole(['super', 'admin'])){
                     <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/historico"><i class="bi bi-card-checklist"></i>
+                            Histórico</a>
+                    </li>
+                    }
+                    <!--@if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
                         <a class="nav-link" routerLink="/staff/hospedaje"><i class="bi bi-h-square"></i> Hospedaje</a>
                     </li>
                     }
@@ -54,11 +56,11 @@
                         <a class="nav-link" routerLink="/staff/contabilidad"><i class="bi bi-wallet"></i>
                             Contabilidad</a>
                     </li>
-                    }
+                    }-->
                     @if(hasRole(['super', 'admin'])){
                     <li class="nav-item">
-                        <a class="nav-link" routerLink="/staff/campamentos"><i class="bi bi-tornado"></i>
-                            Campamentos</a>
+                        <a class="nav-link" routerLink="/staff/eventos"><i class="bi bi-tornado"></i>
+                            Eventos</a>
                     </li>
                     }
                     @if(hasRole(['super', 'admin'])){

@@ -19,6 +19,7 @@ import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.compo
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
 import { TerminosYCondicionesComponent } from './modules/terminos-y-condiciones/terminos-y-condiciones.component';
+import { HistoricoComponent } from './modules/staff/historico/historico.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -38,8 +39,9 @@ const routes: Routes = [
   { path: 'staff/hospedaje', component: HospedajesComponent, canActivate: [hasRoleGuard(['super', 'admin', 'staff'])] },
   { path: 'staff/asistencia', component: AsistenciaComponent, canActivate: [hasRoleGuard(['super', 'admin', 'staff'])] },
   { path: 'staff/contabilidad', component: ContabilidadComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
-  { path: 'staff/campamentos', component: CampamentosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/eventos', component: CampamentosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
   { path: 'staff/usuarios', component: UsuariosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/historico', component: HistoricoComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
 ];
 
 @NgModule({

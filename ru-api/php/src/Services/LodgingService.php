@@ -12,6 +12,7 @@ class LodgingService
         $this->registrationRepository = new EventRegistrationRepository();
         $this->logFile = __DIR__ . '/../../logs/lodging.log';
         $this->ensureLogDirectory();
+        
     }
 
     private function ensureLogDirectory()
@@ -80,6 +81,7 @@ class LodgingService
         $roomsMap = array();
 
         foreach ($registrations as $registration) {
+            
             $roomCode = $registration->room_code;
 
             if (!isset($roomsMap[$roomCode])) {
@@ -92,6 +94,8 @@ class LodgingService
 
             $roomsMap[$roomCode]['occupants_count']++;
             $roomsMap[$roomCode]['registrations'][] = $registration->toArray();
+
+            
         }
 
         $rooms = array_values($roomsMap);

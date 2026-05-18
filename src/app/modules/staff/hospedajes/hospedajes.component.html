@@ -1,14 +1,4 @@
-<div class="container elevado">
-    <ul class="nav nav-tabs">
-        <li *ngFor="let event of events; let i = index" nav-item>
-            <a class="nav-link {{tabsCampas![i]?'active':''}}" (click)="tabCampamentos(i)"><i
-                    class="bi bi-info-circle-fill"></i> {{event.city_label}}</a>
-        </li>
-    </ul>
-</div>
 <div class="container" style="margin-top: 1em;">
-    <h1>Hospedaje</h1>
-
     <ul class="nav nav-tabs">
         <li class="nav-item">
             <a class="nav-link {{pageHabitaciones?'active':''}}" (click)="activarPageHabitaciones()"><i

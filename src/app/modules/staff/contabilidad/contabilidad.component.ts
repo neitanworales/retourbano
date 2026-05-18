@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { PagoDao } from 'src/app/core/api/dao/PagoDao';
 import { Indicador } from 'src/app/core/models/registro/Indicador';
 import { Pago } from 'src/app/core/models/registro/Pago';
 import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
     selector: 'app-contabilidad',
@@ -15,6 +16,8 @@ import * as XLSX from 'xlsx';
 export class ContabilidadComponent {
 
   constructor(public pagoDao: PagoDao, private datePipe: DatePipe) { }
+
+  @Input() selectedEvento?: Event;
 
   indicadores? : Indicador[]
 

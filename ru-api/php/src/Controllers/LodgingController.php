@@ -59,6 +59,13 @@ class LodgingController extends BaseController
 
             $rooms = $this->lodgingService->getRoomsList($eventId);
 
+            $rooms = array_map(function ($room) {
+                $room['registrations'] = array_map(function ($registration) {
+                    return $registration = $this->attachUserToItem($registration);
+                }, $room['registrations']);
+                return $room;
+            }, $rooms);
+
             return $this->ok(array('rooms' => $rooms), 'rooms list');
         } catch (Exception $e) {
             error_log('[LodgingController] Error in getRoomsList: ' . $e->getMessage());

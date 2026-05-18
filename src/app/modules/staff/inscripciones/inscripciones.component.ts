@@ -39,7 +39,8 @@ export class InscripcionesComponent implements OnInit {
   pageAdminsActive = false;
   pageBajasActive = false;
   pageSeguimientoActive = false;
-  pageHistoricoActive = false;
+  pageHospedajeActive = false;
+  pageContabilidadActive = false;
 
   displayStyle: string = "none";
   chartsDisplayStyle = "";
@@ -106,7 +107,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -117,7 +119,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -128,7 +131,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -139,7 +143,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = true;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -150,7 +155,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = true;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -161,7 +167,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = true;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -172,7 +179,32 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = true;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
+    this.cargarDatos();
+  }
+
+  activarPageHospedaje() {
+    this.pageResumenActive = false;
+    this.pageInscritosActive = false;
+    this.pageStaffActive = false;
+    this.pageAdminsActive = false;
+    this.pageBajasActive = false;
+    this.pageSeguimientoActive = false;
+    this.pageHospedajeActive = true;
+    this.pageContabilidadActive = false;
+    this.cargarDatos();
+  }
+
+  activarPageContabilidad() {
+    this.pageResumenActive = false;
+    this.pageInscritosActive = false;
+    this.pageStaffActive = false;
+    this.pageAdminsActive = false;
+    this.pageBajasActive = false;
+    this.pageSeguimientoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = true;
     this.cargarDatos();
   }
 
@@ -188,17 +220,12 @@ export class InscripcionesComponent implements OnInit {
       this.dataSource = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "";
-    }
-    else if (this.pageHistoricoActive) {
-      this.displayStyle = "";
+    } else if (this.pageHospedajeActive) {
+      this.displayStyle = "none";
       this.chartsDisplayStyle = "none";
-
-      this.registroDao.consultarHistorico(this.year, this.selectedEventoId!).subscribe(
-        respuesta => {
-          this.dataSource = respuesta.data?.registrations || [];
-        }
-      );
-
+    } else if (this.pageContabilidadActive) {
+      this.displayStyle = "none";
+      this.chartsDisplayStyle = "none";
     } else {
       this.chartsDisplayStyle = "none";
       this.displayStyle = "";

@@ -1,5 +1,5 @@
 import { DatePipe } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
 import { Habitacion } from 'src/app/core/models/hospedaje/Habitacion';
@@ -17,10 +17,8 @@ import * as XLSX from 'xlsx';
 })
 export class HospedajesComponent implements OnInit {
 
-  selectedEventoId?: number;
-  selectedEvento?: Event;
+  @Input() selectedEvento?: Event;
 
-  events?: Event[];
   tabsCampas?: boolean[];
 
   pageHabitaciones: boolean = true;
@@ -61,25 +59,7 @@ export class HospedajesComponent implements OnInit {
 
   }
 
-  loadCampamentos() {
-    this.eventDao.getEventActivo().subscribe({
-      next: (result) => {
-        console.log("Eventos cargados: ", result.data?.events);
-        this.events = result.data?.events;
-        console.log("Tabs eventos asignados: ", this.tabsCampas);
-
-        if (this.events?.length === 1) {
-          this.tabCampamentos(0);
-        }
-      },
-      error: (error) => {
-        console.error('Error al cargar eventos:', error);
-      }
-    });
-  }
-
   ngOnInit(): void {
-    this.loadCampamentos();
     this.cargarDatosHabitaciones();
   }
 
@@ -87,7 +67,7 @@ export class HospedajesComponent implements OnInit {
     this.cargandoHospedajes = true;
     this.errorHospedajes = null;
 
-    this.registroDao.obtenerHospedajes(this.pageHospedajes, this.selectedEventoId!).subscribe(
+    this.registroDao.obtenerHospedajes(this.pageHospedajes, this.selectedEvento?.id!).subscribe(
       result => {
         if (!result.success) {
           this.errorHospedajes = result.message || 'Error al cargar hospedajes';
@@ -135,15 +115,17 @@ export class HospedajesComponent implements OnInit {
     this.cargandoHabitaciones = true;
     this.errorHabitaciones = null;
 
-    this.registroDao.obtenerHabitaciones(this.selectedEventoId!).subscribe(
+    this.registroDao.obtenerHabitaciones(this.selectedEvento?.id!).subscribe(
       result => {
         if (!result.success) {
           this.errorHabitaciones = result.message || 'Error al cargar habitaciones';
           console.error('Error loading habitaciones:', result.message);
           this.habitaciones = [];
         } else {
+          console.log('Habitaciones obtenidas del backend:', result.resultado);
           this.habitaciones = result.resultado;
           this.errorHabitaciones = null;
+          console.log('Habitaciones cargadas:', this.habitaciones);
         }
         this.cargandoHabitaciones = false;
       },
@@ -155,7 +137,7 @@ export class HospedajesComponent implements OnInit {
       }
     );
 
-    this.registroDao.obtenerPersonasSinHabitacion(this.selectedEventoId!).subscribe(
+    this.registroDao.obtenerPersonasSinHabitacion(this.selectedEvento?.id!).subscribe(
       result => {
         if (result.error) {
           console.error('Error loading unassigned people:', result.message);
@@ -187,7 +169,7 @@ export class HospedajesComponent implements OnInit {
     }
 
     this.guardando = true;
-    this.registroDao.actualizarHabitacion(hosp.id, hosp.habitacion, this.selectedEventoId!).subscribe(
+    this.registroDao.actualizarHabitacion(hosp.id, hosp.habitacion, this.selectedEvento?.id!).subscribe(
       result => {
         if (result.error) {
           alert('Error: ' + (result.message || 'No se pudo actualizar la habitación'));
@@ -224,7 +206,7 @@ export class HospedajesComponent implements OnInit {
     }
 
     this.guardando = true;
-    this.registroDao.actualizarHospedaje(hosp.id, hosp.hospedaje, this.selectedEventoId!).subscribe(
+    this.registroDao.actualizarHospedaje(hosp.id, hosp.hospedaje, this.selectedEvento?.id!).subscribe(
       result => {
         if (result.error) {
           alert('Error: ' + (result.message || 'No se pudo actualizar el hospedaje'));
@@ -297,10 +279,9 @@ export class HospedajesComponent implements OnInit {
   tabCampamentos(arg0: number) {
     this.tabsCampas = [false, false];
     this.tabsCampas[arg0] = true;
-    this.selectedEventoId = this.events![arg0].id;
-    this.selectedEvento = this.events![arg0];
-    console.log("Evento seleccionado: ", this.events![arg0]);
-    console.log("ID evento seleccionado: ", this.selectedEventoId);
+    this.selectedEvento = this.selectedEvento;
+    console.log("Evento seleccionado: ", this.selectedEvento);
+    console.log("ID evento seleccionado: ", this.selectedEvento?.id);
   }
 
 }
