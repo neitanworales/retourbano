@@ -74,8 +74,26 @@ class AuthController extends BaseController
 
         return $this->ok(
             array(),
-            'if the email exists, password reset instructions were sent'
+            'Si el email existe, se enviaron las instrucciones para restablecer la contraseña'
         );
+    }
+
+    public function validateResetToken($request)
+    {
+        $token = isset($request['token']) ? trim($request['token']) : '';
+        if ($token === '') {
+            return $this->fail('token is required', 422);
+        }
+
+        $tokenRow = $this->authService->validatePasswordResetToken($token);
+        if (!$tokenRow) {
+            return $this->fail('invalid or expired reset token', 401);
+        }
+
+        return $this->ok(array(
+            'valid' => true,
+            'expires_at' => isset($tokenRow['expires_at']) ? $tokenRow['expires_at'] : null,
+        ), 'reset token valid');
     }
 
     public function resetPassword($request)
@@ -87,8 +105,8 @@ class AuthController extends BaseController
             return $this->fail('token and new_password are required', 422);
         }
 
-        if (strlen($newPassword) < 8) {
-            return $this->fail('new_password must be at least 8 characters', 422);
+        if (!$this->isStrongPassword($newPassword)) {
+            return $this->fail('new_password must be at least 12 chars and include uppercase, lowercase, number, special char, and no spaces', 422);
         }
 
         $ok = $this->authService->resetPasswordByToken($token, $newPassword);
@@ -97,5 +115,21 @@ class AuthController extends BaseController
         }
 
         return $this->ok(array(), 'password updated successfully');
+    }
+
+    private function isStrongPassword($password)
+    {
+        if (!is_string($password) || strlen($password) < 12) {
+            return false;
+        }
+
+        if (preg_match('/\s/', $password)) {
+            return false;
+        }
+
+        return preg_match('/[A-Z]/', $password)
+            && preg_match('/[a-z]/', $password)
+            && preg_match('/[0-9]/', $password)
+            && preg_match('/[^A-Za-z0-9]/', $password);
     }
 }

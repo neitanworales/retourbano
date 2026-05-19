@@ -20,6 +20,7 @@ import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
 import { TerminosYCondicionesComponent } from './modules/terminos-y-condiciones/terminos-y-condiciones.component';
 import { HistoricoComponent } from './modules/staff/historico/historico.component';
+import { ForgotPasswordComponent } from './modules/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
@@ -28,6 +29,7 @@ const routes: Routes = [
   { path: 'registro/:id_event', component: RegistroComponent },
   { path: 'registro-puro', component: RegistroFormComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'recovery-password', component: RecoveryPasswordComponent },
   { path: 'info', component: InfoCampaComponent },
   { path: 'horario', component: HorarioComponent },

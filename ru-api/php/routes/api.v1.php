@@ -26,6 +26,10 @@ $router->add('POST', '/api/v1/auth/forgot-password', function ($request) use ($a
     return $authController->forgotPassword($request);
 });
 
+$router->add('POST', '/api/v1/auth/validate-reset-token', function ($request) use ($authController) {
+    return $authController->validateResetToken($request);
+});
+
 $router->add('POST', '/api/v1/auth/reset-password', function ($request) use ($authController) {
     return $authController->resetPassword($request);
 });

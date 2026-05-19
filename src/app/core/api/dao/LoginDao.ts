@@ -130,6 +130,36 @@ export class LoginDao {
         );
     }
 
+    public validateResetToken(token: string): Observable<DefaultResponse> {
+        return this.http.post<V1Response<{ valid: boolean; expires_at?: string }>>(
+            this.utils.v1('/auth/validate-reset-token'),
+            { token },
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'reset token validation result',
+                code: response?.code || 200
+            } as DefaultResponse))
+        );
+    }
+
+    public resetPassword(token: string, newPassword: string): Observable<DefaultResponse> {
+        return this.http.post<V1Response<Record<string, never>>>(
+            this.utils.v1('/auth/reset-password'),
+            { token, new_password: newPassword },
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'password updated successfully',
+                code: response?.code || 200
+            } as DefaultResponse))
+        );
+    }
+
     private mapV1LoginToLegacy(response: V1Response<V1LoginPayload>): LoginResponse {
         const user = response?.data?.user;
         const usuario = new Usuario();

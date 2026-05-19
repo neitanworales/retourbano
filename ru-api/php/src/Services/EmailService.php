@@ -245,15 +245,12 @@ class EmailService
             : (isset($user->full_name) ? trim((string) $user->full_name) : 'participante');
 
         $subject = 'Recuperacion de contrasena - Reto Urbano';
-        $html = '<html><body style="font-family: Arial, sans-serif; color: #222;">'
-            . '<h2>Recuperacion de contrasena</h2>'
-            . '<p>Hola ' . htmlspecialchars($safeName, ENT_QUOTES, 'UTF-8') . ',</p>'
-            . '<p>Recibimos una solicitud para restablecer tu contrasena.</p>'
-            . '<p><a href="' . htmlspecialchars($resetUrl, ENT_QUOTES, 'UTF-8') . '">Haz clic aqui para cambiar tu contrasena</a></p>'
-            . '<p>Este enlace expira el: <strong>' . htmlspecialchars($expiresAt, ENT_QUOTES, 'UTF-8') . '</strong></p>'
-            . '<p>Si no solicitaste este cambio, puedes ignorar este correo.</p>'
-            . '<p>Equipo Reto Urbano</p>'
-            . '</body></html>';
+        $variables = array(
+            'nick'      => $safeName,
+            'resetUrl'  => $resetUrl,
+            'expiresAt' => $expiresAt,
+        );
+        $html = $this->renderTemplate('recovery-password.html', $variables);
 
         return $this->send($to, $subject, $html);
     }

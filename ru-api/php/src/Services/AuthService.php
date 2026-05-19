@@ -100,6 +100,11 @@ class AuthService
         return true;
     }
 
+    public function validatePasswordResetToken($token)
+    {
+        return $this->tokens->findActivePasswordResetToken($token);
+    }
+
     private function sendPasswordResetEmail($user, $token, $expiresAt)
     {
         $resetUrl = $this->buildPasswordResetUrl($token);
@@ -114,7 +119,7 @@ class AuthService
     {
         $baseUrl = getenv('PASSWORD_RESET_URL_BASE');
         if (!$baseUrl) {
-            $baseUrl = 'https://events.local/recovery-password';
+            $baseUrl = 'https://ywampachuca.org/retourbano/recovery-password';
         }
 
         $separator = (strpos($baseUrl, '?') === false) ? '?' : '&';
