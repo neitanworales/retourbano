@@ -3,6 +3,7 @@
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Repository/EventRepository.php';
 require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
+require_once __DIR__ . '/../Models/Event.php';
 
 class EventController extends BaseController
 {
@@ -50,6 +51,102 @@ class EventController extends BaseController
         $eventArray['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : $eventId);
 
         return $this->ok(array('event' => $eventArray), 'event found');
+    }
+
+    public function create($request)
+    {
+        $event = $this->buildEventFromRequest($request);
+        if (!$event) {
+            return $this->fail('invalid event payload', 422);
+        }
+
+        if (empty($event->title)) {
+            return $this->fail('title is required', 422);
+        }
+
+        $newId = $this->events->create($event);
+        if (!$newId || (int) $newId <= 0) {
+            return $this->fail('event could not be created', 500);
+        }
+
+        $legacyId = $this->events->getLegacyIdByEventId((int) $newId);
+        if ($legacyId !== null) {
+            $costos = $this->extractCostos($request);
+            $this->events->replaceCostos((int) $legacyId, $costos);
+        }
+
+        $created = $this->events->findModelById((int) $newId);
+        if (!$created) {
+            return $this->fail('event created but not found', 500);
+        }
+
+        $eventArray = $created->toArray();
+        $eventArray['configuracion'] = $this->events->getConfiguracion((int) $created->id);
+        $eventArray['costos'] = $this->events->getCostos(isset($created->legacy_event_id) ? (int) $created->legacy_event_id : (int) $created->id);
+
+        return $this->ok(array('event' => $eventArray), 'event created');
+    }
+
+    public function update($request)
+    {
+        $eventId = isset($request['id']) ? (int) $request['id'] : (isset($request['event_id']) ? (int) $request['event_id'] : 0);
+        if ($eventId <= 0) {
+            return $this->fail('id is required', 422);
+        }
+
+        $existing = $this->events->findModelById($eventId);
+        if (!$existing) {
+            return $this->fail('event not found', 404);
+        }
+
+        $event = $this->buildEventFromRequest($request, $existing);
+        if (!$event) {
+            return $this->fail('invalid event payload', 422);
+        }
+        $event->id = $eventId;
+
+        $updated = $this->events->update($event);
+        if (!$updated) {
+            return $this->fail('event could not be updated', 500);
+        }
+
+        $legacyId = $this->events->getLegacyIdByEventId($eventId);
+        if ($legacyId !== null) {
+            $costos = $this->extractCostos($request);
+            $this->events->replaceCostos((int) $legacyId, $costos);
+        }
+
+        $reloaded = $this->events->findModelById($eventId);
+        $eventArray = $reloaded ? $reloaded->toArray() : $event->toArray();
+        $eventArray['configuracion'] = $this->events->getConfiguracion($eventId);
+        $eventArray['costos'] = $this->events->getCostos(isset($eventArray['legacy_event_id']) ? (int) $eventArray['legacy_event_id'] : $eventId);
+
+        return $this->ok(array('event' => $eventArray), 'event updated');
+    }
+
+    public function delete($request)
+    {
+        $eventId = isset($request['id']) ? (int) $request['id'] : (isset($request['event_id']) ? (int) $request['event_id'] : 0);
+        if ($eventId <= 0) {
+            return $this->fail('id is required', 422);
+        }
+
+        $existing = $this->events->findModelById($eventId);
+        if (!$existing) {
+            return $this->fail('event not found', 404);
+        }
+
+        $legacyId = $this->events->getLegacyIdByEventId($eventId);
+        if ($legacyId !== null) {
+            $this->events->deleteCostosByLegacyEventId((int) $legacyId);
+        }
+
+        $deleted = $this->events->delete($eventId);
+        if (!$deleted) {
+            return $this->fail('event could not be deleted', 500);
+        }
+
+        return $this->ok(array('id' => $eventId), 'event deleted');
     }
 
     public function upcomingAvailability($request)
@@ -113,5 +210,141 @@ class EventController extends BaseController
             ),
             $message
         );
+    }
+
+    private function buildEventFromRequest($request, $existing = null)
+    {
+        $event = $existing ?: new Event();
+
+        $event->legacy_event_id = $this->toNullableInt($this->readField($request, array('legacy_event_id')));
+        $event->organization_id = $this->toNullableInt($this->readField($request, array('organization_id')));
+        $event->city_id = $this->toNullableInt($this->readField($request, array('city_id')));
+        $event->event_year = $this->toNullableInt($this->readField($request, array('event_year', 'year')));
+        $event->title = $this->toNullableString($this->readField($request, array('title', 'titulo')));
+        $event->start_at = $this->toNullableDateTime($this->readField($request, array('start_at', 'fecha_inicio')));
+        $event->end_at = $this->toNullableDateTime($this->readField($request, array('end_at', 'fecha_termino')));
+        $event->is_active = $this->toBooleanInt($this->readField($request, array('is_active', 'activo')));
+        $event->max_registrations = $this->toNullableInt($this->readField($request, array('max_registrations', 'maximo_inscr')));
+        $event->threshold = $this->toNullableInt($this->readField($request, array('threshold', 'umbral')));
+        $event->registration_deadline = $this->toNullableDateTime($this->readField($request, array('registration_deadline', 'fecha_maxima')));
+        $event->registration_open_at = $this->toNullableDateTime($this->readField($request, array('registration_open_at', 'fecha_apertura')));
+        $event->price_mxn = $this->toNullableFloat($this->readField($request, array('price_mxn', 'costoMX')));
+        $event->price_usd = $this->toNullableFloat($this->readField($request, array('price_usd', 'costoUSD')));
+        $event->minimum_payment_mxn = $this->toNullableFloat($this->readField($request, array('minimum_payment_mxn', 'pago_minimoMX')));
+        $event->bank_name = $this->toNullableString($this->readField($request, array('bank_name', 'banco')));
+        $event->bank_account = $this->toNullableString($this->readField($request, array('bank_account', 'cuenta')));
+        $event->bank_clabe = $this->toNullableString($this->readField($request, array('bank_clabe', 'clabe')));
+        $event->account_holder = $this->toNullableString($this->readField($request, array('account_holder', 'titularCuenta')));
+        $event->contact_phone_1 = $this->toNullableString($this->readField($request, array('contact_phone_1', 'contacto1')));
+        $event->contact_phone_2 = $this->toNullableString($this->readField($request, array('contact_phone_2', 'contacto2')));
+        $event->contact_email = $this->toNullableString($this->readField($request, array('contact_email', 'email_contacto')));
+        $event->arrival_place = $this->toNullableString($this->readField($request, array('arrival_place', 'llegada_lugar')));
+        $event->arrival_coordinates = $this->toNullableString($this->readField($request, array('arrival_coordinates', 'llegada_coordenadas')));
+        $event->arrival_note = $this->toNullableString($this->readField($request, array('arrival_note', 'llegada_nota')));
+        $event->departure_place = $this->toNullableString($this->readField($request, array('departure_place', 'salida_lugar')));
+        $event->departure_coordinates = $this->toNullableString($this->readField($request, array('departure_coordinates', 'salida_coordenadas')));
+        $event->departure_note = $this->toNullableString($this->readField($request, array('departure_note', 'salida_nota')));
+        $event->cost_notes = $this->toNullableString($this->readField($request, array('cost_notes', 'notas_costos')));
+
+        return $event;
+    }
+
+    private function extractCostos($request)
+    {
+        $costos = $this->readField($request, array('costos'));
+        if (!is_array($costos)) {
+            return array();
+        }
+
+        $normalized = array();
+        foreach ($costos as $costo) {
+            if (!is_array($costo)) {
+                continue;
+            }
+
+            $normalized[] = array(
+                'descripcion' => isset($costo['descripcion']) ? trim((string) $costo['descripcion']) : '',
+                'divisa' => isset($costo['divisa']) ? trim((string) $costo['divisa']) : 'MXN',
+                'cantidad' => isset($costo['cantidad']) ? (float) $costo['cantidad'] : 0,
+                'incluye' => isset($costo['incluye']) ? $costo['incluye'] : array(),
+            );
+        }
+
+        return $normalized;
+    }
+
+    private function readField($request, $keys)
+    {
+        foreach ($keys as $key) {
+            if (isset($request[$key])) {
+                return $request[$key];
+            }
+        }
+
+        return null;
+    }
+
+    private function toNullableString($value)
+    {
+        if ($value === null) {
+            return null;
+        }
+
+        $value = trim((string) $value);
+        return $value === '' ? null : $value;
+    }
+
+    private function toNullableInt($value)
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (int) $value;
+    }
+
+    private function toNullableFloat($value)
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        return (float) $value;
+    }
+
+    private function toNullableDateTime($value)
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $stringValue = trim((string) $value);
+        if ($stringValue === '') {
+            return null;
+        }
+
+        $normalized = str_replace('T', ' ', $stringValue);
+        if (strlen($normalized) === 16) {
+            $normalized .= ':00';
+        }
+
+        return $normalized;
+    }
+
+    private function toBooleanInt($value)
+    {
+        if ($value === null || $value === '') {
+            return 0;
+        }
+
+        if (is_bool($value)) {
+            return $value ? 1 : 0;
+        }
+
+        if ((string) $value === '1' || strtolower((string) $value) === 'true') {
+            return 1;
+        }
+
+        return 0;
     }
 }

@@ -64,6 +64,24 @@ $router->add('GET', '/api/v1/events/detail', function ($request) use ($eventCont
     return $eventController->detail($request);
 });
 
+$router->add('POST', '/api/v1/events', function ($request) use ($eventController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($eventController) {
+        return $eventController->create($securedRequest);
+    });
+});
+
+$router->add('PUT', '/api/v1/events', function ($request) use ($eventController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($eventController) {
+        return $eventController->update($securedRequest);
+    });
+});
+
+$router->add('DELETE', '/api/v1/events', function ($request) use ($eventController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($eventController) {
+        return $eventController->delete($securedRequest);
+    });
+});
+
 $router->add('GET', '/api/v1/events/upcoming-availability', function ($request) use ($eventController, $authGuard) {
     return $authGuard->protect($request, function ($securedRequest) use ($eventController) {
         return $eventController->upcomingAvailability($securedRequest);

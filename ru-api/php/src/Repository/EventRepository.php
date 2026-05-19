@@ -104,30 +104,111 @@ class EventRepository extends BaseRepository
 
     public function create(Event $event)
     {
-        $sql = 'INSERT INTO events (legacy_event_id, organization_id, city_id, event_year, title, start_at, end_at, is_active, max_registrations, registration_deadline, registration_open_at, price_mxn, price_usd)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+        $sql = 'INSERT INTO events (
+                    legacy_event_id,
+                    organization_id,
+                    city_id,
+                    event_year,
+                    title,
+                    start_at,
+                    end_at,
+                    is_active,
+                    max_registrations,
+                    threshold,
+                    registration_deadline,
+                    registration_open_at,
+                    price_mxn,
+                    price_usd,
+                    minimum_payment_mxn,
+                    bank_name,
+                    bank_account,
+                    bank_clabe,
+                    account_holder,
+                    contact_phone_1,
+                    contact_phone_2,
+                    contact_email,
+                    arrival_place,
+                    arrival_coordinates,
+                    arrival_note,
+                    departure_place,
+                    departure_coordinates,
+                    departure_note,
+                    cost_notes
+                ) VALUES (
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                )';
 
         $stmt = $this->db->prepare($sql);
+        $legacyEventId = isset($event->legacy_event_id) ? (int) $event->legacy_event_id : null;
+        $organizationId = isset($event->organization_id) ? (int) $event->organization_id : null;
+        $cityId = isset($event->city_id) ? (int) $event->city_id : null;
+        $eventYear = isset($event->event_year) ? (int) $event->event_year : null;
+        $title = isset($event->title) ? (string) $event->title : null;
+        $startAt = isset($event->start_at) ? (string) $event->start_at : null;
+        $endAt = isset($event->end_at) ? (string) $event->end_at : null;
+        $isActive = isset($event->is_active) ? (int) $event->is_active : 0;
+        $maxRegistrations = isset($event->max_registrations) ? (int) $event->max_registrations : null;
+        $threshold = isset($event->threshold) ? (int) $event->threshold : null;
+        $registrationDeadline = isset($event->registration_deadline) ? (string) $event->registration_deadline : null;
+        $registrationOpenAt = isset($event->registration_open_at) ? (string) $event->registration_open_at : null;
+        $priceMxn = isset($event->price_mxn) ? (float) $event->price_mxn : null;
+        $priceUsd = isset($event->price_usd) ? (float) $event->price_usd : null;
+        $minimumPaymentMxn = isset($event->minimum_payment_mxn) ? (float) $event->minimum_payment_mxn : null;
+        $bankName = isset($event->bank_name) ? (string) $event->bank_name : null;
+        $bankAccount = isset($event->bank_account) ? (string) $event->bank_account : null;
+        $bankClabe = isset($event->bank_clabe) ? (string) $event->bank_clabe : null;
+        $accountHolder = isset($event->account_holder) ? (string) $event->account_holder : null;
+        $contactPhone1 = isset($event->contact_phone_1) ? (string) $event->contact_phone_1 : null;
+        $contactPhone2 = isset($event->contact_phone_2) ? (string) $event->contact_phone_2 : null;
+        $contactEmail = isset($event->contact_email) ? (string) $event->contact_email : null;
+        $arrivalPlace = isset($event->arrival_place) ? (string) $event->arrival_place : null;
+        $arrivalCoordinates = isset($event->arrival_coordinates) ? (string) $event->arrival_coordinates : null;
+        $arrivalNote = isset($event->arrival_note) ? (string) $event->arrival_note : null;
+        $departurePlace = isset($event->departure_place) ? (string) $event->departure_place : null;
+        $departureCoordinates = isset($event->departure_coordinates) ? (string) $event->departure_coordinates : null;
+        $departureNote = isset($event->departure_note) ? (string) $event->departure_note : null;
+        $costNotes = isset($event->cost_notes) ? (string) $event->cost_notes : null;
+
         $stmt->bind_param(
-            'iiiisssiissdd',
-            $event->legacy_event_id,
-            $event->organization_id,
-            $event->city_id,
-            $event->event_year,
-            $event->title,
-            $event->start_at,
-            $event->end_at,
-            $event->is_active,
-            $event->max_registrations,
-            $event->registration_deadline,
-            $event->registration_open_at,
-            $event->price_mxn,
-            $event->price_usd
+            'iiiisssiiisssdddsssssssssssss',
+            $legacyEventId,
+            $organizationId,
+            $cityId,
+            $eventYear,
+            $title,
+            $startAt,
+            $endAt,
+            $isActive,
+            $maxRegistrations,
+            $threshold,
+            $registrationDeadline,
+            $registrationOpenAt,
+            $priceMxn,
+            $priceUsd,
+            $minimumPaymentMxn,
+            $bankName,
+            $bankAccount,
+            $bankClabe,
+            $accountHolder,
+            $contactPhone1,
+            $contactPhone2,
+            $contactEmail,
+            $arrivalPlace,
+            $arrivalCoordinates,
+            $arrivalNote,
+            $departurePlace,
+            $departureCoordinates,
+            $departureNote,
+            $costNotes
         );
 
         $stmt->execute();
         $id = $this->db->insert_id;
         $stmt->close();
+
+        if ($legacyEventId === null || $legacyEventId <= 0) {
+            $this->assignLegacyEventId($id, $id);
+        }
 
         return $id;
     }
@@ -135,33 +216,185 @@ class EventRepository extends BaseRepository
     public function update(Event $event)
     {
         $sql = 'UPDATE events
-                SET organization_id = ?, city_id = ?, event_year = ?, title = ?, start_at = ?, end_at = ?,
-                    is_active = ?, max_registrations = ?, registration_deadline = ?, registration_open_at = ?,
-                    price_mxn = ?, price_usd = ?
+                SET legacy_event_id = ?, organization_id = ?, city_id = ?, event_year = ?, title = ?, start_at = ?, end_at = ?,
+                    is_active = ?, max_registrations = ?, threshold = ?, registration_deadline = ?, registration_open_at = ?,
+                    price_mxn = ?, price_usd = ?, minimum_payment_mxn = ?, bank_name = ?, bank_account = ?, bank_clabe = ?,
+                    account_holder = ?, contact_phone_1 = ?, contact_phone_2 = ?, contact_email = ?, arrival_place = ?,
+                    arrival_coordinates = ?, arrival_note = ?, departure_place = ?, departure_coordinates = ?, departure_note = ?,
+                    cost_notes = ?
                 WHERE id = ?';
 
         $stmt = $this->db->prepare($sql);
+        $legacyEventId = isset($event->legacy_event_id) ? (int) $event->legacy_event_id : null;
+        $organizationId = isset($event->organization_id) ? (int) $event->organization_id : null;
+        $cityId = isset($event->city_id) ? (int) $event->city_id : null;
+        $eventYear = isset($event->event_year) ? (int) $event->event_year : null;
+        $title = isset($event->title) ? (string) $event->title : null;
+        $startAt = isset($event->start_at) ? (string) $event->start_at : null;
+        $endAt = isset($event->end_at) ? (string) $event->end_at : null;
+        $isActive = isset($event->is_active) ? (int) $event->is_active : 0;
+        $maxRegistrations = isset($event->max_registrations) ? (int) $event->max_registrations : null;
+        $threshold = isset($event->threshold) ? (int) $event->threshold : null;
+        $registrationDeadline = isset($event->registration_deadline) ? (string) $event->registration_deadline : null;
+        $registrationOpenAt = isset($event->registration_open_at) ? (string) $event->registration_open_at : null;
+        $priceMxn = isset($event->price_mxn) ? (float) $event->price_mxn : null;
+        $priceUsd = isset($event->price_usd) ? (float) $event->price_usd : null;
+        $minimumPaymentMxn = isset($event->minimum_payment_mxn) ? (float) $event->minimum_payment_mxn : null;
+        $bankName = isset($event->bank_name) ? (string) $event->bank_name : null;
+        $bankAccount = isset($event->bank_account) ? (string) $event->bank_account : null;
+        $bankClabe = isset($event->bank_clabe) ? (string) $event->bank_clabe : null;
+        $accountHolder = isset($event->account_holder) ? (string) $event->account_holder : null;
+        $contactPhone1 = isset($event->contact_phone_1) ? (string) $event->contact_phone_1 : null;
+        $contactPhone2 = isset($event->contact_phone_2) ? (string) $event->contact_phone_2 : null;
+        $contactEmail = isset($event->contact_email) ? (string) $event->contact_email : null;
+        $arrivalPlace = isset($event->arrival_place) ? (string) $event->arrival_place : null;
+        $arrivalCoordinates = isset($event->arrival_coordinates) ? (string) $event->arrival_coordinates : null;
+        $arrivalNote = isset($event->arrival_note) ? (string) $event->arrival_note : null;
+        $departurePlace = isset($event->departure_place) ? (string) $event->departure_place : null;
+        $departureCoordinates = isset($event->departure_coordinates) ? (string) $event->departure_coordinates : null;
+        $departureNote = isset($event->departure_note) ? (string) $event->departure_note : null;
+        $costNotes = isset($event->cost_notes) ? (string) $event->cost_notes : null;
+        $eventId = (int) $event->id;
+
         $stmt->bind_param(
-            'iiisssiissddi',
-            $event->organization_id,
-            $event->city_id,
-            $event->event_year,
-            $event->title,
-            $event->start_at,
-            $event->end_at,
-            $event->is_active,
-            $event->max_registrations,
-            $event->registration_deadline,
-            $event->registration_open_at,
-            $event->price_mxn,
-            $event->price_usd,
-            $event->id
+            'iiiisssiiisssdddssssssssssssssi',
+            $legacyEventId,
+            $organizationId,
+            $cityId,
+            $eventYear,
+            $title,
+            $startAt,
+            $endAt,
+            $isActive,
+            $maxRegistrations,
+            $threshold,
+            $registrationDeadline,
+            $registrationOpenAt,
+            $priceMxn,
+            $priceUsd,
+            $minimumPaymentMxn,
+            $bankName,
+            $bankAccount,
+            $bankClabe,
+            $accountHolder,
+            $contactPhone1,
+            $contactPhone2,
+            $contactEmail,
+            $arrivalPlace,
+            $arrivalCoordinates,
+            $arrivalNote,
+            $departurePlace,
+            $departureCoordinates,
+            $departureNote,
+            $costNotes,
+            $eventId
         );
 
         $ok = $stmt->execute();
         $stmt->close();
 
+        if ($ok && ($legacyEventId === null || $legacyEventId <= 0)) {
+            $this->assignLegacyEventId($eventId, $eventId);
+        }
+
         return $ok;
+    }
+
+    public function delete($id)
+    {
+        return $this->deleteById($id);
+    }
+
+    public function getLegacyIdByEventId($eventId)
+    {
+        $sql = 'SELECT legacy_event_id FROM events WHERE id = ? LIMIT 1';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $eventId);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+
+        if (!$row) {
+            return null;
+        }
+
+        $legacyId = isset($row['legacy_event_id']) ? (int) $row['legacy_event_id'] : 0;
+        if ($legacyId > 0) {
+            return $legacyId;
+        }
+
+        return (int) $eventId;
+    }
+
+    public function replaceCostos($legacyEventId, $costos)
+    {
+        $legacyEventId = (int) $legacyEventId;
+        if ($legacyEventId <= 0) {
+            return false;
+        }
+
+        $this->deleteCostosByLegacyEventId($legacyEventId);
+
+        if (!is_array($costos) || empty($costos)) {
+            return true;
+        }
+
+        $sql = 'INSERT INTO campamento_costos (campamento_id, divisa, cantidad, descripcion, incluye)
+                VALUES (?, ?, ?, ?, ?)';
+
+        $stmt = $this->db->prepare($sql);
+        if (!$stmt) {
+            return false;
+        }
+
+        foreach ($costos as $costo) {
+            $divisa = isset($costo['divisa']) ? trim((string) $costo['divisa']) : '';
+            $cantidad = isset($costo['cantidad']) ? (float) $costo['cantidad'] : 0.0;
+            $descripcion = isset($costo['descripcion']) ? trim((string) $costo['descripcion']) : '';
+            $incluyeRaw = isset($costo['incluye']) ? $costo['incluye'] : array();
+            if (!is_array($incluyeRaw)) {
+                $incluyeRaw = array_map('trim', explode(',', (string) $incluyeRaw));
+            }
+            $incluye = implode(',', array_values(array_filter(array_map(function ($item) {
+                return trim((string) $item);
+            }, $incluyeRaw), function ($item) {
+                return $item !== '';
+            })));
+
+            $stmt->bind_param('isdss', $legacyEventId, $divisa, $cantidad, $descripcion, $incluye);
+            if (!$stmt->execute()) {
+                $stmt->close();
+                return false;
+            }
+        }
+
+        $stmt->close();
+        return true;
+    }
+
+    public function deleteCostosByLegacyEventId($legacyEventId)
+    {
+        $legacyEventId = (int) $legacyEventId;
+        if ($legacyEventId <= 0) {
+            return true;
+        }
+
+        $sql = 'DELETE FROM campamento_costos WHERE campamento_id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $legacyEventId);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
+    }
+
+    private function assignLegacyEventId($eventId, $legacyEventId)
+    {
+        $sql = 'UPDATE events SET legacy_event_id = ? WHERE id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('ii', $legacyEventId, $eventId);
+        $stmt->execute();
+        $stmt->close();
     }
 
     public function getConfiguracion($eventId)

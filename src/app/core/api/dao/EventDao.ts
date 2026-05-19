@@ -5,6 +5,8 @@ import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
 import { environment } from "src/environments/environment";
 import { Utils } from "../Utils";
 import { EventResponse } from "src/app/core/models/registro/EventResponse";
+import { DefaultResponse } from "src/app/core/models/DefaultResponse";
+import { Event } from "src/app/core/models/registro/Event";
 
 @Injectable()
 export class EventDao {
@@ -14,15 +16,8 @@ export class EventDao {
         private utils: Utils
     ) { }
 
-    /**
-     * @deprecated Uses legacy endpoint retourbano/events.php. Migrate to v1 endpoints.
-     */
     public getEvents(): Observable<EventResponse> {
-        const user = JSON.parse(localStorage.getItem('session')!);
-        return this.http.get<any>(environment.apiUrl + 'retourbano/events.php'
-        +'?user=' + user.id
-        + '&token=' + user.token
-        , { headers: this.utils.getHeaders() }).pipe(
+        return this.http.get<any>(this.utils.v1('/events'), { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
         );
     }
@@ -36,6 +31,24 @@ export class EventDao {
     public getEventInfo(idEvent: number): Observable<EventResponse> {
         return this.http.get<any>(this.utils.v1('/events/detail') + '?event_id=' + idEvent, { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
+        );
+    }
+
+    public createEvent(payload: Partial<Event>): Observable<EventResponse> {
+        return this.http.post<any>(this.withToken(this.utils.v1('/events')), payload, { headers: this.utils.getHeaders() }).pipe(
+            map(response => this.normalizeEventResponse(response))
+        );
+    }
+
+    public updateEvent(payload: Partial<Event>): Observable<EventResponse> {
+        return this.http.put<any>(this.withToken(this.utils.v1('/events')), payload, { headers: this.utils.getHeaders() }).pipe(
+            map(response => this.normalizeEventResponse(response))
+        );
+    }
+
+    public deleteEvent(eventId: number): Observable<DefaultResponse> {
+        return this.http.delete<any>(this.withToken(this.utils.v1('/events') + '?id=' + encodeURIComponent(String(eventId))), { headers: this.utils.getHeaders() }).pipe(
+            map(response => this.normalizeDefaultResponse(response))
         );
     }
 
@@ -114,5 +127,32 @@ export class EventDao {
         }
 
         return normalized;
+    }
+
+    private normalizeDefaultResponse(response: any): DefaultResponse {
+        return {
+            success: response?.success ?? !response?.error,
+            error: !!response?.error,
+            message: response?.message || 'Operation executed',
+            code: response?.code || 200,
+        } as DefaultResponse;
+    }
+
+    private withToken(url: string): string {
+        const sessionRaw = localStorage.getItem('session');
+        if (!sessionRaw) {
+            return url;
+        }
+
+        try {
+            const session = JSON.parse(sessionRaw);
+            const token = session?.token;
+            if (!token) {
+                return url;
+            }
+            return url + (url.includes('?') ? '&' : '?') + 'token=' + encodeURIComponent(String(token));
+        } catch {
+            return url;
+        }
     }
 }

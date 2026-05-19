@@ -1,224 +1,278 @@
-<div class="container">
-    <h1>Campamentos</h1>
-    <form [formGroup]="eventoForm" class="row shadow p-3 mb-5 bg-body-tertiary rounded">
-        <h2>Evento Actual</h2>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="labelInputID">ID</label>
-                <input class="form-control form-control-sm" type="text" placeholder="ID" id="labelInputID" readonly
-                    formControlName="id_campamento">
-            </div>
-            <div class="form-group">
-                <label for="txtTitulo">Títiulo</label>
-                <input type="text" class="form-control form-control-sm" id="txtTitulo" placeholder="Título"
-                    formControlName="titulo">
-            </div>
-            <div class="form-group">
-                <label for="txtFechaInicio">Fecha Inicio</label>
-                <input type="text" class="form-control form-control-sm" id="txtFechaInicio" placeholder="Fecha de Inicio"
-                    formControlName="fecha_inicio">
-            </div>
+<div class="campamentos-page container-fluid py-4">
+    <div class="hero-card mb-4">
+        <div>
+            <p class="eyebrow">Panel de administración</p>
+            <h1>Campamentos</h1>
+            <p class="subtitle">Gestiona eventos, costos y datos operativos desde una sola vista.</p>
+        </div>
+        <button type="button" class="btn btn-gradient" (click)="nuevoEvento()">
+            Nuevo campamento
+        </button>
+    </div>
 
-            <mat-form-field>
-                <mat-label>Choose a date</mat-label>
-                <input matInput [matDatepicker]="picker">
-                <mat-hint>MM/DD/YYYY</mat-hint>
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker></mat-datepicker>
-            </mat-form-field>
+    <div class="alert" [ngClass]="feedbackType === 'success' ? 'alert-success' : 'alert-danger'" *ngIf="feedbackMessage">
+        {{ feedbackMessage }}
+    </div>
 
-            <div class="form-group">
-                <label for="txtFechaTermino">Fecha Termino</label>
-                <input type="text" class="form-control form-control-sm" id="txtFechaTermino" placeholder="Fecha de termino"
-                    formControlName="fecha_termino">
-            </div>
-            <div class="form-group">
-                <label for="txtActivo">Activo</label>
-                <input type="number" class="form-control form-control-sm" id="txtMaximoInscritos" placeholder="Activo"
-                    formControlName="activo">
-            </div>
-            <div class="form-group">
-                <label for="txtMaximoInscritos">Máximo Inscritos</label>
-                <input type="number" class="form-control form-control-sm" id="txtMaximoInscritos" placeholder="Maximo"
-                    formControlName="maximo_inscr">
-            </div>
-
-            <div class="form-group">
-                <label for="txtUmbral">Umbral</label>
-                <input type="number" class="form-control form-control-sm" id="txtUmbral" placeholder="Umbral"
-                    formControlName="umbral">
-            </div>
-            <div class="form-group">
-                <label for="txtFecha_apertura">Fecha de apertura de registro</label>
-                <input type="datetime" class="form-control form-control-sm" id="txtFecha_apertura"
-                    placeholder="Fecha Apertura" formControlName="fecha_apertura">
-            </div>
-            <div class="form-group">
-                <label for="txtFecha_maxima">Fecha máxima de regitro</label>
-                <input type="datetime" class="form-control form-control-sm" id="txtFecha_maxima"
-                    placeholder="Fecha Máxima" formControlName="fecha_maxima">
+    <form [formGroup]="eventoForm" class="editor-card">
+        <div class="section-title-row">
+            <h2>{{ isCreating ? 'Nuevo campamento' : 'Editar campamento' }}</h2>
+            <div class="d-flex gap-2">
+                <button type="button" class="btn btn-outline-dark" (click)="cancelarEdicion()">Cancelar</button>
+                <button type="button" class="btn btn-primary" [disabled]="isSaving" (click)="guardarEvento()">
+                    {{ isSaving ? 'Guardando...' : 'Guardar cambios' }}
+                </button>
+                <button type="button" class="btn btn-outline-danger" *ngIf="!isCreating" (click)="eliminarEvento()">
+                    Eliminar
+                </button>
             </div>
         </div>
-        <div class="col-lg-6 col-md-6">
-            <div class="form-group">
-                <label for="txtPagoMinimo">Pago Mínimo</label>
-                <input type="number" class="form-control form-control-sm" id="txtPagoMinimo" placeholder="Pago Minimo"
-                    formControlName="pago_minimoMX">
+
+        <div class="row g-3">
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label">ID</label>
+                <input type="text" class="form-control" formControlName="id" readonly>
             </div>
-            <div class="form-group">
-                <label for="txtBanco">Banco</label>
-                <input type="text" class="form-control form-control-sm" id="txtBanco" placeholder="Banco"
-                    formControlName="banco">
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label">Año</label>
+                <input type="number" class="form-control" formControlName="event_year">
             </div>
-            <div class="form-group">
-                <label for="txtCuenta">Cuenta</label>
-                <input type="text" class="form-control form-control-sm" id="txtCuenta" placeholder="Cuenta"
-                    formControlName="cuenta">
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label">ID Organización</label>
+                <input type="number" class="form-control" formControlName="organization_id">
             </div>
-            <div class="form-group">
-                <label for="txtTitularCuenta">Títular Cuenta</label>
-                <input type="text" class="form-control form-control-sm" id="txtTitularCuenta"
-                    placeholder="Títular Cuenta" formControlName="titularCuenta">
+            <div class="col-lg-2 col-md-3">
+                <label class="form-label">ID Ciudad</label>
+                <input type="number" class="form-control" formControlName="city_id">
             </div>
-            <div class="form-group">
-                <label for="txtContacto1">Contacto 1</label>
-                <input type="text" class="form-control form-control-sm" id="txtContacto1" placeholder="Contacto 1"
-                    formControlName="contacto1">
-            </div>
-            <div class="form-group">
-                <label for="txtContacto2">Contacto 2</label>
-                <input type="text" class="form-control form-control-sm" id="txtContacto2" placeholder="Contacto 2"
-                    formControlName="contacto2">
+            <div class="col-lg-4 col-md-12">
+                <label class="form-label">Título</label>
+                <input type="text" class="form-control" formControlName="titulo" placeholder="Nombre del campamento">
             </div>
 
-            <div class="form-group">
-                <label for="txtEmailContacto">Email Contacto</label>
-                <input type="email" class="form-control form-control-sm" id="txtEmailContacto" placeholder="Email Contacto"
-                    formControlName="email_contacto">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Inicio</label>
+                <input type="datetime-local" class="form-control" formControlName="fecha_inicio">
             </div>
-            <div class="form-group">
-                <label for="txtLlegadaLugar">Llegada Lugar</label>
-                <input type="text" class="form-control form-control-sm" id="txtLlegadaLugar" placeholder="Llegada Lugar"
-                    formControlName="llegada_lugar">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Término</label>
+                <input type="datetime-local" class="form-control" formControlName="fecha_termino">
             </div>
-            <div class="form-group">
-                <label for="txtLlegadaCoordenadas">Llegada Coordenadas</label>
-                <input type="text" class="form-control form-control-sm" id="txtLlegadaCoordenadas" placeholder="Llegada Coordenadas"
-                    formControlName="llegada_coordenadas">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Apertura de registro</label>
+                <input type="datetime-local" class="form-control" formControlName="fecha_apertura">
             </div>
-            <div class="form-group">
-                <label for="txtLlegadaNota">Llegada Nota</label>
-                <input type="text" class="form-control form-control-sm" id="txtLlegadaNota" placeholder="Llegada Nota"
-                    formControlName="llegada_nota">
+            <div class="col-lg-3 col-md-6">
+                <label class="form-label">Cierre de registro</label>
+                <input type="datetime-local" class="form-control" formControlName="fecha_maxima">
             </div>
-            <div class="form-group">
-                <label for="txtSalidaLugar">Salida Lugar</label>
-                <input type="text" class="form-control form-control-sm" id="txtSalidaLugar" placeholder="Salida Lugar"
-                    formControlName="salida_lugar">
+
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Activo</label>
+                <select class="form-select" formControlName="activo">
+                    <option [value]="1">Sí</option>
+                    <option [value]="0">No</option>
+                </select>
             </div>
-            <div class="form-group">
-                <label for="txtSalidaCoordenadas">Salida Coordenadas</label>
-                <input type="text" class="form-control form-control-sm" id="txtSalidaCoordenadas" placeholder="Salida Coordenadas"
-                    formControlName="salida_coordenadas">
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Máximo inscritos</label>
+                <input type="number" class="form-control" formControlName="maximo_inscr">
             </div>
-            <div class="form-group">
-                <label for="txtSalidaNota">Salida Nota</label>
-                <input type="text" class="form-control form-control-sm" id="txtSalidaNota" placeholder="Salida Nota"
-                    formControlName="salida_nota">
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Umbral</label>
+                <input type="number" class="form-control" formControlName="umbral">
             </div>
-            <div class="formGroup" style="margin-top: 1.5em;">
-                <button type="button" class="btn btn-primary" style="margin-right: 1em;">Guardar</button>
-                <button type="button" class="btn btn-warning">Cancelar</button>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Costo MXN</label>
+                <input type="number" class="form-control" formControlName="costoMX">
+            </div>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Costo USD</label>
+                <input type="number" class="form-control" formControlName="costoUSD">
+            </div>
+            <div class="col-lg-2 col-md-4">
+                <label class="form-label">Pago mínimo MXN</label>
+                <input type="number" class="form-control" formControlName="pago_minimoMX">
             </div>
         </div>
-        <div class="row" style="margin-top: 2em;">
-            <h2>Costos</h2>
-            <div *ngFor="let costo of eventoActivo.costos;" class="card col-lg-3" style="margin-top: 1em; margin-right: 1em;">
-                <div class="card-header">
-                    {{costo.descripcion}}
+
+        <div class="sub-section mt-4">
+            <h3>Datos de pago y contacto</h3>
+            <div class="row g-3">
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label">Banco</label>
+                    <input type="text" class="form-control" formControlName="banco">
                 </div>
-                <div class="card-body">
-                    <div class="input-group mb-3">
-                        <span class="input-group-text">$</span>
-                        <input type="number" class="form-control" value="{{costo.cantidad}}">
-                        <span class="input-group-text">{{costo.divisa}}</span>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label">Cuenta</label>
+                    <input type="text" class="form-control" formControlName="cuenta">
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label">CLABE</label>
+                    <input type="text" class="form-control" formControlName="clabe">
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label">Titular</label>
+                    <input type="text" class="form-control" formControlName="titularCuenta">
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label">Contacto 1</label>
+                    <input type="text" class="form-control" formControlName="contacto1">
+                </div>
+                <div class="col-lg-3 col-md-6">
+                    <label class="form-label">Contacto 2</label>
+                    <input type="text" class="form-control" formControlName="contacto2">
+                </div>
+                <div class="col-lg-6 col-md-12">
+                    <label class="form-label">Email de contacto</label>
+                    <input type="email" class="form-control" formControlName="email_contacto">
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-section mt-4">
+            <h3>Logística</h3>
+            <div class="row g-3">
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label">Llegada - lugar</label>
+                    <input type="text" class="form-control" formControlName="llegada_lugar">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label">Llegada - coordenadas</label>
+                    <input type="text" class="form-control" formControlName="llegada_coordenadas">
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <label class="form-label">Llegada - nota</label>
+                    <input type="text" class="form-control" formControlName="llegada_nota">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label">Salida - lugar</label>
+                    <input type="text" class="form-control" formControlName="salida_lugar">
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <label class="form-label">Salida - coordenadas</label>
+                    <input type="text" class="form-control" formControlName="salida_coordenadas">
+                </div>
+                <div class="col-lg-4 col-md-12">
+                    <label class="form-label">Salida - nota</label>
+                    <input type="text" class="form-control" formControlName="salida_nota">
+                </div>
+            </div>
+        </div>
+
+        <div class="sub-section mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3>Costos</h3>
+                <button type="button" class="btn btn-outline-primary btn-sm" (click)="agregarCosto()">Agregar costo</button>
+            </div>
+
+            <div class="row g-3" formArrayName="costos">
+                <div class="col-lg-4" *ngFor="let costo of costosFormArray.controls; let i = index" [formGroupName]="i">
+                    <div class="cost-card">
+                        <div class="row g-2">
+                            <div class="col-8">
+                                <label class="form-label">Descripción</label>
+                                <input type="text" class="form-control" formControlName="descripcion">
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label">Divisa</label>
+                                <input type="text" class="form-control" formControlName="divisa">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Monto</label>
+                                <input type="number" class="form-control" formControlName="cantidad">
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label">Incluye (una línea por concepto)</label>
+                                <textarea rows="3" class="form-control" formControlName="incluyeText"></textarea>
+                            </div>
+                        </div>
+                        <button type="button" class="btn btn-link text-danger p-0 mt-2" (click)="eliminarCosto(i)">
+                            Quitar costo
+                        </button>
                     </div>
-                    <ul class="list-group list-group-flush">
-                        <li *ngFor="let incly of costo.incluye;" class="list-group-item">{{incly}}</li>
-                    </ul>
                 </div>
+            </div>
+
+            <div class="mt-3">
+                <label class="form-label">Notas de costos</label>
+                <textarea rows="2" class="form-control" formControlName="notas_costos"></textarea>
             </div>
         </div>
     </form>
 
-    <div class="row">
-        <div class="title-table mat-elevation-z8">
-            <div class="row d-flex">
-                <div class="col elevado">
-                    <p>Registros {{dataSource?.length}}</p>
-                </div>
-            </div>
+    <div class="table-card mt-4">
+        <div class="table-header">
+            <h3>Eventos registrados</h3>
+            <span class="badge rounded-pill text-bg-light">{{ dataSource.length }} registros</span>
         </div>
 
-        <table mat-table [dataSource]="dataSource!" class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z2 w-100">
 
-            <ng-container matColumnDef="botonera">
-                <th mat-header-cell *matHeaderCellDef></th>
-                <td mat-cell *matCellDef="let element">
-                    <button type="button" class="btn btn-outline-primary"><i class="bi bi-pencil-square"></i></button>
+            <ng-container matColumnDef="acciones">
+                <th mat-header-cell *matHeaderCellDef>Acciones</th>
+                <td mat-cell *matCellDef="let element" class="actions-cell">
+                    <button type="button" class="btn btn-sm btn-outline-primary" (click)="seleccionarEvento(element)">
+                        Editar
+                    </button>
+                    <button type="button" class="btn btn-sm btn-outline-danger" (click)="eliminarEvento(element)">
+                        Eliminar
+                    </button>
                 </td>
             </ng-container>
 
-            <ng-container matColumnDef="id_campamento">
-                <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.id_campamento}} </td>
+            <ng-container matColumnDef="id_event">
+                <th mat-header-cell *matHeaderCellDef>ID</th>
+                <td mat-cell *matCellDef="let element">{{ getEventId(element) }}</td>
             </ng-container>
 
             <ng-container matColumnDef="titulo">
-                <th mat-header-cell *matHeaderCellDef> Titulo </th>
-                <td mat-cell *matCellDef="let element"> {{element.titulo}} </td>
+                <th mat-header-cell *matHeaderCellDef>Título</th>
+                <td mat-cell *matCellDef="let element">{{ element.titulo || element.title }}</td>
             </ng-container>
 
             <ng-container matColumnDef="fecha_inicio">
-                <th mat-header-cell *matHeaderCellDef> Inicia </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_inicio}} </td>
+                <th mat-header-cell *matHeaderCellDef>Inicia</th>
+                <td mat-cell *matCellDef="let element">{{ element.fecha_inicio || element.start_at | date:'mediumDate' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="fecha_termino">
-                <th mat-header-cell *matHeaderCellDef> Termina </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_termino}} </td>
+                <th mat-header-cell *matHeaderCellDef>Termina</th>
+                <td mat-cell *matCellDef="let element">{{ element.fecha_termino || element.end_at | date:'mediumDate' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="activo">
-                <th mat-header-cell *matHeaderCellDef> Activo </th>
+                <th mat-header-cell *matHeaderCellDef>Activo</th>
                 <td mat-cell *matCellDef="let element">
-                    <i class="bi bi-toggle-{{element.activo==1?'on':'off'}}"></i>
+                    <span class="status-pill" [ngClass]="getActivo(element) === 1 ? 'active' : 'inactive'">
+                        {{ getActivo(element) === 1 ? 'Sí' : 'No' }}
+                    </span>
                 </td>
             </ng-container>
 
             <ng-container matColumnDef="maximo_inscr">
-                <th mat-header-cell *matHeaderCellDef> Máximo Inscrito </th>
-                <td mat-cell *matCellDef="let element"> {{element.maximo_inscr}} </td>
+                <th mat-header-cell *matHeaderCellDef>Máximo</th>
+                <td mat-cell *matCellDef="let element">{{ element.maximo_inscr || element.max_registrations }}</td>
             </ng-container>
 
             <ng-container matColumnDef="umbral">
-                <th mat-header-cell *matHeaderCellDef> Umbral </th>
-                <td mat-cell *matCellDef="let element"> {{element.umbral}} </td>
+                <th mat-header-cell *matHeaderCellDef>Umbral</th>
+                <td mat-cell *matCellDef="let element">{{ element.umbral || element.threshold }}</td>
             </ng-container>
 
             <ng-container matColumnDef="fecha_apertura">
-                <th mat-header-cell *matHeaderCellDef> Fecha de Apertura </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_apertura}} </td>
+                <th mat-header-cell *matHeaderCellDef>Apertura</th>
+                <td mat-cell *matCellDef="let element">{{ element.fecha_apertura || element.registration_open_at | date:'short' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="fecha_maxima">
-                <th mat-header-cell *matHeaderCellDef> Fecha Máxima </th>
-                <td mat-cell *matCellDef="let element"> {{element.fecha_maxima}} </td>
+                <th mat-header-cell *matHeaderCellDef>Cierre</th>
+                <td mat-cell *matCellDef="let element">{{ element.fecha_maxima || element.registration_deadline | date:'short' }}</td>
             </ng-container>
 
             <ng-container matColumnDef="costo">
-                <th mat-header-cell *matHeaderCellDef> Costo </th>
-                <td mat-cell *matCellDef="let element"> {{element.costo | currency:"$ "}} </td>
+                <th mat-header-cell *matHeaderCellDef>Costo MXN</th>
+                <td mat-cell *matCellDef="let element">{{ element.costoMX || element.price_mxn | currency:'MXN' }}</td>
             </ng-container>
 
             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
