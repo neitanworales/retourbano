@@ -1,5 +1,4 @@
-import { Component, OnInit, Inject } from '@angular/core';
-import { APP_BASE_HREF } from '@angular/common';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Event } from 'src/app/core/models/registro/Event';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 
@@ -11,6 +10,9 @@ import { EventDao } from 'src/app/core/api/dao/EventDao';
 })
 export class NavbarComponent implements OnInit {
 
+  @ViewChild('navbarResponsive') navbarResponsive?: ElementRef<HTMLDivElement>;
+  @ViewChild('navbarToggler') navbarToggler?: ElementRef<HTMLButtonElement>;
+
   events?: Event[];
   isLoading: boolean = true;
 
@@ -21,6 +23,19 @@ export class NavbarComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  closeNavbar(): void {
+    const collapse = this.navbarResponsive?.nativeElement;
+    const toggler = this.navbarToggler?.nativeElement;
+
+    if (!collapse?.classList.contains('show')) {
+      return;
+    }
+
+    collapse.classList.remove('show');
+    toggler?.classList.add('collapsed');
+    toggler?.setAttribute('aria-expanded', 'false');
   }
 
   private loadEvent() {

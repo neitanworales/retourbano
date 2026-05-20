@@ -418,7 +418,9 @@ class EventController extends BaseController
         );
 
         if ($mode === 'BASIC') {
-            return $this->pickEventFields($eventArray, $basicFields);
+            $payload = $this->pickEventFields($eventArray, $basicFields);
+            $payload['configuracion'] = $this->events->getConfiguracion($eventId);
+            return $payload;
         }
 
         if ($mode === 'SUMMARY') {

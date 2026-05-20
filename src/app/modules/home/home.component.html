@@ -1,50 +1,6 @@
-<!-- Masthead-->
-<header class="masthead">
-    <div class="container px-4 px-lg-5 d-flex h-100 align-items-center justify-content-center">
-        <div class="d-flex justify-content-center">
-            <div class="text-center">
-                <h1 class="mx-auto my-0 text-uppercase">RETO URBANO</h1>
-                <h2 class="text-white-50 mx-auto mt-2 mb-5">reto ¿que somos?</h2>
-                <a *ngFor="let event of events" class="btn btn-primary" routerLink="/info"
-                    [queryParams]="{ id_event: event.id }">{{event.city_label}}</a>
-            </div>
-        </div>
-    </div>
-</header>
-<!-- About-->
-<section class="about-section text-center" id="about">
-    <div class="container px-4 px-lg-5">
-        <!-- Spinner de carga -->
-        <div *ngIf="isLoading" class="row gx-4 gx-lg-5 justify-content-center">
-            <div class="col-lg-8 text-center">
-                <div class="spinner-border text-white" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-            </div>
-        </div>
-        <!-- Contenido cuando ya cargó -->
-        <div *ngIf="!isLoading" class="row gx-4 gx-lg-5 justify-content-center">
-            <div *ngFor="let event of events" class="col-lg-6">
-                <h1 class="text-white mb-4">{{event.titulo}}</h1>
-                <div class="row">
-                    <div class="text-white text-center col-md-12">
-                        <h2>{{event.city_label}}</h2>
-                        <h3>{{event.start_at | date:'dd MMMM':'':'es-MX' }} a {{event.end_at | date:'dd MMMM':'':'es-MX'}}</h3>
-                    </div>
-                    <div class="text-center col-md-12 section">
-                        <app-registro-avance [showForm]="false"
-                            [event]="event"></app-registro-avance>
-                    </div>
-                    <div class="text-center col-md-12 section">
-                        <a routerLink="/registro" [queryParams]="{ id_event: event.id }"
-                            class="btn btn-danger">Ir a
-                            inscripciones</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
+<div class="section margintop">
+    <img src="assets/img/flyers/ru_flyer_11.jpg" alt="" class="img-fluid ">
+</div>
 <section class="mensaje-section bg-light text-center" id="mensaje">
     <div class="container">
         <div class="row">
@@ -61,9 +17,9 @@
                     <p>Los saludamos desde Juventud con Una Misión Pachuca nuevamente.</p>
                     <p>Este año estamos cumpliendo 17 años de Reto Urbano, es increíble como pasa el tiempo y estamos
                         emocionados de esta nueva etapa de RU.</p>
-                    <p>Como sorpresa queremos que sepas que estamos comenzando Reto Urbano Puebla, en donde tendremos un
-                        campamento en vacaciones de semana Santa. A través de esta pagina podrás registrarte al;
-                        campamento de Puebla de 28 de marzo - 1 de abril y en Pachuca del 21-26 de Julio 2026</p>
+                    <p>A través de esta pagina podrás registrarte al campamento en Pachuca del 21-26 de Julio 2026</p>
+
+                    <p><a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a></p>
 
                     <p>Queremos invitarles a que nuevamente a sean parte de la historia de Juventud con Una Misión a
                         través de Reto Urbano.</p>
@@ -98,9 +54,9 @@
                         el evangelio de Cristo a traves del fuego de su Espiritu.
                     </p>
 
-                    <p>Nuestra sede para campamento de Puebla sera en Valsequillo y para el campamento de Pachuca aun
-                        estamos por confirmar.
-                        También como ya es tradición en Reto, tendremos 3 días de enseñanza, entrenamiento, talleres y
+                    <p>Nuestra sede para campamento es en Pachuca! <a routerLink="/info">Click aquí para mas información
+                        </a></p>
+                    <p>También como ya es tradición en Reto, tendremos 3 días de enseñanza, entrenamiento, talleres y
                         los últimos 2 días tomaremos autobuses y saldremos a llevar el mensaje de Cristo através de
                         artes urbanas.
                     </p>
@@ -111,6 +67,43 @@
 
                     <footer class="blockquote-footer">Richz Volta </footer>
                 </blockquote>
+            </div>
+        </div>
+    </div>
+</section>
+<section class="section text-center" id="about">
+    <div class="container px-4 px-lg-5">
+        <!-- Spinner de carga -->
+        <div *ngIf="isLoading" class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="col-lg-8 text-center">
+                <div class="spinner-border text-white" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+            </div>
+        </div>
+        <!-- Contenido cuando ya cargó -->
+        <div *ngIf="!isLoading" class="row gx-4 gx-lg-5 justify-content-center">
+            <div class="text-center">
+                <h1>RETO URBANO</h1>
+                <h2>reto ¿que somos?</h2>
+                <p>Próximos campamentos</p>
+            </div>
+            <div *ngFor="let event of events" class="col-lg-6">
+                <h1 class="mb-4">{{event.titulo}}</h1>
+                <div class="row">
+                    <div class="text-center col-md-12">
+                        <h2>{{event.city_label}}</h2>
+                        <h3>{{event.start_at | date:'dd MMMM':'':'es-MX' }} a {{event.end_at | date:'dd
+                            MMMM':'':'es-MX'}}</h3>
+                    </div>
+                    <div class="text-center col-md-12 section">
+                        <app-registro-avance [showForm]="false" [event]="event"></app-registro-avance>
+                    </div>
+                    <div class="text-center col-md-12 section">
+                        <a routerLink="/registro" [queryParams]="{ id_event: event.id }" class="btn btn-danger">Ir a
+                            inscripciones</a>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { combineLatest, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { Event } from 'src/app/core/models/registro/Event';
 
@@ -24,15 +25,39 @@ export class InfoCampaComponent implements OnInit {
   isLoading = false;
 
   ngOnInit(): void {
-    this.route.queryParamMap
+    combineLatest([
+      this.route.queryParamMap,
+      this.eventDao.getEventActivo('BASIC')
+    ])
       .pipe(
-        map((params: ParamMap) => Number(params.get('id_event'))),
-        filter((id) => !isNaN(id) && id > 0),
-        tap((id) => {
-          this.isLoading = true;
-          this.id_event = id;
+        map(([params, result]: [ParamMap, any]) => {
+          const queryId = Number(params.get('id_event'));
+          if (!isNaN(queryId) && queryId > 0) {
+            return queryId;
+          }
+
+          const activeEvents = result?.data?.events || [];
+          if (activeEvents.length === 1) {
+            return this.getEventId(activeEvents[0]);
+          }
+
+          return undefined;
         }),
-        switchMap((id) => this.eventDao.getEventInfo(id))
+        tap((id) => {
+          if (id) {
+            this.isLoading = true;
+            this.id_event = id;
+          } else {
+            this.event = new Event();
+            this.id_event = undefined;
+          }
+        }),
+        switchMap((id) => {
+          if (!id) {
+            return of({ data: { events: [] } });
+          }
+          return this.eventDao.getEventInfo(id);
+        })
       )
       .subscribe({
         next: (result) => {
@@ -44,6 +69,24 @@ export class InfoCampaComponent implements OnInit {
           this.isLoading = false;
         }
       });
+  }
+
+  private getEventId(event: Event | undefined): number | undefined {
+    if (!event) {
+      return undefined;
+    }
+
+    const anyEvent = event as any;
+    const candidates = [event.id, anyEvent.id_event, anyEvent.id_campamento];
+
+    for (const candidate of candidates) {
+      const parsed = Number(candidate);
+      if (!isNaN(parsed) && parsed > 0) {
+        return parsed;
+      }
+    }
+
+    return undefined;
   }
 
   private loadEvent(id_event  : number): void {

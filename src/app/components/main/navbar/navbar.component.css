@@ -1,3 +1,9 @@
 #mainNav {
-    background-color: gray;
+    background-color: rgb(255, 255, 255);
+}
+
+.nav-link {
+    color: var(--rb-dark) !important;
+    font-weight: 500;
+    font-size: 0.95rem;
 }
