@@ -62,7 +62,7 @@ export class RegistroComponent implements OnInit {
   }
 
   private loadEvents() {
-    this.eventDao.getEventActivo().subscribe({
+    this.eventDao.getEventActivo('BASIC').subscribe({
       next: (result) => {
         this.events = result.data?.events || [];
         // Si hay solo un evento y no hay query params, seleccionarlo automáticamente

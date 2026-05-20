@@ -22,13 +22,11 @@ class EventController extends BaseController
         $active = isset($request['active']) && $request['active'] !== '' ? (int) $request['active'] : null;
         $limit = isset($request['limit']) ? (int) $request['limit'] : 100;
         $offset = isset($request['offset']) ? (int) $request['offset'] : 0;
+        $viewSpec = $this->resolveEventViewSpec($request);
 
         $items = $this->events->findMany($year, $active, $limit, $offset);
-        $data = array_map(function ($event) {
-            $eventArray = $event->toArray();
-            $eventArray['configuracion'] = $this->events->getConfiguracion((int) $event->id);
-            $eventArray['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : (int) $event->id);
-            return $eventArray;
+        $data = array_map(function ($event) use ($viewSpec) {
+            return $this->buildEventPayload($event, $viewSpec);
         }, $items);
 
         return $this->ok(array('events' => $data), 'events list');
@@ -37,6 +35,7 @@ class EventController extends BaseController
     public function detail($request)
     {
         $eventId = isset($request['event_id']) ? (int) $request['event_id'] : 0;
+        $viewSpec = $this->resolveEventViewSpec($request);
         if ($eventId <= 0) {
             return $this->fail('event_id is required', 422);
         }
@@ -46,15 +45,14 @@ class EventController extends BaseController
             return $this->fail('event not found', 404);
         }
 
-        $eventArray = $event->toArray();
-        $eventArray['configuracion'] = $this->events->getConfiguracion($eventId);
-        $eventArray['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : $eventId);
+        $eventArray = $this->buildEventPayload($event, $viewSpec);
 
         return $this->ok(array('event' => $eventArray), 'event found');
     }
 
     public function create($request)
     {
+        $viewSpec = $this->resolveEventViewSpec($request);
         $event = $this->buildEventFromRequest($request);
         if (!$event) {
             return $this->fail('invalid event payload', 422);
@@ -80,15 +78,14 @@ class EventController extends BaseController
             return $this->fail('event created but not found', 500);
         }
 
-        $eventArray = $created->toArray();
-        $eventArray['configuracion'] = $this->events->getConfiguracion((int) $created->id);
-        $eventArray['costos'] = $this->events->getCostos(isset($created->legacy_event_id) ? (int) $created->legacy_event_id : (int) $created->id);
+        $eventArray = $this->buildEventPayload($created, $viewSpec);
 
         return $this->ok(array('event' => $eventArray), 'event created');
     }
 
     public function update($request)
     {
+        $viewSpec = $this->resolveEventViewSpec($request);
         $eventId = isset($request['id']) ? (int) $request['id'] : (isset($request['event_id']) ? (int) $request['event_id'] : 0);
         if ($eventId <= 0) {
             return $this->fail('id is required', 422);
@@ -117,9 +114,7 @@ class EventController extends BaseController
         }
 
         $reloaded = $this->events->findModelById($eventId);
-        $eventArray = $reloaded ? $reloaded->toArray() : $event->toArray();
-        $eventArray['configuracion'] = $this->events->getConfiguracion($eventId);
-        $eventArray['costos'] = $this->events->getCostos(isset($eventArray['legacy_event_id']) ? (int) $eventArray['legacy_event_id'] : $eventId);
+        $eventArray = $this->buildEventPayload($reloaded ?: $event, $viewSpec);
 
         return $this->ok(array('event' => $eventArray), 'event updated');
     }
@@ -151,6 +146,7 @@ class EventController extends BaseController
 
     public function upcomingAvailability($request)
     {
+        $viewSpec = $this->resolveEventViewSpec($request);
         if (!isset($request['auth_user']) || !isset($request['auth_user']->id)) {
             return $this->fail('authenticated user is required', 401);
         }
@@ -182,12 +178,10 @@ class EventController extends BaseController
                 $isRegisteredAny = true;
             }
 
-            $row = $event->toArray();
+            $row = $this->buildEventPayload($event, $viewSpec);
             $row['is_registered'] = $isRegistered;
             $row['registration_id'] = $isRegistered ? (int) $registration->id : null;
             $row['registration_status'] = $isRegistered ? $registration->registration_status : null;
-            $row['configuracion'] = $this->events->getConfiguracion((int) $event->id);
-            $row['costos'] = $this->events->getCostos(isset($event->legacy_event_id) ? (int) $event->legacy_event_id : (int) $event->id);
             $items[] = $row;
         }
 
@@ -346,5 +340,110 @@ class EventController extends BaseController
         }
 
         return 0;
+    }
+
+    private function resolveEventViewSpec($request)
+    {
+        $raw = null;
+
+        if (isset($request['view']) && trim((string) $request['view']) !== '') {
+            $raw = trim((string) $request['view']);
+        } elseif (isset($request['projection']) && trim((string) $request['projection']) !== '') {
+            $raw = trim((string) $request['projection']);
+        } elseif (isset($request['fields']) && trim((string) $request['fields']) !== '') {
+            $raw = trim((string) $request['fields']);
+        } else {
+            $headerView = isset($_SERVER['HTTP_X_EVENT_VIEW']) ? trim((string) $_SERVER['HTTP_X_EVENT_VIEW']) : '';
+            $headerFields = isset($_SERVER['HTTP_X_EVENT_FIELDS']) ? trim((string) $_SERVER['HTTP_X_EVENT_FIELDS']) : '';
+            if ($headerView !== '') {
+                $raw = $headerView;
+            } elseif ($headerFields !== '') {
+                $raw = $headerFields;
+            }
+        }
+
+        if ($raw === null || $raw === '') {
+            return array('mode' => 'FULL', 'fields' => array());
+        }
+
+        $upper = strtoupper($raw);
+        if ($upper === 'FULL') {
+            return array('mode' => 'FULL', 'fields' => array());
+        }
+        if ($upper === 'SUMMARY' || $upper === 'STANDARD') {
+            return array('mode' => 'SUMMARY', 'fields' => array());
+        }
+        if ($upper === 'BASIC' || $upper === 'MINIMAL' || $upper === 'MINI') {
+            return array('mode' => 'BASIC', 'fields' => array());
+        }
+
+        $fields = array_values(array_filter(array_map(function ($item) {
+            return trim((string) $item);
+        }, explode(',', $raw)), function ($item) {
+            return $item !== '';
+        }));
+
+        if (empty($fields)) {
+            return array('mode' => 'FULL', 'fields' => array());
+        }
+
+        return array('mode' => 'CUSTOM', 'fields' => $fields);
+    }
+
+    private function buildEventPayload($event, $viewSpec)
+    {
+        $eventArray = is_object($event) && method_exists($event, 'toArray')
+            ? $event->toArray()
+            : (array) $event;
+
+        $eventId = isset($eventArray['id']) ? (int) $eventArray['id'] : 0;
+        $legacyEventId = isset($eventArray['legacy_event_id']) && (int) $eventArray['legacy_event_id'] > 0
+            ? (int) $eventArray['legacy_event_id']
+            : $eventId;
+
+        $mode = isset($viewSpec['mode']) ? $viewSpec['mode'] : 'FULL';
+        $fields = isset($viewSpec['fields']) && is_array($viewSpec['fields']) ? $viewSpec['fields'] : array();
+
+        if ($mode === 'FULL') {
+            $eventArray['configuracion'] = $this->events->getConfiguracion($eventId);
+            $eventArray['costos'] = $this->events->getCostos($legacyEventId);
+            return $eventArray;
+        }
+
+        $basicFields = array('id', 'organization_id', 'city_id', 'event_year', 'title', 'start_at', 'end_at', 'is_active', 'city_label');
+        $summaryFields = array(
+            'id', 'organization_id', 'city_id', 'event_year', 'title', 'start_at', 'end_at', 'is_active',
+            'max_registrations', 'threshold', 'registration_open_at', 'registration_deadline',
+            'price_mxn', 'price_usd', 'minimum_payment_mxn', 'city_label'
+        );
+
+        if ($mode === 'BASIC') {
+            return $this->pickEventFields($eventArray, $basicFields);
+        }
+
+        if ($mode === 'SUMMARY') {
+            return $this->pickEventFields($eventArray, $summaryFields);
+        }
+
+        $payload = $this->pickEventFields($eventArray, $fields);
+        if (in_array('configuracion', $fields, true)) {
+            $payload['configuracion'] = $this->events->getConfiguracion($eventId);
+        }
+        if (in_array('costos', $fields, true)) {
+            $payload['costos'] = $this->events->getCostos($legacyEventId);
+        }
+
+        return $payload;
+    }
+
+    private function pickEventFields($eventArray, $fields)
+    {
+        $payload = array();
+        foreach ($fields as $field) {
+            if (array_key_exists($field, $eventArray)) {
+                $payload[$field] = $eventArray[$field];
+            }
+        }
+        return $payload;
     }
 }

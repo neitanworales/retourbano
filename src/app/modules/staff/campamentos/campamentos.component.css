@@ -151,6 +151,35 @@ table {
     color: var(--rb-danger);
 }
 
+.catalog-list {
+    max-height: 280px;
+    overflow: auto;
+    border-top: 1px solid var(--rb-border);
+    padding-top: 0.75rem;
+}
+
+.catalog-item {
+    width: 100%;
+    border: 1px solid var(--rb-border);
+    border-radius: 10px;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.55rem 0.7rem;
+    margin-bottom: 0.45rem;
+}
+
+.catalog-item:hover {
+    background: #f7fbff;
+}
+
+.catalog-item.selected {
+    border-color: #7eaed7;
+    background: #eff7ff;
+}
+
 tr.example-element-row:hover td {
     background: #f0f7ff !important;
 }

@@ -7,6 +7,39 @@ class CityRepository extends BaseRepository
 {
     protected $table = 'cities';
 
+    public function findMany($active = null, $limit = 100, $offset = 0)
+    {
+        $conditions = array();
+        $params = array();
+        $types = '';
+
+        if ($active !== null) {
+            $conditions[] = 'is_active = ?';
+            $params[] = (int) $active;
+            $types .= 'i';
+        }
+
+        $sql = 'SELECT * FROM cities';
+        if (!empty($conditions)) {
+            $sql .= ' WHERE ' . implode(' AND ', $conditions);
+        }
+        $sql .= ' ORDER BY name ASC LIMIT ? OFFSET ?';
+
+        $params[] = (int) $limit;
+        $params[] = (int) $offset;
+        $types .= 'ii';
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        return array_map(function ($row) {
+            return new City($row);
+        }, $rows);
+    }
+
     public function findModelById($id)
     {
         $row = $this->findById($id);
@@ -48,5 +81,21 @@ class CityRepository extends BaseRepository
         $stmt->close();
 
         return $id;
+    }
+
+    public function update(City $city)
+    {
+        $sql = 'UPDATE cities SET legacy_city_id = ?, name = ?, slug = ?, is_active = ? WHERE id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('issii', $city->legacy_city_id, $city->name, $city->slug, $city->is_active, $city->id);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
+    }
+
+    public function delete($id)
+    {
+        return $this->deleteById($id);
     }
 }

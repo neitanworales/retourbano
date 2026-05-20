@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { CityCatalogItem, EventDao, OrganizationCatalogItem } from 'src/app/core/api/dao/EventDao';
 import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
@@ -38,15 +38,25 @@ export class CampamentosComponent implements OnInit {
   feedbackMessage = '';
   feedbackType: 'success' | 'error' | '' = '';
 
+  cities: CityCatalogItem[] = [];
+  organizations: OrganizationCatalogItem[] = [];
+  cityForm!: FormGroup;
+  organizationForm!: FormGroup;
+  selectedCityId?: number;
+  selectedOrganizationId?: number;
+  isSavingCity = false;
+  isSavingOrganization = false;
+
   ngOnInit(): void {
     this.inicializarForm();
+    this.inicializarCatalogForms();
     this.cargarDatos();
+    this.cargarCatalogos();
   }
 
   inicializarForm() {
     this.eventoForm = this.formBuilder.group({
       id: [null],
-      legacy_event_id: [null],
       organization_id: [null, Validators.required],
       city_id: [null, Validators.required],
       event_year: [new Date().getFullYear(), Validators.required],
@@ -76,6 +86,26 @@ export class CampamentosComponent implements OnInit {
       salida_nota: [""],
       notas_costos: [""],
       costos: this.formBuilder.array([])
+    });
+  }
+
+  inicializarCatalogForms() {
+    this.cityForm = this.formBuilder.group({
+      id: [null],
+      name: ['', Validators.required],
+      slug: [''],
+      is_active: [1]
+    });
+
+    this.organizationForm = this.formBuilder.group({
+      id: [null],
+      city_id: [null, Validators.required],
+      name: ['', Validators.required],
+      slug: [''],
+      legal_name: [''],
+      email: [''],
+      phone: [''],
+      is_active: [1]
     });
   }
 
@@ -136,6 +166,194 @@ export class CampamentosComponent implements OnInit {
     );
   }
 
+  cargarCatalogos(): void {
+    this.cargarCiudades();
+    this.cargarOrganizaciones();
+  }
+
+  cargarCiudades(): void {
+    this.eventDao.getCities().subscribe({
+      next: (cities) => {
+        this.cities = cities || [];
+        if (this.cities.length > 0 && !this.selectedCityId) {
+          this.seleccionarCiudad(this.cities[0]);
+        }
+        if (!this.organizationForm.get('city_id')?.value && this.cities[0]?.id) {
+          this.organizationForm.patchValue({ city_id: this.cities[0].id });
+        }
+      }
+    });
+  }
+
+  cargarOrganizaciones(): void {
+    this.eventDao.getOrganizations().subscribe({
+      next: (organizations) => {
+        this.organizations = organizations || [];
+        if (this.organizations.length > 0 && !this.selectedOrganizationId) {
+          this.seleccionarOrganizacion(this.organizations[0]);
+        }
+      }
+    });
+  }
+
+  seleccionarCiudad(city: CityCatalogItem): void {
+    this.selectedCityId = city.id ? Number(city.id) : undefined;
+    this.cityForm.patchValue({
+      id: city.id || null,
+      name: city.name || '',
+      slug: city.slug || '',
+      is_active: this.toActiveValue(city.is_active)
+    });
+  }
+
+  nuevaCiudad(): void {
+    this.selectedCityId = undefined;
+    this.cityForm.reset({
+      id: null,
+      name: '',
+      slug: '',
+      is_active: 1
+    });
+  }
+
+  guardarCiudad(): void {
+    if (this.cityForm.invalid) {
+      this.cityForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSavingCity = true;
+    const payload = this.cityForm.getRawValue();
+    const request$ = payload.id ? this.eventDao.updateCity(payload) : this.eventDao.createCity(payload);
+
+    request$.subscribe({
+      next: () => {
+        this.isSavingCity = false;
+        this.cargarCiudades();
+        this.feedbackType = 'success';
+        this.feedbackMessage = payload.id ? 'Ciudad actualizada.' : 'Ciudad creada.';
+      },
+      error: () => {
+        this.isSavingCity = false;
+        this.feedbackType = 'error';
+        this.feedbackMessage = 'No fue posible guardar la ciudad.';
+      }
+    });
+  }
+
+  eliminarCiudad(city?: CityCatalogItem): void {
+    const id = city?.id || this.cityForm.get('id')?.value;
+    if (!id) {
+      return;
+    }
+
+    if (!window.confirm('Se eliminara la ciudad seleccionada. Deseas continuar?')) {
+      return;
+    }
+
+    this.eventDao.deleteCity(Number(id)).subscribe({
+      next: () => {
+        this.feedbackType = 'success';
+        this.feedbackMessage = 'Ciudad eliminada.';
+        this.nuevaCiudad();
+        this.cargarCiudades();
+      },
+      error: () => {
+        this.feedbackType = 'error';
+        this.feedbackMessage = 'No fue posible eliminar la ciudad.';
+      }
+    });
+  }
+
+  seleccionarOrganizacion(organization: OrganizationCatalogItem): void {
+    this.selectedOrganizationId = organization.id ? Number(organization.id) : undefined;
+    this.organizationForm.patchValue({
+      id: organization.id || null,
+      city_id: organization.city_id || null,
+      name: organization.name || '',
+      slug: organization.slug || '',
+      legal_name: organization.legal_name || '',
+      email: organization.email || '',
+      phone: organization.phone || '',
+      is_active: this.toActiveValue(organization.is_active)
+    });
+  }
+
+  nuevaOrganizacion(): void {
+    this.selectedOrganizationId = undefined;
+    this.organizationForm.reset({
+      id: null,
+      city_id: this.cities[0]?.id || null,
+      name: '',
+      slug: '',
+      legal_name: '',
+      email: '',
+      phone: '',
+      is_active: 1
+    });
+  }
+
+  guardarOrganizacion(): void {
+    if (this.organizationForm.invalid) {
+      this.organizationForm.markAllAsTouched();
+      return;
+    }
+
+    this.isSavingOrganization = true;
+    const payload = this.organizationForm.getRawValue();
+    const request$ = payload.id ? this.eventDao.updateOrganization(payload) : this.eventDao.createOrganization(payload);
+
+    request$.subscribe({
+      next: () => {
+        this.isSavingOrganization = false;
+        this.cargarOrganizaciones();
+        this.feedbackType = 'success';
+        this.feedbackMessage = payload.id ? 'Organizacion actualizada.' : 'Organizacion creada.';
+      },
+      error: () => {
+        this.isSavingOrganization = false;
+        this.feedbackType = 'error';
+        this.feedbackMessage = 'No fue posible guardar la organizacion.';
+      }
+    });
+  }
+
+  eliminarOrganizacion(organization?: OrganizationCatalogItem): void {
+    const id = organization?.id || this.organizationForm.get('id')?.value;
+    if (!id) {
+      return;
+    }
+
+    if (!window.confirm('Se eliminara la organizacion seleccionada. Deseas continuar?')) {
+      return;
+    }
+
+    this.eventDao.deleteOrganization(Number(id)).subscribe({
+      next: () => {
+        this.feedbackType = 'success';
+        this.feedbackMessage = 'Organizacion eliminada.';
+        this.nuevaOrganizacion();
+        this.cargarOrganizaciones();
+      },
+      error: () => {
+        this.feedbackType = 'error';
+        this.feedbackMessage = 'No fue posible eliminar la organizacion.';
+      }
+    });
+  }
+
+  resolveCityName(cityId?: number): string {
+    if (!cityId) {
+      return 'Sin ciudad';
+    }
+    const found = this.cities.find((city) => Number(city.id) === Number(cityId));
+    return found?.name || 'Sin ciudad';
+  }
+
+  toActiveValue(value: number | boolean | undefined): number {
+    return value === true || Number(value) === 1 ? 1 : 0;
+  }
+
   seleccionarEvento(evento: Event): void {
     this.eventoActivo = evento;
     this.selectedEventId = this.getEventId(evento) || undefined;
@@ -147,7 +365,6 @@ export class CampamentosComponent implements OnInit {
 
     this.eventoForm.patchValue({
       id: this.getEventId(evento),
-      legacy_event_id: eventData.legacy_event_id || this.getEventId(evento) || null,
       organization_id: eventData.organization_id || null,
       city_id: eventData.city_id || null,
       event_year: eventData.event_year || this.obtenerYearDesdeFecha(eventData.fecha_inicio ?? eventData.start_at),
@@ -191,7 +408,6 @@ export class CampamentosComponent implements OnInit {
     const now = new Date();
     this.eventoForm.reset({
       id: null,
-      legacy_event_id: null,
       organization_id: (base as any).organization_id || null,
       city_id: (base as any).city_id || null,
       event_year: now.getFullYear(),
@@ -330,7 +546,6 @@ export class CampamentosComponent implements OnInit {
 
     return {
       id: raw.id || undefined,
-      legacy_event_id: raw.legacy_event_id || undefined,
       organization_id: Number(raw.organization_id),
       city_id: Number(raw.city_id),
       event_year: Number(raw.event_year || this.obtenerYearDesdeDateString(fechaInicio)),

@@ -1,12 +1,30 @@
 import { HttpClient } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Observable, map } from "rxjs";
-import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
-import { environment } from "src/environments/environment";
 import { Utils } from "../Utils";
 import { EventResponse } from "src/app/core/models/registro/EventResponse";
 import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { Event } from "src/app/core/models/registro/Event";
+
+export interface CityCatalogItem {
+    id?: number;
+    name?: string;
+    slug?: string;
+    is_active?: number | boolean;
+}
+
+export interface OrganizationCatalogItem {
+    id?: number;
+    city_id?: number;
+    name?: string;
+    slug?: string;
+    legal_name?: string;
+    email?: string;
+    phone?: string;
+    is_active?: number | boolean;
+}
+
+export type EventViewMode = 'FULL' | 'SUMMARY' | 'BASIC';
 
 @Injectable()
 export class EventDao {
@@ -16,20 +34,23 @@ export class EventDao {
         private utils: Utils
     ) { }
 
-    public getEvents(): Observable<EventResponse> {
-        return this.http.get<any>(this.utils.v1('/events'), { headers: this.utils.getHeaders() }).pipe(
+    public getEvents(view: EventViewMode = 'FULL'): Observable<EventResponse> {
+        const url = this.withQueryParam(this.utils.v1('/events'), 'view', view);
+        return this.http.get<any>(url, { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
         );
     }
 
-    public getEventActivo(): Observable<EventResponse> {
-        return this.http.get<any>(this.utils.v1('/events')+"?active=1", { headers: this.utils.getHeaders() }).pipe(
+    public getEventActivo(view: EventViewMode = 'FULL'): Observable<EventResponse> {
+        const url = this.withQueryParam(this.withQueryParam(this.utils.v1('/events'), 'active', 1), 'view', view);
+        return this.http.get<any>(url, { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
         );
     }
 
-    public getEventInfo(idEvent: number): Observable<EventResponse> {
-        return this.http.get<any>(this.utils.v1('/events/detail') + '?event_id=' + idEvent, { headers: this.utils.getHeaders() }).pipe(
+    public getEventInfo(idEvent: number, view: EventViewMode = 'FULL'): Observable<EventResponse> {
+        const url = this.withQueryParam(this.withQueryParam(this.utils.v1('/events/detail'), 'event_id', idEvent), 'view', view);
+        return this.http.get<any>(url, { headers: this.utils.getHeaders() }).pipe(
             map(response => this.normalizeEventResponse(response))
         );
     }
@@ -52,9 +73,55 @@ export class EventDao {
         );
     }
 
+    public getCities(): Observable<CityCatalogItem[]> {
+        return this.http.get<any>(this.withToken(this.utils.v1('/cities')), { headers: this.utils.getHeaders() }).pipe(
+            map(response => Array.isArray(response?.data?.cities) ? response.data.cities : [])
+        );
+    }
+
+    public createCity(payload: Partial<CityCatalogItem>): Observable<CityCatalogItem | undefined> {
+        return this.http.post<any>(this.withToken(this.utils.v1('/cities')), payload, { headers: this.utils.getHeaders() }).pipe(
+            map(response => response?.data?.city as CityCatalogItem | undefined)
+        );
+    }
+
+    public updateCity(payload: Partial<CityCatalogItem>): Observable<CityCatalogItem | undefined> {
+        return this.http.put<any>(this.withToken(this.utils.v1('/cities')), payload, { headers: this.utils.getHeaders() }).pipe(
+            map(response => response?.data?.city as CityCatalogItem | undefined)
+        );
+    }
+
+    public deleteCity(cityId: number): Observable<DefaultResponse> {
+        return this.http.delete<any>(this.withToken(this.utils.v1('/cities') + '?id=' + encodeURIComponent(String(cityId))), { headers: this.utils.getHeaders() }).pipe(
+            map(response => this.normalizeDefaultResponse(response))
+        );
+    }
+
+    public getOrganizations(): Observable<OrganizationCatalogItem[]> {
+        return this.http.get<any>(this.withToken(this.utils.v1('/organizations')), { headers: this.utils.getHeaders() }).pipe(
+            map(response => Array.isArray(response?.data?.organizations) ? response.data.organizations : [])
+        );
+    }
+
+    public createOrganization(payload: Partial<OrganizationCatalogItem>): Observable<OrganizationCatalogItem | undefined> {
+        return this.http.post<any>(this.withToken(this.utils.v1('/organizations')), payload, { headers: this.utils.getHeaders() }).pipe(
+            map(response => response?.data?.organization as OrganizationCatalogItem | undefined)
+        );
+    }
+
+    public updateOrganization(payload: Partial<OrganizationCatalogItem>): Observable<OrganizationCatalogItem | undefined> {
+        return this.http.put<any>(this.withToken(this.utils.v1('/organizations')), payload, { headers: this.utils.getHeaders() }).pipe(
+            map(response => response?.data?.organization as OrganizationCatalogItem | undefined)
+        );
+    }
+
+    public deleteOrganization(organizationId: number): Observable<DefaultResponse> {
+        return this.http.delete<any>(this.withToken(this.utils.v1('/organizations') + '?id=' + encodeURIComponent(String(organizationId))), { headers: this.utils.getHeaders() }).pipe(
+            map(response => this.normalizeDefaultResponse(response))
+        );
+    }
+
     private normalizeEventResponse(response: any): EventResponse {
-        // Handle legacy formato: { resultado: Event[], event: Event }
-        // and v1 formato: { data: { event: Event } } or { data: { events: Event[] } }
         let events: any[] = [];
         let event: any = undefined;
         
@@ -64,12 +131,6 @@ export class EventDao {
         } else if (response?.data?.event) {
             event = response.data.event;
             events = [response.data.event];
-        } else if (response?.resultado) {
-            events = Array.isArray(response.resultado) ? response.resultado : [response.resultado];
-            event = events[0];
-        } else if (response?.event) {
-            events = [response.event];
-            event = response.event;
         }
         
         const normalizedEvents = events.map((item) => this.normalizeEvent(item));
@@ -154,5 +215,13 @@ export class EventDao {
         } catch {
             return url;
         }
+    }
+
+    private withQueryParam(url: string, key: string, value: string | number): string {
+        const encoded = encodeURIComponent(String(value));
+        return url + (url.includes('?') ? '&' : '?') + key + '=' + encoded;
+    }
+
+    private withEventViewHeader(view: EventViewMode) {
     }
 }

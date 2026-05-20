@@ -185,7 +185,7 @@ export class ReinscripcionComponent implements OnInit {
   }
 
   private loadCampamentos() {
-    this.eventDao.getEventActivo().subscribe({
+    this.eventDao.getEventActivo('BASIC').subscribe({
       next: (result) => {
         this.events = result.data?.events || [];
         this.event = result.data?.events?.[0];

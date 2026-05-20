@@ -24,7 +24,7 @@ export class NavbarComponent implements OnInit {
   }
 
   private loadEvent() {
-    this.eventDao.getEventActivo().subscribe({
+    this.eventDao.getEventActivo('BASIC').subscribe({
       next: (result) => {
         console.log("Eventos cargados: ", result.data?.events);
         this.events = result.data?.events!;

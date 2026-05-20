@@ -35,7 +35,7 @@ export class NavbarSeguimientoComponent implements OnInit {
     const parsed = stored != null ? Number(stored) : null;
     this.selectedEventoId = parsed != null && !isNaN(parsed) && parsed > 0 ? parsed : undefined;
     console.log('Evento seleccionado cargado:', this.selectedEventoId);
-    this.eventDao.getEventActivo().subscribe({
+    this.eventDao.getEventActivo('BASIC').subscribe({
       next: (resp) => {
         this.eventos = resp.data?.events ?? [];
       },

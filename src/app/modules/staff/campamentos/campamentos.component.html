@@ -38,12 +38,18 @@
                 <input type="number" class="form-control" formControlName="event_year">
             </div>
             <div class="col-lg-2 col-md-3">
-                <label class="form-label">ID Organización</label>
-                <input type="number" class="form-control" formControlName="organization_id">
+                <label class="form-label">Organización</label>
+                <select class="form-select" formControlName="organization_id">
+                    <option [ngValue]="null">Selecciona</option>
+                    <option *ngFor="let org of organizations" [ngValue]="org.id">{{ org.name }}</option>
+                </select>
             </div>
             <div class="col-lg-2 col-md-3">
-                <label class="form-label">ID Ciudad</label>
-                <input type="number" class="form-control" formControlName="city_id">
+                <label class="form-label">Ciudad</label>
+                <select class="form-select" formControlName="city_id">
+                    <option [ngValue]="null">Selecciona</option>
+                    <option *ngFor="let city of cities" [ngValue]="city.id">{{ city.name }}</option>
+                </select>
             </div>
             <div class="col-lg-4 col-md-12">
                 <label class="form-label">Título</label>
@@ -278,5 +284,131 @@
             <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
             <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="example-element-row"></tr>
         </table>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6">
+            <div class="editor-card h-100">
+                <div class="section-title-row mb-3">
+                    <h2>Ciudades</h2>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-dark btn-sm" (click)="nuevaCiudad()">Nueva</button>
+                        <button type="button" class="btn btn-primary btn-sm" [disabled]="isSavingCity" (click)="guardarCiudad()">
+                            {{ isSavingCity ? 'Guardando...' : 'Guardar' }}
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="eliminarCiudad()">Eliminar</button>
+                    </div>
+                </div>
+
+                <form [formGroup]="cityForm" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" class="form-control" formControlName="id" readonly>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Activo</label>
+                        <select class="form-select" formControlName="is_active">
+                            <option [value]="1">Sí</option>
+                            <option [value]="0">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" formControlName="name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Slug</label>
+                        <input type="text" class="form-control" formControlName="slug" placeholder="auto si vacio">
+                    </div>
+                </form>
+
+                <div class="catalog-list mt-3">
+                    <button
+                        type="button"
+                        class="catalog-item"
+                        [ngClass]="{'selected': selectedCityId === city.id}"
+                        *ngFor="let city of cities"
+                        (click)="seleccionarCiudad(city)">
+                        <span>{{ city.name }}</span>
+                        <span class="badge rounded-pill" [ngClass]="toActiveValue(city.is_active) === 1 ? 'text-bg-success' : 'text-bg-secondary'">
+                            {{ toActiveValue(city.is_active) === 1 ? 'Activa' : 'Inactiva' }}
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="editor-card h-100">
+                <div class="section-title-row mb-3">
+                    <h2>Organizaciones</h2>
+                    <div class="d-flex gap-2">
+                        <button type="button" class="btn btn-outline-dark btn-sm" (click)="nuevaOrganizacion()">Nueva</button>
+                        <button type="button" class="btn btn-primary btn-sm" [disabled]="isSavingOrganization" (click)="guardarOrganizacion()">
+                            {{ isSavingOrganization ? 'Guardando...' : 'Guardar' }}
+                        </button>
+                        <button type="button" class="btn btn-outline-danger btn-sm" (click)="eliminarOrganizacion()">Eliminar</button>
+                    </div>
+                </div>
+
+                <form [formGroup]="organizationForm" class="row g-3">
+                    <div class="col-md-3">
+                        <label class="form-label">ID</label>
+                        <input type="text" class="form-control" formControlName="id" readonly>
+                    </div>
+                    <div class="col-md-9">
+                        <label class="form-label">Ciudad</label>
+                        <select class="form-select" formControlName="city_id">
+                            <option [ngValue]="null">Selecciona</option>
+                            <option *ngFor="let city of cities" [ngValue]="city.id">{{ city.name }}</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Nombre</label>
+                        <input type="text" class="form-control" formControlName="name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Slug</label>
+                        <input type="text" class="form-control" formControlName="slug" placeholder="auto si vacio">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Razón social</label>
+                        <input type="text" class="form-control" formControlName="legal_name">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Activo</label>
+                        <select class="form-select" formControlName="is_active">
+                            <option [value]="1">Sí</option>
+                            <option [value]="0">No</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Email</label>
+                        <input type="email" class="form-control" formControlName="email">
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Teléfono</label>
+                        <input type="text" class="form-control" formControlName="phone">
+                    </div>
+                </form>
+
+                <div class="catalog-list mt-3">
+                    <button
+                        type="button"
+                        class="catalog-item"
+                        [ngClass]="{'selected': selectedOrganizationId === org.id}"
+                        *ngFor="let org of organizations"
+                        (click)="seleccionarOrganizacion(org)">
+                        <div class="d-flex flex-column align-items-start text-start">
+                            <span>{{ org.name }}</span>
+                            <small class="text-muted">{{ resolveCityName(org.city_id) }}</small>
+                        </div>
+                        <span class="badge rounded-pill" [ngClass]="toActiveValue(org.is_active) === 1 ? 'text-bg-success' : 'text-bg-secondary'">
+                            {{ toActiveValue(org.is_active) === 1 ? 'Activa' : 'Inactiva' }}
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

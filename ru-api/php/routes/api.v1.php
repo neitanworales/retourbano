@@ -3,6 +3,8 @@
 $authController = new AuthController();
 $registrationController = new RegistrationController();
 $eventController = new EventController();
+$cityController = new CityController();
+$organizationController = new OrganizationController();
 $eventDashboardController = new EventDashboardController();
 $userController = new UserController();
 $paymentController = new PaymentController();
@@ -79,6 +81,54 @@ $router->add('PUT', '/api/v1/events', function ($request) use ($eventController,
 $router->add('DELETE', '/api/v1/events', function ($request) use ($eventController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($eventController) {
         return $eventController->delete($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/cities', function ($request) use ($cityController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin', 'super'), function ($securedRequest) use ($cityController) {
+        return $cityController->list($securedRequest);
+    });
+});
+
+$router->add('POST', '/api/v1/cities', function ($request) use ($cityController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($cityController) {
+        return $cityController->create($securedRequest);
+    });
+});
+
+$router->add('PUT', '/api/v1/cities', function ($request) use ($cityController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($cityController) {
+        return $cityController->update($securedRequest);
+    });
+});
+
+$router->add('DELETE', '/api/v1/cities', function ($request) use ($cityController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($cityController) {
+        return $cityController->delete($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/organizations', function ($request) use ($organizationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin', 'super'), function ($securedRequest) use ($organizationController) {
+        return $organizationController->list($securedRequest);
+    });
+});
+
+$router->add('POST', '/api/v1/organizations', function ($request) use ($organizationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($organizationController) {
+        return $organizationController->create($securedRequest);
+    });
+});
+
+$router->add('PUT', '/api/v1/organizations', function ($request) use ($organizationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($organizationController) {
+        return $organizationController->update($securedRequest);
+    });
+});
+
+$router->add('DELETE', '/api/v1/organizations', function ($request) use ($organizationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin', 'super'), function ($securedRequest) use ($organizationController) {
+        return $organizationController->delete($securedRequest);
     });
 });
 
