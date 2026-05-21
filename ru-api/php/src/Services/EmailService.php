@@ -105,7 +105,7 @@ class EmailService
         $staffEmail = isset($event->contact_email) ? trim((string) $event->contact_email) : '';
         if ($staffEmail !== '') {
             $staffHtml = $this->renderTemplate('inscripcion-staff.html', $variables);
-            $this->send($staffEmail, '[REPORTE A STAFF][' . $variables['ciudad'] . '] '. ($reinscription ? 'Reinscripcion' : 'Nuevo') . ' a Reto Urbano ' . $variables['year'] . ' - ' . $variables['ciudad'], $staffHtml);
+            $this->send($staffEmail, '[REPORTE A STAFF][' . $variables['ciudad'] . '] '. ($reinscription ? 'Reinscripción' : 'Inscripción') . ' a Reto Urbano ' . $variables['year'] . ' - ' . $variables['ciudad'], $staffHtml);
         }
 
         return $sent;
