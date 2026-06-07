@@ -216,6 +216,7 @@ class EventController extends BaseController
         $event->event_year = $this->toNullableInt($this->readField($request, array('event_year', 'year')));
         $event->title = $this->toNullableString($this->readField($request, array('title', 'titulo')));
         $event->start_at = $this->toNullableDateTime($this->readField($request, array('start_at', 'fecha_inicio')));
+        $event->lobby_end_at = $this->toNullableTime($this->readField($request, array('lobby_end_at')));
         $event->end_at = $this->toNullableDateTime($this->readField($request, array('end_at', 'fecha_termino')));
         $event->is_active = $this->toBooleanInt($this->readField($request, array('is_active', 'activo')));
         $event->max_registrations = $this->toNullableInt($this->readField($request, array('max_registrations', 'maximo_inscr')));
@@ -325,6 +326,33 @@ class EventController extends BaseController
         return $normalized;
     }
 
+    private function toNullableTime($value)
+    {
+        if ($value === null || $value === '') {
+            return null;
+        }
+
+        $stringValue = trim((string) $value);
+        if ($stringValue === '') {
+            return null;
+        }
+
+        if (preg_match('/^\d{2}:\d{2}$/', $stringValue)) {
+            return $stringValue . ':00';
+        }
+
+        if (preg_match('/^\d{2}:\d{2}:\d{2}$/', $stringValue)) {
+            return $stringValue;
+        }
+
+        $timestamp = strtotime($stringValue);
+        if ($timestamp === false) {
+            return null;
+        }
+
+        return date('H:i:s', $timestamp);
+    }
+
     private function toBooleanInt($value)
     {
         if ($value === null || $value === '') {
@@ -410,9 +438,9 @@ class EventController extends BaseController
             return $eventArray;
         }
 
-        $basicFields = array('id', 'organization_id', 'city_id', 'event_year', 'title', 'start_at', 'end_at', 'is_active', 'city_label');
+        $basicFields = array('id', 'organization_id', 'city_id', 'event_year', 'title', 'start_at', 'lobby_end_at', 'end_at', 'is_active', 'city_label');
         $summaryFields = array(
-            'id', 'organization_id', 'city_id', 'event_year', 'title', 'start_at', 'end_at', 'is_active',
+            'id', 'organization_id', 'city_id', 'event_year', 'title', 'start_at', 'lobby_end_at', 'end_at', 'is_active',
             'max_registrations', 'threshold', 'registration_open_at', 'registration_deadline',
             'price_mxn', 'price_usd', 'minimum_payment_mxn', 'city_label'
         );

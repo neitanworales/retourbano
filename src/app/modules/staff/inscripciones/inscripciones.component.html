@@ -34,23 +34,23 @@
                     class="bi bi-person-fill-up"></i> Seguimiento</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageHospedajeActive?'active':''}}" (click)="activarPageHospedaje()"><i class="bi bi-h-square"></i> Hospedaje</a>
+            <a class="nav-link {{pageHospedajeActive?'active':''}}" (click)="activarPageHospedaje()"><i
+                    class="bi bi-h-square"></i> Hospedaje</a>
         </li>
         <li class="nav-item">
-            <a class="nav-link {{pageContabilidadActive?'active':''}}" (click)="activarPageContabilidad()"><i class="bi bi-wallet"></i> Contabilidad</a>
+            <a class="nav-link {{pageContabilidadActive?'active':''}}" (click)="activarPageContabilidad()"><i
+                    class="bi bi-wallet"></i> Contabilidad</a>
         </li>
     </ul>
 
     <div *ngIf="pageResumenActive" class="mt-4 mb-4">
-        <app-event-summary-dashboard
-            [eventId]="selectedEventoId"
-            [eventTitle]="selectedEvento?.city_label || 'Resumen del evento'"
-            [eventDate]="selectedEvento?.start_at">
+        <app-event-summary-dashboard [eventId]="selectedEventoId"
+            [eventTitle]="selectedEvento?.city_label || 'Resumen del evento'" [eventDate]="selectedEvento?.start_at">
         </app-event-summary-dashboard>
     </div>
 
     <app-hospedajes *ngIf="pageHospedajeActive" [selectedEvento]="selectedEvento"></app-hospedajes>
-    
+
     <app-contabilidad *ngIf="pageContabilidadActive" [selectedEvento]="selectedEvento"></app-contabilidad>
 
     <div [ngStyle]="{'display':displayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
@@ -76,7 +76,7 @@
 
             <ng-container matColumnDef="ID">
                 <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+                <td mat-cell *matCellDef="let element"> {{element.id}}.{{element.user?.id}} </td>
             </ng-container>
 
             <ng-container matColumnDef="numero">
@@ -299,10 +299,13 @@
                                                 <div class="icon-block">
                                                     <p><i class="bi bi-chat-left-quote"></i>{{element.razones}}</p>
                                                     <p><i class="bi bi-house-door"></i>{{element.user?.iglesia}}</p>
-                                                    <p><i class="bi bi-exclamation-diamond"></i>{{element.user?.alergias}}</p>
+                                                    <p><i
+                                                            class="bi bi-exclamation-diamond"></i>{{element.user?.alergias}}
+                                                    </p>
                                                     <p><i class="bi bi-capsule"></i>{{element.user?.medicamentos}}</p>
                                                     <h5>Datos del tutor</h5>
-                                                    <p><i class="bi bi-person-check"></i>{{element.user?.tutorNombre}}</p>
+                                                    <p><i class="bi bi-person-check"></i>{{element.user?.tutorNombre}}
+                                                    </p>
                                                     <p><i class="bi bi-phone"></i>{{element.user?.tutorTelefono}}</p>
                                                     <div class="row">
                                                         <div *ngIf="element.user?.updatePassword; else updatePasss">
@@ -328,8 +331,9 @@
                                                                     (click)="editarContrasena(element);"><i
                                                                         class="bi bi-pen"></i></button>
                                                                 <input type="text" class="form-control"
-                                                                    placeholder="Password" value="{{element.user?.password}}"
-                                                                    disabled readonly>
+                                                                    placeholder="Password"
+                                                                    value="{{element.user?.password}}" disabled
+                                                                    readonly>
                                                             </div>
                                                         </ng-template>
                                                     </div>
@@ -361,6 +365,35 @@
                                             </td>
                                             <td>
                                                 {{element.habitacion}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table tabla-pagos">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Campamentos Anteriores
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let previousEvent of element.previous_events || []">
+                                            <td>
+                                                <div class="btn position-relative">
+                                                    {{ previousEvent.title || previousEvent.titulo || 'Campamento sin título' }}
+                                                    <span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        {{ previousEvent.event_year || previousEvent.year || '-' }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="!(element.previous_events?.length)">
+                                            <td>
+                                                Sin campamentos anteriores
                                             </td>
                                         </tr>
                                     </tbody>
@@ -403,8 +436,7 @@
                                             </td>
                                             <td>
                                                 <div *ngIf="pago.nuevo; else elseCol2">
-                                                    <input type="number" class="form-control"
-                                                        [(ngModel)]="pago.amount">
+                                                    <input type="number" class="form-control" [(ngModel)]="pago.amount">
                                                 </div>
                                                 <ng-template #elseCol2>
                                                     {{pago.amount | currency:"$ "}}

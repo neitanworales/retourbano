@@ -47,17 +47,19 @@
         <li>
             <h3>2. <i class="bi bi-car-front-fill"></i> Día de llegada:</h3>
             <p *ngIf="event.start_at"><i class="bi bi-calendar-event"></i> {{event.start_at | date}}</p>
-            <p *ngIf="event.start_at"><i class="bi bi-clock"></i> {{event.start_at | date:'shortTime'}}
-            </p>
+            <p *ngIf="event.start_at"><i class="bi bi-clock"></i> Apertura de registro: {{event.start_at | date:'shortTime'}}</p>
+            <p *ngIf="event.lobby_end_at"><i class="bbi bi-clock-history"></i> Cierre de registro: {{formatLobbyTime(event.lobby_end_at)}}</p>
+
+            <div class="alert alert-warning" role="alert" *ngIf="event.arrival_note" style="white-space: pre-line;">
+                {{ formatNoteText(event.arrival_note) }}
+            </div>
+
             <p *ngIf="event.arrival_place"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b>
                 {{event.arrival_place}}</p>
             <iframe *ngIf="event.arrival_coordinates" [src]="getSafeUrl(event.arrival_coordinates)" width="600"
                 height="450" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
 
-            <div class="alert alert-warning" role="alert" *ngIf="event.arrival_note">
-                {{event.arrival_note}}
-            </div>
         </li>
         <li>
             <h3>3. <i class="bi bi-backpack2"></i> Viaje Misionero:</h3>

@@ -1,4 +1,5 @@
 import { DefaultResponse } from "../DefaultResponse";
+import { Event } from "./Event";
 import { Pago } from "./Pago";
 import { User } from "./User";
 
@@ -24,6 +25,7 @@ export class EventRegistration {
     // Payment data
     pagado?: number;
     pagos?: Pago[] = [];
+    previous_events?: Event[];
 
     // Legacy UI field
     numero?: number;

@@ -111,6 +111,7 @@ class EventRepository extends BaseRepository
                     event_year,
                     title,
                     start_at,
+                    lobby_end_at,
                     end_at,
                     is_active,
                     max_registrations,
@@ -135,7 +136,7 @@ class EventRepository extends BaseRepository
                     departure_note,
                     cost_notes
                 ) VALUES (
-                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
+                    ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?
                 )';
 
         $stmt = $this->db->prepare($sql);
@@ -145,6 +146,7 @@ class EventRepository extends BaseRepository
         $eventYear = isset($event->event_year) ? (int) $event->event_year : null;
         $title = isset($event->title) ? (string) $event->title : null;
         $startAt = isset($event->start_at) ? (string) $event->start_at : null;
+        $lobbyEndAt = isset($event->lobby_end_at) ? (string) $event->lobby_end_at : null;
         $endAt = isset($event->end_at) ? (string) $event->end_at : null;
         $isActive = isset($event->is_active) ? (int) $event->is_active : 0;
         $maxRegistrations = isset($event->max_registrations) ? (int) $event->max_registrations : null;
@@ -170,13 +172,14 @@ class EventRepository extends BaseRepository
         $costNotes = isset($event->cost_notes) ? (string) $event->cost_notes : null;
 
         $stmt->bind_param(
-            'iiiisssiiisssdddsssssssssssss',
+            'iiiissssiiissdddssssssssssssss',
             $legacyEventId,
             $organizationId,
             $cityId,
             $eventYear,
             $title,
             $startAt,
+            $lobbyEndAt,
             $endAt,
             $isActive,
             $maxRegistrations,
@@ -216,7 +219,7 @@ class EventRepository extends BaseRepository
     public function update(Event $event)
     {
         $sql = 'UPDATE events
-                SET legacy_event_id = ?, organization_id = ?, city_id = ?, event_year = ?, title = ?, start_at = ?, end_at = ?,
+                SET legacy_event_id = ?, organization_id = ?, city_id = ?, event_year = ?, title = ?, start_at = ?, lobby_end_at = ?, end_at = ?,
                     is_active = ?, max_registrations = ?, threshold = ?, registration_deadline = ?, registration_open_at = ?,
                     price_mxn = ?, price_usd = ?, minimum_payment_mxn = ?, bank_name = ?, bank_account = ?, bank_clabe = ?,
                     account_holder = ?, contact_phone_1 = ?, contact_phone_2 = ?, contact_email = ?, arrival_place = ?,
@@ -231,6 +234,7 @@ class EventRepository extends BaseRepository
         $eventYear = isset($event->event_year) ? (int) $event->event_year : null;
         $title = isset($event->title) ? (string) $event->title : null;
         $startAt = isset($event->start_at) ? (string) $event->start_at : null;
+        $lobbyEndAt = isset($event->lobby_end_at) ? (string) $event->lobby_end_at : null;
         $endAt = isset($event->end_at) ? (string) $event->end_at : null;
         $isActive = isset($event->is_active) ? (int) $event->is_active : 0;
         $maxRegistrations = isset($event->max_registrations) ? (int) $event->max_registrations : null;
@@ -257,13 +261,14 @@ class EventRepository extends BaseRepository
         $eventId = (int) $event->id;
 
         $stmt->bind_param(
-            'iiiisssiiisssdddssssssssssssssi',
+            'iiiissssiiissdddssssssssssssssi',
             $legacyEventId,
             $organizationId,
             $cityId,
             $eventYear,
             $title,
             $startAt,
+            $lobbyEndAt,
             $endAt,
             $isActive,
             $maxRegistrations,

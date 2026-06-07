@@ -297,7 +297,8 @@ class RegistrationController extends BaseController
         $registrations = $this->registrationService->getByEvent($eventId, $limit, $offset, $filters);
         $items = array_map(function ($registration) {
             $item = $this->attachUserToItem($registration->toArray());
-            return $this->attachPaymentsToItem($item);
+            $item = $this->attachPaymentsToItem($item);
+            return $this->attachPreviousEventsToItem($item);
         }, $registrations);
 
         return $this->ok(array('registrations' => $items), 'registrations by event');
@@ -369,6 +370,25 @@ class RegistrationController extends BaseController
             $amount = isset($payment['amount']) ? (float) $payment['amount'] : 0;
             return $total + $amount;
         }, 0.0);
+        return $item;
+    }
+
+    private function attachPreviousEventsToItem($item)
+    {
+        if (!is_array($item) || !isset($item['user_id'])) {
+            return $item;
+        }
+
+        $userId = (int) $item['user_id'];
+        if ($userId <= 0) {
+            $item['previous_events'] = array();
+            return $item;
+        }
+
+        $events = $this->eventRegistrations->findByUser($userId, 20, 0);
+        $item['previous_events'] = array_map(function ($event) {
+            return $event->toArray();
+        }, $events);
         return $item;
     }
 

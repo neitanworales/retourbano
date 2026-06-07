@@ -55,9 +55,10 @@ export class LoginDao {
         );
     }
 
-    public logout(): Observable<LoginResponse>{
-        this.session = JSON.parse(localStorage.getItem('session')!);
-        const body = { token: this.session?.token?.toString() || '' };
+    public logout(token?: string): Observable<LoginResponse>{
+        const sessionRaw = localStorage.getItem('session');
+        this.session = sessionRaw ? JSON.parse(sessionRaw) : undefined;
+        const body = { token: token || this.session?.token?.toString() || '' };
 
         return this.http.post<V1Response<Record<string, never>>>(this.utils.v1('/auth/logout'), body, { headers: this.utils.getHeaders() }).pipe(
             map((response) => ({

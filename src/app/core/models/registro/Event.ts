@@ -10,6 +10,7 @@ export class Event {
     event_year?: number;
     title?: string;
     start_at?: Date;
+    lobby_end_at?: Date;
     end_at?: Date;
     is_active?: boolean;
     max_registrations?: number;

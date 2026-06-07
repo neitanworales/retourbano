@@ -20,6 +20,7 @@ export class CampamentosComponent implements OnInit {
     'id_event',
     'titulo',
     'fecha_inicio',
+    'lobby_end_at',
     'fecha_termino',
     'activo',
     'maximo_inscr',
@@ -62,6 +63,7 @@ export class CampamentosComponent implements OnInit {
       event_year: [new Date().getFullYear(), Validators.required],
       titulo: ["", Validators.required],
       fecha_inicio: ["", Validators.required],
+      lobby_end_at: [""],
       fecha_termino: ["", Validators.required],
       activo: [1],
       maximo_inscr: ["", Validators.required],
@@ -370,6 +372,7 @@ export class CampamentosComponent implements OnInit {
       event_year: eventData.event_year || this.obtenerYearDesdeFecha(eventData.fecha_inicio ?? eventData.start_at),
       titulo: eventData.titulo ?? eventData.title ?? '',
       fecha_inicio: this.formatearFechaInput(eventData.fecha_inicio ?? eventData.start_at),
+      lobby_end_at: this.formatearHoraInput(eventData.lobby_end_at),
       fecha_termino: this.formatearFechaInput(eventData.fecha_termino ?? eventData.end_at),
       activo: this.getActivo(evento),
       maximo_inscr: eventData.maximo_inscr ?? eventData.max_registrations ?? '',
@@ -413,6 +416,7 @@ export class CampamentosComponent implements OnInit {
       event_year: now.getFullYear(),
       titulo: '',
       fecha_inicio: '',
+      lobby_end_at: '',
       fecha_termino: '',
       activo: 1,
       maximo_inscr: base.maximo_inscr || 150,
@@ -542,6 +546,7 @@ export class CampamentosComponent implements OnInit {
   private buildPayload(): any {
     const raw = this.eventoForm.getRawValue();
     const fechaInicio = this.normalizeDateTime(raw.fecha_inicio);
+    const lobbyEndAt = this.normalizeTimeWithDate(raw.fecha_inicio, raw.lobby_end_at);
     const fechaTermino = this.normalizeDateTime(raw.fecha_termino);
 
     return {
@@ -551,6 +556,7 @@ export class CampamentosComponent implements OnInit {
       event_year: Number(raw.event_year || this.obtenerYearDesdeDateString(fechaInicio)),
       title: raw.titulo,
       start_at: fechaInicio,
+      lobby_end_at: lobbyEndAt,
       end_at: fechaTermino,
       is_active: Number(raw.activo) === 1 ? 1 : 0,
       max_registrations: Number(raw.maximo_inscr),
@@ -612,6 +618,27 @@ export class CampamentosComponent implements OnInit {
     return localDate.toISOString().slice(0, 16);
   }
 
+  private formatearHoraInput(value?: Date | string): string {
+    if (!value) {
+      return '';
+    }
+
+    if (typeof value === 'string') {
+      const timeMatch = value.match(/^(\d{2}:\d{2})(?::\d{2})?$/);
+      if (timeMatch) {
+        return timeMatch[1];
+      }
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return localDate.toISOString().slice(11, 16);
+  }
+
   private normalizeDateTime(value: string): string | null {
     if (!value) {
       return null;
@@ -624,6 +651,33 @@ export class CampamentosComponent implements OnInit {
 
     const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
     return localDate.toISOString().slice(0, 19).replace('T', ' ');
+  }
+
+  private normalizeTimeWithDate(dateValue: string, timeValue: string): string | null {
+    if (!timeValue) {
+      return null;
+    }
+
+    if (!dateValue) {
+      return null;
+    }
+
+    return this.normalizeDateTime(dateValue.slice(0, 10) + 'T' + timeValue);
+  }
+
+  formatLobbyTime(value?: Date | string): string {
+    if (!value) {
+      return '';
+    }
+
+    if (typeof value === 'string') {
+      const timeMatch = value.match(/^(\d{2}:\d{2})(?::\d{2})?$/);
+      if (timeMatch) {
+        return timeMatch[1];
+      }
+    }
+
+    return this.formatearHoraInput(value);
   }
 
   private obtenerYearDesdeFecha(value?: Date | string): number | null {

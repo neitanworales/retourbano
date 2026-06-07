@@ -294,6 +294,10 @@ class EventRegistrationRepository extends BaseRepository
 
     public function findByUser($userId, $limit = 100, $offset = 0)
     {
+        if($userId === '2054') {
+            echo "Finding events for user ID: $userId\n";
+        }
+
         $sql = 'SELECT * FROM events e
                 LEFT JOIN event_registrations er ON er.event_id = e.id 
                 WHERE er.user_id = ? AND e.is_active = 0 ORDER BY e.event_year DESC LIMIT ? OFFSET ?';

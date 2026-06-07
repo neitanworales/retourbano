@@ -11,6 +11,7 @@ class Event extends BaseModel
     public $event_year;
     public $title;
     public $start_at;
+    public $lobby_end_at;
     public $end_at;
     public $is_active;
     public $max_registrations;

@@ -6,6 +6,7 @@ import { Session } from 'src/app/core/models/login/Session';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { Event } from 'src/app/core/models/registro/Event';
+import { take } from 'rxjs';
 
 @Component({
   selector: 'app-navbar-seguimiento',
@@ -26,10 +27,14 @@ export class NavbarSeguimientoComponent implements OnInit {
     private autho: AuthService,
     private eventDao: EventDao
   ) {
-    this.currentUser = inject(AuthService).getSessionValida();
+    this.currentUser = inject(AuthService).getSession() || undefined;
   }
 
   ngOnInit(): void {
+    this.autho.currentUser$.subscribe((session) => {
+      this.currentUser = session || undefined;
+    });
+
     // Initialize selected evento from localStorage before options load
     const stored = localStorage.getItem('eventoSeleccionado');
     const parsed = stored != null ? Number(stored) : null;
@@ -46,18 +51,20 @@ export class NavbarSeguimientoComponent implements OnInit {
   }
 
   cerrarSesion() {
-    const session = this.autho.getSession();
-    if (session) {
-      this.loginDao.logout().subscribe(
-        result => {
-          console.log(result);
-          this.autho.setSession(null);
-          this.router.navigate(['login']);
-          localStorage.clear();
-        });
-    } else {
-      this.router.navigate(['login']);
+    const token = this.autho.getSession()?.token?.toString() || '';
+
+    this.autho.clearSession();
+    this.router.navigate(['login']);
+
+    if (!token) {
+      return;
     }
+
+    this.loginDao.logout(token).pipe(take(1)).subscribe({
+      error: (error) => {
+        console.error('Error al cerrar sesión:', error);
+      }
+    });
   }
 
   hasRole(roles: UserRole[]) {

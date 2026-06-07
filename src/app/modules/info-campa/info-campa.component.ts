@@ -129,4 +129,48 @@ export class InfoCampaComponent implements OnInit {
     return durationInDays > 0 ? durationInDays : 0;
   }
 
+  formatLobbyTime(value?: Date | string): string {
+    if (!value) {
+      return '';
+    }
+
+    if (typeof value === 'string') {
+      const timeMatch = value.match(/^(\d{2}:\d{2})(?::\d{2})?$/);
+      if (timeMatch) {
+        return timeMatch[1];
+      }
+    }
+
+    return this.formatearHoraInput(value);
+  }
+
+  formatNoteText(value?: string | null): string {
+    if (!value) {
+      return '';
+    }
+
+    return value.replace(/\s*\*\*\s*/g, '\n').trim();
+  }
+
+  private formatearHoraInput(value?: Date | string): string {
+    if (!value) {
+      return '';
+    }
+
+    if (typeof value === 'string') {
+      const timeMatch = value.match(/^(\d{2}:\d{2})(?::\d{2})?$/);
+      if (timeMatch) {
+        return timeMatch[1];
+      }
+    }
+
+    const date = new Date(value);
+    if (Number.isNaN(date.getTime())) {
+      return '';
+    }
+
+    const localDate = new Date(date.getTime() - (date.getTimezoneOffset() * 60000));
+    return localDate.toISOString().slice(11, 16);
+  }
+
 }

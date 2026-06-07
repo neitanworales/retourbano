@@ -1666,6 +1666,10 @@ components:
           type: string
           format: date-time
           nullable: true
+        lobby_end_at:
+          type: string
+          format: date-time
+          nullable: true
         end_at:
           type: string
           format: date-time

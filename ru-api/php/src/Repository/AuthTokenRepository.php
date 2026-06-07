@@ -63,7 +63,7 @@ class AuthTokenRepository extends BaseRepository
 
     public function revokeByToken($token)
     {
-        $sql = 'UPDATE auth_tokens SET revoked_at = NOW() WHERE token = ? AND revoked_at IS NULL';
+        $sql = 'DELETE FROM auth_tokens WHERE token = ?';
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('s', $token);
         $ok = $stmt->execute();

@@ -154,6 +154,7 @@ export class RegistroDao {
                             razones: item?.reasons,
                             pagado: rawUser?.pagado ?? item?.pagado,
                             pagos: rawUser?.pagos ?? item?.pagos,
+                            previous_events: item?.previous_events ?? [],
                             // Legacy Spanish aliases for UI compatibility
                             confirmado: (item?.is_confirmed ?? 0) === 1,
                             asistencia: (item?.attendance_confirmed ?? 0) === 1,
