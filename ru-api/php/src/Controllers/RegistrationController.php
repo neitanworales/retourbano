@@ -188,6 +188,52 @@ class RegistrationController extends BaseController
         return $this->ok(array('registration_id' => $registrationId, 'updated' => $updates), 'registration updated');
     }
 
+    public function resendWelcomeEmail($request)
+    {
+        $registrationId = isset($request['registration_id']) ? (int) $request['registration_id'] : 0;
+        if ($registrationId <= 0) {
+            return $this->fail('registration_id is required', 422);
+        }
+
+        $result = $this->registrationService->sendWelcomeEmail($registrationId);
+        if (isset($result['error'])) {
+            return $this->fail($result['error'], 400, $result);
+        }
+
+        return $this->ok($result, 'welcome email sent');
+    }
+
+    public function sendConfirmationInfoEmail($request)
+    {
+        $registrationId = isset($request['registration_id']) ? (int) $request['registration_id'] : 0;
+        if ($registrationId <= 0) {
+            return $this->fail('registration_id is required', 422);
+        }
+
+        $result = $this->registrationService->sendConfirmationInfoEmail($registrationId);
+        if (isset($result['error'])) {
+            return $this->fail($result['error'], 400, $result);
+        }
+
+        return $this->ok($result, 'confirmation info email sent');
+    }
+
+    public function delete($request)
+    {
+        $registrationId = isset($request['registration_id']) ? (int) $request['registration_id'] : 0;
+        if ($registrationId <= 0) {
+            return $this->fail('registration_id is required', 422);
+        }
+
+        $result = $this->registrationService->delete($registrationId);
+        if (isset($result['error'])) {
+            $code = $result['error'] === 'registration not found' ? 404 : 500;
+            return $this->fail($result['error'], $code, $result);
+        }
+
+        return $this->ok($result, 'registration deleted');
+    }
+
     public function requestReenrollmentCode($request)
     {
         $email = isset($request['email']) ? trim((string) $request['email']) : '';

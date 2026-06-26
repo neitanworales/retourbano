@@ -267,7 +267,7 @@
             <div class="form-group">
                 <label>¿Requieres Hospedaje?</label>
                 <select class="form-control" formControlName="hospedaje"
-                    [ngClass]="{'is-invalid': form['hospedaje'].errors }" [(ngModel)]="model.hospedaje">
+                    [ngClass]="{'is-invalid': form['hospedaje'].errors }" [(ngModel)]="model.requires_lodging">
                     <option value="null" disabled="" selected="">Hospedaje</option>
                     <option value="true">Si</option>
                     <option value="false">No</option>

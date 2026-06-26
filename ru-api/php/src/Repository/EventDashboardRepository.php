@@ -21,7 +21,7 @@ class EventDashboardRepository extends BaseRepository
                     SUM(CASE WHEN $activeCondition AND er.requires_lodging = 1 THEN 1 ELSE 0 END) AS with_lodging,
                     SUM(CASE WHEN $activeCondition AND (er.requires_lodging = 0 OR er.requires_lodging IS NULL) THEN 1 ELSE 0 END) AS without_lodging,
                     SUM(CASE WHEN $activeCondition AND er.is_followup = 1 THEN 1 ELSE 0 END) AS followup,
-                    SUM(CASE WHEN $activeCondition AND er.welcome_email_sent = 1 THEN 1 ELSE 0 END) AS welcome_email_sent,
+                    SUM(CASE WHEN $activeCondition THEN COALESCE(er.welcome_email_sent, 0) ELSE 0 END) AS welcome_email_sent,
                     SUM(CASE WHEN $activeCondition AND er.email_confirmed = 1 THEN 1 ELSE 0 END) AS email_confirmed,
                     SUM(CASE WHEN $activeCondition AND er.is_confirmed = 1 THEN 1 ELSE 0 END) AS confirmed,
                     SUM(CASE WHEN $activeCondition AND er.attendance_confirmed = 1 THEN 1 ELSE 0 END) AS attendance_confirmed

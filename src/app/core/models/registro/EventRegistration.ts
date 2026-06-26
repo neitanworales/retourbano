@@ -10,15 +10,19 @@ export class EventRegistration {
     event_id?: number;
     user_id?: number;
     registration_status?: string;
-    is_confirmed?: boolean;
-    attendance_confirmed?: boolean;
+    
     is_staff?: boolean;
     is_admin?: boolean;
     is_followup?: boolean;
-    welcome_email_sent?: boolean;
+
+    welcome_email_sent?: number;
+    is_confirmed?: boolean;
     email_confirmed?: boolean;
+    attendance_confirmed?: boolean;
+
     requires_lodging?: boolean;
     room_code?: string;
+    
     reasons?: string;
     razones?: string;
 
@@ -29,19 +33,7 @@ export class EventRegistration {
 
     // Legacy UI field
     numero?: number;
-
-    // Legacy Spanish aliases for registration flags (used in UI)
-    confirmado?: boolean;
-    asistencia?: boolean;
-    staff?: boolean;
-    admin?: boolean;
     seguimiento?: boolean;
-    emailEnviado?: boolean;
-    emailConfirmado?: boolean;
-    hospedaje?: boolean;
-    habitacion?: string;
-
-    // Nested user profile data
     user?: User;
 }
 

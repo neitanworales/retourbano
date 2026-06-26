@@ -110,6 +110,52 @@ class EventRegistrationRepository extends BaseRepository
         return $this->updateFields($id, array('registration_status' => $status));
     }
 
+    public function incrementWelcomeEmailSent($id)
+    {
+        $sql = 'UPDATE event_registrations
+                SET welcome_email_sent = COALESCE(welcome_email_sent, 0) + 1,
+                    updated_at = NOW()
+                WHERE id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $id);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        if (!$ok) {
+            return false;
+        }
+
+        $registration = $this->findModelById($id);
+        if (!$registration) {
+            return false;
+        }
+
+        return (int) $registration->welcome_email_sent;
+    }
+
+    public function incrementConfirmationEmailSent($id)
+    {
+        $sql = 'UPDATE event_registrations
+                SET email_confirmed = COALESCE(email_confirmed, 0) + 1,
+                    updated_at = NOW()
+                WHERE id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $id);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        if (!$ok) {
+            return false;
+        }
+
+        $registration = $this->findModelById($id);
+        if (!$registration) {
+            return false;
+        }
+
+        return (int) $registration->welcome_email_sent;
+    }
+
     public function updateFields($id, $fields)
     {
         $allowed = array(

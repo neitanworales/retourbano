@@ -47,8 +47,10 @@
         <li>
             <h3>2. <i class="bi bi-car-front-fill"></i> Día de llegada:</h3>
             <p *ngIf="event.start_at"><i class="bi bi-calendar-event"></i> {{event.start_at | date}}</p>
-            <p *ngIf="event.start_at"><i class="bi bi-clock"></i> Apertura de registro: {{event.start_at | date:'shortTime'}}</p>
-            <p *ngIf="event.lobby_end_at"><i class="bbi bi-clock-history"></i> Cierre de registro: {{formatLobbyTime(event.lobby_end_at)}}</p>
+            <p *ngIf="event.start_at"><i class="bi bi-clock"></i> Apertura de registro: {{event.start_at |
+                date:'shortTime'}}</p>
+            <p *ngIf="event.lobby_end_at"><i class="bbi bi-clock-history"></i> Cierre de registro:
+                {{formatLobbyTime(event.lobby_end_at)}}</p>
 
             <div class="alert alert-warning" role="alert" *ngIf="event.arrival_note" style="white-space: pre-line;">
                 {{ formatNoteText(event.arrival_note) }}
@@ -83,6 +85,84 @@
                 height="450" style="border:0;" allowfullscreen="" loading="lazy"
                 referrerpolicy="no-referrer-when-downgrade"></iframe>
             <p *ngIf="event.departure_note">{{event.departure_note}}</p>
+            <p><a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a></p>
+        </li>
+        <li>
+            <h3>5. <i class="bi bi-clipboard2-check-fill"></i> Qué llevar: (Puedes ir marcando esta lista)</h3>
+
+            <p style="white-space: pre-line;">Estas son algunas cosas que debes traer al campamento:</p>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck2">
+                <label class="form-check-label" for="switchCheck2">Biblia, cuaderno y lapiceros (obligatorios)</label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck3">
+                <label class="form-check-label" for="switchCheck3">Mochila pequeña o cangurera</label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck4">
+                <label class="form-check-label" for="switchCheck4">
+                    Ropa cómoda para 6 días (tendremos algunas actividades al aire libre)
+                </label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck5">
+                <label class="form-check-label" for="switchCheck5">
+                    Chamarra para el frío y la lluvia; el clima tiende a ser frío por las noches
+                </label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck6">
+                <label class="form-check-label" for="switchCheck6">
+                    Accesorios para el sol, como gorra, sombrero tipo bucket, bloqueador, etc.
+                </label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck7">
+                <label class="form-check-label" for="switchCheck7">
+                    Artículos de uso personal: todo lo que necesitas para bañarte y arreglarte
+                </label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck8">
+                <label class="form-check-label" for="switchCheck8">
+                    Calzado cómodo que te permita hacer ejercicio y actividades al aire libre
+                </label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck9">
+                <label class="form-check-label" for="switchCheck9">Dinero extra para la tienda</label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck10">
+                <label class="form-check-label" for="switchCheck10">Botella de agua reutilizable</label>
+            </div>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck11">
+                <label class="form-check-label" for="switchCheck11">No es necesario que traigas almohada ni
+                    cobijas</label>
+            </div>
+
+            <p style="white-space: pre-line;">
+                Te recomendamos NO TRAER dispositivos electrónicos adicionales (iPad, computadora, Nintendo Switch,
+                laptop, etc.). Reto Urbano no podrá hacerse responsable de la pérdida o el daño de cualquiera de estos
+                dispositivos.
+            </p>
+
+            <p style="white-space: pre-line;">
+                * Recuerda que no se permite traer bebidas alcohólicas, drogas, armas o cualquier objeto que pueda poner
+                en riesgo la seguridad de los participantes.
+            </p>
         </li>
     </ul>
     <p><a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a></p>

@@ -58,6 +58,24 @@ $router->add('PATCH', '/api/v1/registrations/status', function ($request) use ($
     });
 });
 
+$router->add('POST', '/api/v1/registrations/welcome-email', function ($request) use ($registrationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($registrationController) {
+        return $registrationController->resendWelcomeEmail($securedRequest);
+    });
+});
+
+$router->add('POST', '/api/v1/registrations/confirmation-email', function ($request) use ($registrationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($registrationController) {
+        return $registrationController->sendConfirmationInfoEmail($securedRequest);
+    });
+});
+
+$router->add('DELETE', '/api/v1/registrations', function ($request) use ($registrationController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($registrationController) {
+        return $registrationController->delete($securedRequest);
+    });
+});
+
 $router->add('GET', '/api/v1/events', function ($request) use ($eventController) {
     return $eventController->list($request);
 });
@@ -165,6 +183,12 @@ $router->add('PATCH', '/api/v1/users/roles', function ($request) use ($userContr
 $router->add('PATCH', '/api/v1/users/event-roles', function ($request) use ($userController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('admin'), function ($securedRequest) use ($userController) {
         return $userController->updateEventRoles($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/users/password', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
+        return $userController->updatePassword($securedRequest);
     });
 });
 

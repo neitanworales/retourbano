@@ -236,7 +236,7 @@ CREATE TABLE `event_registrations` (
   `is_staff` tinyint(1) NOT NULL DEFAULT '0',
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
   `is_followup` tinyint(1) NOT NULL DEFAULT '0',
-  `welcome_email_sent` tinyint(1) DEFAULT NULL,
+  `welcome_email_sent` tinyint(1) NOT NULL DEFAULT '0',
   `email_confirmed` tinyint(1) DEFAULT NULL,
   `reasons` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `requires_lodging` tinyint(1) DEFAULT NULL,

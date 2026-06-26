@@ -199,6 +199,28 @@ class UserController extends BaseController
         ), 'event roles updated');
     }
 
+    public function updatePassword($request)
+    {
+        $targetUserId = isset($request['user_id']) ? (int) $request['user_id'] : 0;
+        $newPassword = isset($request['new_password']) ? (string) $request['new_password'] : '';
+
+        if ($targetUserId <= 0 || trim($newPassword) === '') {
+            return $this->fail('user_id and new_password are required', 422);
+        }
+
+        $targetUser = $this->users->findModelById($targetUserId);
+        if (!$targetUser) {
+            return $this->fail('user not found', 404);
+        }
+
+        $ok = $this->authService->updatePassword($targetUserId, $newPassword);
+        if (!$ok) {
+            return $this->fail('could not update password', 500);
+        }
+
+        return $this->ok(array('user_id' => $targetUserId), 'password updated');
+    }
+
     private function parseBoolean($value)
     {
         if (is_bool($value)) {

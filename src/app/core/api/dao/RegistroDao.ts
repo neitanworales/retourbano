@@ -1,5 +1,5 @@
 import { Injectable } from "@angular/core";
-import { Observable, catchError, map, of } from 'rxjs';
+import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Utils } from "../Utils";
 import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
@@ -12,7 +12,6 @@ import { DefaultResponse } from "src/app/core/models/DefaultResponse";
 import { Pago } from "src/app/core/models/registro/Pago";
 import { HttpClient } from "@angular/common/http";
 import { GuerreroResponse } from "src/app/core/models/GuerreroResponse";
-import { HospedajeResponse } from "../../models/hospedaje/HosepdajeResponse";
 import { AuthService } from "../../services/auth.service";
 import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
 import { HabitacionResponse } from "../../models/hospedaje/HabitacionResponse";
@@ -59,7 +58,7 @@ export class RegistroDao {
             medicamentos: guerrero?.user?.medicamentos,
             instagram: guerrero?.user?.instagram,
             aceptaPoliticas: guerrero?.user?.aceptaPoliticas,
-            hospedaje: guerrero?.hospedaje,
+            requires_lodging: guerrero?.requires_lodging,
             event_id: event_id,
         };
 
@@ -98,7 +97,7 @@ export class RegistroDao {
             medicamentos: guerrero?.user?.medicamentos,
             instagram: guerrero?.user?.instagram,
             aceptaPoliticas: guerrero?.user?.aceptaPoliticas,
-            hospedaje: guerrero?.hospedaje,
+            requires_lodging: guerrero?.requires_lodging,
             event_id: event_id,
         };
 
@@ -146,7 +145,7 @@ export class RegistroDao {
                             is_staff: (item?.is_staff ?? 0) === 1,
                             is_admin: (item?.is_admin ?? 0) === 1,
                             is_followup: (item?.is_followup ?? 0) === 1,
-                            welcome_email_sent: (item?.welcome_email_sent ?? item?.email_enviado ?? 0) === 1,
+                            welcome_email_sent: this.toIntegerCount(item?.welcome_email_sent ?? item?.email_enviado ?? 0),
                             email_confirmed: (item?.email_confirmed ?? item?.email_confirmado ?? 0) === 1,
                             requires_lodging: (item?.requires_lodging ?? 0) === 1,
                             room_code: item?.room_code,
@@ -155,16 +154,6 @@ export class RegistroDao {
                             pagado: rawUser?.pagado ?? item?.pagado,
                             pagos: rawUser?.pagos ?? item?.pagos,
                             previous_events: item?.previous_events ?? [],
-                            // Legacy Spanish aliases for UI compatibility
-                            confirmado: (item?.is_confirmed ?? 0) === 1,
-                            asistencia: (item?.attendance_confirmed ?? 0) === 1,
-                            staff: (item?.is_staff ?? 0) === 1,
-                            admin: (item?.is_admin ?? 0) === 1,
-                            seguimiento: (item?.is_followup ?? 0) === 1,
-                            emailEnviado: (item?.welcome_email_sent ?? item?.email_enviado ?? 0) === 1,
-                            emailConfirmado: (item?.email_confirmed ?? item?.email_confirmado ?? 0) === 1,
-                            hospedaje: (item?.requires_lodging ?? 0) === 1,
-                            habitacion: item?.room_code,
                             user: normalizedUser,
                         };
 
@@ -261,6 +250,11 @@ export class RegistroDao {
         } as User;
     }
 
+    private toIntegerCount(value: any): number {
+        const parsed = Number(value ?? 0);
+        return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+    }
+
     /**
      * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
      */
@@ -302,7 +296,7 @@ export class RegistroDao {
         is_confirmed?: boolean;
         attendance_confirmed?: boolean;
         is_followup?: boolean;
-        welcome_email_sent?: boolean;
+        welcome_email_sent?: number | boolean;
         email_confirmed?: boolean;
     }): Observable<DefaultResponse> {
         const session = this.autho.getSessionValida();
@@ -331,14 +325,18 @@ export class RegistroDao {
      * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
      */
     public cambiarContrasena(newPassword: String, id: number, campamentoId: number): Observable<DefaultResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=10&id=' + id
-            + '&newPassword=' + newPassword
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.patch<DefaultResponse>(
+            this.utils.v1('/users/password') + '?token=' + token,
+            {
+                user_id: id,
+                new_password: newPassword,
+                event_id: campamentoId,
+            },
+            { headers: this.utils.getHeaders() }
+        );
     }
 
     public guardarPago(pago: Pago, eventRegistrationId: number): Observable<DefaultResponse> {
@@ -394,14 +392,57 @@ export class RegistroDao {
     }
 
     public enviarConfirmarEmail(enviar: boolean, confirmar: boolean, registrationId: number): Observable<DefaultResponse> {
-        return this.actualizarRegistro(registrationId, {
-            welcome_email_sent: enviar,
-            email_confirmed: confirmar,
-        });
+        if (!enviar) {
+            return this.actualizarRegistro(registrationId, {
+                email_confirmed: false,
+            });
+        }
+
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.post<DefaultResponse>(
+            this.utils.v1('/registrations/confirmation-email') + '?token=' + token,
+            { registration_id: registrationId },
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            switchMap((sendResponse: any) => this.actualizarRegistro(registrationId, {
+                email_confirmed: true,
+            }).pipe(
+                map((updateResponse: any) => ({
+                    ...updateResponse,
+                    data: {
+                        ...(updateResponse?.data || {}),
+                        welcome_email_sent: sendResponse?.data?.welcome_email_sent,
+                    }
+                }))
+            ))
+        );
     }
 
     public guardarSeguimiento(valor: boolean, registrationId: number): Observable<DefaultResponse> {
         return this.actualizarRegistro(registrationId, { is_followup: valor });
+    }
+
+    public reenviarWelcomeEmail(registrationId: number): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.post<DefaultResponse>(
+            this.utils.v1('/registrations/welcome-email') + '?token=' + token,
+            { registration_id: registrationId },
+            { headers: this.utils.getHeaders() }
+        );
+    }
+
+    public borrarRegistro(registrationId: number): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.delete<DefaultResponse>(
+            this.utils.v1('/registrations') + '?token=' + token + '&registration_id=' + registrationId,
+            { headers: this.utils.getHeaders() }
+        );
     }
 
     /**

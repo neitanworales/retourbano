@@ -65,8 +65,8 @@ export class RegistroFormComponent implements OnInit {
       if (this.registrationToEdit) {
         this.model.razones = this.registrationToEdit.razones ?? this.registrationToEdit.reasons ?? this.model.razones;
         this.model.reasons = this.model.razones;
-        const hospedaje = this.registrationToEdit.hospedaje ?? this.registrationToEdit.requires_lodging;
-        this.model.hospedaje = typeof hospedaje === 'boolean' ? hospedaje : !!hospedaje;
+        const requires_lodging = this.registrationToEdit.requires_lodging ?? this.registrationToEdit.requires_lodging ?? this.registrationToEdit.requires_lodging;
+        this.model.requires_lodging = typeof requires_lodging === 'boolean' ? requires_lodging : !!requires_lodging;
       }
 
       const dateString = this.userToEdit.fechaNac + "";
@@ -82,7 +82,7 @@ export class RegistroFormComponent implements OnInit {
     this.ensureUserModel();
     if (!this.actualizar) {
       this.model.user!.sexo = "";      
-      this.model.hospedaje = true;
+      this.model.requires_lodging = true;
       this.model.user!.year = 0;
       this.model.user!.month = 0;
       this.model.user!.day = 0;

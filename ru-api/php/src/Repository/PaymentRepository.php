@@ -122,4 +122,15 @@ class PaymentRepository extends BaseRepository
 
         return $ok;
     }
+
+    public function deleteByRegistrationId($registrationId)
+    {
+        $sql = 'DELETE FROM payments WHERE event_registration_id = ?';
+        $stmt = $this->db->prepare($sql);
+        $stmt->bind_param('i', $registrationId);
+        $ok = $stmt->execute();
+        $stmt->close();
+
+        return $ok;
+    }
 }

@@ -19,7 +19,7 @@ class EmailService
         }
 
         $html = file_get_contents($path);
-        $allowRaw = array('reporteResumen', 'reporte');
+        $allowRaw = array('reporteResumen', 'reporte', 'arrivalNoteHtml', 'departureNoteHtml');
         foreach ($variables as $key => $value) {
             $replacement = in_array($key, $allowRaw, true)
                 ? (string) $value
@@ -109,6 +109,46 @@ class EmailService
         }
 
         return $sent;
+    }
+
+    public function sendEventInfoConfirmationEmail($user, $event)
+    {
+        $to = isset($user->email) ? trim((string) $user->email) : '';
+        if ($to === '') {
+            return false;
+        }
+
+        $variables = array(
+            'year' => isset($event->event_year) ? $event->event_year : '',
+            'ciudad' => isset($event->city_label) ? $event->city_label : '',
+            'titulo' => isset($event->title) ? $event->title : '',
+            'nick' => isset($user->display_name) && trim((string) $user->display_name) !== '' ? $user->display_name : (isset($user->full_name) ? $user->full_name : 'participante'),
+            'nombre' => isset($user->full_name) ? $user->full_name : '',
+            'durationDays' => $this->calculateDurationDays(isset($event->start_at) ? $event->start_at : null, isset($event->end_at) ? $event->end_at : null),
+            'minimumPaymentMxn' => isset($event->minimum_payment_mxn) ? $event->minimum_payment_mxn : '',
+            'bankName' => isset($event->bank_name) ? $event->bank_name : '',
+            'accountHolder' => isset($event->account_holder) ? $event->account_holder : '',
+            'bankAccount' => isset($event->bank_account) ? $event->bank_account : '',
+            'bankClabe' => isset($event->bank_clabe) ? $event->bank_clabe : '',
+            'contactEmail' => isset($event->contact_email) ? $event->contact_email : '',
+            'contactPhone1' => isset($event->contact_phone_1) ? $event->contact_phone_1 : '',
+            'contactPhone2' => isset($event->contact_phone_2) ? $event->contact_phone_2 : '',
+            'startDate' => $this->formatDateValue(isset($event->start_at) ? $event->start_at : null),
+            'startTime' => $this->formatTimeValue(isset($event->start_at) ? $event->start_at : null),
+            'lobbyEndTime' => $this->formatTimeValue(isset($event->lobby_end_at) ? $event->lobby_end_at : null),
+            'arrivalPlace' => isset($event->arrival_place) ? $event->arrival_place : '',
+            'arrivalNoteHtml' => $this->formatNoteHtml(isset($event->arrival_note) ? $event->arrival_note : null),
+            'departureDate' => $this->formatDateValue(isset($event->end_at) ? $event->end_at : null),
+            'departureTime' => $this->formatTimeValue(isset($event->end_at) ? $event->end_at : null),
+            'departurePlace' => isset($event->departure_place) ? $event->departure_place : '',
+            'departureNoteHtml' => $this->formatNoteHtml(isset($event->departure_note) ? $event->departure_note : null),
+            'cruzadaLugar' => isset($event->city_label) ? $event->city_label : '',
+        );
+
+        $subject = 'Información de tu campamento Reto Urbano ' . $variables['year'] . ' - ' . $variables['ciudad'];
+        $html = $this->renderTemplate('confirmacion-info.html', $variables);
+
+        return $this->send($to, $subject, $html);
     }
 
     private function buildStaffReportSummaryHtml(array $dashboard)
@@ -253,5 +293,62 @@ class EmailService
         $html = $this->renderTemplate('recovery-password.html', $variables);
 
         return $this->send($to, $subject, $html);
+    }
+
+    private function calculateDurationDays($startAt, $endAt)
+    {
+        if (!$startAt || !$endAt) {
+            return 0;
+        }
+
+        $start = strtotime((string) $startAt);
+        $end = strtotime((string) $endAt);
+        if ($start === false || $end === false || $end <= $start) {
+            return 0;
+        }
+
+        return (int) ceil(($end - $start) / 86400);
+    }
+
+    private function formatDateValue($value)
+    {
+        if (!$value) {
+            return '';
+        }
+
+        $timestamp = strtotime((string) $value);
+        if ($timestamp === false) {
+            return (string) $value;
+        }
+
+        return date('d/m/Y', $timestamp);
+    }
+
+    private function formatTimeValue($value)
+    {
+        if (!$value) {
+            return '';
+        }
+
+        if (preg_match('/^(\d{2}:\d{2})(?::\d{2})?$/', (string) $value, $matches)) {
+            return $matches[1];
+        }
+
+        $timestamp = strtotime((string) $value);
+        if ($timestamp === false) {
+            return (string) $value;
+        }
+
+        return date('H:i', $timestamp);
+    }
+
+    private function formatNoteHtml($value)
+    {
+        if (!$value) {
+            return '';
+        }
+
+        $normalized = preg_replace('/\s*\*\*\s*/', "\n", trim((string) $value));
+        return nl2br(htmlspecialchars((string) $normalized, ENT_QUOTES, 'UTF-8'));
     }
 }
