@@ -17,7 +17,7 @@ export class EventRegistration {
 
     welcome_email_sent?: number;
     is_confirmed?: boolean;
-    email_confirmed?: boolean;
+    email_confirmed?: number;
     attendance_confirmed?: boolean;
 
     requires_lodging?: boolean;

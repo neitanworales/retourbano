@@ -153,7 +153,7 @@ class EventRegistrationRepository extends BaseRepository
             return false;
         }
 
-        return (int) $registration->welcome_email_sent;
+        return (int) $registration->email_confirmed;
     }
 
     public function updateFields($id, $fields)

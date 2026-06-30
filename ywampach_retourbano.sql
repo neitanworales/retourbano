@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: localhost:3306
--- Tiempo de generación: 06-06-2026 a las 14:57:26
+-- Tiempo de generación: 26-06-2026 a las 17:42:33
 -- Versión del servidor: 5.7.44-48
 -- Versión de PHP: 8.3.31
 
@@ -42,53 +42,16 @@ CREATE TABLE `auth_tokens` (
 --
 
 INSERT INTO `auth_tokens` (`id`, `user_id`, `token`, `token_type`, `expires_at`, `created_at`, `revoked_at`) VALUES
-(1, 1076, '0a7348714cb48cac7d176c50226422c8', 'auth', '2024-07-29 11:40:22', '2024-07-29 11:40:22', NULL),
-(2, 1075, 'b8dcca7871a16ba044590c4f7fe58956', 'auth', '2024-07-29 16:52:45', '2024-07-29 16:52:45', NULL),
-(3, 893, 'e60a478b9c14792d9e83c6330b557c8d', 'auth', '2025-03-11 08:02:32', '2025-03-11 08:02:32', NULL),
-(4, 1000, 'f862f43a8bccc3e9f666d5656e75e0d6', 'auth', '2026-05-13 10:57:13', '2026-05-13 10:57:13', NULL),
-(5, 1048, 'ad599132fe005a9daf067aec1703fd7a', 'auth', '2026-05-13 19:05:10', '2026-05-13 19:05:10', NULL),
-(6, 1074, '4ececccc4a19e14ff55f81f4ca101830', 'auth', '2026-05-13 23:34:03', '2026-05-13 23:34:03', NULL),
-(0, 1074, '009808a22a8a3a2127f88423e0e848c9b514122bc60673f6c0693956ad56fe9e', 'auth', '2026-05-22 13:26:27', '2026-05-15 13:26:27', '2026-05-15 13:45:25'),
-(0, 1000, '9c79cfe3fb1904af7a78b01386ae763137b63690cffdf71cd76d8f1ab37a1e99', 'auth', '2026-05-22 13:46:01', '2026-05-15 13:46:01', '2026-05-15 13:46:30'),
-(0, 1074, '7c18a907297961cfc9af19f288b13ac0a128d57f09430e7d106d11a4d4ae8241', 'auth', '2026-05-22 13:46:34', '2026-05-15 13:46:34', '2026-05-15 13:46:50'),
-(0, 1000, '4b67a10049134df26e0c16e401be93aba820c6eeb6d9725023b943f284e1bf57', 'auth', '2026-05-22 13:47:02', '2026-05-15 13:47:02', '2026-05-15 13:58:38'),
-(0, 1000, 'e32c9d5c1c58cae0fd26272bae57fcd0d8793f81a5ce2f787ea45e894eaf27db', 'auth', '2026-05-22 13:49:40', '2026-05-15 13:49:40', '2026-05-15 13:58:13'),
-(0, 1000, '0cf7e0ab0b54750d937f7bde1c6b8bcbf6bfaaaa04bec1e6e36cb4e61cf8807d', 'auth', '2026-05-22 14:15:54', '2026-05-15 14:15:54', '2026-05-15 16:52:00'),
-(0, 1074, 'e5fb38f475fd1b1b30627c4843fe1b413a108efa7a5a5d5edc535e763d42c93a', 'auth', '2026-05-22 15:02:36', '2026-05-15 15:02:36', NULL),
-(0, 1000, 'a760b4001b0dfcffc679abc90f30fd405b199c04b6dcf05d0677d3295a7373f5', 'auth', '2026-05-22 15:16:10', '2026-05-15 15:16:10', NULL),
-(0, 1000, 'b6b7891d09991cc480c7c1f3f8039e5e4fb0cfafb62775f1c94fa7bf6242b042', 'auth', '2026-05-22 15:25:27', '2026-05-15 15:25:27', NULL),
-(0, 1074, '4492d5e18d748c74b872677d4aad6b100255537e4d662dd2aef5ef65122cb9c3', 'auth', '2026-05-22 15:30:21', '2026-05-15 15:30:21', NULL),
-(0, 1000, 'df316f7c198df049fe96e14a7e3bb5a01f1f7a653604d88652ef9586cd7b082c', 'auth', '2026-05-22 16:15:29', '2026-05-15 16:15:29', '2026-05-15 16:50:44'),
-(0, 1074, '6c96700e35a118a912a9fc233c334a2588a2e27f7db548c6c40c034803d0b088', 'auth', '2026-05-22 16:50:52', '2026-05-15 16:50:52', NULL),
-(0, 1074, 'a0a23a6d7d7e47ee9e06b717436e867fcc51b1ef1d7039ec9a237daacc6f28e8', 'auth', '2026-05-22 16:52:06', '2026-05-15 16:52:06', '2026-05-15 20:13:16'),
-(0, 1074, '93a002f0b09b443aac2b658d43cdb60124b8fbfd2bcfa4b9151859ce34ea2fd4', 'auth', '2026-05-22 16:56:09', '2026-05-15 16:56:09', NULL),
-(0, 1000, 'e14beb52dda93a1239cf6635af63be90cd9dd78dd3e6a9345b72e5e1d6f8d019', 'auth', '2026-05-22 16:58:19', '2026-05-15 16:58:19', NULL),
-(0, 1074, '4c8f5b088c5e6bb91fdb2cc20785e5c5748b824fba0617751d644d9840ff1d05', 'auth', '2026-05-22 17:57:52', '2026-05-15 17:57:52', '2026-05-20 00:21:22'),
-(0, 1074, 'c9bc505ddd54751d7442507e5c1241bf6c613cdf0c075775d70ec51bde1159d7', 'auth', '2026-05-22 19:49:50', '2026-05-15 19:49:50', '2026-05-15 20:22:22'),
-(0, 1074, 'ed5f3fc27c42b2adc3907f2b3f0a1e34334b55d17eb6e808c257aad66398b7f7', 'auth', '2026-05-22 19:50:53', '2026-05-15 19:50:53', '2026-05-16 18:25:23'),
-(0, 1074, '69dbd44f77e8d32656ddcc6a0d2b9e2f64700352d6740cadaa70fb00038d42a1', 'auth', '2026-05-22 20:13:22', '2026-05-15 20:13:22', NULL),
-(0, 1074, '599d38ce44f308f6cb95defeaf641383bdd3c5b6fea2127c7438ac66e4b8ac92', 'auth', '2026-05-22 20:23:36', '2026-05-15 20:23:36', NULL),
-(0, 1074, '5eabd1b474fa43aa6f4505bb5271dc124ba710d819a5f8b866400dab9905b4a5', 'auth', '2026-05-22 21:02:11', '2026-05-15 21:02:11', '2026-05-16 13:21:56'),
-(0, 1048, '27640d030263c6eed2c77fb0064c6af0be70e34fdf4b5c42c883a7358af558f7', 'auth', '2026-05-23 04:21:56', '2026-05-16 04:21:56', NULL),
-(0, 1048, '94112f5c73f6f86d53bde83cf4b8ed125d9a63fe36b6c1460ff232918b434856', 'auth', '2026-05-23 08:01:59', '2026-05-16 08:01:59', NULL),
-(0, 1074, '37d68cae09591016442a7f3815bd0b365ce57ff0145177119534cc503c18a026', 'auth', '2026-05-23 18:26:43', '2026-05-16 18:26:43', '2026-05-16 23:30:28'),
-(0, 1074, '5bdad9476b1520433035ec01e94c255612f26c197dae2edd082694694e183409', 'auth', '2026-05-23 18:57:30', '2026-05-16 18:57:30', NULL),
-(0, 1074, 'ee6e4872f86ea1ccde33fa89021e923e078344865c1ee1ec1160f9bc8e5421d4', 'auth', '2026-05-23 23:56:28', '2026-05-16 23:56:28', '2026-05-17 00:12:21'),
-(0, 1000, '35133858b948f0613523a6e9aa32c97171d5ce1faa716305f7aca91a84cfd008', 'auth', '2026-05-24 00:12:30', '2026-05-17 00:12:30', '2026-05-17 00:22:30'),
-(0, 1074, '38de9c833c06440dfcea8d36c4c76b4aab316681967c194d094767f8161c7bba', 'auth', '2026-05-24 09:43:46', '2026-05-17 09:43:46', '2026-05-17 09:51:48'),
-(0, 1074, '59fff895c59cebbe02f104d5bd408cda75808a28d66642b66254d7ce18a8d524', 'auth', '2026-05-24 21:52:57', '2026-05-17 21:52:57', '2026-05-17 22:01:59'),
-(0, 1074, 'f75c91201f32e17069b4213b647edc37fe67eeb9db38d10b51f5044a50ebce01', 'password_reset', '2026-05-18 22:26:18', '2026-05-18 21:56:18', NULL),
-(0, 1074, '5e71162e8bc6bb0790a9d4c77f3455ab22f5670fe24477f6c43467e65f96fbe1', 'password_reset', '2026-05-18 22:47:50', '2026-05-18 22:17:50', NULL),
-(0, 1074, 'b10beadf9ba140a7bf0759b6a29dc5944eb201c78ffcc2691b8b37e9ecac2608', 'password_reset', '2026-05-18 23:28:42', '2026-05-18 22:58:42', '2026-05-18 22:59:19'),
-(0, 1074, '589b9ab9de7b1e504a091557fa7c00f65659675f959fca767e2c582082ca5197', 'auth', '2026-05-25 22:59:32', '2026-05-18 22:59:32', NULL),
-(0, 1074, 'aed0ba91036f92275e917e03cd978ac94dcfc6c70146f11a90869d46488ab6c2', 'auth', '2026-05-26 14:03:47', '2026-05-19 14:03:47', NULL),
-(0, 1074, '63d55820d4fe2240164bf617ae02b99a2ea5e89a7d5a2a800be2fc99ce5d14ec', 'auth', '2026-05-27 00:47:20', '2026-05-20 00:47:20', NULL),
-(0, 1000, 'c636bbe5705c5f9672c67a4608fe8f706bf66d0d9a8b55ec7225910d7080ffa6', 'auth', '2026-06-02 13:24:15', '2026-05-26 13:24:15', NULL),
-(0, 1074, 'cd60d67807b1d82a362223522d37fc64eb9f7458eab702c51d19b63c47f887a5', 'auth', '2026-06-08 21:28:21', '2026-06-01 21:28:21', '2026-06-01 21:38:16'),
-(0, 1000, '7595ea01fade4a020415306d41941aa1c898d7a0bff4a4e185fb3ec1b87da2bf', 'auth', '2026-06-10 09:22:58', '2026-06-03 09:22:58', NULL),
-(0, 1074, 'aeb39b8d316fb012c4917ec966efbdbd51d235884ea24de63df9631e9665b60c', 'auth', '2026-06-11 15:47:21', '2026-06-04 15:47:21', '2026-06-06 14:38:07'),
-(0, 1074, '8de2589ecf53a996e34f94f75aea2dc695474fa8d6cabbce99870b9ece65914e', 'password_reset', '2026-06-06 15:08:28', '2026-06-06 14:38:28', '2026-06-06 14:39:09'),
-(0, 1074, '0570eaa9fb3b6234641caf5df24230751be3379654bb95511232fb0c432540ff', 'auth', '2026-06-13 14:39:23', '2026-06-06 14:39:23', '2026-06-06 14:39:25');
+(2, 1074, 'e037587008785115aaf41c1c299e4cc4a9f7c509ef757d256719114cfc633930', 'auth', '2026-06-13 23:37:17', '2026-06-06 23:37:17', NULL),
+(3, 1048, '890ac558546c3eb0862d440399e447e0662a9f27cb942ccd8c666e8d6fa0b54c', 'auth', '2026-06-16 22:43:23', '2026-06-09 22:43:23', NULL),
+(4, 1000, 'b37c8288b8d412905ee56c1829af213dbbb9e9d9a1364f776827f1fe2088bb82', 'auth', '2026-06-22 11:27:22', '2026-06-15 11:27:22', NULL),
+(5, 1000, '35014957ed457686c45cac79de1068af8df03944c9273baa0dfb814f163cc74d', 'auth', '2026-06-23 10:14:29', '2026-06-16 10:14:29', NULL),
+(6, 1048, 'dc48aca6310bb13b2337916e44d0a860dac691466c9bbe17647ddb03803a3563', 'auth', '2026-06-29 21:47:06', '2026-06-22 21:47:06', NULL),
+(7, 1000, '467fcd1953f588e87a7d36494669219a5ceb725444b66670d2f95d517a43d474', 'auth', '2026-06-29 21:49:19', '2026-06-22 21:49:19', NULL),
+(8, 1000, '1aadfe957fa7cd071b6aba0bd66e8ae25b0106fa4e42050e2320ae591e302860', 'auth', '2026-06-30 22:39:44', '2026-06-23 22:39:44', NULL),
+(10, 294, 'bc15861498b9688171f218d147848d161c439942cc4fdf1e434e9e68a9c5579f', 'password_reset', '2026-06-24 11:05:29', '2026-06-24 10:35:29', NULL),
+(12, 1000, 'bd42cddcb916d1e3ca81499c0dc5b533186e5621f65145b291469e27a8e37341', 'auth', '2026-07-02 13:08:56', '2026-06-25 13:08:56', NULL),
+(13, 1074, '4c99f509ef673ece5ac7bb8ee16c55f1f06ba666aab70fcc334c04bf898bf846', 'auth', '2026-07-02 23:01:56', '2026-06-25 23:01:56', NULL);
 
 -- --------------------------------------------------------
 
@@ -129,8 +92,8 @@ INSERT INTO `campamento_costos` (`id`, `campamento_id`, `divisa`, `cantidad`, `d
 (1, 2025, 'MXN', 2200, 'Todo Incluido', 'Hospedaje,Comidas,Clases,Talleres,Kit de bienvenida,Playera,Materiales', NULL),
 (2, 2025, 'MXN', 1650, 'Sin hospedaje', 'Comidas,Clases,Talleres,Kit de bienvenida,Playera,Materiales', NULL),
 (3, 2025, 'USD', 180, 'All included', 'Lodgment,Meals,Lecture,Workshops,T-shirt,Welcome-Kit,Materials', NULL),
-(4, 11, 'MXN', 2900, 'Todo Incluido', 'Hospedaje, Comidas, Clases, Materiales, Entrenamientos, Viaje Misionero a Puebla', NULL),
-(5, 11, 'MXN', 1900, 'Sin hospedaje', 'Comidas, Clases, Materiales, Entrenamientos, Viaje Misionero a Puebla', NULL);
+(8, 11, 'MXN', 2900, 'Todo Incluido', 'Hospedaje,Comidas,Clases,Materiales,Entrenamientos,Viaje Misionero a Puebla', NULL),
+(9, 11, 'MXN', 1900, 'Sin hospedaje', 'Comidas,Clases,Materiales,Entrenamientos,Viaje Misionero a Puebla', NULL);
 
 -- --------------------------------------------------------
 
@@ -215,7 +178,7 @@ INSERT INTO `events` (`id`, `legacy_event_id`, `organization_id`, `event_year`, 
 (8, 8, 2, '2023', 1, 'Camapmento Reto Urbano 2023', NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 0.00, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pachuca', NULL, '2026-05-15 18:20:26', '2026-05-15 19:57:28'),
 (9, 9, 2, '2024', 1, 'Camapmento Reto Urbano 2024', NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 0.00, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pachuca', NULL, '2026-05-15 18:20:26', '2026-05-15 19:57:28'),
 (10, 10, 2, '2025', 1, 'Camapmento Reto Urbano 2025', NULL, NULL, NULL, 0, 0, 0, NULL, NULL, 0.00, 0.00, 0.00, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Pachuca', NULL, '2026-05-15 18:20:26', '2026-05-15 19:57:28'),
-(11, 11, 2, '2026', 1, 'LEGADO', '2026-07-21 14:00:00', NULL, '2026-07-26 17:00:00', 1, 120, 20, '2026-07-12 23:59:59', '2026-01-01 23:59:59', 2900.00, 100.00, 800.00, 'Banco Azteca', '4027 6600 0998 6854', NULL, 'Jony Buendia Pitalua', '771 208 8634', '771 404 4654', 'reto@ywampachuca.org', 'Recepción del Hotel de los Baños (Pachuca Centro)', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3483.223765835358!2d-98.73422481121389!3d20.126226373633518!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109ffb720c53f%3A0xf24ad0a2a299f982!2sHotel%20de%20Los%20Ba%C3%B1os%20S%20A%20de%20C%20V!5e0!3m2!1ses!2smx!4v1773934438710!5m2!1ses!2smx', '** Ese es el lugar de llegada, aunque no tengas hospedaje necesitas llegar a este lugar\r\n** Ten en cuenta que si no llegas a tiempo al registro tendrás que llegar directamente a la \"Primera Iglesia Bautista\"\r\n** Traer tu maleta etiquetada (Importante)', 'Primera Iglesia Bautista', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.2385463082446!2d-98.73572688991682!3d20.124093281230476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e5bf1b80bb%3A0x784964863c9f7a2a!2sPrimera%20Iglesia%20Bautista%20de%20Pachuca!5e0!3m2!1ses!2smx!4v1750115039174!5m2!1ses!2smx', '¡Llega puntual para recoger a los camperos con tiempo y sin prisas!', 'Este año hemos cambiado de hotel cede.', 'Pachuca', 'Puebla', '2026-05-15 18:20:26', '2026-06-04 21:39:08'),
+(11, 11, 2, '2026', 1, 'LEGADO', '2026-07-21 14:00:00', '15:30:00', '2026-07-26 17:00:00', 1, 120, 20, '2026-07-12 23:59:00', '2026-01-01 23:59:00', 2900.00, 100.00, 800.00, 'Banco Azteca', '4027 6600 0998 6854', NULL, 'Jony Buendia Pitalua', '771 208 8634', '771 404 4654', 'reto@ywampachuca.org', 'Recepción del Hotel de los Baños (Pachuca Centro)', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3483.223765835358!2d-98.73422481121389!3d20.126226373633518!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109ffb720c53f%3A0xf24ad0a2a299f982!2sHotel%20de%20Los%20Ba%C3%B1os%20S%20A%20de%20C%20V!5e0!3m2!1ses!2smx!4v1773934438710!5m2!1ses!2smx', '** Ese es el lugar de llegada, aunque no tengas hospedaje necesitas llegar a este lugar\r\n** Ten en cuenta que si no llegas a tiempo al registro tendrás que llegar directamente a la \"Primera Iglesia Bautista\"\r\n** Traer tu maleta etiquetada (Importante)', 'Primera Iglesia Bautista', 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3746.2385463082446!2d-98.73572688991682!3d20.124093281230476!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x85d109e5bf1b80bb%3A0x784964863c9f7a2a!2sPrimera%20Iglesia%20Bautista%20de%20Pachuca!5e0!3m2!1ses!2smx!4v1750115039174!5m2!1ses!2smx', '¡Llega puntual para recoger a los camperos con tiempo y sin prisas!', 'Este año hemos cambiado de hotel cede.', 'Pachuca', 'Puebla', '2026-05-15 18:20:26', '2026-06-15 17:29:02'),
 (12, 12, 3, '2026', 2, 'LA VOZ', '2026-03-28 23:59:59', NULL, '2026-04-01 23:59:59', 0, 100, 20, '2026-03-21 23:59:59', '2026-01-01 23:59:59', 2000.00, 100.00, 500.00, 'Banamex', '5204 1660 1084 3698', NULL, 'RAQUEL GABRIELA BARRIENTOS RUIZ', '9612591807', '9617091695', 'reto_puebla@ywampachuca.org', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 'Puebla', NULL, '2026-05-15 18:20:26', '2026-05-15 19:57:29');
 
 -- --------------------------------------------------------
@@ -236,8 +199,8 @@ CREATE TABLE `event_registrations` (
   `is_staff` tinyint(1) NOT NULL DEFAULT '0',
   `is_admin` tinyint(1) NOT NULL DEFAULT '0',
   `is_followup` tinyint(1) NOT NULL DEFAULT '0',
-  `welcome_email_sent` tinyint(1) NOT NULL DEFAULT '0',
-  `email_confirmed` tinyint(1) DEFAULT NULL,
+  `welcome_email_sent` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
+  `email_confirmed` tinyint(3) UNSIGNED NOT NULL DEFAULT '0',
   `reasons` varchar(500) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `requires_lodging` tinyint(1) DEFAULT NULL,
   `room_code` varchar(20) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
@@ -1358,7 +1321,7 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (1103, 2024036, 9, 1108, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Porque me gustan los retos', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1104, 2024037, 9, 1109, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Dios', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1105, 2024038, 9, 1110, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Porque quiero convivir con jóvenes cristianos', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1106, 2024039, 9, 1111, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Me gustan las dinámicas y actividades, me gusto el primer campamento al que fui y quiero seguir yendo.', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
+(1106, 2024039, 9, 2054, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Me gustan las dinámicas y actividades, me gusto el primer campamento al que fui y quiero seguir yendo.', 0, NULL, '2026-05-15 18:20:46', '2026-06-07 05:44:13'),
 (1107, 2024040, 9, 1112, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Quiero seguir aprendiendo del amor de Dios para conmigo y mi familia', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1108, 2024041, 9, 1113, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'Aprender, Capacitarme y buscar de Dios', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1109, 2024042, 9, 1114, '2024', 'A', 0, 0, 0, 0, 0, 0, 0, 'El año pasado fue mi primera vez en Reto y viví experiencias increíbles con Dios, aprendí mucho de él y conocí a personas increíbles, por lo que estoy muy contenta de volver y a la expectativa de lo que Dios hará este año.', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
@@ -1423,7 +1386,7 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (1168, 2025040, 10, 1163, '2025', 'A', 0, 0, 0, 0, 0, 0, 0, 'Por mi Familia', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1169, 2025041, 10, 1164, '2025', 'A', 0, 0, 0, 0, 0, 0, 0, 'Por mi familia', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1170, 2025042, 10, 1165, '2025', 'A', 0, 0, 0, 0, 0, 0, 0, 'Como Staff', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1171, 2025043, 10, 1111, '2025', 'A', 1, 0, 0, 0, 0, 0, 0, 'Me gustan las dinámicas y actividades, me gusto el primer campamento al que fui y quiero seguir yendo.', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
+(1171, 2025043, 10, 2054, '2025', 'A', 1, 0, 0, 0, 0, 0, 0, 'Me gustan las dinámicas y actividades, me gusto el primer campamento al que fui y quiero seguir yendo.', 1, NULL, '2026-05-15 18:20:46', '2026-06-07 05:44:13'),
 (1172, 2025044, 10, 1109, '2025', 'A', 0, 0, 0, 0, 0, 0, 0, 'Dios', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1173, 2025045, 10, 1166, '2025', 'cancelled', 0, 0, 0, 0, 0, 0, 0, 'Me encantaría ser parte por primera vez de algo como esto', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1174, 2025046, 10, 1167, '2025', 'cancelled', 0, 0, 0, 0, 0, 0, 0, 'Porqué me llama la atención la actividad', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
@@ -1511,14 +1474,14 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (1255, 2026005, 11, 1233, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Para acercarme a dios', 1, '789', '2026-05-15 18:20:46', '2026-05-17 15:48:43'),
 (1256, 2026006, 11, 1159, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Para tener comunión con Dios y poder entrar al seguimiento', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1257, 2026007, 11, 1234, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Me llamo la atención y me invitó un amigo', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1258, 2026008, 11, 1229, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Para seguir creciendo en el Señor y seguir desarrollando áreas de mi vida. También para Sanar y Retarme a salir de mi zona de confort.', 1, NULL, '2026-05-15 18:20:46', '2026-06-01 22:54:45'),
-(1259, 2026009, 11, 1078, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Voy a ser staff de este campamento y quiero servir a los chicos, ser un modelo del amor de Dios hacia a ellos.<3', 1, '234', '2026-05-15 18:20:46', '2026-05-17 15:49:09'),
+(1258, 2026008, 11, 1229, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Para seguir creciendo en el Señor y seguir desarrollando áreas de mi vida. También para Sanar y Retarme a salir de mi zona de confort.', 1, NULL, '2026-05-15 18:20:46', '2026-06-26 23:23:07'),
+(1259, 2026009, 11, 1078, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Voy a ser staff de este campamento y quiero servir a los chicos, ser un modelo del amor de Dios hacia a ellos.<3', 1, '234', '2026-05-15 18:20:46', '2026-06-26 23:23:11'),
 (1260, 2026010, 11, 1160, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Aprender más de Dios y tener comunión con otros que también le glorifican,', 1, '234', '2026-05-15 18:20:46', '2026-05-17 15:49:16'),
 (1261, 2026011, 11, 1235, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Por todas las experiencias que me cuentan mis amigos', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1262, 2026012, 11, 1236, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Quiero conocer y saber más sobre lo que Dios quiere hablar a mi vida. Quiero ser misionero', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1263, 2026013, 11, 1000, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Servir a Dios!', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
+(1263, 2026013, 11, 1000, '2026', 'A', 0, 0, 1, 0, 0, 3, 1, 'Servir a Dios!', 1, NULL, '2026-05-15 18:20:46', '2026-06-26 23:40:03'),
 (1264, 2026014, 11, 1086, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Amo reto', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1265, 2026015, 11, 1105, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, ':)', 1, NULL, '2026-05-15 18:20:46', '2026-05-16 10:25:12'),
+(1265, 2026015, 11, 1105, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, ':)', 1, NULL, '2026-05-15 18:20:46', '2026-06-26 23:32:08'),
 (1266, 2026016, 11, 1044, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Lider', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1267, 2026017, 11, 1218, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Para aprender y profundizar más lo que Dios tiene para ami', 1, NULL, '2026-05-15 18:20:46', '2026-05-18 18:12:35'),
 (1268, 2026018, 11, 285, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Porque lo amo ????????', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
@@ -1526,7 +1489,7 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (1270, 2026020, 11, 1124, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Divertirme en mi verano', 1, NULL, '2026-05-15 18:20:46', '2026-05-18 18:12:38'),
 (1271, 2026021, 11, 963, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Staff', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1272, 2026022, 11, 1237, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Porque me gusta', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1273, 2026023, 11, 1165, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Como Staff', 1, NULL, '2026-05-15 18:20:46', '2026-06-01 22:55:27'),
+(1273, 2026023, 11, 1165, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Como Staff', 1, NULL, '2026-05-15 18:20:46', '2026-06-16 03:57:44'),
 (1274, 2026024, 11, 1238, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Me gusta', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1275, 2026025, 11, 1079, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Para servir', 0, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1276, 2026026, 11, 1239, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'La verdad voy a reto por que quiero servir y seguir viendo como Dios se mueve en mí y hablar y sanar aún más cosas con el.', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
@@ -1534,7 +1497,7 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (1278, 2026028, 11, 1212, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Me gusta servir a Dios formando parte del equipo', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1279, 2026029, 11, 1178, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Para vivir de nuevo está experiencia y acercarme más a Dios', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1280, 2026030, 11, 1179, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Crecer espiritualmente aprender más sobre Dios y preparación', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
-(1281, 2026031, 11, 1172, '2026', 'A', 0, 0, 1, 0, 0, 0, 0, 'Porque me encanta', 1, '789', '2026-05-15 18:20:46', '2026-05-17 15:48:12'),
+(1281, 2026031, 11, 1172, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Porque me encanta', 1, '789', '2026-05-15 18:20:46', '2026-06-26 23:23:03'),
 (1282, 2026032, 11, 1241, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Para conocer más de Dios', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1283, 2026033, 11, 1242, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Porque me gusta', 1, NULL, '2026-05-15 18:20:46', '2026-05-15 22:04:56'),
 (1284, 2026034, 11, 1243, '2026', 'A', 0, 0, 0, 0, 0, 0, 0, 'Para saber más de mi creador', 1, '789', '2026-05-15 18:20:46', '2026-05-17 15:48:56'),
@@ -1545,7 +1508,6 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (2049, NULL, 11, 2048, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Para acercarme más a Dios', 1, NULL, '2026-05-15 23:47:12', '2026-05-15 23:47:13'),
 (2056, NULL, 11, 2050, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'a acercarme más a Dios', 1, NULL, '2026-05-21 17:18:09', '2026-05-21 17:18:09'),
 (2057, NULL, 11, 2051, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Quiero fortalecer mi relación con Dios y hechar relajo 👻', 1, NULL, '2026-05-22 03:42:44', '2026-05-22 03:42:44'),
-(2058, NULL, 11, 1074, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Rich me obliga', 1, NULL, '2026-05-25 21:57:07', '2026-05-25 21:57:07'),
 (2059, NULL, 11, 2052, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Siento el llamado a compartir la palabra de Dios', 1, NULL, '2026-05-26 18:49:53', '2026-05-26 18:49:54'),
 (2060, NULL, 11, 2053, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Para fortalecer y mejorar cada día mi relación con Dios, ser una buena discípula y  aprender a compartir sobre Él', 0, NULL, '2026-05-27 14:10:37', '2026-05-27 14:10:37'),
 (2061, NULL, 11, 2054, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Por qué ya había venido hace 2 años (no se encontró mi correo con el que me registre el año pasado) y encontré en reto un hogar y muchas personas que han sido de gran bendición en mi vida', 1, NULL, '2026-05-27 21:41:35', '2026-05-27 21:41:35'),
@@ -1556,7 +1518,34 @@ INSERT INTO `event_registrations` (`id`, `legacy_registration_id`, `event_id`, `
 (2066, NULL, 11, 1071, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, '🤷‍♂️', 1, NULL, '2026-06-03 01:28:46', '2026-06-03 01:28:46'),
 (2067, NULL, 11, 1072, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Por qué no?', 1, NULL, '2026-06-03 01:33:21', '2026-06-03 01:33:21'),
 (2068, NULL, 11, 1093, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Quien sabe', 1, NULL, '2026-06-03 01:40:33', '2026-06-03 01:40:33'),
-(2069, NULL, 11, 2058, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Quiero vivir la experiencia y aprender, he escuchado mucho de este campamento.', 1, NULL, '2026-06-04 03:12:17', '2026-06-04 03:12:17');
+(2069, NULL, 11, 2058, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Quiero vivir la experiencia y aprender, he escuchado mucho de este campamento.', 1, NULL, '2026-06-04 03:12:17', '2026-06-04 03:12:17'),
+(2070, NULL, 11, 2059, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Seguir a cristo', 1, NULL, '2026-06-07 20:13:57', '2026-06-15 17:28:09'),
+(2071, NULL, 11, 2060, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Es mi 3ra vez en reto', 1, NULL, '2026-06-07 22:45:58', '2026-06-07 22:45:58'),
+(2072, NULL, 11, 1097, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Quiero volver a intentar tener mis seguimientos.', 1, NULL, '2026-06-09 16:34:05', '2026-06-09 16:34:05'),
+(2073, NULL, 11, 1048, '2026', 'A', 0, 0, 1, 0, 0, 2, 2, 'Obligado por Neitan', 1, NULL, '2026-06-10 04:52:10', '2026-06-26 23:39:50'),
+(2074, NULL, 11, 1224, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Por qué me gustó mucho la experiencia del año pasado', 1, NULL, '2026-06-11 04:23:35', '2026-06-11 04:23:35'),
+(2075, NULL, 11, 2061, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Servir a Dios', 0, NULL, '2026-06-11 04:49:01', '2026-06-19 22:52:20'),
+(2076, NULL, 11, 2062, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Por crecimiento espiritual', 0, NULL, '2026-06-11 15:56:24', '2026-06-11 15:56:24'),
+(2077, NULL, 11, 2063, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Acercarme a Dios', 1, NULL, '2026-06-15 02:20:10', '2026-06-15 17:32:21'),
+(2078, NULL, 11, 1206, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Porque me gusta servirrr ❤️❤️❤️', 0, NULL, '2026-06-15 22:22:10', '2026-06-15 22:22:10'),
+(2079, NULL, 11, 1168, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Para seguir conociendo el corazón de Dios', 1, NULL, '2026-06-15 22:23:41', '2026-06-15 22:23:57'),
+(2080, NULL, 11, 2064, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Por la experiencia y enseñanza', 0, NULL, '2026-06-16 04:17:24', '2026-06-16 04:17:24'),
+(2081, NULL, 11, 2065, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Formación biblica, estrategia de evangelizar y experiencia', 1, NULL, '2026-06-16 04:28:53', '2026-06-16 04:28:53'),
+(2082, NULL, 11, 809, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Es mi hogar ✨️', 1, NULL, '2026-06-16 04:35:57', '2026-06-16 16:16:21'),
+(2083, NULL, 11, 2066, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Por conocer y acercarme más a dios', 1, NULL, '2026-06-16 04:36:12', '2026-06-16 04:36:12'),
+(2084, NULL, 11, 975, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Porque mi mamá me manda', 0, NULL, '2026-06-17 00:49:20', '2026-06-17 16:58:26'),
+(2085, NULL, 11, 241, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Me gusta ir', 1, NULL, '2026-06-17 18:45:26', '2026-06-17 18:45:26'),
+(2086, NULL, 11, 2067, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'fui parte del seguimiento', 1, NULL, '2026-06-18 02:44:02', '2026-06-18 02:44:02'),
+(2087, NULL, 11, 2068, '2026', 'B', 0, 0, 0, 0, 0, 1, 0, 'participe en el seguimiento', 1, NULL, '2026-06-18 02:54:33', '2026-06-19 20:51:24'),
+(2088, NULL, 11, 2069, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Para asercarme más a Dios', 1, NULL, '2026-06-19 04:51:50', '2026-06-19 04:51:50'),
+(2089, NULL, 11, 1180, '2026', 'A', 0, 0, 1, 0, 0, 1, 0, 'Desde la primera vez que llegué encontré una casa y un lugar que me abrazó y me enseñó a Jesús; hoy quiero hacer lo mismo y seguir siendo parte de esto.', 1, NULL, '2026-06-22 03:09:00', '2026-06-23 03:49:52'),
+(2090, NULL, 11, 2070, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Me invitaron', 1, NULL, '2026-06-22 05:07:11', '2026-06-22 05:07:12'),
+(2091, NULL, 11, 2071, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Me invitaron', 1, NULL, '2026-06-22 21:04:07', '2026-06-22 21:04:07'),
+(2092, NULL, 11, 2072, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Me invitaron', 1, NULL, '2026-06-22 21:18:01', '2026-06-22 21:18:01'),
+(2093, NULL, 11, 2073, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Para aprender mas sobre dios', 1, NULL, '2026-06-23 15:36:17', '2026-06-23 15:36:17'),
+(2094, NULL, 11, 2074, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Para acercarme más a Dios', 1, NULL, '2026-06-23 17:44:38', '2026-06-23 17:44:39'),
+(2095, NULL, 11, 2075, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'No tengo', 1, NULL, '2026-06-25 00:00:15', '2026-06-25 00:00:15'),
+(2096, NULL, 11, 2076, '2026', 'A', 0, 0, 0, 0, 0, 1, 0, 'Terminar el seguimiento', 1, NULL, '2026-06-26 10:01:32', '2026-06-26 10:01:32');
 
 -- --------------------------------------------------------
 
@@ -3327,7 +3316,11 @@ INSERT INTO `payments` (`id`, `legacy_payment_id`, `event_registration_id`, `amo
 (212, NULL, 2068, 800.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-03 15:23:38', '2026-06-03 15:23:38'),
 (213, NULL, 2067, 800.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-03 15:24:00', '2026-06-03 15:24:00'),
 (214, NULL, 2066, 800.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-03 15:24:23', '2026-06-03 15:24:23'),
-(215, NULL, 2063, 1600.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-03 15:25:04', '2026-06-03 15:25:04');
+(215, NULL, 2063, 1600.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-03 15:25:04', '2026-06-03 15:25:04'),
+(216, NULL, 1264, 800.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-15 17:30:36', '2026-06-15 17:30:36'),
+(217, NULL, 1273, 600.00, 'anticipo efectivo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-19 20:51:52', '2026-06-19 20:51:52'),
+(218, NULL, 2072, 1500.00, 'Anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-19 20:53:36', '2026-06-19 20:53:36'),
+(219, NULL, 2095, 800.00, 'anticipo', 'MXN', NULL, NULL, NULL, NULL, '2026-06-25 19:09:13', '2026-06-25 19:09:13');
 
 -- --------------------------------------------------------
 
@@ -3611,7 +3604,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (238, 2017089, 'Elijah Mark Johnson', NULL, NULL, 20, 'M', 'G', 'YWAM Pachuca', '228-342-9279', 'guitarfreak.johnson@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (239, 2017090, 'Linette Yazmin Roldán Martínez', NULL, NULL, 2, 'F', 'C', 'Edo México', '5538700200', 'linette.yazmin@hotmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (240, 2017091, 'Monica Zaldivar', NULL, NULL, 0, 'F', 'C', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, 'adamjonshon@gmail.com', NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(241, 2017092, 'Diana Negrete Calderón', NULL, NULL, 13, 'F', 'C', 'Pachuca', '7712297949', 'ana.ale.green@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(241, 2017092, 'Diana Negrete Calderón', 'Ale', '2003-10-28', 22, 'F', 'M', 'Pachuca', '7711778808', 'ana.ale.green@gmail.com', 'Ninguna', '7713909220', 'PIB', NULL, 'Olga Calderon', 'Diana Alejandra', 'diana_ale_n', 1, NULL, 'No', '7711778808', '223600d3', NULL, NULL, '2026-05-15 18:18:06', '2026-06-17 18:45:26'),
 (242, 2017093, 'Montserrat Quezada Fragoso', NULL, NULL, 15, 'F', 'C', 'Pachuca', '7712186604', 'quezadamontse@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (243, 2017094, 'Diana Sanchez Jimenez', NULL, NULL, 20, 'F', 'XG', 'Mexico Ecatepec', NULL, 'mari_15_rock@hotmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (244, 2017095, 'Christopher Mancilla', NULL, NULL, 14, 'M', 'C', 'Ciudad de México', '5538295443', 'chadmaro19@gmail.com', NULL, NULL, NULL, NULL, NULL, NULL, NULL, 0, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4182,7 +4175,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (806, 2021251, 'Geovanna Lizbeth Gonzalez Torr', 'Vanna', '2003-03-03', 18, 'F', 'X', 'San Luis potosi', '4447670225', 'lizbethgonzaleztorres7@gmail.com', 'Arañas', '8442055786', '.', '2021-06-26 14:11:18', 'Ludin Torres bonilla', 'Lizbeth Torres', 'Lizbeth Gonzalez 23', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (807, 2021252, 'Elida Martínez De Jesús', 'Ely', '2004-04-06', 17, 'F', 'XS', 'Campista', '5547723157', 'em2354041@gmail.com', 'Nada', '7713402023', 'Fuente de vida', '2021-06-27 11:57:57', 'Hilaria Martínez', 'Elida de Jesús gil', 'Elida de Jesús gil', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (808, 2021253, 'Braulio Aarón Lara Suárez', 'Braulio', '2002-09-03', 18, 'M', 'M', 'Ecatepec', '5527591377', 'braulara712@gmail.com', 'Ninguna', '5563518800', NULL, '2021-06-28 13:37:34', 'Armando Lara', 'Braulio Lara', 'braulio.318', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(809, 2021254, 'Israel', 'Israel', '0000-00-00', 16, 'M', 'S', 'Chiapas, Mexico', '9613368339', 'IsraelGC.30@hotmail.com', 'al polvo', '5518231186', 'Templo Auditorio Cristiano \"Solo Cristo Salva\"', '2021-06-29 09:32:22', 'Briseida Rodríguez Franco', 'Israel Gomez Castelazo', 'israelgc01', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(809, 2021254, 'Israel', 'Israel', '2005-01-30', 21, 'M', 'X', 'Chiapas, Mexico', '9613368339', 'IsraelGC.30@hotmail.com', 'al polvo', '9611005893', 'Templo Auditorio Cristiano \"Solo Cristo Salva\"', '2021-06-29 09:32:22', 'Misai Gómez Nucamendi', 'Israel Gomez Castelazo', 'israelgc01', 1, NULL, NULL, '961 336 8339', '6e53fc1e', NULL, NULL, '2026-05-15 18:18:06', '2026-06-16 04:35:57'),
 (810, 2021255, 'Gabriel Castañón Zuñiga', 'Gabe', NULL, 0, 'M', 'XL', 'Tamazunchale SLP.', '4831118074', 'thegibson_2782@outlook.com', 'Penicilina', '4831098322', 'Hogar Cristiano ABBA', '2021-06-29 17:03:58', 'Miriam', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (811, 2021256, 'Miriam Isabel Cruz Jonguitud', 'Miriam', NULL, 0, 'F', 'M', 'Tamazunchale SLP', '4831098322', 'cieloazul192@yahoo.com', 'Penicilina', '4831118074', 'Hogar Cristiano ABBA', '2021-06-29 17:09:14', 'Gabriel Castañón', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (812, 2021257, 'Jayden Matthew Castañón Cruz', 'Jayden', NULL, 0, 'M', 'XS', 'Tamazunchale SLP', '4831118074', NULL, 'Penicilina', '4831118074', 'Hogar Cristiano ABBA', '2021-06-29 17:12:59', 'Gabriel Castañón', NULL, NULL, 1, NULL, NULL, NULL, NULL, 'thegibson_2782@outlook.com', NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4349,7 +4342,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (972, 2023101, 'Natan Morales', 'Neitan', '1987-10-29', 36, 'M', 'XL', 'CDMX', '5624242759', 'neitan.morales1@gmail.com_', 'No', '000000000000', NULL, '2023-04-14 16:12:51', 'Sheila', 'Neitan Morales', 'Neitan Morales', 1, '', NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 19:43:01'),
 (973, 2023103, 'Josué Yael Vázquez Guzmán', 'Josué staff', '2004-03-16', 19, 'M', 'M', 'Pachuca', '5542295782', 'yayeljosuevaz2004@gmail.com', 'No', '7713253793', 'PIB Pachuca', '2023-04-15 07:15:24', 'Ana Nallely Guzmán Rojas', 'Yael Vázquez', 'Iamjosueyael', 1, NULL, NULL, NULL, '72aebede', NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (974, 2023104, 'Angel Levit Vazquez Guzman', 'Levit', '2008-02-07', 14, 'M', 'S', 'Pachuca', '771 243 164', 'anlev50vazgu90@gmail.com', 'No', '7713253793', 'PIB Pachuca', '2023-04-15 07:20:46', 'Ana Nallely Guzmán Rojas', 'Levit Vazquez', 'No tengo', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(975, 2023105, 'Richz Volta', 'Richz', '1975-01-18', 47, 'M', 'S', 'Pachuca', '7712088634', 'richjucum@gmail.com', 'Ninguna', '7712088634', 'Cornerstone Pachuca', '2023-04-15 07:48:41', 'Citlali', 'Richz Volta', 'Richz Volta', 1, 'citlali77', 'no', '7712088634', '364374fc', NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(975, 2023105, 'Richz Volta', 'Richz', '1975-01-18', 51, 'M', 'S', 'Pachuca', '7712088634', 'richjucum@gmail.com', 'Ninguna', '7712088634', 'Cornerstone Pachuca', '2023-04-15 07:48:41', 'Citlali', 'Richz Volta', 'Richz Volta', 1, 'citlali77', 'no', '7712088634', 'dffcd160', NULL, NULL, '2026-05-15 18:18:06', '2026-06-17 00:49:20'),
 (976, 2023106, 'Andrea Estrada Garrido', 'Andy', '2005-05-12', 18, 'F', 'M', 'Estado de Mexico', '5531403659', 'garridoandrea34@gmail.com', 'No', '5520307910', 'Manada Pequeña', '2023-04-15 08:58:09', 'Michel Garrido Estrada', 'Andrea Estrada', 'garrido__a', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (977, 2023107, 'Héctor Ricardo Trejo Real', 'Héctor', '1991-04-17', 32, 'M', 'XL', 'Monterrey', '7713228498', 'hectorziller@gmail.com', 'No', '5584518866', 'Nuevo Amanecer', '2023-04-15 10:23:47', 'Taurino Bustos', 'Hector Real', 'hectorreal17', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (978, 2023108, 'Auri lueguer Ortiz', 'Auri', '2005-10-02', 18, 'F', 'M', 'Pachuca Hidalgo', '7711525659', 'auriortiz02@gmail.com', 'A los perros', '+52771152565', 'Vida plena', '2023-04-17 21:19:44', 'Beatriz Adriana Ortiz Bustos', 'Auri lueguer Ortiz', 'L.u.e.g.u.e.r', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4423,7 +4416,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (1045, 2023175, 'Brianna Lisset Hernandez Perez', 'bri', '2008-07-30', 15, 'F', 'M', 'Pachuca, Hidalgo', '7712622424', 'lizzybri2009@gmail', 'no', '7717221473', 'Cornerstone Pachuca', '2023-07-03 14:54:55', 'Citlali Perez', 'https://www.facebook.com/profile.php?id=1000928690', 'lissibri_oficialmusic', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1046, 2023176, 'Eduardo Josué Manzano Estrada', 'Manzano', '2003-07-15', 20, 'M', 'M', 'León, Guanajuato', '+52 476 738', 'manzano150703@gmail.com', 'No', '4761265224', 'CDO', '2023-07-04 00:08:05', 'José Carmen Manzano Camargo', 'Eduardo Manzano', 'eduardo_manzano15', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1047, 2023177, 'Yazmin Quezada', 'Yaz', '1985-04-24', 37, 'F', 'X', 'Pachuca', '5612626127', 'yaz1812ambar@gmail.com', NULL, '7791003164', NULL, '2023-07-04 18:04:50', 'Antonio Quezada', NULL, NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1048, 2023178, 'RUBÉN CALDERÓN ANDRADE', 'Rubén C.', '1993-06-11', 30, 'M', 'M', 'Pachuca', '7713723583', 'calderonruben432@gmail.com', 'No.', '771 404 4654', 'PIB', '2023-07-04 21:48:50', 'Karen Gómez', 'Rubén Calderón', 'Rcalderon', 1, '$2y$12$G5BBdI7eB0YMgY95c5uoI.c7apvZoR7owxEQ5iMA.5mMonXilBkk.', 'No', '771 372 3583', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-16 10:21:56'),
+(1048, 2023178, 'RUBÉN CALDERÓN ANDRADE', 'Rubén C.', '1993-06-11', 32, 'M', 'M', 'Pachuca', '7713723583', 'calderonruben432@gmail.com', 'No.', '771 404 4654', 'PIB', '2023-07-04 21:48:50', 'Karen Gómez', 'Rubén Calderón', 'Rcalderon', 1, '$2y$12$G5BBdI7eB0YMgY95c5uoI.c7apvZoR7owxEQ5iMA.5mMonXilBkk.', 'No', '771 372 3583', '64a4d106', NULL, NULL, '2026-05-15 18:18:06', '2026-06-10 04:52:10'),
 (1049, 2023179, 'Ana Gabriela García Guerrero', 'Ana', '1991-02-18', 31, 'F', 'S', 'Pachuca', '5554946662', 'ananorge1553@gmail.com', 'No', '5534683369', NULL, '2023-07-05 08:43:28', 'Gabriela Guerrero', 'Ana García', 'La_fos', 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1050, 2023180, 'Evan Daniel Hernandez Perez', 'Minty', '2004-09-02', 19, 'M', 'S', 'Pachuca', '7712668008', 'evannet099@gmail.com', 'No', '771 208 8634', 'Jucum', '2023-07-05 12:24:02', 'Ricardo Hernandez', 'NA', 'NA', 1, NULL, 'No', '7712668008', 'fbb15a46', NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1051, 2023181, 'Carlos Yereth Bello Hernández', 'Yereth', '2004-07-20', 19, 'M', 'M', 'Pachuca', '7712177459', 'yereth.bello7@gmail.com', NULL, '7711501548', 'Cornerstone Tulancingo', '2023-07-05 12:39:01', 'Juana Gisela Hernández Reyes', 'Yereth Bello', NULL, 1, NULL, NULL, NULL, NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4472,7 +4465,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (1094, 2024021, 'Abdiel Ruiz Gutiérrez', 'Abdiel', '2009-07-05', 15, 'M', 'X', 'Estado de México', NULL, 'abdirugu123@gmail.com', 'No', '+52 55680238', 'Hago iglesia en casa', '2024-05-08 19:41:02', 'Alejandro Ruiz Pacheco', 'Gracias a Dios prescindo de él', 'Gracias a Dios prescindo de él', 1, NULL, 'No', '5636022770', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1095, 2024022, 'Christopher Campos Farfán', 'Christo', '2002-12-11', 22, 'M', 'S', 'Estado de México', NULL, 'camposfarfan240@gmail.com', 'No', '5560594699', NULL, '2024-05-09 00:11:13', 'Maria del Rosario Farfán Villegas', 'Christopher Farfan', 'jotaro.stxcky', 1, NULL, 'No', '5567518234', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1096, 2024023, 'Jose Antonio Rubio Gonzalez', 'Jose', '2002-05-17', 22, 'M', 'X', 'Cancunsito', NULL, 'joserubio1fv@gmail.con', 'Perros , gatos y al jamón', '5584046396', NULL, '2024-05-12 09:37:37', 'Claudia González Moreno', 'Jose RG', 'josssrg____', 1, NULL, 'No', 'Sin teléfono', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1097, 2024024, 'Fernanda Díaz González', 'Fernan', '2007-01-30', 17, 'F', 'XL', 'Campestre Villas del Álamo,  Av. Framboyanes #224', '7713705453', 'ferchis070130@gmail.com', 'Nop', '7713705453', 'Iglesia Selah', '2024-05-12 12:05:48', 'Rosa Durán', 'No', 'fernan_tripoier', 1, NULL, 'Nop', '7713705453', '9fe906bb', NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(1097, 2024024, 'Fernanda Díaz González', 'Fernan', '2007-01-30', 19, 'F', 'X', 'Campestre Villas del Álamo,  Av. Framboyanes #224', '7713705453', 'ferchis070130@gmail.com', 'Nop', '7711315851', 'Iglesia Selah', '2024-05-12 12:05:48', 'Sra. Monica', 'Fernan DG', 'fernan_tripoier', 1, NULL, 'Nop', '7713705453', '252f3f4e', NULL, NULL, '2026-05-15 18:18:06', '2026-06-09 16:34:05'),
 (1098, 2024025, 'Jaciel Trujillo Gómez', 'Jaciel Garrixen', '2004-12-21', 20, 'M', 'X', 'Estado de México Texcoco de mora', NULL, 'timbergling870@gmail.com', 'No', '5512119769', 'Somos familia', '2024-05-13 13:36:12', 'Socorro Gómez', 'Jaciel Garrixen', 'timberglin870', 1, NULL, 'Nada', '5579419277', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1099, 2024026, 'René Isaí Reyes Gómez', 'Ener', '1997-09-05', 27, 'M', 'XXL', 'Edo mex', NULL, 'rene.reyes7922@gmail.com', 'No', '5539050703', 'Unción México para las naciones', '2024-05-13 22:23:25', 'Sonia', 'Ener rg', 'RG.ener', 1, NULL, 'No', '5549050703', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1100, 2024027, 'Sara Isabel Delgado Trejo', 'Sarita', '2003-12-29', 21, 'F', 'M', 'Pachuca', NULL, 'isadelgado290312@gmail.com', 'Si polvo', '5573090150', NULL, '2024-05-14 17:06:58', 'Maria de los Ángeles Trejo Vizueth', NULL, NULL, 1, NULL, 'No', '5951090150', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4541,10 +4534,10 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (1162, 2025017, 'Marisol Shelyn Márquez Sánchez', 'Sol', '1995-12-09', 30, 'F', 'S', 'Pachuca', '7715593466', 'marisolshelyn@gmail.com', 'No', '7712214765', 'Sama El lugar de su presencia', '2025-05-04 18:19:22', 'Francisco Márquez Contreras', 'Marisol Shelyn', 'shelyn09', 1, NULL, 'No', '7716578656', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1163, 2025018, 'Diana Alejandra Negrete Calderón', 'Alejandra', '2003-10-28', 22, 'F', 'S', 'Mineral de La Reforma', '7711778808', 'ana.ale.green@gmail.com', 'No', '7713909220', 'Ninguna', '2025-05-10 22:05:42', 'Olga Calderón Andrade', 'Diana Alejandra', 'diana_ale_n', 1, NULL, 'No', '7711778808', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1164, 2025019, 'Julián Negrete Calderón', 'Julian', '2007-07-01', 18, 'M', 'M', 'Mineral de la Reformas', '7713904722', 'julian.negrete.01072007@gmail.com', 'No', '7713909220', 'Ninguna', '2025-05-10 22:09:37', 'Olga Calderón Andrade', 'Julián Negrete', 'juliannegrete.c', 1, NULL, 'No', '7713904722', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1165, 2025020, 'Raúl Harim Quintero Acevedo', 'Harim', '2008-05-06', 18, 'M', 'X', 'Avandaro Mexico', '7227848156', 'jurassicworldrexy81@gmail.com', 'Ninguna', '7227848156', 'Viña del señor Avandaro', '2025-05-13 03:31:25', 'Raúl Quintero', NULL, 'raulharimquintero', 1, NULL, 'Ninguno', '7227848156', 'ee039b7d', NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(1165, 2025020, 'Raúl Harim Quintero Acevedo', 'Harim', '2008-05-06', 18, 'M', 'X', 'Avandaro Mexico', '7227848156', 'jurassicworldrexy81@gmail.com', 'Ninguna', '7227848156', 'Viña del señor Avandaro', '2025-05-13 03:31:25', 'Raúl Quintero', NULL, 'raulharimquintero', 1, NULL, 'Ninguno', '7227848156', '2792a8f3', NULL, NULL, '2026-05-15 18:18:06', '2026-06-15 22:29:34'),
 (1166, 2025021, 'Ammi Josabet Álvarez Martínez', 'Ammistad', '2006-09-02', 19, 'F', 'M', 'Apan Hidalgo', '7711285891', 'ammicbt@gmail.com', 'No', '7481114355', 'Vida de Dios Remanente Fiel', '2025-05-16 20:31:59', 'Mi madre', 'Bett Alvarez', 'ammistadd', 1, NULL, 'No', '7711285891', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1167, 2025022, 'Sinaí Valentina Oliva Avila', 'Sina', '2010-01-14', 14, 'F', 'M', 'Pachuca', 'Sí', 'valentinaoliva160@gmail.com', 'A la penicilina', '7716621410', 'SAMA EL LUGAR DE SU PRECENCIA', '2025-05-18 17:31:30', 'Monica oliva avila', NULL, '@idk._svx', 1, NULL, 'No', '5525551100', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1168, 2025023, 'David Eduardo Quintero Acevedo', 'Pastorcito', '2009-09-15', 16, 'M', 'XL', 'Viña Avandaro', 'No', 'quinterodavidfox@gmail.com', 'No', '7227848156', 'Viña del señor Avandaro Mex.', '2025-05-20 08:04:18', 'Raúl Quintero', 'No', 'No', 1, NULL, 'No', 'No', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(1168, 2025023, 'David Eduardo Quintero Acevedo', 'Pastorcito', '2009-09-15', 16, 'M', 'XL', 'Viña Avandaro', '7221401425', 'quinterodavidfox@gmail.com', 'No', '7227848156', 'Viña del señor Avandaro Mex.', '2025-05-20 08:04:18', 'Raúl Quintero', 'No', 'No', 1, NULL, 'No', '7221401425', '51ad2f42', NULL, NULL, '2026-05-15 18:18:06', '2026-06-15 22:23:41'),
 (1169, 2025024, 'Levi Neftalí Hernández Acosta', 'Levi', '2006-06-10', 19, 'M', 'X', 'Actopan', '7751204095', 'lh3079140@gmail.com', 'No', '7712652313', 'Emanuel', '2025-05-22 14:16:57', 'Guadalupe Acosta Gómez', 'Levi Acosta', 'Levi Acosta', 1, NULL, 'Ninguno', '7751204095', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1170, 2025025, 'Fernanda Montserrat Martínez Canto', 'Fercita', '2003-02-05', 21, 'F', 'S', 'Pachuca', '7713452553', 'montserrat.canto.fernanda@gmail.com', 'Ninguna', '7712020734', 'Tierra Fértil', '2025-05-22 21:49:43', 'Montserrat Cantó Fernández', 'Fer Canto', 'fercitaa.canto', 1, NULL, 'No', '7713452553', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1171, 2025026, 'Danna Carol', 'Danna Carol', '2002-05-07', 23, 'F', 'XS', 'Ciudad de México', '5611714539', 'poncedannacarol@gmail.com', 'Si', '5531241898', 'Árboles de Justicia', '2025-05-22 22:24:17', 'Genaro Ponce', 'Carol Ponce', 'carol_ponce_t', 1, NULL, 'No', 'Si', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4556,7 +4549,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (1177, 2025032, 'Daniel Alejandro Acosta Martínez', '7', '2006-09-01', 19, 'M', 'M', 'Tijuana baja california', '664 193 51 0', 'da6201409@gmail.com', 'no', '664 642 78 3', 'Hope zone', '2025-06-01 12:56:58', 'Brissa', 'Daniel martinez', 'no tengo', 1, NULL, 'no', '664 193 51 0', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1178, 2025033, 'Jonathan Villafuerte Mejía', 'Jonathan', '2010-01-05', 14, 'M', 'X', 'Cuidad de México', '5533608008', 'jonathanvifuerte618@gmail.com', 'Nop', '5566231057', 'Solo Cristo Salva', '2025-06-03 10:54:43', 'Dario Villafuerte Mejía', 'Jonathan Villafuerte', 'Jonathan Villafuerte', 1, NULL, 'Nop', '5533608008', '9794e966', NULL, NULL, '2026-05-15 18:18:06', '2026-05-16 01:25:53'),
 (1179, 2025034, 'Isai Villafuerte Mejía', 'Isai Villafuerte', '2011-03-23', 13, 'M', 'M', 'Ciudad de México', '5645285892', 'isaivillafuertemejia@gmail.com', 'Ninguna', '5566231057', 'Solo Cristo salva', '2025-06-03 11:03:19', 'Dario Villafuerte Salazar', 'Isai Villafuerte', 'Isai Villafuerte', 1, NULL, 'No', '5645285892', '115326a9', NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1180, 2025035, 'Odalys Vanessa Velazquez Alfaro', 'oda :)', '2005-12-27', 20, 'F', 'S', 'Tuxtla Gutiérrez, Chiapas', '9613348768', 'odalysv57@gmail.com', NULL, '9614565272', 'Palabras de Vida', '2025-06-05 21:42:16', 'Alonso Velazquez', NULL, 'odalys_vva', 1, NULL, NULL, '9613348768', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(1180, 2025035, 'Odalys Vanessa Velazquez Alfaro', 'oda :)', '2005-12-27', 20, 'F', 'S', 'Tuxtla Gutiérrez, Chiapas', '9613348768', 'odalysv57@gmail.com', NULL, '9614565272', 'Palabras de Vida', '2025-06-05 21:42:16', 'Alonso Velazquez', NULL, 'odalys_vva', 1, NULL, NULL, '9613348768', 'd5414ccc', NULL, NULL, '2026-05-15 18:18:06', '2026-06-22 03:02:06'),
 (1181, 2025036, 'Esmeralda Templos', 'Esme', '2007-05-08', 18, 'F', 'S', 'Pachuca', '7714337635', 'no', 'A los arándanos', 'No', 'Fuego restaurador', '2025-06-05 23:23:06', 'No', 'Esmeralda templos', 'Tmsse', 1, NULL, 'No', 'No', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1182, 2025037, 'Maelin Aileen Alvarado Raygoza', 'Mae', '2011-03-23', 13, 'F', 'X', 'Ciudad de México', '5633116011', 'rutestrellaray@gmail.com', 'Paracetamol', '5586767026', 'Jerusalén', '2025-06-08 12:39:44', 'Rut Estrella Alvarado Raygoza', NULL, NULL, 1, NULL, 'No', '5586767026', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1183, 2025038, 'Melina Espindola Alonso', 'Mely', '2006-10-09', 19, 'F', 'M', 'Pachuca', '7713540448', 'melispindola2006@gmail.com', NULL, '7712031099', 'PIB Pachuca', '2025-06-08 14:06:56', 'Wendy Cecilia Espindola Alonso', 'Meli Spindola', 'Spindola_2006', 1, NULL, NULL, '7713540448', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4582,7 +4575,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (1203, 2025058, 'Libni Zabdiel Anaya García', 'Bibi', '1997-04-11', 27, 'F', 'M', 'Ciudad de México', '5564818471', 'vitamyplan97@gmail.com', 'No', '5566231057', 'Templo Auditorio Cristiano Solo Cristo Salva', '2025-06-13 06:20:27', 'Darío Villafuerte Salazar', 'Bibita Anaya', 'bebissbibita', 1, NULL, 'No', '5564818471', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1204, 2025059, 'Ariadna Abigail Alfaro Vidales', 'Abi', '2009-02-26', 15, 'F', 'S', 'Estado de México', '525573259602', 'mvv198@gmail.com', 'No', '5538133946', 'Iglesia Bautista Verdad y Vida', '2025-06-14 09:47:29', 'Miriam Vidales', 'Abigail Alfaro Vidales', 'No tengo', 1, NULL, 'No', '5573259602', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1205, 2025060, 'Evelyn López Gutiérrez', 'Evy', '2005-02-27', 19, 'F', 'M', 'Valle de Bravo, Edo. Mex.', '7221510374', 'quinterodavidfox@gmail.com', 'Rinitis aguda', '7227848156', 'Viña del Señor Avandaro, Mex', '2025-06-15 16:22:35', 'Raul Quintero Bustamante', 'no', 'no', 1, NULL, 'sterimar y afrin', '7221510374', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1206, 2025061, 'Daniela Tamara Altamirano Becerril', 'Tamy', '2008-08-22', 17, 'F', 'M', 'Pachuca, Hgo', '771 140 5563', 'danielatamaraaltamirano22@gmail.com', 'No', '771 284 2545', 'SAMA', '2025-06-15 21:40:33', 'Libertad Becerril Covarrubias', NULL, 'danielaa_alt', 1, NULL, 'No', '771 140 5563', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
+(1206, 2025061, 'Daniela Tamara Altamirano Becerril', 'Tamy', '2008-08-22', 17, 'F', 'M', 'Pachuca, Hgo', '771 140 5563', 'danielatamaraaltamirano22@gmail.com', 'No', '771 284 2545', 'SAMA', '2025-06-15 21:40:33', 'Libertad Becerril Covarrubias', NULL, 'danielaa_alt', 1, NULL, 'No', '771 140 5563', 'ceef43ba', NULL, NULL, '2026-05-15 18:18:06', '2026-06-15 22:19:14'),
 (1207, 2025062, 'Jonathan Jorge peñafiel spindola', 'Joni', '2009-04-12', 15, 'M', 'M', 'Pachuca', 'Si', 'trakastrakas779@gmail.com', 'A los gatos', '771 104 1650', 'Selah', '2025-06-15 23:09:24', 'Amayrani Stefania spindola Molina', NULL, 'Joni_penafiel', 1, NULL, 'Ningúno', '772 138 0332', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1208, 2025063, 'Angela Domínguez Santin', 'Angela', '2005-12-10', 20, 'F', 'M', 'Puebla, México', '2211274429', 'angeladominguezsantin@gmail.com', 'No', '2221733263', 'Centro de Alabanza y Proclamación', '2025-06-18 09:10:17', 'Nadia Alicia Santin Morteo', NULL, NULL, 1, NULL, 'No', '2211274429', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1209, 2025064, 'Yarexi Monserrath', 'Monse', '2007-02-02', 17, 'F', 'S', 'Valle de Bravo', '7294546110', 'yareximonsejaimes2502@gmail.com', 'No', '7221304949', 'La viña del señor', '2025-06-20 07:00:29', 'Carlos', 'Jaimes Yare', 'Yare Jaimes', 1, NULL, 'No', '7294546110', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4600,7 +4593,7 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (1221, 2025076, 'Fernanda reyes luna', 'Fernanda', '2011-10-30', 14, 'F', 'S', 'Sama el lugar de su pre8', NULL, 'marlunaluna94@gmail.com', 'No', '777 9735325', 'Sama el lugar de su presencia', '2025-06-29 13:37:05', 'Marcela luna', NULL, NULL, 1, NULL, 'No', '7717596476', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1222, 2025077, 'Andres Israel Vargas Rueda', 'Andy', '2001-10-11', 24, 'M', 'M', 'Valle de Bravo, Edo. de Mex.', '72 21 82 24', 'quinterodavidfox@gmail.com', 'A las sulfas (es un medicamento)', '7227848156', 'Viña del Señor Avandaro', '2025-06-30 16:45:37', 'Raul Quintero Bustamante', 'No', 'No', 1, NULL, 'No', '72 21 82 24', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1223, 2025078, 'Karla Reyes Solis', 'Karla', '2000-05-03', 24, 'F', 'M', 'Pachuca Hidalgo', '7712726140', 'reyeskarlas0305@gmail.com', 'No', '7228555123', 'PIB Pachuca', '2025-07-04 11:39:04', 'Charlie caudillo', 'Karla Reyes', 'Reyes Karla', 1, NULL, 'Para intestino irritable', '7712726140', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
-(1224, 2025079, 'Hanna Zurisaday Lopez Zararte', 'Hanna', '2008-07-07', 17, 'F', 'S', 'Morelos', '7351443337', 'Hannazurisaday1@gmail.com', 'Ninguna', '5570816398', 'Centro cristiano buenas nuevas', '2025-07-04 16:05:10', 'Eleazar Lopez Villa', 'Zuri Lopez', 'zu.bmvv', 1, NULL, 'No tomo ningún medicamento', '7351443337', '175a2ca4', NULL, NULL, '2026-05-15 18:18:06', '2026-05-28 09:42:22'),
+(1224, 2025079, 'Hanna Zurisaday Lopez Zararte', 'Hanna', '2008-07-07', 17, 'F', 'S', 'Morelos', '7352905370', 'Hannazurisaday1@gmail.com', 'Ninguna', '5570816398', 'Centro cristiano buenas nuevas', '2025-07-04 16:05:10', 'Eleazar Lopez Villa', 'Zuri Lopez', 'zu.bmvv', 1, NULL, 'No tomo ningún medicamento', '7352905370', '8a45e2aa', NULL, NULL, '2026-05-15 18:18:06', '2026-06-11 04:23:35'),
 (1225, 2025080, 'Carlos Fabricio Bautista Hernández', 'Charly', '2005-06-06', 20, 'M', 'M', 'Pachuca', 'Si', 'kingsunite140224@gmail.com', 'No', '+52 771 143', 'PIB PACHUCA', '2025-07-06 17:31:45', 'Mama', 'Carlos Bautista', 'Carlosfbh10', 1, NULL, 'No', 'Si 771 199 8', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1226, 2025081, 'Silvia Getsemaní Galván Diego', 'Getse Galván', '2005-04-30', 19, 'F', 'S', 'Pachuca de Soto', '7713151466', 'getsemanisilvia@gmail.com', 'No', '771 810 9139', 'PIB Pachuca', '2025-07-08 21:06:17', 'Antonio Galván', NULL, 'getsemani_g_d', 1, NULL, 'No', '7713151466', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
 (1227, 2025082, 'Delia Hernandez', 'Mamá Yeya', '1970-07-05', 55, 'F', 'X', 'Huitzi', NULL, '.', NULL, '771', NULL, '2025-07-08 21:32:19', 'Eleazar', NULL, NULL, 1, NULL, NULL, '.', NULL, NULL, NULL, '2026-05-15 18:18:06', '2026-05-15 18:18:06'),
@@ -4629,7 +4622,25 @@ INSERT INTO `users` (`id`, `legacy_user_id`, `full_name`, `display_name`, `birth
 (2055, NULL, 'Angel Cruz Rocha', 'Angel', '2007-06-17', 18, 'M', 'XL', 'Pachuca', '7711306050', 'josecruzhinojosaaa@gmail.com', 'No', '7716783874', 'Tiempo de vida', '2026-05-30 21:59:34', 'Alejandra Rocha Hernandez', 'No', 'No', 1, '', 'No', '7711306050', '', '', 'A', '2026-05-31 03:59:34', '2026-06-02 03:32:52'),
 (2056, NULL, 'Alan Cruz Rocha', 'Alan', '2010-08-24', 15, 'M', 'M', 'Pachuca', '7713538169', 'josecruzhinojosaaa@gmail.com', 'Si a las almendras', '7716783874', 'Tiempo de vida', '2026-05-30 21:59:34', 'Alejandra Rocha Hernandez', 'No', 'No', 1, '', 'No', '7713538169', '', '', 'A', '2026-05-31 03:59:34', '2026-05-31 03:59:34'),
 (2057, NULL, 'Alan Habib Garduño Garduño', 'Alan Garduño', '2004-04-14', 22, 'M', 'M', 'CDMX', '7226986556', 'alanhabibg@gmail.com', 'No', '7226080859', 'Viña del señor Avándaro', '2026-06-01 22:29:05', 'Inés Garduño Facundo', 'Alan Garduño', 'Alan Garduño', 1, '', 'No', '7226986556', '', '', 'A', '2026-06-02 04:29:05', '2026-06-02 04:29:05'),
-(2058, NULL, 'Deborah Sahily Gómez Castelazo', 'Sahily', '2010-01-03', 16, 'F', 'M', 'Tuxtla Gutiérrez Chiapas, México', '9613361089', 'saygc234@gmail.com', '', '9617091125', 'Templo Auditorio Cristiano,Solo Cristo Salva.', '2026-06-03 21:12:17', 'Deborah Castelazo Nandayapa', '', '', 1, '', '', '9613361089', '', '', 'A', '2026-06-04 03:12:17', '2026-06-04 03:12:17');
+(2058, NULL, 'Deborah Sahily Gómez Castelazo', 'Sahily', '2010-01-03', 16, 'F', 'M', 'Tuxtla Gutiérrez Chiapas, México', '9613361089', 'saygc234@gmail.com', '', '9617091125', 'Templo Auditorio Cristiano,Solo Cristo Salva.', '2026-06-03 21:12:17', 'Deborah Castelazo Nandayapa', '', '', 1, '', '', '9613361089', '', '', 'A', '2026-06-04 03:12:17', '2026-06-04 03:12:17'),
+(2059, NULL, 'Ricardo Tovar Escobar', 'Ricky', '2001-09-20', 24, 'M', 'XS', 'Valle de Bravo', '5586931052', 'richitovarescobar@hotmail.com', 'No', '7221524194', 'La viña del Señor en Avandaro', '2026-06-07 14:13:57', 'Ricardo Tovar Escobar', 'Ricardo Tovar', 'Richy_Tovar', 1, '', 'No', '5586931052', '', '', 'A', '2026-06-07 20:13:57', '2026-06-07 20:13:57'),
+(2060, NULL, 'Diego Dodanim Torres Hernandez', 'Doda', '2003-05-21', 23, 'M', 'X', 'San Luis Potosí', '4444263741', 'dodanimhernandez18@gmail.com', 'No', '4441136808', 'Gran Redentor', '2026-06-07 16:45:58', 'Primitivo Torres Bonilla', 'Sisi Doda', 'Hernandez_dodanim', 1, '', 'No', '4444263741', '', '', 'A', '2026-06-07 22:45:58', '2026-06-07 22:45:58'),
+(2061, NULL, 'Auri Lueguer Ortiz', 'China', '2005-10-01', 20, 'F', 'X', 'Pachuca', '7711525659', 'auridentista@gamil.com', 'No', '7711497328', 'Vida plena', '2026-06-10 22:49:01', 'Bety Lueguer', 'Auri Lueguer Ortiz', 'L.u.e.g.u.e.r', 1, '', 'No', '7711525659', '', '', 'A', '2026-06-11 04:49:01', '2026-06-11 04:49:01'),
+(2062, NULL, 'Ruth Cecilia Pérez Rivero', 'Ruth', '2010-08-08', 15, 'F', 'M', 'Pachuca', '5642252781', 'rceciliaper@gmail.com', 'No', '7712015407', 'Tierra fertil', '2026-06-11 09:56:24', 'Eva Cecilia Rivero Reynoso', 'No tengo', 'Sutt_9810', 1, '', 'No', '5642252781', '', '', 'A', '2026-06-11 15:56:24', '2026-06-11 15:56:24'),
+(2063, NULL, 'Yara Lisset Vargas Monroy', 'Yara', '2000-03-27', 26, 'F', 'XS', 'Valle de Bravo', '7269721340', 'yara.lisset00@gmail.com', '', '5651402018', 'La Viña Avandaro', '2026-06-14 20:20:10', 'Leticia Monroy Vázquez', 'Yara Monroy', 'Yara.mon', 1, '', '', '7269721340', '', '', 'A', '2026-06-15 02:20:10', '2026-06-15 02:20:10'),
+(2064, NULL, 'Hanna Ramirez Pérez', 'Hanns', '2009-06-04', 17, 'F', 'X', 'Pachuca', '771 331 6103', 'wonderhanna0@gmail.com', '', '771 243 2801', 'Vida Plena', '2026-06-15 22:17:24', 'Korina Pérez Soto', '', 'hannsrmz', 1, '', '', '771 331 6103', '', '', 'A', '2026-06-16 04:17:24', '2026-06-16 04:17:24'),
+(2065, NULL, 'Dasha Ramirez Pérez', 'Dash', '2007-01-12', 19, 'F', 'M', 'Pachuca', 'Si', 'dashsecretcottage@gmail.com', 'A la sardina', '771 243 2801', 'VIDA PLENA', '2026-06-15 22:28:53', 'Korina Pérez Soto', 'Dasha Ra', 'gooeyshortcake', 1, '', 'No', '771 180 8934', '', '', 'A', '2026-06-16 04:28:53', '2026-06-16 04:28:53'),
+(2066, NULL, 'Cristóbal Alejandro Arellano González', 'Alejandro', '2009-11-16', 16, 'M', 'M', 'Pachuca hgo', '7712243181', 'ca2130907@gmail.com', 'No', '7713792162', 'Vida plena', '2026-06-15 22:36:12', 'Rodrigo', '', '@a_lejandro_f10', 1, '', 'No', '7712243181', '', '', 'A', '2026-06-16 04:36:12', '2026-06-16 04:36:12'),
+(2067, NULL, 'Naara Sofía Reyes Lopez', 'Naara', '2008-10-22', 17, 'F', 'S', 'Valle de Bravo', '', 'naloz3425@gmail.com', 'No', '722 154 2338', 'La Viña del Señor', '2026-06-17 20:44:02', 'Cristina López', '', 'sofi_rlm', 1, '', 'No', '729 322 9592', '', '', 'A', '2026-06-18 02:44:02', '2026-06-18 02:44:02'),
+(2068, NULL, 'Naara Sofía Reyes Lopez', 'Naara', '2008-10-22', 17, 'F', 'S', 'Valle de Bravo, México', '', 'poojar10nr@gmail.com', 'No', '722 154 2338', 'La Viña del Señor', '2026-06-17 20:54:33', 'Cristina López', '', 'sofi_rlm', 1, '', 'No', '729 322 9592', '', '', 'A', '2026-06-18 02:54:33', '2026-06-18 02:54:33'),
+(2069, NULL, 'Ángel Francisco Garcia Gaspar', 'Angel', '2011-12-04', 14, 'M', 'M', 'Ciudad de México', '5652126675', 'garciagalindofrancisco751@gmail.com', 'No', '5640335578', 'Solo cristo salva', '2026-06-18 22:51:50', 'Estefani Garcia Galindo', 'No', 'No', 1, '', 'No', 'Si', '', '', 'A', '2026-06-19 04:51:50', '2026-06-19 04:51:50'),
+(2070, NULL, 'Aarón Castelazo Pereyra', 'Aarón', '2007-08-04', 18, 'M', 'M', 'Chiapas', '9614576763', 'aaroncastelazo@gmail.com', 'No', '9611234606', 'Solo Cristo Salva', '2026-06-21 23:07:11', 'Violeta', 'No tengo', 'aaron_cast_7', 1, '', 'No', '9614576763', '', '', 'A', '2026-06-22 05:07:11', '2026-06-22 05:07:11'),
+(2071, NULL, 'Eleazar Castelazo Pereyra', 'Eleazar', '2009-01-03', 17, 'M', 'M', 'Tuxtla Gutiérrez Chiapas', '9611514996', 'castelazoeleazar@gmail.com', 'No', '9611234606', 'Templo Auditorio Cristiano Solo Cristo Salva', '2026-06-22 15:04:07', 'Violeta Pereyra Fonseca', '', 'ele_cast_17', 1, '', 'No', '9611514996', '', '', 'A', '2026-06-22 21:04:07', '2026-06-22 21:04:07'),
+(2072, NULL, 'Andrés Castelazo Pereyra', 'Andrés', '2011-09-15', 14, 'M', 'X', 'Tuxtla Gutiérrez Chiapas', '9612667116', 'israaltgomez@gmail.com', 'No', '9611234606', 'Templo Auditorio Cristiano Solo Cristo Salva', '2026-06-22 15:18:01', 'Violeta Pereyra Fonseca', 'No tengo', 'No tengo', 1, '', 'No', '9612667116', '', '', 'A', '2026-06-22 21:18:01', '2026-06-22 21:18:01'),
+(2073, NULL, 'Samuel perez morales', 'Sam', '2010-01-15', 16, 'M', 'M', 'Chiapas', '961 192 8395', 'samuelteia@gamil.com', 'No', '961 672 0044', 'Iglesia cristiana palabra de vida', '2026-06-23 09:36:17', 'Adaluz morales mota', 'No tengo', 'sam.uxb', 1, '', 'No', '9611137219', '', '', 'A', '2026-06-23 15:36:17', '2026-06-23 15:36:17'),
+(2074, NULL, 'Leonardo Avendaño Ramos', 'Leo', '2003-06-16', 23, 'M', 'M', 'Tuxtla Gutiérrez, Chiapas', '9612675917', 'leonardoramosinfo07@gmail.com', 'No', '9611325033', 'Palabras de vida', '2026-06-23 11:44:38', 'Susana Ramos Vázquez', 'Leonardo Avendaño Ramos', 'Leonardo.aven', 1, '', 'No', '9612675917', '', '', 'A', '2026-06-23 17:44:38', '2026-06-23 17:44:38'),
+(2075, NULL, 'Granados Hernández Alexa', 'No lo se', '2008-07-03', 17, 'F', 'XL', 'Pachuca de soto', '7712680043', 'granadoshealexa@gmail.com', 'No', '7713621800', 'Tiempo de vida', '2026-06-24 18:00:15', 'Hernández Cabrera Maria Elena', 'No tengo', 'No tengo', 1, '', 'No', '7712680043', '', '', 'A', '2026-06-25 00:00:15', '2026-06-25 00:00:15'),
+(2076, NULL, 'Julio César Martinez Rivera', 'César', '2005-07-27', 20, 'M', 'M', 'Valle de Bravo', '7293312915', 'juliocesarmartinezrivera52@gmail.com', 'No', '720 859 7468', 'Viña del Señor Avandaro', '2026-06-26 04:01:32', 'Julio César', 'César Rivera', 'cesar. rivera3', 1, '', 'No', '7293312915', '', '', 'A', '2026-06-26 10:01:32', '2026-06-26 10:01:32');
 
 -- --------------------------------------------------------
 
@@ -4694,7 +4705,13 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role`, `created_at`) VALUES
 (65, 1218, 'staff', '2026-05-18 18:12:35'),
 (66, 1124, 'staff', '2026-05-18 18:12:38'),
 (68, 1229, 'staff', '2026-06-01 22:54:45'),
-(69, 1165, 'staff', '2026-06-01 22:55:27');
+(69, 1165, 'staff', '2026-06-01 22:55:27'),
+(72, 2059, 'staff', '2026-06-15 17:28:09'),
+(73, 2063, 'staff', '2026-06-15 17:32:21'),
+(74, 809, 'staff', '2026-06-16 16:16:21'),
+(77, 2061, 'staff', '2026-06-19 22:52:20'),
+(79, 1074, 'staff', '2026-06-26 23:17:02'),
+(80, 1074, 'admin', '2026-06-26 23:17:02');
 
 --
 -- Índices para tablas volcadas
@@ -4704,6 +4721,7 @@ INSERT INTO `user_roles` (`id`, `user_id`, `role`, `created_at`) VALUES
 -- Indices de la tabla `auth_tokens`
 --
 ALTER TABLE `auth_tokens`
+  ADD PRIMARY KEY (`id`),
   ADD KEY `fk_auth_tokens_user` (`user_id`);
 
 --
@@ -4828,6 +4846,12 @@ ALTER TABLE `user_roles`
 --
 
 --
+-- AUTO_INCREMENT de la tabla `auth_tokens`
+--
+ALTER TABLE `auth_tokens`
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+
+--
 -- AUTO_INCREMENT de la tabla `bitacora_cambios`
 --
 ALTER TABLE `bitacora_cambios`
@@ -4837,7 +4861,7 @@ ALTER TABLE `bitacora_cambios`
 -- AUTO_INCREMENT de la tabla `campamento_costos`
 --
 ALTER TABLE `campamento_costos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `cities`
@@ -4855,7 +4879,7 @@ ALTER TABLE `events`
 -- AUTO_INCREMENT de la tabla `event_registrations`
 --
 ALTER TABLE `event_registrations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2070;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2097;
 
 --
 -- AUTO_INCREMENT de la tabla `organizations`
@@ -4879,19 +4903,19 @@ ALTER TABLE `pagos_copy1`
 -- AUTO_INCREMENT de la tabla `payments`
 --
 ALTER TABLE `payments`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=216;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=220;
 
 --
 -- AUTO_INCREMENT de la tabla `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2059;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2077;
 
 --
 -- AUTO_INCREMENT de la tabla `user_roles`
 --
 ALTER TABLE `user_roles`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=70;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=83;
 
 --
 -- Restricciones para tablas volcadas

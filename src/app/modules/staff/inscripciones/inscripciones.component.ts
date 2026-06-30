@@ -369,14 +369,13 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  enviarConfirmarEmail(reg: EventRegistration, enviar: boolean, confirmar: boolean) {
-    this.registroDao.enviarConfirmarEmail(enviar, confirmar, reg.id!).subscribe(
+  enviarConfirmarEmail(reg: EventRegistration) {
+    this.registroDao.enviarConfirmarEmail(reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          reg.email_confirmed = enviar;
-          reg.welcome_email_sent = this.extractSentEmailCount(reg, result);
+          reg.email_confirmed = this.extractConfirmationEmailCount(reg, result);
         }
       }
     );
@@ -458,7 +457,7 @@ export class InscripcionesComponent implements OnInit {
       admin: registro.is_admin ?? registro.is_admin,
       seguimiento: registro.is_followup ?? registro.is_followup,
       emailEnviado: registro.welcome_email_sent ?? registro.welcome_email_sent,
-      emailConfirmado: registro.email_confirmed ?? registro.email_confirmed,
+      emailConfirmado: registro.email_confirmed ?? 0,
       hospedaje: registro.requires_lodging ?? registro.requires_lodging,
       habitacion: registro.room_code,
       statusRegistro: registro.registration_status,
@@ -545,6 +544,15 @@ export class InscripcionesComponent implements OnInit {
     }
 
     return this.getSentEmailCount(reg) + 1;
+  }
+
+  private extractConfirmationEmailCount(reg: EventRegistration, result: any): number {
+    const sentCount = Number(result?.data?.email_confirmed ?? result?.data?.confirmation_email_sent);
+    if (Number.isFinite(sentCount) && sentCount >= 0) {
+      return sentCount;
+    }
+
+    return this.getSentEmailCountConfirmacion(reg) + 1;
   }
 
   imprimirPDF(reg: EventRegistration) {

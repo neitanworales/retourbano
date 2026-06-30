@@ -146,7 +146,7 @@ export class RegistroDao {
                             is_admin: (item?.is_admin ?? 0) === 1,
                             is_followup: (item?.is_followup ?? 0) === 1,
                             welcome_email_sent: this.toIntegerCount(item?.welcome_email_sent ?? item?.email_enviado ?? 0),
-                            email_confirmed: (item?.email_confirmed ?? item?.email_confirmado ?? 0) === 1,
+                            email_confirmed: this.toIntegerCount(item?.email_confirmed ?? item?.email_confirmado ?? 0),
                             requires_lodging: (item?.requires_lodging ?? 0) === 1,
                             room_code: item?.room_code,
                             reasons: item?.reasons,
@@ -297,7 +297,7 @@ export class RegistroDao {
         attendance_confirmed?: boolean;
         is_followup?: boolean;
         welcome_email_sent?: number | boolean;
-        email_confirmed?: boolean;
+        email_confirmed?: number | boolean;
     }): Observable<DefaultResponse> {
         const session = this.autho.getSessionValida();
         const token = encodeURIComponent(String(session?.token || ''));
@@ -391,13 +391,7 @@ export class RegistroDao {
         return this.actualizarRegistro(registrationId, { attendance_confirmed: valor });
     }
 
-    public enviarConfirmarEmail(enviar: boolean, confirmar: boolean, registrationId: number): Observable<DefaultResponse> {
-        if (!enviar) {
-            return this.actualizarRegistro(registrationId, {
-                email_confirmed: false,
-            });
-        }
-
+    public enviarConfirmarEmail(registrationId: number): Observable<DefaultResponse> {
         const session = this.autho.getSessionValida();
         const token = encodeURIComponent(String(session?.token || ''));
 
@@ -405,18 +399,6 @@ export class RegistroDao {
             this.utils.v1('/registrations/confirmation-email') + '?token=' + token,
             { registration_id: registrationId },
             { headers: this.utils.getHeaders() }
-        ).pipe(
-            switchMap((sendResponse: any) => this.actualizarRegistro(registrationId, {
-                email_confirmed: true,
-            }).pipe(
-                map((updateResponse: any) => ({
-                    ...updateResponse,
-                    data: {
-                        ...(updateResponse?.data || {}),
-                        welcome_email_sent: sendResponse?.data?.welcome_email_sent,
-                    }
-                }))
-            ))
         );
     }
 

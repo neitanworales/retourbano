@@ -173,6 +173,7 @@ class RegistrationService
         return array(
             'registration_id' => (int) $registrationId,
             'email_sent' => true,
+            'email_confirmed' => (int) $confirmationEmailSentCount,
             'confirmation_email_sent' => (int) $confirmationEmailSentCount,
         );
     }

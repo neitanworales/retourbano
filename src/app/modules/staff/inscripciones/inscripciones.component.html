@@ -166,7 +166,7 @@
                         <i class="bi bi-x-octagon" class="red"></i>
                     </ng-template>
                     <span class="email-count-badge">{{getSentEmailCount(element)}}</span>
-                    <div *ngIf="element.emailConfirmado; else emailConfirmado">
+                    <div *ngIf="hasSentEmailsConfirmacion(element); else emailConfirmado">
                         <i class="bi bi-envelope-check" class="green"></i>
                     </div>
                     <ng-template #emailConfirmado>
@@ -195,9 +195,9 @@
                                                 </button>
                                                 <button type="button"
                                                     class="btn btn-{{getEmailButtonClassConfirmacion(element)}} btn-sm"
-                                                    (click)="enviarConfirmarEmail(element, !element.email_confirmed, element.email_confirmed)">
-                                                    <i class="bi-envelope-{{element.email_confirmed?'check':'x'}}"></i>
-                                                    {{element.email_confirmed?'Confirmación Enviada':'Enviar confirmación'}} ({{getSentEmailCountConfirmacion(element)}})
+                                                    (click)="enviarConfirmarEmail(element)">
+                                                    <i class="bi-envelope-{{hasSentEmailsConfirmacion(element)?'check':'x'}}"></i>
+                                                    Enviar confirmación ({{getSentEmailCountConfirmacion(element)}})
                                                 </button>
                                                 <button type="button"
                                                     class="btn btn-{{element.is_confirmed?'success':'secondary'}} btn-sm"
@@ -230,10 +230,10 @@
 
                                                     <li *ngIf="!element.is_staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarStaff(element);"> Convertir Staff</a></li>
 
-                                                    <li *ngIf="element.staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarAdmin(element);"> Convertir a Administrador</a></li>
-                                                    <li *ngIf="element.staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarStaff(element);"> Convertir a Campero</a></li>
+                                                    <li *ngIf="element.is_staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarAdmin(element);"> Convertir a Administrador</a></li>
+                                                    <li *ngIf="element.is_staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarStaff(element);"> Convertir a Campero</a></li>
 
-                                                    <li *ngIf="element.admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarAdmin(element);"> Convertir Staff</a></li>
+                                                    <li *ngIf="element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarAdmin(element);"> Convertir Staff</a></li>
                                                     
                                                     <li *ngIf="element.registration_status==='A'"><hr class="dropdown-divider"></li>  
 

@@ -166,12 +166,12 @@ class RegistrationController extends BaseController
             $updates['is_followup'] = (int) $isFollowup;
         }
 
-        $welcomeEmailSent = $this->parseOptionalBoolean($request, 'welcome_email_sent');
+        $welcomeEmailSent = $this->parseOptionalInteger($request, 'welcome_email_sent');
         if ($welcomeEmailSent !== null) {
             $updates['welcome_email_sent'] = (int) $welcomeEmailSent;
         }
 
-        $emailConfirmed = $this->parseOptionalBoolean($request, 'email_confirmed');
+        $emailConfirmed = $this->parseOptionalInteger($request, 'email_confirmed');
         if ($emailConfirmed !== null) {
             $updates['email_confirmed'] = (int) $emailConfirmed;
         }
@@ -645,6 +645,28 @@ class RegistrationController extends BaseController
 
         if (in_array($normalized, array('0', 'false', 'no', 'off'), true)) {
             return 0;
+        }
+
+        return null;
+    }
+
+    private function parseOptionalInteger($request, $key)
+    {
+        if (!isset($request[$key])) {
+            return null;
+        }
+
+        $value = $request[$key];
+        if (is_int($value)) {
+            return $value;
+        }
+
+        if (is_bool($value)) {
+            return $value ? 1 : 0;
+        }
+
+        if (is_numeric($value)) {
+            return (int) $value;
         }
 
         return null;
