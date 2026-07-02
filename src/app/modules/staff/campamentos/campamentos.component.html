@@ -1,9 +1,9 @@
-<div class="campamentos-page container-fluid py-4">
-    <div class="hero-card mb-4">
+<div class="campamentos-page staff-page container-fluid py-4">
+    <div class="hero-card staff-surface staff-panel staff-section-split mb-4">
         <div>
-            <p class="eyebrow">Panel de administración</p>
-            <h1>Campamentos</h1>
-            <p class="subtitle">Gestiona eventos, costos y datos operativos desde una sola vista.</p>
+            <p class="eyebrow staff-page-kicker">Panel de administración</p>
+            <h1 class="staff-page-title">Campamentos</h1>
+            <p class="subtitle staff-page-subtitle">Gestiona eventos, costos y datos operativos desde una sola vista.</p>
         </div>
         <button type="button" class="btn btn-gradient" (click)="nuevoEvento()">
             Nuevo campamento
@@ -14,7 +14,7 @@
         {{ feedbackMessage }}
     </div>
 
-    <form [formGroup]="eventoForm" class="editor-card">
+    <form [formGroup]="eventoForm" class="editor-card staff-surface staff-panel">
         <div class="section-title-row">
             <h2>{{ isCreating ? 'Nuevo campamento' : 'Editar campamento' }}</h2>
             <div class="d-flex gap-2">
@@ -178,7 +178,7 @@
 
             <div class="row g-3" formArrayName="costos">
                 <div class="col-lg-4" *ngFor="let costo of costosFormArray.controls; let i = index" [formGroupName]="i">
-                    <div class="cost-card">
+                    <div class="cost-card staff-soft-card">
                         <div class="row g-2">
                             <div class="col-8">
                                 <label class="form-label">Descripción</label>
@@ -211,7 +211,7 @@
         </div>
     </form>
 
-    <div class="table-card mt-4">
+    <div class="table-card staff-surface mt-4 staff-table-shell">
         <div class="table-header">
             <h3>Eventos registrados</h3>
             <span class="badge rounded-pill text-bg-light">{{ dataSource.length }} registros</span>
@@ -259,7 +259,7 @@
             <ng-container matColumnDef="activo">
                 <th mat-header-cell *matHeaderCellDef>Activo</th>
                 <td mat-cell *matCellDef="let element">
-                    <span class="status-pill" [ngClass]="getActivo(element) === 1 ? 'active' : 'inactive'">
+                    <span class="status-pill staff-pill" [ngClass]="getActivo(element) === 1 ? 'active staff-pill-success' : 'inactive staff-pill-error'">
                         {{ getActivo(element) === 1 ? 'Sí' : 'No' }}
                     </span>
                 </td>

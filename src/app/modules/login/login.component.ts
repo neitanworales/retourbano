@@ -15,6 +15,7 @@ export class LoginComponent implements OnInit {
 
   username?: String = "";
   password?: String = "";
+  showPassword: boolean = false;
   registerForm!: FormGroup;
   submitted = false;
   loginError?: boolean;
@@ -78,6 +79,10 @@ export class LoginComponent implements OnInit {
   onReset() {
     this.submitted = false;
     this.registerForm?.reset();
+  }
+
+  togglePasswordVisibility() {
+    this.showPassword = !this.showPassword;
   }
 
 }

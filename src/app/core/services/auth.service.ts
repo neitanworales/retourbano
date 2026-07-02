@@ -7,14 +7,13 @@ import { SessionResponse } from '../models/login/SessionResponse';
 
 @Injectable()
 export class AuthService {
-  constructor(private loginDao: LoginDao) {
-    this.validateStoredSession();
-  }
+  constructor(private loginDao: LoginDao) {}
 
   private _currentUser = new BehaviorSubject<Session | null>(this.readStoredSession());
   currentUser$ = this._currentUser.asObservable();
   authorized: Session | null = null;
   router = inject(Router);
+  private sessionValidationStarted = false;
 
   getSession(): Session | null {
     return this.readStoredSession();
@@ -49,6 +48,16 @@ export class AuthService {
       localStorage.removeItem('session');
       return null;
     }
+  }
+
+  initializeSessionValidation() {
+    if (this.sessionValidationStarted) {
+      return;
+    }
+
+    this.sessionValidationStarted = true;
+
+    this.validateStoredSession();
   }
 
   private validateStoredSession() {

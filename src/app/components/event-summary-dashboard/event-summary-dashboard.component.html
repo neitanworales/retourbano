@@ -1,26 +1,26 @@
 <div class="summary-dashboard" *ngIf="hasData; else emptyState">
-  <div class="summary-dashboard__hero">
+  <div class="summary-dashboard__hero staff-surface staff-panel staff-section-split">
     <div>
-      <p class="summary-dashboard__eyebrow">Resumen del evento</p>
-      <h3>{{ eventTitle || 'Evento seleccionado' }}</h3>
+      <p class="summary-dashboard__eyebrow staff-section-kicker">Resumen del evento</p>
+      <h3 class="staff-section-title">{{ eventTitle || 'Evento seleccionado' }}</h3>
       <p class="summary-dashboard__meta" *ngIf="eventDate">{{ eventDate | date:'dd/MM/yyyy' }}</p>
     </div>
     <div class="summary-dashboard__badges">
-      <span class="summary-badge summary-badge--primary">Inscritos {{ eventDashboard?.data?.summary?.registered ?? 0 }}</span>
-      <span class="summary-badge summary-badge--success">Ocupación {{ formatValue('Ocupacion %', occupancy) }}</span>
-      <span class="summary-badge summary-badge--warning">Cobertura {{ formatValue('Cobertura pagos %', coverage) }}</span>
+      <span class="summary-badge summary-badge--primary staff-pill staff-pill-neutral">Inscritos {{ eventDashboard?.data?.summary?.registered ?? 0 }}</span>
+      <span class="summary-badge summary-badge--success staff-pill staff-pill-info">Ocupación {{ formatValue('Ocupacion %', occupancy) }}</span>
+      <span class="summary-badge summary-badge--warning staff-pill staff-pill-info">Cobertura {{ formatValue('Cobertura pagos %', coverage) }}</span>
     </div>
   </div>
 
   <div class="summary-dashboard__grid">
-    <section class="summary-panel summary-panel--operations">
+    <section class="summary-panel summary-panel--operations staff-surface staff-panel">
       <div class="summary-panel__header">
         <h4>Operacion</h4>
         <p>Lectura rapida del estado del evento</p>
       </div>
 
       <div class="summary-kpi-grid">
-        <article *ngFor="let card of cardsOperacion" class="summary-kpi summary-kpi--{{ card.tone }}">
+        <article *ngFor="let card of cardsOperacion" class="summary-kpi summary-kpi--{{ card.tone }} staff-soft-card">
           <span class="summary-kpi__label">{{ card.label }}</span>
           <span class="summary-kpi__value">{{ formatValue(card.label, card.value) }}</span>
         </article>
@@ -38,14 +38,14 @@
       </div>
     </section>
 
-    <section class="summary-panel summary-panel--finances">
+    <section class="summary-panel summary-panel--finances staff-surface staff-panel">
       <div class="summary-panel__header">
         <h4>Finanzas</h4>
         <p>Pagos, cobertura y saldo</p>
       </div>
 
       <div class="summary-kpi-grid">
-        <article *ngFor="let card of cardsFinanzas" class="summary-kpi summary-kpi--{{ card.tone }}">
+        <article *ngFor="let card of cardsFinanzas" class="summary-kpi summary-kpi--{{ card.tone }} staff-soft-card">
           <span class="summary-kpi__label">{{ card.label }}</span>
           <span class="summary-kpi__value">{{ formatValue(card.label, card.value) }}</span>
         </article>
@@ -64,7 +64,7 @@
     </section>
   </div>
 
-  <section class="summary-panel summary-panel--birthdays">
+  <section class="summary-panel summary-panel--birthdays staff-surface staff-panel">
     <div class="summary-panel__header">
       <h4>Cumpleanos durante el evento</h4>
       <p>Participantes que cumplen anos entre la fecha de inicio y fin del evento</p>
@@ -89,7 +89,7 @@
     </ng-template>
   </section>
 
-  <div class="summary-dashboard__charts">
+  <div class="summary-dashboard__charts staff-surface staff-panel">
     <div class="summary-dashboard__charts-header">
       <h4>Graficas</h4>
       <p>Distribucion y comportamiento del evento</p>
@@ -104,10 +104,10 @@
 
 <ng-template #emptyState>
   <div class="summary-dashboard summary-dashboard--empty">
-    <div class="summary-dashboard__hero">
+    <div class="summary-dashboard__hero staff-surface staff-panel">
       <div>
-        <p class="summary-dashboard__eyebrow">Resumen del evento</p>
-        <h3>Selecciona un evento para ver los indicadores</h3>
+        <p class="summary-dashboard__eyebrow staff-section-kicker">Resumen del evento</p>
+        <h3 class="staff-section-title">Selecciona un evento para ver los indicadores</h3>
       </div>
     </div>
   </div>

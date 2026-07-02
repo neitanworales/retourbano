@@ -14,5 +14,8 @@ export class AppComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadingService.setLoading(false);
+    setTimeout(() => {
+      this.authService.initializeSessionValidation();
+    });
   }
 }

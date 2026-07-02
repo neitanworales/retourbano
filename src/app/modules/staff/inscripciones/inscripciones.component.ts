@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
@@ -7,7 +7,6 @@ import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { Event } from 'src/app/core/models/registro/Event';
-import { PieChartComponent } from 'src/app/components/pie-chart/pie-chart.component';
 
 @Component({
   selector: 'app-inscripciones',
@@ -24,9 +23,6 @@ import { PieChartComponent } from 'src/app/components/pie-chart/pie-chart.compon
   standalone: false
 })
 export class InscripcionesComponent implements OnInit {
-
-  @ViewChild(PieChartComponent)
-  child!: PieChartComponent;
 
   tabsCampas?: boolean[] = [false, false];
   events?: Event[]
@@ -136,18 +132,6 @@ export class InscripcionesComponent implements OnInit {
     this.cargarDatos();
   }
 
-  activarPageAdmins() {
-    this.pageResumenActive = false;
-    this.pageInscritosActive = false;
-    this.pageStaffActive = false;
-    this.pageAdminsActive = true;
-    this.pageBajasActive = false;
-    this.pageSeguimientoActive = false;
-    this.pageHospedajeActive = false;
-    this.pageContabilidadActive = false;
-    this.cargarDatos();
-  }
-
   activarPageBajas() {
     this.pageResumenActive = false;
     this.pageInscritosActive = false;
@@ -213,7 +197,6 @@ export class InscripcionesComponent implements OnInit {
     let opcion: number = 0;
     let activo: boolean = false;
     let staff: boolean = false;
-    let admin: boolean = false;
     let seg: boolean = false;
 
     if (this.pageResumenActive) {
@@ -234,7 +217,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = true;
         staff = false;
-        admin = false;
         seg = false;
       }
 
@@ -242,7 +224,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = true;
         staff = true;
-        admin = false;
         seg = false;
       }
 
@@ -250,7 +231,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = true;
         staff = true;
-        admin = true;
         seg = false;
       }
 
@@ -258,7 +238,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = false;
         staff = false;
-        admin = false;
         seg = false;
       }
 
@@ -268,7 +247,7 @@ export class InscripcionesComponent implements OnInit {
         seg = true;
       }
 
-      this.registroDao.consultarInscritos(opcion, activo, staff, admin, this.searchByName!, seg, this.selectedEventoId).subscribe(
+      this.registroDao.consultarInscritos(opcion, activo, staff, this.searchByName!, seg, this.selectedEventoId).subscribe(
         respuesta => {
           this.dataSource = respuesta.data?.registrations || [];
         }
@@ -475,6 +454,10 @@ export class InscripcionesComponent implements OnInit {
     XLSX.writeFile(wb, fileName);
   }
 
+  isAdminRegistration(registration: EventRegistration): boolean {
+    return registration.is_admin === true || registration.roles?.includes('admin') === true;
+  }
+
   tabCampamentos(arg0: number) {
     this.tabsCampas = [false, false];
     this.tabsCampas[arg0] = true;
@@ -482,17 +465,7 @@ export class InscripcionesComponent implements OnInit {
     this.selectedEvento = this.events![arg0];
     console.log("Evento seleccionado: ", this.events![arg0]);
     console.log("ID evento seleccionado: ", this.selectedEventoId);
-    this.actualizarGraficos();
     this.cargarDatos();
-  }
-
-  actualizarGraficos() {
-    this.child.refrescar(4);
-    this.child.refrescar(5);
-    this.child.refrescar(6);
-    this.child.refrescar(7);
-    this.child.refrescar(8);
-    this.child.refrescar(14);
   }
 
   confirmarAsistencia(reg: EventRegistration) {

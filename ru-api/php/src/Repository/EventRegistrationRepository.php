@@ -7,6 +7,11 @@ class EventRegistrationRepository extends BaseRepository
 {
     protected $table = 'event_registrations';
 
+    private function getActiveRegistrationCondition($registrationAlias = 'er')
+    {
+        return "($registrationAlias.registration_status IS NULL OR $registrationAlias.registration_status NOT IN ('B', 'inactive'))";
+    }
+
     public function findModelById($id)
     {
         $row = $this->findById($id);
@@ -219,12 +224,6 @@ class EventRegistrationRepository extends BaseRepository
             $params[] = (int) $filters['is_staff'];
         }
 
-        if (array_key_exists('is_admin', $filters) && $filters['is_admin'] !== null) {
-            $sql .= ' AND is_admin = ?';
-            $types .= 'i';
-            $params[] = (int) $filters['is_admin'];
-        }
-
         if (array_key_exists('is_followup', $filters) && $filters['is_followup'] !== null) {
             $sql .= ' AND is_followup = ?';
             $types .= 'i';
@@ -302,12 +301,6 @@ class EventRegistrationRepository extends BaseRepository
             $params[] = (int) $filters['is_staff'];
         }
 
-        if (array_key_exists('is_admin', $filters) && $filters['is_admin'] !== null) {
-            $sql .= ' AND is_admin = ?';
-            $types .= 'i';
-            $params[] = (int) $filters['is_admin'];
-        }
-
         // Handle room_code_null and room_code_not_null special filters
         if (array_key_exists('room_code_null', $filters) && $filters['room_code_null'] === true) {
             $sql .= ' AND (room_code IS NULL OR room_code = "")';
@@ -338,15 +331,23 @@ class EventRegistrationRepository extends BaseRepository
         }, $rows);
     }
 
-    public function findByUser($userId, $limit = 100, $offset = 0)
+    public function findByUser($userId, $limit = 100, $offset = 0, $includeActive = false)
     {
-        if($userId === '2054') {
-            echo "Finding events for user ID: $userId\n";
+        $sql = 'SELECT e.*, 
+                   er.id AS registration_id,
+                   er.user_id AS user_id,
+                   er.event_id AS event_id,
+                   er.registration_status AS registration_status,
+                   CASE WHEN er.id IS NULL THEN 0 ELSE 1 END AS is_registered
+            FROM events e
+            LEFT JOIN event_registrations er ON er.event_id = e.id 
+                WHERE er.user_id = ?';
+
+        if (!$includeActive) {
+            $sql .= ' AND e.is_active = 0';
         }
 
-        $sql = 'SELECT * FROM events e
-                LEFT JOIN event_registrations er ON er.event_id = e.id 
-                WHERE er.user_id = ? AND e.is_active = 0 ORDER BY e.event_year DESC LIMIT ? OFFSET ?';
+        $sql .= ' ORDER BY e.is_active DESC, e.event_year DESC, e.start_at DESC LIMIT ? OFFSET ?';
         $stmt = $this->db->prepare($sql);
         $stmt->bind_param('iii', $userId, $limit, $offset);
         $stmt->execute();
@@ -356,5 +357,154 @@ class EventRegistrationRepository extends BaseRepository
         return array_map(function ($row) {
             return new Event($row);
         }, $rows);
+    }
+
+    public function findLatestEventSummaryByUserIds($userIds)
+    {
+        $userIds = array_values(array_unique(array_map('intval', is_array($userIds) ? $userIds : array())));
+        if (empty($userIds)) {
+            return array();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($userIds), '?'));
+        $sql = "SELECT er.user_id,
+                       e.id AS event_id,
+                       e.title,
+                       e.event_year,
+                       e.is_active,
+                       e.start_at,
+                       er.registration_status,
+                       er.created_at AS registration_created_at,
+                       er.id AS registration_id
+                FROM event_registrations er
+                INNER JOIN events e ON e.id = er.event_id
+                INNER JOIN (
+                    SELECT er2.user_id,
+                           MAX(COALESCE(er2.created_at, e2.start_at, '1970-01-01 00:00:00')) AS latest_marker,
+                           MAX(er2.id) AS latest_registration_id
+                    FROM event_registrations er2
+                    INNER JOIN events e2 ON e2.id = er2.event_id
+                    WHERE er2.user_id IN ($placeholders)
+                    GROUP BY er2.user_id
+                ) latest ON latest.user_id = er.user_id
+                       AND COALESCE(er.created_at, e.start_at, '1970-01-01 00:00:00') = latest.latest_marker
+                       AND er.id = latest.latest_registration_id
+                WHERE er.user_id IN ($placeholders)";
+
+        $stmt = $this->db->prepare($sql);
+        $types = str_repeat('i', count($userIds) * 2);
+        $params = array_merge($userIds, $userIds);
+        $stmt->bind_param($types, ...$params);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        $result = array();
+        foreach ($rows as $row) {
+            $result[(int) $row['user_id']] = $this->mapEventSummaryRow($row);
+        }
+
+        return $result;
+    }
+
+    public function findActiveEventSummariesByUserIds($userIds)
+    {
+        $userIds = array_values(array_unique(array_map('intval', is_array($userIds) ? $userIds : array())));
+        if (empty($userIds)) {
+            return array();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($userIds), '?'));
+        $activeCondition = $this->getActiveRegistrationCondition('er');
+        $sql = "SELECT er.user_id,
+                       e.id AS event_id,
+                       e.title,
+                       e.event_year,
+                       e.is_active,
+                       e.start_at,
+                       er.registration_status,
+                       er.created_at AS registration_created_at,
+                       er.id AS registration_id
+                FROM event_registrations er
+                INNER JOIN events e ON e.id = er.event_id
+                WHERE er.user_id IN ($placeholders)
+                  AND e.is_active = 1
+                  AND $activeCondition
+                ORDER BY er.user_id ASC, e.start_at ASC, e.id ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $types = str_repeat('i', count($userIds));
+        $stmt->bind_param($types, ...$userIds);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        $result = array();
+        foreach ($rows as $row) {
+            $userId = (int) $row['user_id'];
+            if (!isset($result[$userId])) {
+                $result[$userId] = array();
+            }
+            $result[$userId][] = $this->mapEventSummaryRow($row);
+        }
+
+        return $result;
+    }
+
+    public function findHistoricalEventSummariesByUserIds($userIds)
+    {
+        $userIds = array_values(array_unique(array_map('intval', is_array($userIds) ? $userIds : array())));
+        if (empty($userIds)) {
+            return array();
+        }
+
+        $placeholders = implode(',', array_fill(0, count($userIds), '?'));
+        $sql = "SELECT er.user_id,
+                       e.id AS event_id,
+                       e.title,
+                       e.event_year,
+                       e.is_active,
+                       e.start_at,
+                       er.registration_status,
+                       er.created_at AS registration_created_at,
+                       er.id AS registration_id
+                FROM event_registrations er
+                INNER JOIN events e ON e.id = er.event_id
+                WHERE er.user_id IN ($placeholders)
+                ORDER BY er.user_id ASC,
+                         COALESCE(e.start_at, STR_TO_DATE(CONCAT(e.event_year, '-01-01'), '%Y-%m-%d')) DESC,
+                         e.id DESC";
+
+        $stmt = $this->db->prepare($sql);
+        $types = str_repeat('i', count($userIds));
+        $stmt->bind_param($types, ...$userIds);
+        $stmt->execute();
+        $rows = $stmt->get_result()->fetch_all(MYSQLI_ASSOC);
+        $stmt->close();
+
+        $result = array();
+        foreach ($rows as $row) {
+            $userId = (int) $row['user_id'];
+            if (!isset($result[$userId])) {
+                $result[$userId] = array();
+            }
+            $result[$userId][] = $this->mapEventSummaryRow($row);
+        }
+
+        return $result;
+    }
+
+    private function mapEventSummaryRow($row)
+    {
+        return array(
+            'event_id' => isset($row['event_id']) ? (int) $row['event_id'] : null,
+            'title' => isset($row['title']) ? $row['title'] : null,
+            'event_year' => isset($row['event_year']) ? (int) $row['event_year'] : null,
+            'is_active' => isset($row['is_active']) ? (int) $row['is_active'] : 0,
+            'start_at' => isset($row['start_at']) ? $row['start_at'] : null,
+            'registration_status' => isset($row['registration_status']) ? $row['registration_status'] : null,
+            'registration_id' => isset($row['registration_id']) ? (int) $row['registration_id'] : null,
+            'registration_created_at' => isset($row['registration_created_at']) ? $row['registration_created_at'] : null,
+        );
     }
 }

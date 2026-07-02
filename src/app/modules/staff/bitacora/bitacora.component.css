@@ -1,0 +1,123 @@
+.bitacora-shell {
+    --bitacora-ink: #17324d;
+    --bitacora-muted: #6a778b;
+    --bitacora-accent: #28435f;
+    --bitacora-accent-soft: rgba(40, 67, 95, 0.08);
+    --bitacora-panel: rgba(255, 255, 255, 0.94);
+    --bitacora-outline: rgba(23, 50, 77, 0.1);
+    padding: 1rem 0 2rem;
+    color: var(--bitacora-ink);
+}
+
+.bitacora-hero {
+    margin-bottom: 1.5rem;
+}
+
+.bitacora-stats {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.bitacora-panel {
+    padding: 1rem;
+}
+
+.bitacora-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(220px, 0.8fr) auto;
+    gap: 1rem;
+    align-items: end;
+    margin-bottom: 1rem;
+}
+
+.toolbar-field label {
+    display: block;
+    margin-bottom: 0.45rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--bitacora-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+}
+
+.toolbar-actions {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+.bitacora-state {
+    padding: 1rem;
+}
+
+.muted-block {
+    color: var(--bitacora-muted);
+}
+
+.bitacora-table-wrap {
+    overflow-x: auto;
+}
+
+.bitacora-table-wrap table {
+    margin: 0;
+}
+
+.bitacora-table-wrap thead th {
+    border-bottom: 0;
+    color: var(--bitacora-ink);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.bitacora-table-wrap tbody td {
+    vertical-align: top;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.timestamp-cell {
+    font-weight: 700;
+}
+
+
+.bitacora-pagination {
+    margin-top: 1rem;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.pagination-copy {
+    color: var(--bitacora-muted);
+}
+
+.pagination-actions {
+    display: flex;
+    gap: 0.75rem;
+}
+
+@media (max-width: 991px) {
+    .bitacora-hero,
+    .bitacora-pagination {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .bitacora-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .toolbar-actions,
+    .pagination-actions {
+        width: 100%;
+    }
+
+    .toolbar-actions .btn,
+    .pagination-actions .btn {
+        flex: 1 1 0;
+    }
+}

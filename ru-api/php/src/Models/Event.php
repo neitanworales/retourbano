@@ -41,4 +41,6 @@ class Event extends BaseModel
     public $is_registered;
     public $registration_id;
     public $registration_status;
+    public $user_id;
+    public $event_id;
 }

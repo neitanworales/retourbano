@@ -52,6 +52,8 @@ import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.compo
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { AuthInterceptor } from './core/services/ auth.interceptor';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
+import { BitacoraComponent } from './modules/staff/bitacora/bitacora.component';
+import { HistoricoComponent } from './modules/staff/historico/historico.component';
 import { TumbaService } from './core/services/tumbaService';
 import { QueTraerComponent } from "./components/que-traer/que-traer.component";
 import { EventSummaryDashboardComponent } from "./components/event-summary-dashboard/event-summary-dashboard.component";
@@ -87,6 +89,8 @@ registerLocaleData(localeEsMx);
         HospedajesComponent,
         CuentaComponent,
         UsuariosComponent,
+        BitacoraComponent,
+        HistoricoComponent,
         QueTraerComponent
     ],
     bootstrap: [AppComponent],

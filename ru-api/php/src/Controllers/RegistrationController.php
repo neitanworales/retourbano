@@ -7,6 +7,7 @@ require_once __DIR__ . '/../Repository/UserRepository.php';
 require_once __DIR__ . '/../Repository/EventRepository.php';
 require_once __DIR__ . '/../Repository/PaymentRepository.php';
 require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
+require_once __DIR__ . '/../Repository/ActivityLogRepository.php';
 require_once __DIR__ . '/../Models/User.php';
 
 class RegistrationController extends BaseController
@@ -17,6 +18,8 @@ class RegistrationController extends BaseController
     private $payments;
     private $eventRegistrations;
     private $email;
+    private $userRoles;
+    private $activityLog;
 
     public function __construct()
     {
@@ -26,6 +29,8 @@ class RegistrationController extends BaseController
         $this->payments = new PaymentRepository();
         $this->eventRegistrations = new EventRegistrationRepository();
         $this->email = new EmailService();
+        $this->userRoles = new UserRoleRepository();
+        $this->activityLog = new ActivityLogRepository();
     }
 
     public function register($request)
@@ -60,6 +65,21 @@ class RegistrationController extends BaseController
             return $this->fail($result['error'], 400, $result);
         }
 
+        $actorId = isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : $userId;
+        $this->activityLog->createEntry($userId, 'registrations.create', null, array(
+            'registration_status' => 'A',
+            'requires_lodging' => $requiresLodging,
+            'room_code' => $roomCode,
+        ), array(
+            'actor_user_id' => $actorId,
+            'entity_type' => 'registration',
+            'entity_id' => isset($result['id']) ? (int) $result['id'] : null,
+            'related_event_id' => $eventId,
+            'related_registration_id' => isset($result['id']) ? (int) $result['id'] : null,
+            'source' => 'api.v1.registrations',
+            'metadata' => array('reinscription' => false, 'reasons' => $reasons),
+        ));
+
         return $this->ok($result, 'registration created');
     }
 
@@ -76,6 +96,8 @@ class RegistrationController extends BaseController
         if (!$user) {
             return $this->fail('user not found', 404);
         }
+
+        $beforeUser = $user->toArray();
 
         $this->fillUserFromRequest($user, $request, true);
         $saved = $this->users->update($user);
@@ -102,8 +124,23 @@ class RegistrationController extends BaseController
                     return $this->fail($registerResult['error'], 400, $registerResult);
                 }
                 $registrationId = isset($registerResult['id']) ? (int) $registerResult['id'] : null;
+
+                $this->activityLog->createEntry($userId, 'registrations.reenrollment.create', null, array(
+                    'registration_status' => 'A',
+                    'requires_lodging' => $requiresLodging,
+                    'room_code' => $roomCode,
+                ), array(
+                    'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : $userId,
+                    'entity_type' => 'registration',
+                    'entity_id' => $registrationId,
+                    'related_event_id' => $eventId,
+                    'related_registration_id' => $registrationId,
+                    'source' => 'api.v1.registrations',
+                    'metadata' => array('reinscription' => true, 'reasons' => $reasons),
+                ));
             } else {
                 $registrationId = (int) $existing->id;
+                $beforeRegistration = $existing->toArray();
 
                 $updates = array();
                 $requiresLodging = $this->parseOptionalBoolean($request, 'requires_lodging');
@@ -121,9 +158,27 @@ class RegistrationController extends BaseController
 
                 if (!empty($updates)) {
                     $this->registrationService->updateFields($registrationId, $updates);
+                    $this->activityLog->createEntry($userId, 'registrations.update', $beforeRegistration, array_merge($beforeRegistration, $updates), array(
+                        'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : $userId,
+                        'entity_type' => 'registration',
+                        'entity_id' => $registrationId,
+                        'related_event_id' => $eventId,
+                        'related_registration_id' => $registrationId,
+                        'source' => 'api.v1.registrations',
+                        'metadata' => array('updated_fields' => array_keys($updates)),
+                    ));
                 }
             }
         }
+
+        $this->activityLog->createEntry($userId, 'users.registration_profile_update', $beforeUser, $user->toArray(), array(
+            'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : $userId,
+            'entity_type' => 'user',
+            'entity_id' => $userId,
+            'related_event_id' => $eventId > 0 ? $eventId : null,
+            'related_registration_id' => $registrationId,
+            'source' => 'api.v1.registrations',
+        ));
 
         return $this->ok(
             array(
@@ -141,6 +196,13 @@ class RegistrationController extends BaseController
         if ($registrationId <= 0) {
             return $this->fail('registration_id is required', 422);
         }
+
+        $registration = $this->eventRegistrations->findModelById($registrationId);
+        if (!$registration) {
+            return $this->fail('registration not found', 404);
+        }
+
+        $beforeRegistration = $registration->toArray();
 
         $updates = array();
 
@@ -185,6 +247,16 @@ class RegistrationController extends BaseController
             return $this->fail('could not update registration', 500);
         }
 
+        $this->activityLog->createEntry((int) $registration->user_id, 'registrations.status_update', $beforeRegistration, array_merge($beforeRegistration, $updates), array(
+            'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null,
+            'entity_type' => 'registration',
+            'entity_id' => $registrationId,
+            'related_event_id' => isset($registration->event_id) ? (int) $registration->event_id : null,
+            'related_registration_id' => $registrationId,
+            'source' => 'api.v1.registrations',
+            'metadata' => array('updated_fields' => array_keys($updates)),
+        ));
+
         return $this->ok(array('registration_id' => $registrationId, 'updated' => $updates), 'registration updated');
     }
 
@@ -225,11 +297,25 @@ class RegistrationController extends BaseController
             return $this->fail('registration_id is required', 422);
         }
 
+        $registration = $this->eventRegistrations->findModelById($registrationId);
+        if (!$registration) {
+            return $this->fail('registration not found', 404);
+        }
+
         $result = $this->registrationService->delete($registrationId);
         if (isset($result['error'])) {
             $code = $result['error'] === 'registration not found' ? 404 : 500;
             return $this->fail($result['error'], $code, $result);
         }
+
+        $this->activityLog->createEntry((int) $registration->user_id, 'registrations.delete', $registration->toArray(), array('deleted' => true), array(
+            'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null,
+            'entity_type' => 'registration',
+            'entity_id' => $registrationId,
+            'related_event_id' => isset($registration->event_id) ? (int) $registration->event_id : null,
+            'related_registration_id' => $registrationId,
+            'source' => 'api.v1.registrations',
+        ));
 
         return $this->ok($result, 'registration deleted');
     }
@@ -335,15 +421,16 @@ class RegistrationController extends BaseController
 
         $filters = array(
             'is_staff' => $this->parseOptionalBoolean($request, 'is_staff'),
-            'is_admin' => $this->parseOptionalBoolean($request, 'is_admin'),
             'is_followup' => $this->parseOptionalBoolean($request, 'is_followup'),
             'registration_status' => isset($request['registration_status']) ? trim((string) $request['registration_status']) : null,
         );
 
         $registrations = $this->registrationService->getByEvent($eventId, $limit, $offset, $filters);
-        $items = array_map(function ($registration) {
+        $number = 0;
+        $items = array_map(function ($registration) use (&$number) {
             $item = $this->attachUserToItem($registration->toArray());
             $item = $this->attachPaymentsToItem($item);
+            $item = $this->attachRolesToItem($item);
             return $this->attachPreviousEventsToItem($item);
         }, $registrations);
 
@@ -355,12 +442,13 @@ class RegistrationController extends BaseController
         $userId = isset($request['user_id']) ? (int) $request['user_id'] : 0;
         $limit = isset($request['limit']) ? (int) $request['limit'] : 100;
         $offset = isset($request['offset']) ? (int) $request['offset'] : 0;
+        $includeActive = $this->parseOptionalBoolean($request, 'include_active');
 
         if ($userId <= 0) {
             return $this->fail('user_id is required', 422);
         }
 
-        $registrations = $this->registrationService->getByUser($userId, $limit, $offset);
+        $registrations = $this->registrationService->getByUser($userId, $limit, $offset, $includeActive === true);
         $items = array_map(function ($registration) {
             $item = $this->attachUserToItem($registration->toArray());
             return $this->attachPaymentsToItem($item);
@@ -393,11 +481,11 @@ class RegistrationController extends BaseController
 
     private function attachPaymentsToItem($item)
     {
-        if (!is_array($item) || !isset($item['id'])) {
+        if (!is_array($item) || (!isset($item['registration_id']) && !isset($item['id']))) {
             return $item;
         }
 
-        $registrationId = (int) $item['id'];
+        $registrationId = isset($item['registration_id']) ? (int) $item['registration_id'] : (int) $item['id'];
         if ($registrationId <= 0) {
             $item['pagos'] = array();
             return $item;
@@ -421,9 +509,9 @@ class RegistrationController extends BaseController
 
     private function attachPreviousEventsToItem($item)
     {
-        if (!is_array($item) || !isset($item['user_id'])) {
-            return $item;
-        }
+            if (!is_array($item) || !isset($item['user_id'])) {
+                return $item;
+            }
 
         $userId = (int) $item['user_id'];
         if ($userId <= 0) {
@@ -435,6 +523,25 @@ class RegistrationController extends BaseController
         $item['previous_events'] = array_map(function ($event) {
             return $event->toArray();
         }, $events);
+        return $item;
+    }
+    private function attachRolesToItem($item)
+    {
+        if (!is_array($item) || !isset($item['user_id'])) {
+            return $item;
+        }
+        $userId = (int) $item['user_id'];
+
+        if ($userId <= 0) {
+            $item['roles'] = array();
+            return $item;
+        }
+
+        $roles = $this->userRoles->getRolesByUserId($userId);
+        $item['roles'] = array_map(function ($role) {
+            return $role;
+        }, $roles);
+
         return $item;
     }
 

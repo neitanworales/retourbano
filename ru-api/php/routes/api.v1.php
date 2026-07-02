@@ -162,6 +162,12 @@ $router->add('GET', '/api/v1/events/dashboard', function ($request) use ($eventD
     });
 });
 
+$router->add('GET', '/api/v1/users', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
+        return $userController->list($securedRequest);
+    });
+});
+
 $router->add('GET', '/api/v1/users/detail', function ($request) use ($userController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
         return $userController->detail($securedRequest);
@@ -171,6 +177,36 @@ $router->add('GET', '/api/v1/users/detail', function ($request) use ($userContro
 $router->add('GET', '/api/v1/users/profile', function ($request) use ($userController, $authGuard) {
     return $authGuard->protect($request, function ($securedRequest) use ($userController) {
         return $userController->profile($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/users/profile', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protect($request, function ($securedRequest) use ($userController) {
+        return $userController->updateProfile($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/users/profile/password', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protect($request, function ($securedRequest) use ($userController) {
+        return $userController->updateOwnPassword($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/users/profile/activity', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protect($request, function ($securedRequest) use ($userController) {
+        return $userController->profileActivity($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/users/activity-log', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
+        return $userController->activityLog($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/users/history', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
+        return $userController->history($securedRequest);
     });
 });
 
@@ -189,6 +225,24 @@ $router->add('PATCH', '/api/v1/users/event-roles', function ($request) use ($use
 $router->add('PATCH', '/api/v1/users/password', function ($request) use ($userController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
         return $userController->updatePassword($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/users/password/reset', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
+        return $userController->resetPassword($securedRequest);
+    });
+});
+
+$router->add('GET', '/api/v1/users/duplicates', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin'), function ($securedRequest) use ($userController) {
+        return $userController->duplicates($securedRequest);
+    });
+});
+
+$router->add('PATCH', '/api/v1/users/tutor-link', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('admin'), function ($securedRequest) use ($userController) {
+        return $userController->updateTutorLink($securedRequest);
     });
 });
 

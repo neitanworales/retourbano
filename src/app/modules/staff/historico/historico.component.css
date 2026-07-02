@@ -1,0 +1,143 @@
+tr.example-detail-row {
+	height: 0;
+}
+
+tr.example-element-row:not(.example-expanded-row):hover {
+	background: whitesmoke;
+}
+
+tr.example-element-row:not(.example-expanded-row):active {
+	background: #efefef;
+}
+
+.example-element-row td {
+	border-bottom-width: 0;
+}
+
+.example-element-detail {
+	overflow: hidden;
+}
+
+.role-badge-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4rem;
+}
+
+.role-badge {
+	letter-spacing: 0.02em;
+	text-transform: uppercase;
+}
+
+.role-badge-last-event {
+	color: #5d4f2f;
+}
+
+.role-badge-status-active {
+	color: #2f5d46;
+}
+
+.role-badge-status-inactive {
+	color: #8a4343;
+}
+
+.role-badge-status-pending {
+	background-color: rgba(40, 67, 95, 0.08);
+	border-color: rgba(40, 67, 95, 0.12);
+	color: #28435f;
+}
+
+.history-hero {
+	margin-bottom: 1rem;
+}
+
+.history-metrics {
+	justify-content: flex-end;
+}
+
+.leaderboard-header {
+	margin-bottom: 0.8rem;
+}
+
+.leaderboard-list {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	gap: 0.75rem;
+}
+
+.leaderboard-item {
+	align-items: center;
+	display: flex;
+	gap: 0.75rem;
+}
+
+.leaderboard-rank,
+.ranking-pill {
+	color: #111827;
+	font-weight: 800;
+	min-width: 3rem;
+}
+
+.leaderboard-body {
+	min-width: 0;
+}
+
+.leaderboard-name,
+.person-name,
+.history-event-title {
+	color: #111827;
+	font-weight: 700;
+}
+
+.event-query-view .form-label {
+	color: #475569;
+	font-size: 0.9rem;
+	font-weight: 600;
+}
+
+.event-roster-summary {
+	display: flex;
+	gap: 0.75rem;
+	flex-wrap: wrap;
+}
+
+.leaderboard-meta,
+.person-meta,
+.history-event-meta {
+	color: #6b7280;
+	font-size: 0.82rem;
+}
+
+.attendance-count {
+	color: #111827;
+	font-size: 1.1rem;
+	font-weight: 800;
+}
+
+.history-stack {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+}
+
+.history-event-row {
+	align-items: center;
+	display: flex;
+	justify-content: space-between;
+	gap: 0.75rem;
+}
+
+@media (max-width: 768px) {
+	.history-hero {
+		flex-direction: column;
+	}
+
+	.history-metrics {
+		justify-content: flex-start;
+	}
+
+	.history-event-row {
+		align-items: flex-start;
+		flex-direction: column;
+	}
+}

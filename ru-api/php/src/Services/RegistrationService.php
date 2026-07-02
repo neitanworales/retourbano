@@ -226,8 +226,8 @@ class RegistrationService
         return $this->registrations->findByEvent((int) $eventId, (int) $limit, (int) $offset, $filters);
     }
 
-    public function getByUser($userId, $limit = 100, $offset = 0)
+    public function getByUser($userId, $limit = 100, $offset = 0, $includeActive = false)
     {
-        return $this->registrations->findByUser((int) $userId, (int) $limit, (int) $offset);
+        return $this->registrations->findByUser((int) $userId, (int) $limit, (int) $offset, (bool) $includeActive);
     }
 }

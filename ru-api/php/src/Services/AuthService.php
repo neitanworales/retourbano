@@ -137,6 +137,11 @@ class AuthService
         return $this->users->updatePasswordHash((int) $userId, $hash);
     }
 
+    public function clearPassword($userId)
+    {
+        return $this->users->clearPasswordHash((int) $userId);
+    }
+
     public function userHasAnyRole($userId, $allowedRoles)
     {
         $allowed = array_map(function ($role) {

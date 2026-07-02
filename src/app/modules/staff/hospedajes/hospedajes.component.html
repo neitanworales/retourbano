@@ -1,5 +1,5 @@
-<div class="container" style="margin-top: 1em;">
-    <ul class="nav nav-tabs">
+<div class="staff-page container" style="margin-top: 1em;">
+    <ul class="nav nav-tabs staff-tabs">
         <li class="nav-item">
             <a class="nav-link {{pageHabitaciones?'active':''}}" (click)="activarPageHabitaciones()"><i
                     class="bi bi-person-fill-check"></i> Habitaciones</a>
@@ -14,7 +14,7 @@
         </li-->
     </ul>
 
-    <div [ngStyle]="{'display':pageHabitacionesDisplayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
+    <div [ngStyle]="{'display':pageHabitacionesDisplayStyle}" class="staff-surface staff-panel mb-5">
         <div *ngIf="errorHabitaciones" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> {{errorHabitaciones}}
             <button type="button" class="btn-close" (click)="errorHabitaciones = null" aria-label="Cerrar"></button>
@@ -86,7 +86,7 @@
         </div>
     </div>
 
-    <div [ngStyle]="{'display':pageHospedajesDisplayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
+    <div [ngStyle]="{'display':pageHospedajesDisplayStyle}" class="staff-surface staff-panel mb-5">
         <div *ngIf="errorHospedajes" class="alert alert-danger alert-dismissible fade show" role="alert">
             <strong>Error:</strong> {{errorHospedajes}}
             <button type="button" class="btn-close" (click)="errorHospedajes = null" aria-label="Cerrar"></button>

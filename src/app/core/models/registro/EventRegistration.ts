@@ -10,6 +10,7 @@ export class EventRegistration {
     event_id?: number;
     user_id?: number;
     registration_status?: string;
+    roles?: string[];
     
     is_staff?: boolean;
     is_admin?: boolean;

@@ -3,11 +3,11 @@ tr.example-detail-row {
 }
 
 tr.example-element-row:not(.example-expanded-row):hover {
-    background: whitesmoke;
+    background: #f8fafc;
 }
 
 tr.example-element-row:not(.example-expanded-row):active {
-    background: #efefef;
+    background: #eef2f6;
 }
 
 .example-element-row td {
@@ -43,11 +43,71 @@ tr.example-element-row:not(.example-expanded-row):active {
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: #04AA6D;
-    color: white;
+    background-color: #eef2f6;
+    color: #1b2b3a;
 }
 
 caption {
     display: table-caption;
     text-align: center;
+}
+
+.role-badge-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.role-badge {
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.2rem 0.65rem;
+    text-transform: uppercase;
+}
+
+.role-badge-admin {
+    background-color: #eef2f6;
+    color: #314457;
+}
+
+.role-badge-staff {
+    background-color: #eef2f6;
+    color: #314457;
+}
+
+.role-badge-password {
+    background-color: #eef2f6;
+    color: #314457;
+}
+
+.role-badge-active-event {
+    background-color: #eef2f6;
+    color: #314457;
+}
+
+.role-badge-last-event {
+    background-color: #eef2f6;
+    color: #314457;
+}
+
+.role-badge-status-active {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.role-badge-status-inactive {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+.role-badge-status-pending {
+    background-color: #e0f2fe;
+    color: #075985;
+}
+
+.role-badge-empty {
+    background-color: #e9ecef;
+    color: #495057;
 }

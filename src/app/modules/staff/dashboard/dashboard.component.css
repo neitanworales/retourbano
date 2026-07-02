@@ -1,4 +1,190 @@
-.paquete {
-    margin-left: 2em;
-    margin-bottom: 1em;
+.dashboard-shell {
+    --dashboard-ink: #15233b;
+    --dashboard-muted: #66758f;
+    color: var(--dashboard-ink);
+}
+
+.dashboard-hero-meta,
+.dashboard-chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.65rem;
+}
+
+.dashboard-hero-meta {
+    margin-top: 1rem;
+}
+
+.dashboard-hero {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-hero-copy h1 {
+    margin: 0;
+    font-family: inherit;
+    font-weight: 600;
+}
+
+.dashboard-hero-copy h1 {
+    font-size: clamp(1.55rem, 2.8vw, 2.1rem);
+}
+
+.dashboard-current-section {
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-account-hero {
+    display: grid;
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.dashboard-identity-card {
+    display: grid;
+    grid-template-columns: 72px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: center;
+}
+
+.dashboard-identity-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: #ffffff;
+    background: #28435f;
+}
+
+.dashboard-state-row {
+    min-height: 1.75rem;
+    margin-top: 0.75rem;
+}
+
+.dashboard-summary-label,
+.dashboard-info-label,
+.dashboard-payment-card span {
+    display: block;
+    margin: 0 0 0.45rem;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--dashboard-muted);
+    font-weight: 700;
+}
+
+.dashboard-summary-value {
+    margin: 0;
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+.dashboard-summary-muted {
+    color: var(--dashboard-muted);
+}
+
+.dashboard-section-head {
+    margin-bottom: 1rem;
+}
+
+.dashboard-status-pill {
+    white-space: nowrap;
+}
+
+.dashboard-event-empty {
+    margin-top: 1rem;
+}
+
+.dashboard-event-empty-compact {
+    margin-top: 0.75rem;
+}
+
+.dashboard-action-button {
+    margin-top: 0.9rem;
+}
+
+.dashboard-payment-block {
+    margin-top: 1rem;
+}
+
+.dashboard-payment-card strong,
+.dashboard-payment-row strong {
+    font-size: 0.98rem;
+}
+
+.dashboard-payment-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.dashboard-panel-wide {
+    grid-column: 1 / -1;
+}
+
+.dashboard-panel-head {
+    margin-bottom: 1rem;
+}
+
+.dashboard-panel-actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 0.65rem;
+}
+
+.dashboard-info-item,
+.dashboard-form-field {
+    min-width: 0;
+}
+
+.dashboard-info-item strong {
+    display: block;
+    font-size: 0.94rem;
+}
+
+.dashboard-form-field,
+.dashboard-form-field-full,
+.dashboard-info-item-full {
+    display: block;
+}
+
+.dashboard-form-field-full,
+.dashboard-info-item-full {
+    grid-column: 1 / -1;
+}
+
+.dashboard-textarea {
+    resize: vertical;
+}
+
+.dashboard-history-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.dashboard-history-head {
+    align-items: flex-start;
+}
+
+
+@media (max-width: 767.98px) {
+    .dashboard-payment-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-identity-card {
+        grid-template-columns: 1fr;
+    }
+
+    .dashboard-form-field-full,
+    .dashboard-info-item-full,
+    .dashboard-panel-wide {
+        grid-column: auto;
+    }
 }

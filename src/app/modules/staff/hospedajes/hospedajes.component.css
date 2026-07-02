@@ -3,14 +3,17 @@
 }
 
 .card-habitacion{
-    margin-right: 2em;
-    margin-bottom: 1em;
+    margin-right: 1rem;
+    margin-bottom: 1rem;
+    border: 1px solid rgba(27, 43, 58, 0.08);
+    border-radius: 14px;
+    box-shadow: 0 8px 24px rgba(27, 43, 58, 0.05);
 }
 
 .persona-pink {
-    background-color: pink;
+    background-color: rgba(27, 43, 58, 0.04);
 }
 
 .persona-blue {
-    background-color: skyblue;
+    background-color: rgba(27, 43, 58, 0.06);
 }

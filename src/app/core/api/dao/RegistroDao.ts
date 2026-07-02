@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Observable, catchError, map, of, switchMap } from 'rxjs';
 import { environment } from 'src/environments/environment';
-import { Utils } from "../Utils";
+import { UserRole, Utils } from "../Utils";
 import { AvanceResponse } from "src/app/core/models/registro/AvanceResponse";
 import { User } from "src/app/core/models/registro/User";
 import { EventRegistration, EventRegistrationResponse } from "src/app/core/models/registro/EventRegistration";
@@ -17,6 +17,91 @@ import { MtoLoginResponse } from "../../models/login/MtoLoginResponse";
 import { HabitacionResponse } from "../../models/hospedaje/HabitacionResponse";
 import { SinHabitacionResponse } from "../../models/hospedaje/SinHabitacionResponse";
 import { EventResponse } from "../../models/registro/EventResponse";
+import { CampamentoGuerreros, CampamentoGuerrerosResponse } from "../../models/registro/CampamentoGuerreros";
+
+interface UserProfileResponse extends DefaultResponse {
+    user?: User;
+    roles?: UserRole[];
+    has_password?: boolean;
+    active_registrations?: any[];
+    historical_registrations?: any[];
+}
+
+interface UserActivityItem {
+    id?: number;
+    affected_user_id?: number;
+    action?: string;
+    old_value?: string;
+    new_value?: string;
+    created_at?: string;
+}
+
+interface UserActivityResponse extends DefaultResponse {
+    movements?: UserActivityItem[];
+}
+
+interface StaffActivityLogItem {
+    id?: number;
+    action?: string;
+    action_label?: string;
+    actor_user_id?: number;
+    actor_name?: string;
+    actor_email?: string;
+    affected_user_id?: number;
+    affected_name?: string;
+    affected_email?: string;
+    entity_type?: string;
+    entity_id?: number;
+    related_event_id?: number;
+    related_event_title?: string;
+    related_event_year?: number;
+    related_registration_id?: number;
+    source?: string;
+    old_value?: string;
+    new_value?: string;
+    metadata_json?: string;
+    created_at?: string;
+    updated_at?: string;
+}
+
+interface StaffActivityLogFilterOption {
+    value: string;
+    label: string;
+}
+
+interface StaffActivityLogResponse extends DefaultResponse {
+    items?: StaffActivityLogItem[];
+    filters?: {
+        actions?: StaffActivityLogFilterOption[];
+    };
+    pagination?: {
+        limit?: number;
+        offset?: number;
+        count?: number;
+        total?: number;
+        search?: string;
+        action?: string;
+    };
+}
+
+interface UserProfileUpdatePayload {
+    full_name?: string;
+    display_name?: string;
+    birth_date?: string;
+    age?: number | null;
+    gender?: string;
+    shirt_size?: string;
+    coming_from?: string;
+    email?: string;
+    whatsapp?: string;
+    phone?: string;
+    allergies?: string;
+    guardian_phone?: string;
+    guardian_name?: string;
+    guardian_email?: string;
+    church?: string;
+    medications?: string;
+}
 
 @Injectable()
 export class RegistroDao {
@@ -108,7 +193,7 @@ export class RegistroDao {
         );
     }
 
-    public consultarInscritos(opcion: number, activo: boolean, staff: boolean, admin: boolean, byName: string, seg: boolean, event_id?: number): Observable<EventRegistrationResponse> {
+    public consultarInscritos(opcion: number, activo: boolean, staff: boolean, byName: string, seg: boolean, event_id?: number): Observable<EventRegistrationResponse> {
         const user = this.autho.getSessionValida();
         const params: string[] = [
             'event_id=' + encodeURIComponent(String(event_id || '')),
@@ -117,7 +202,6 @@ export class RegistroDao {
 
         // Keep legacy UX behavior: only send positive boolean filters.
         params.push('is_staff=' + (staff ? '1' : '0'));
-        params.push('is_admin=' + (admin ? '1' : '0'));
         // Do not filter by follow-up unless the seguimiento view explicitly requests it.
         if (seg) {
             params.push('is_followup=1');
@@ -172,6 +256,60 @@ export class RegistroDao {
                     } as EventRegistrationResponse;
                 })
             );
+    }
+
+    public consultarInscritosPorEvento(eventId: number): Observable<EventRegistrationResponse> {
+        const user = this.autho.getSessionValida();
+        const params: string[] = [
+            'event_id=' + encodeURIComponent(String(eventId || '')),
+            'token=' + encodeURIComponent(String(user?.token || '')),
+        ];
+
+        return this.http.get<any>(
+            this.utils.v1('/registrations/by-event') + '?' + params.join('&'),
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => {
+                const registrations = response?.data?.registrations || [];
+                const users = registrations.map((item: any) => {
+                    const rawUser = item?.user || item;
+                    const normalizedUser = this.normalizeUser(rawUser);
+
+                    return {
+                        id: item?.id,
+                        event_id: item?.event_id,
+                        user_id: item?.user_id,
+                        registration_status: item?.registration_status,
+                        is_confirmed: (item?.is_confirmed ?? 0) === 1,
+                        attendance_confirmed: (item?.attendance_confirmed ?? 0) === 1,
+                        is_staff: (item?.is_staff ?? 0) === 1,
+                        is_admin: (item?.is_admin ?? 0) === 1,
+                        is_followup: (item?.is_followup ?? 0) === 1,
+                        welcome_email_sent: this.toIntegerCount(item?.welcome_email_sent ?? item?.email_enviado ?? 0),
+                        email_confirmed: this.toIntegerCount(item?.email_confirmed ?? item?.email_confirmado ?? 0),
+                        requires_lodging: (item?.requires_lodging ?? 0) === 1,
+                        room_code: item?.room_code,
+                        reasons: item?.reasons,
+                        razones: item?.reasons,
+                        pagado: rawUser?.pagado ?? item?.pagado,
+                        pagos: rawUser?.pagos ?? item?.pagos,
+                        previous_events: item?.previous_events ?? [],
+                        roles: item?.roles ?? [],
+                        user: normalizedUser,
+                    };
+                });
+
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'Inscritos por evento consultados',
+                    code: response?.code || 200,
+                    data: {
+                        registrations: users
+                    }
+                } as EventRegistrationResponse;
+            })
+        );
     }
 
     public actualizarRolesGlobales(userId: number, payload: { roles?: string[]; add_roles?: string[]; remove_roles?: string[] }): Observable<DefaultResponse> {
@@ -334,6 +472,19 @@ export class RegistroDao {
                 user_id: id,
                 new_password: newPassword,
                 event_id: campamentoId,
+            },
+            { headers: this.utils.getHeaders() }
+        );
+    }
+
+    public resetearContrasena(id: number): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.patch<DefaultResponse>(
+            this.utils.v1('/users/password/reset') + '?token=' + token,
+            {
+                user_id: id,
             },
             { headers: this.utils.getHeaders() }
         );
@@ -689,43 +840,207 @@ export class RegistroDao {
     /**
      * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
      */
-    public obtenerUsuarios(campamentoId: number): Observable<MtoLoginResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<MtoLoginResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=15'
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+    public obtenerUsuarios(campamentoId: number, search: string = ''): Observable<MtoLoginResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+        const searchParam = encodeURIComponent(search.trim());
+
+        return this.http.get<any>(
+            this.utils.v1('/users') + '?token=' + token + '&search=' + searchParam,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => {
+                const users = (response?.data?.users || []).map((item: any) => ({
+                    ...item,
+                    roles: Array.isArray(item?.roles) ? item.roles : [],
+                    password: '',
+                }));
+
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'Usuarios consultados',
+                    code: response?.code || 200,
+                    users,
+                } as MtoLoginResponse;
+            })
+        );
+    }
+
+    public obtenerHistoricoUsuarios(search: string = ''): Observable<MtoLoginResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+        const searchParam = encodeURIComponent(search.trim());
+
+        return this.http.get<any>(
+            this.utils.v1('/users/history') + '?token=' + token + '&search=' + searchParam,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => {
+                const users = (response?.data?.users || []).map((item: any) => ({
+                    ...item,
+                    roles: Array.isArray(item?.roles) ? item.roles : [],
+                    password: '',
+                }));
+
+                return {
+                    success: !!response?.success,
+                    error: !response?.success,
+                    message: response?.message || 'Historico consultado',
+                    code: response?.code || 200,
+                    users,
+                } as MtoLoginResponse;
+            })
+        );
+    }
+
+    public obtenerPerfilCuenta(includeDashboard: boolean = false): Observable<UserProfileResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+        const dashboardFlag = includeDashboard ? '&include_dashboard=1' : '';
+
+        return this.http.get<any>(
+            this.utils.v1('/users/profile') + '?token=' + token + dashboardFlag,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'Perfil consultado',
+                code: response?.code || 200,
+                user: response?.data?.user as User,
+                roles: Array.isArray(response?.data?.roles) ? response.data.roles : [],
+                has_password: !!response?.data?.has_password,
+                active_registrations: Array.isArray(response?.data?.active_registrations) ? response.data.active_registrations : [],
+                historical_registrations: Array.isArray(response?.data?.historical_registrations) ? response.data.historical_registrations : [],
+            } as UserProfileResponse))
+        );
+    }
+
+    public actualizarPerfilCuenta(payload: UserProfileUpdatePayload): Observable<UserProfileResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.patch<any>(
+            this.utils.v1('/users/profile') + '?token=' + token,
+            payload,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'Perfil actualizado',
+                code: response?.code || 200,
+                user: response?.data?.user as User,
+                roles: Array.isArray(response?.data?.roles) ? response.data.roles : [],
+                has_password: !!response?.data?.has_password,
+            } as UserProfileResponse))
+        );
+    }
+
+    public actualizarPasswordPropia(newPassword: string): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.patch<DefaultResponse>(
+            this.utils.v1('/users/profile/password') + '?token=' + token,
+            { new_password: newPassword },
+            { headers: this.utils.getHeaders() }
+        );
+    }
+
+    public obtenerActividadCuenta(limit: number = 10): Observable<UserActivityResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.get<any>(
+            this.utils.v1('/users/profile/activity') + '?token=' + token + '&limit=' + limit,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'Actividad consultada',
+                code: response?.code || 200,
+                movements: Array.isArray(response?.data?.movements) ? response.data.movements : [],
+            } as UserActivityResponse))
+        );
+    }
+
+    public obtenerBitacoraStaff(limit: number = 100, offset: number = 0, search: string = '', action: string = ''): Observable<StaffActivityLogResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+        const params = new URLSearchParams({
+            token,
+            limit: String(limit),
+            offset: String(offset),
+        });
+
+        if (search.trim()) {
+            params.set('search', search.trim());
+        }
+
+        if (action.trim()) {
+            params.set('action', action.trim());
+        }
+
+        return this.http.get<any>(
+            this.utils.v1('/users/activity-log') + '?' + params.toString(),
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'Bitacora consultada',
+                code: response?.code || 200,
+                items: Array.isArray(response?.data?.items) ? response.data.items : [],
+                filters: {
+                    actions: Array.isArray(response?.data?.filters?.actions) ? response.data.filters.actions : [],
+                },
+                pagination: response?.data?.pagination || {},
+            } as StaffActivityLogResponse))
+        );
     }
 
     /**
      * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
      */
-    public obtenerRepetidos(campamentoId: number): Observable<EventRegistrationResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<EventRegistrationResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=16'
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+    public obtenerRepetidos(campamentoId: number): Observable<CampamentoGuerrerosResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.get<any>(
+            this.utils.v1('/users/duplicates') + '?token=' + token,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'Repetidos consultados',
+                code: response?.code || 200,
+                data: {
+                    duplicates: (response?.data?.duplicates || []) as CampamentoGuerreros[],
+                },
+            } as CampamentoGuerrerosResponse))
+        );
     }
 
     /**
      * @deprecated Uses legacy endpoint retourbano/mantenimiento.php. Migrate to v1 endpoint.
      */
     public updateEmailTutor(id: number, email: String, email_tutor: String, campamentoId: number): Observable<DefaultResponse> {
-        const user = this.autho.getSessionValida();
-        return this.http.get<DefaultResponse>(environment.apiUrl
-            + 'retourbano/mantenimiento.php?opcion=17'
-            + '&id=' + id
-            + '&email=' + email
-            + '&email_tutor=' + email_tutor
-            + '&user=' + user?.id
-            + '&token=' + user?.token
-            + '&campamento_id=' + campamentoId
-            , { headers: this.utils.getHeaders() });
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.patch<DefaultResponse>(
+            this.utils.v1('/users/tutor-link') + '?token=' + token,
+            {
+                legacy_user_id: id,
+                email,
+                email_tutor,
+            },
+            { headers: this.utils.getHeaders() }
+        );
     }
 
     /**
@@ -757,12 +1072,13 @@ export class RegistroDao {
             , { headers: this.utils.getHeaders() });
     }
 
-    public getUserRegistrations(limit: number = 100, offset: number = 0): Observable<EventResponse> {
+    public getUserRegistrations(limit: number = 100, offset: number = 0, includeActive: boolean = false): Observable<EventResponse> {
         const session = this.autho.getSessionValida();
         const token = session?.token?.toString() || '';
+        const includeActiveFlag = includeActive ? '&include_active=1' : '';
 
         return this.http.get<any>(
-            this.utils.v1('/registrations/by-user') + '?token=' + encodeURIComponent(token) + '&user_id=' + session?.id + '&limit=' + limit + '&offset=' + offset,
+            this.utils.v1('/registrations/by-user') + '?token=' + encodeURIComponent(token) + '&user_id=' + session?.id + '&limit=' + limit + '&offset=' + offset + includeActiveFlag,
             { headers: this.utils.getHeaders() }
         ).pipe(
             map((response) => {

@@ -1,0 +1,128 @@
+.account-shell {
+	--account-ink: #1b2b3a;
+	--account-muted: #6c7b88;
+	color: var(--account-ink);
+}
+
+.account-hero {
+	display: grid;
+	grid-template-columns: 64px minmax(0, 1fr);
+	gap: 0.9rem;
+	align-items: center;
+}
+
+.account-avatar {
+	width: 64px;
+	height: 64px;
+	border-radius: 16px;
+	display: grid;
+	place-items: center;
+	font-size: 1.15rem;
+	font-weight: 700;
+	letter-spacing: 0.05em;
+	color: #ffffff;
+	background: #28435f;
+}
+
+.account-label {
+	margin: 0 0 0.35rem;
+	color: var(--account-muted);
+}
+
+.account-hero h1,
+.account-card h2 {
+	margin: 0;
+	font-weight: 600;
+	line-height: 1.1;
+	color: var(--account-ink);
+}
+
+.account-hero h1 {
+	font-size: 1.3rem;
+}
+
+.account-card h2 {
+	margin-bottom: 0.85rem;
+}
+
+.account-meta,
+.account-role-row {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin-top: 0.85rem;
+}
+
+.account-status-row {
+	min-height: 1.5rem;
+	margin-top: 0.7rem;
+}
+
+.account-grid {
+	margin-top: 1rem;
+}
+
+.account-card-wide {
+	grid-column: 1 / -1;
+}
+
+.account-card-head {
+	margin-bottom: 0.8rem;
+}
+
+.account-info-list,
+.account-form,
+.account-movement-list {
+	display: grid;
+	gap: 0.85rem;
+}
+
+.account-info-list strong,
+.account-movement-item strong {
+	display: block;
+	font-size: 0.95rem;
+	font-weight: 600;
+}
+
+.account-input {
+	color: var(--account-ink);
+}
+
+.account-button {
+	justify-self: flex-start;
+}
+
+.account-button:disabled {
+	opacity: 0.65;
+}
+
+.account-movement-item {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 0.9rem;
+}
+
+.account-movement-item span {
+	white-space: nowrap;
+	font-size: 0.78rem;
+	color: var(--account-muted);
+	font-weight: 700;
+}
+
+@media (max-width: 767.98px) {
+	.account-hero,
+	.account-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.account-card-wide {
+		grid-column: auto;
+	}
+
+	.account-card-head,
+	.account-movement-item {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+}

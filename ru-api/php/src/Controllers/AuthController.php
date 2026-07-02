@@ -3,16 +3,19 @@
 require_once __DIR__ . '/BaseController.php';
 require_once __DIR__ . '/../Services/AuthService.php';
 require_once __DIR__ . '/../Repository/UserRoleRepository.php';
+require_once __DIR__ . '/../Repository/ActivityLogRepository.php';
 
 class AuthController extends BaseController
 {
     private $authService;
     private $userRoles;
+    private $activityLog;
 
     public function __construct()
     {
         $this->authService = new AuthService();
         $this->userRoles = new UserRoleRepository();
+        $this->activityLog = new ActivityLogRepository();
     }
 
     public function login($request)
@@ -27,6 +30,17 @@ class AuthController extends BaseController
         $result = $this->authService->login($email, $password);
         if (!$result) {
             return $this->fail('invalid credentials', 401);
+        }
+
+        $userId = isset($result['user']['id']) ? (int) $result['user']['id'] : 0;
+        if ($userId > 0) {
+            $this->activityLog->createEntry($userId, 'auth.login', null, 'Inicio de sesion exitoso', array(
+                'actor_user_id' => $userId,
+                'entity_type' => 'user',
+                'entity_id' => $userId,
+                'source' => 'api.v1.auth',
+                'metadata' => array('email' => $email),
+            ));
         }
 
         return $this->ok($result, 'login successful');
@@ -59,7 +73,18 @@ class AuthController extends BaseController
             return $this->fail('token is required', 422);
         }
 
+        $user = $this->authService->validateToken($token);
         $this->authService->logout($token);
+
+        if ($user && isset($user->id)) {
+            $this->activityLog->createEntry((int) $user->id, 'auth.logout', null, 'Cierre de sesion', array(
+                'actor_user_id' => (int) $user->id,
+                'entity_type' => 'user',
+                'entity_id' => (int) $user->id,
+                'source' => 'api.v1.auth',
+            ));
+        }
+
         return $this->ok(array(), 'logout successful');
     }
 
@@ -109,9 +134,20 @@ class AuthController extends BaseController
             return $this->fail('new_password must be at least 12 chars and include uppercase, lowercase, number, special char, and no spaces', 422);
         }
 
+        $tokenRow = $this->authService->validatePasswordResetToken($token);
+
         $ok = $this->authService->resetPasswordByToken($token, $newPassword);
         if (!$ok) {
             return $this->fail('invalid or expired reset token', 401);
+        }
+
+        if ($tokenRow && isset($tokenRow['user_id'])) {
+            $this->activityLog->createEntry((int) $tokenRow['user_id'], 'auth.password_reset', null, 'Contrasena restablecida con token', array(
+                'actor_user_id' => (int) $tokenRow['user_id'],
+                'entity_type' => 'user',
+                'entity_id' => (int) $tokenRow['user_id'],
+                'source' => 'api.v1.auth',
+            ));
         }
 
         return $this->ok(array(), 'password updated successfully');

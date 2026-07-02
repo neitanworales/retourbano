@@ -1,14 +1,20 @@
-<div class="container elevado">
-    <ul class="nav nav-tabs">
+<div class="staff-page container elevado">
+    <ul class="nav nav-tabs staff-tabs">
         <li *ngFor="let event of events; let i = index" nav-item>
             <a class="nav-link {{tabsCampas![i]?'active':''}}" (click)="tabCampamentos(i)"><i
                     class="bi bi-info-circle-fill"></i> {{event.city_label}}</a>
         </li>
     </ul>
 </div>
-<div *ngIf="selectedEventoId" class="container">
-    <h1>Inscripciones RU</h1>
-    <ul class="nav nav-tabs">
+<div *ngIf="selectedEventoId" class="staff-page container">
+    <div class="staff-page-header">
+        <div>
+            <p class="staff-page-kicker">Operación</p>
+            <h1 class="staff-page-title">Inscripciones</h1>
+            <p class="staff-page-subtitle">Resumen, seguimiento, hospedaje y contabilidad del evento activo desde una misma vista.</p>
+        </div>
+    </div>
+    <ul class="nav nav-tabs staff-tabs">
         <li class="nav-item">
             <a class="nav-link {{pageResumenActive?'active':''}}" (click)="activarPageResumen()"><i
                     class="bi bi-pie-chart-fill"></i> Resumen</a>
@@ -20,10 +26,6 @@
         <li class="nav-item">
             <a class="nav-link {{pageStaffActive?'active':''}}" (click)="activarPageStaff()"><i
                     class="bi bi-person-raised-hand"></i> Staff</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {{pageAdminsActive?'active':''}}" (click)="activarPageAdmins()"><i
-                    class="bi bi-person-video3"></i> Administradores</a>
         </li>
         <li class="nav-item">
             <a class="nav-link {{pageBajasActive?'active':''}}" (click)="activarPageBajas()"><i
@@ -53,7 +55,7 @@
 
     <app-contabilidad *ngIf="pageContabilidadActive" [selectedEvento]="selectedEvento"></app-contabilidad>
 
-    <div [ngStyle]="{'display':displayStyle}" class="shadow p-3 mb-5 bg-body-tertiary rounded">
+    <div [ngStyle]="{'display':displayStyle}" class="staff-surface staff-panel mb-5">
         <div class="title-table mat-elevation-z8">
             <div class="row d-flex">
                 <div class="col elevado">
@@ -76,12 +78,16 @@
 
             <ng-container matColumnDef="ID">
                 <th mat-header-cell *matHeaderCellDef> ID </th>
-                <td mat-cell *matCellDef="let element"> {{element.id}}.{{element.user?.id}} </td>
+                <td mat-cell *matCellDef="let element">
+                    {{element.user?.id}} 
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="numero">
                 <th mat-header-cell *matHeaderCellDef> # </th>
-                <td mat-cell *matCellDef="let element"> {{element.numero}} </td>
+                <td mat-cell *matCellDef="let element; let i = dataIndex">
+                    <i *ngIf="isAdminRegistration(element)" class="bi bi-person-fill me-1"></i>{{i + 1}}
+                </td>
             </ng-container>
 
             <ng-container matColumnDef="nombre">
@@ -165,7 +171,7 @@
                     <ng-template #emailEnviado>
                         <i class="bi bi-x-octagon" class="red"></i>
                     </ng-template>
-                    <span class="email-count-badge">{{getSentEmailCount(element)}}</span>
+                    <span class="email-count-badge staff-pill staff-pill-neutral">{{getSentEmailCount(element)}}</span>
                     <div *ngIf="hasSentEmailsConfirmacion(element); else emailConfirmado">
                         <i class="bi bi-envelope-check" class="green"></i>
                     </div>
@@ -257,7 +263,7 @@
                         <div class="row list-group">
                             <!--Profile Card 3-->
                             <div class="col-md-12">
-                                <div class="card profile-card-3">
+                                <div class="card profile-card-3 staff-surface">
                                     <div class="card-content">
                                         <div class="row">
                                             <div class="col-md-6">
@@ -347,7 +353,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <table class="table tabla-pagos">
+                                <table class="table tabla-pagos staff-table-shell">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>
@@ -371,7 +377,7 @@
                                 </table>
                             </div>
                             <div class="col">
-                                <table class="table tabla-pagos">
+                                <table class="table tabla-pagos staff-table-shell">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>
@@ -404,7 +410,7 @@
 
                         <div class="row">
                             <div class="col">
-                                <table class="table tabla-pagos">
+                                <table class="table tabla-pagos staff-table-shell">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th>

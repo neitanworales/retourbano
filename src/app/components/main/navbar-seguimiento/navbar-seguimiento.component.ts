@@ -78,4 +78,26 @@ export class NavbarSeguimientoComponent implements OnInit {
     }
   }
 
+  getCurrentUserName(): string {
+    return String(
+      this.currentUser?.guerrero?.display_name
+      || this.currentUser?.guerrero?.full_name
+      || this.currentUser?.guerrero?.nombre
+      || this.currentUser?.usuario?.display_name
+      || this.currentUser?.usuario?.full_name
+      || this.currentUser?.usuario?.nombre
+      || 'Mi cuenta'
+    );
+  }
+
+  getCurrentUserInitials(): string {
+    const parts = this.getCurrentUserName()
+      .split(' ')
+      .map((part) => part.trim())
+      .filter((part) => part.length > 0)
+      .slice(0, 2);
+
+    return parts.map((part) => part.charAt(0).toUpperCase()).join('') || 'RU';
+  }
+
 }
