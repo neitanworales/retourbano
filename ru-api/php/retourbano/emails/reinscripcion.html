@@ -1,60 +1,85 @@
-<html>
-
+<!DOCTYPE html>
+<html lang="es">
 <head>
-    <style>
-        .correoreto {
-            padding: 20px;
-            background-color: whitesmoke;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-        h3 {
-            padding: 10px;
-            background-color: lavender;
-        }
-
-        p {
-            color: brown;
-        }
-
-        #deals {
-            display: flex;
-            flex-flow: row wrap;
-            margin: 5px;
-        }
-
-        .sale-item {
-            display: flex;
-            flex-flow: column;
-            background: beige;
-            margin-right: 5px;
-            display: block;
-            text-align: center;
-            padding: 5px;
-        }
-
-        .header {
-            font-size: large;
-        }
-
-        .body {
-            font-size: medium;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reinscripci&oacute;n - Reto Urbano {{year}}</title>
 </head>
+<body style="margin:0;padding:0;background-color:#F0F4F8;font-family:Arial,Helvetica,sans-serif;">
 
-<body>
-    <div class="correoreto">
-        <h3>Hola {{nick}}</h3>
-        <p>Este correo es para validar que est&aacute;s tratando de reinscribirte a Reto Urbano {{year}}</p>
-        <p>Si fuiste tu, por favor sigue las siguientes instrucciones:</p>
-        <p>Usa el siguiente c&oacute;digo para continuar con tu reinscripci&oacute;n a Reto Urbano {{year}}</p>
-        <h2>{{codigo}}</h2>
-        <p>Tambi&eacute;n puedes dar click en el siguiente enlace <a href="{{basesite}}/reinscripcion?code={{codigo}}"
-                target="_blank">Reinscr&iacute;bite aqu&iacute;</a> </p>
-        <p>Esperamos verte pronto!!! Mas info en <a href="{{basesite}}" target="_blank">Reto Urbano</a></p>
-        <p>Atentamente: Reto Urbano - Inscripciones</p>
-    </div>
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F0F4F8;padding:30px 0;">
+    <tr>
+      <td align="center">
+        <table width="560" cellpadding="0" cellspacing="0" style="max-width:560px;width:100%;">
+
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#1A3A5C 0%,#2E6DA4 100%);border-radius:10px 10px 0 0;padding:36px 40px;text-align:center;">
+              <p style="margin:0 0 4px 0;font-size:12px;color:#A8C8E8;letter-spacing:3px;text-transform:uppercase;">CAMPAMENTO</p>
+              <h1 style="margin:0;font-size:26px;color:#FFFFFF;font-weight:700;">RETO URBANO {{year}}</h1>
+              <p style="margin:8px 0 0 0;font-size:14px;color:#A8C8E8;">{{titulo}} &bull; {{ciudad}}</p>
+            </td>
+          </tr>
+
+          <!-- Body -->
+          <tr>
+            <td style="background-color:#FFFFFF;padding:36px 40px;">
+
+              <h2 style="margin:0 0 8px 0;font-size:20px;color:#2D3748;">&#128075;&nbsp; &iexcl;Hola {{nick}}!</h2>
+              <p style="margin:0 0 20px 0;font-size:14px;color:#4A5568;">Recibimos tu solicitud para reinscribirte a <strong>Reto Urbano {{year}} &mdash; {{titulo}}</strong> en {{ciudad}}.</p>
+              <p style="margin:0 0 24px 0;font-size:14px;color:#4A5568;">Si fuiste t&uacute;, usa el siguiente c&oacute;digo para completar tu reinscripci&oacute;n:</p>
+
+              <!-- Code box -->
+              <table width="100%" cellpadding="0" cellspacing="0">
+                <tr>
+                  <td align="center" style="background-color:#EBF4FF;border:2px dashed #2E6DA4;border-radius:10px;padding:24px 20px;">
+                    <p style="margin:0 0 6px 0;font-size:12px;color:#2E6DA4;letter-spacing:2px;text-transform:uppercase;">Tu c&oacute;digo de reinscripci&oacute;n</p>
+                    <p style="margin:0;font-size:32px;font-weight:700;color:#1A3A5C;letter-spacing:6px;">{{codigo}}</p>
+                  </td>
+                </tr>
+              </table>
+
+              <!-- CTA button -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:28px;">
+                <tr>
+                  <td align="center">
+                    <a href="{{basesite}}/reinscripcion?code={{codigo}}&id_campamento={{id_campamento}}"
+                       target="_blank"
+                       style="display:inline-block;background-color:#2E6DA4;color:#FFFFFF;text-decoration:none;font-size:14px;font-weight:700;padding:14px 36px;border-radius:6px;letter-spacing:0.5px;">
+                      &#128640;&nbsp; Reinscribirme ahora
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:24px 0 0 0;font-size:13px;color:#718096;text-align:center;">
+                O visita <a href="{{basesite}}" target="_blank" style="color:#2E6DA4;">Reto Urbano</a> para m&aacute;s informaci&oacute;n.
+              </p>
+
+              <!-- Security note -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-top:24px;">
+                <tr>
+                  <td style="background-color:#FFF5F5;border-left:4px solid #FC8181;border-radius:0 6px 6px 0;padding:12px 16px;">
+                    <p style="margin:0;font-size:13px;color:#742A2A;">&#9888;&nbsp; Si no solicitaste esta reinscripci&oacute;n, ignora este correo.</p>
+                  </td>
+                </tr>
+              </table>
+
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="background-color:#1A3A5C;border-radius:0 0 10px 10px;padding:24px 40px;text-align:center;">
+              <p style="margin:0 0 4px 0;font-size:13px;color:#A8C8E8;">&iexcl;Esperamos verte pronto!</p>
+              <p style="margin:0;font-size:15px;font-weight:700;color:#FFFFFF;">Staff de Reto Urbano {{year}}</p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+
 </body>
-
 </html>

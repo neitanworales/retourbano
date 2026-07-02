@@ -1,11 +1,17 @@
-<ng-container *ngIf="loadingService.isLoading$ | async">
-  <i class="loading">
-    Loading
-    <img alt="..." src="/assets/img/main/fireloading.gif" style="width: 18em; margin-top: 15em;">
-  </i>
+<ng-container *ngIf="{ isLoading: (loadingService.isLoading$ | async), currentUser: (authService.currentUser$ | async) } as vm">
+  <ng-container *ngIf="vm.isLoading">
+    <i class="loading">
+      Loading
+      <img alt="..." src="/assets/img/main/loading_ru.gif" style="width: 18em; margin-top: 15em;">
+    </i>
+  </ng-container>
+
+  <div class="app-shell">
+    <app-navbar *ngIf="!vm.currentUser"></app-navbar>
+    <app-navbar-seguimiento *ngIf="vm.currentUser"></app-navbar-seguimiento>
+    <main class="app-main">
+      <router-outlet></router-outlet>
+    </main>
+    <app-footer></app-footer>
+  </div>
 </ng-container>
-<div class="cover-container d-flex w-100 p-3 mx-auto flex-column">
-  <app-navbar></app-navbar>
-</div>
-<router-outlet></router-outlet>
-<footer></footer>

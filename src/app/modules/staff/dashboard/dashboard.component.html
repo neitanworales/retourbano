@@ -1,39 +1,349 @@
-<app-navbar-seguimiento></app-navbar-seguimiento>
+<div class="dashboard-shell staff-page container">
+    <section class="dashboard-hero staff-surface staff-panel">
+        <div class="dashboard-hero-copy">
+            <p class="staff-section-kicker">Dashboard</p>
+            <h1>Hola {{getProfileName()}}</h1>
+            <p class="staff-copy-sm">Aqui se concentra tu campamento vigente, tu perfil y tu historial, con una sola carga homologada para tu
+                informacion de cuenta.</p>
+            <div class="dashboard-hero-meta">
+                <span class="dashboard-meta-pill staff-pill staff-pill-neutral">ID {{session.id || 's/d'}}</span>
+                <span class="dashboard-meta-pill staff-pill staff-pill-neutral">{{getAcceptedPoliciesLabel()}}</span>
+                <span class="dashboard-meta-pill staff-pill staff-pill-neutral">Registro {{getRegisteredAt()}}</span>
+            </div>
+        </div>
+    </section>
 
-<div class="container">
-    <div class="row" style="margin-top: 1em; margin-bottom: 2em;">
-        <div class="col-lg-6">
-            <div class="alert alert-info" role="alert">
-                Hola {{session.guerrero?.nombre}}
-            </div>
-            <div class="{{classInscritoCampamento}}" role="alert">
-                {{mensajeInscritoCampamento}}
-                <button *ngIf="!inscrtoCampamento" type="button" class="btn btn-warning"
-                    (click)="presentarFormInscripcion()">Inscribir</button>
+    <section class="dashboard-current-section">
+        <div class="dashboard-section-head">
+            <div>
+                <p class="staff-section-kicker">Campamento actual</p>
+                <h2 class="staff-title-sm">Tu evento vigente</h2>
             </div>
         </div>
-        <div class="col-lg-6">
-            <a class="btn btn-info" href="/inscripciones">Ir a Inscripciones de RU</a>
-        </div>
-        <div *ngIf="showFormInscripcion" class="col-lg-6">
-            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="session.guerrero!"></app-registro-form>
-        </div>
-        <div class="col-lg-6">
-            DASHBOARD
-        </div>
-    </div>
-    <div class="row">
-        <h3>Indicadores</h3>
-        <div class="d-flex flex-wrap">
-            <ol *ngFor="let paquete of paquetes" class="list-group list-group-numbered paquete">
-                <li *ngFor="let indicador of paquete.indicadores" class="list-group-item d-flex justify-content-between align-items-start">
-                    <div class="ms-2 me-auto">
-                        <div class="fw-bold">{{indicador.valor}}</div>
+
+        <div class="dashboard-current-grid staff-grid" *ngIf="upcomingEvents && upcomingEvents.length > 0; else noUpcomingEvents">
+            <article class="dashboard-event-card staff-surface staff-panel" *ngFor="let event of upcomingEvents">
+                <div class="dashboard-event-head staff-section-split">
+                    <div>
+                        <h3 class="staff-title-sm">{{event.title}}</h3>
+                        <p class="staff-copy-sm">{{getEventDateLabel(event)}}<span *ngIf="event.city_label"> · {{event.city_label}}</span></p>
                     </div>
-                    <span class="badge bg-primary rounded-pill">{{indicador.count}}</span>
-                </li>
-            </ol>
+                    <span [class]="getCurrentEventStatusClass(event)">{{getCurrentEventStatus(event)}}</span>
+                </div>
+
+                <div *ngIf="!isRegisteredForEvent(event)" class="dashboard-event-empty staff-soft-card">
+                    <p class="staff-copy-sm">Todavia puedes inscribirte a este campamento.</p>
+                    <button type="button" class="btn btn-primary dashboard-action-button"
+                        (click)="inscribirEvento(event.id!)">Inscribirme</button>
+                </div>
+
+                <div *ngIf="isRegisteredForEvent(event)" class="dashboard-payment-block">
+                    <div class="dashboard-payment-summary staff-grid-2">
+                        <div class="dashboard-payment-card staff-soft-card">
+                            <span>Pagado</span>
+                            <strong>{{getCurrentEventPaidAmount(event) | currency:'MXN':'symbol':'1.0-0'}}</strong>
+                        </div>
+                        <div class="dashboard-payment-card staff-soft-card">
+                            <span>Pendiente</span>
+                            <strong>{{getCurrentEventPendingAmount(event) | currency:'MXN':'symbol':'1.0-0'}}</strong>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-payment-list staff-grid"
+                        *ngIf="getCurrentEventPayments(event).length > 0; else noPayments">
+                        <div class="dashboard-payment-row staff-soft-card" *ngFor="let payment of getCurrentEventPayments(event)">
+                            <div>
+                                <strong>{{payment.description || 'Pago registrado'}}</strong>
+                                <p class="staff-copy-sm">{{getPaymentDateLabel(payment)}}<span *ngIf="payment.payment_method"> ·
+                                        {{payment.payment_method}}</span></p>
+                            </div>
+                            <span>{{(payment.amount || 0) | currency:'MXN':'symbol':'1.0-0'}}</span>
+                        </div>
+                    </div>
+
+                    <ng-template #noPayments>
+                        <div class="dashboard-event-empty dashboard-event-empty-compact staff-soft-card">
+                            <p class="staff-copy-sm">Aun no hay pagos registrados para este campamento.</p>
+                        </div>
+                    </ng-template>
+                </div>
+            </article>
         </div>
-    </div>
+
+        <ng-template #noUpcomingEvents>
+            <div class="dashboard-event-empty dashboard-empty-card staff-surface staff-soft-card">
+                <p>No hay eventos proximos disponibles.</p>
+            </div>
+        </ng-template>
+    </section>
+
+    <section class="dashboard-account-hero">
+        <div class="dashboard-identity-card staff-surface staff-panel">
+            <div class="dashboard-identity-avatar">{{getInitials()}}</div>
+            <div>
+                <p class="staff-section-kicker">Tu cuenta</p>
+                <h2 class="staff-title-sm">{{getProfileName()}}</h2>
+                <p class="dashboard-muted-copy staff-copy-sm">{{getPrimaryEmail()}}</p>
+                <div class="dashboard-state-row">
+                    <span *ngIf="loadingProfile" class="dashboard-state-chip dashboard-state-chip-loading staff-pill">Actualizando
+                        desde backend...</span>
+                    <span *ngIf="profileErrorMessage"
+                        class="dashboard-state-chip dashboard-state-chip-error staff-pill">{{profileErrorMessage}}</span>
+                    <span *ngIf="saveProfileMessage"
+                        class="dashboard-state-chip dashboard-state-chip-success staff-pill">{{saveProfileMessage}}</span>
+                    <span *ngIf="saveProfileErrorMessage"
+                        class="dashboard-state-chip dashboard-state-chip-error staff-pill">{{saveProfileErrorMessage}}</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="dashboard-summary-grid staff-grid-3">
+            <article class="dashboard-summary-card dashboard-summary-card-gold staff-surface staff-panel">
+                <p class="dashboard-summary-label">Roles</p>
+                <div class="dashboard-chip-row" *ngIf="getRoles().length; else noRoles">
+                    <span class="dashboard-role-chip staff-pill staff-pill-neutral" *ngFor="let role of getRoles()">{{role}}</span>
+                </div>
+                <ng-template #noRoles>
+                    <p class="dashboard-summary-value dashboard-summary-muted">Sin roles asignados</p>
+                </ng-template>
+            </article>
+
+            <article class="dashboard-summary-card dashboard-summary-card-coral staff-surface staff-panel">
+                <p class="dashboard-summary-label">Contacto</p>
+                <p class="dashboard-summary-value">{{getPhone()}}</p>
+                <p class="dashboard-summary-muted">Telefono principal</p>
+            </article>
+
+            <article class="dashboard-summary-card dashboard-summary-card-sky staff-surface staff-panel">
+                <p class="dashboard-summary-label">Comunidad</p>
+                <p class="dashboard-summary-value">{{getChurch()}}</p>
+                <p class="dashboard-summary-muted">Iglesia o comunidad</p>
+            </article>
+
+            <article class="dashboard-summary-card dashboard-summary-card-gold staff-surface staff-panel">
+                <p class="dashboard-summary-label">Historial</p>
+                <p class="dashboard-summary-value">{{getHistoricalRegistrationCount()}}</p>
+                <p class="dashboard-summary-muted">campamentos anteriores</p>
+            </article>
+
+            <article class="dashboard-summary-card dashboard-summary-card-coral staff-surface staff-panel">
+                <p class="dashboard-summary-label">Campamento actual</p>
+                <p class="dashboard-summary-value">{{getActiveRegistrationCount() > 0 ? 'Inscrito' : 'Sin inscripcion
+                    activa'}}</p>
+                <p class="dashboard-summary-muted">{{getActiveRegistrationCount() > 0 ? 'Tienes un campamento vigente' :
+                    'Inscribete desde esta vista'}}</p>
+            </article>
+        </div>
+    </section>
+
+    <section class="dashboard-detail-grid staff-grid-2">
+        <article class="dashboard-panel staff-surface staff-panel">
+            <div class="dashboard-panel-head staff-section-split">
+                <div>
+                    <p class="staff-section-kicker">Perfil</p>
+                    <h2 class="staff-title-sm">Datos generales</h2>
+                </div>
+                <div class="dashboard-panel-actions">
+                    <button *ngIf="!isEditingProfile" type="button" class="btn btn-sm btn-outline-secondary"
+                        (click)="startEditingProfile()">Editar perfil</button>
+                    <button *ngIf="isEditingProfile" type="button" class="btn btn-sm btn-outline-secondary"
+                        (click)="cancelEditingProfile()">Cancelar</button>
+                    <button *ngIf="isEditingProfile" type="button" class="btn btn-sm btn-primary"
+                        (click)="saveProfile()" [disabled]="isSavingProfile">
+                        {{isSavingProfile ? 'Guardando...' : 'Guardar cambios'}}
+                    </button>
+                </div>
+            </div>
+
+            <div *ngIf="!isEditingProfile" class="dashboard-info-grid staff-grid-2">
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Sexo</span>
+                    <strong>{{getGender()}}</strong>
+                </div>
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Fecha de nacimiento</span>
+                    <strong>{{getBirthDate()}}</strong>
+                </div>
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Edad</span>
+                    <strong>{{getAge()}}</strong>
+                </div>
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Talla</span>
+                    <strong>{{getShirtSize()}}</strong>
+                </div>
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Viene de</span>
+                    <strong>{{getOrigin()}}</strong>
+                </div>
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Correo</span>
+                    <strong>{{getPrimaryEmail()}}</strong>
+                </div>
+            </div>
+
+            <div *ngIf="isEditingProfile" class="dashboard-form-grid staff-grid-2">
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Nombre completo</span>
+                    <input [(ngModel)]="editableProfile.full_name" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Nombre visible</span>
+                    <input [(ngModel)]="editableProfile.display_name" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Correo</span>
+                    <input [(ngModel)]="editableProfile.email" [ngModelOptions]="{standalone: true}" type="email"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Telefono</span>
+                    <input [(ngModel)]="editableProfile.phone" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">WhatsApp</span>
+                    <input [(ngModel)]="editableProfile.whatsapp" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Sexo</span>
+                    <input [(ngModel)]="editableProfile.gender" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Fecha de nacimiento</span>
+                    <input [(ngModel)]="editableProfile.birth_date" [ngModelOptions]="{standalone: true}" type="date"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Edad</span>
+                    <input [(ngModel)]="editableProfile.age" [ngModelOptions]="{standalone: true}" type="number"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Talla</span>
+                    <input [(ngModel)]="editableProfile.shirt_size" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Viene de</span>
+                    <input [(ngModel)]="editableProfile.coming_from" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field dashboard-form-field-full">
+                    <span class="dashboard-info-label">Iglesia o comunidad</span>
+                    <input [(ngModel)]="editableProfile.church" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+            </div>
+        </article>
+
+        <article class="dashboard-panel staff-surface staff-panel">
+            <div class="dashboard-panel-head staff-section-split">
+                <div>
+                    <p class="staff-section-kicker">Respaldo</p>
+                    <h2 class="staff-title-sm">Tutor y acompanamiento</h2>
+                </div>
+            </div>
+
+            <div *ngIf="!isEditingProfile" class="dashboard-info-grid staff-grid-2">
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Tutor</span>
+                    <strong>{{getGuardianName()}}</strong>
+                </div>
+                <div class="dashboard-info-item">
+                    <span class="dashboard-info-label">Telefono tutor</span>
+                    <strong>{{getGuardianPhone()}}</strong>
+                </div>
+                <div class="dashboard-info-item dashboard-info-item-full">
+                    <span class="dashboard-info-label">Correo tutor</span>
+                    <strong>{{getGuardianEmail()}}</strong>
+                </div>
+            </div>
+
+            <div *ngIf="isEditingProfile" class="dashboard-form-grid staff-grid-2">
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Tutor</span>
+                    <input [(ngModel)]="editableProfile.guardian_name" [ngModelOptions]="{standalone: true}" type="text"
+                        class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field">
+                    <span class="dashboard-info-label">Telefono tutor</span>
+                    <input [(ngModel)]="editableProfile.guardian_phone" [ngModelOptions]="{standalone: true}"
+                        type="text" class="dashboard-input form-control">
+                </label>
+                <label class="dashboard-form-field dashboard-form-field-full">
+                    <span class="dashboard-info-label">Correo tutor</span>
+                    <input [(ngModel)]="editableProfile.guardian_email" [ngModelOptions]="{standalone: true}"
+                        type="email" class="dashboard-input form-control">
+                </label>
+            </div>
+        </article>
+
+        <article class="dashboard-panel dashboard-panel-wide staff-surface staff-panel">
+            <div class="dashboard-panel-head staff-section-split">
+                <div>
+                    <p class="staff-section-kicker">Bienestar</p>
+                    <h2 class="staff-title-sm">Salud y observaciones</h2>
+                </div>
+            </div>
+
+            <div *ngIf="!isEditingProfile" class="dashboard-note-grid staff-grid-2">
+                    <div class="dashboard-note-card staff-soft-card">
+                    <span class="dashboard-info-label">Alergias</span>
+                    <p class="staff-copy-sm">{{getAllergies()}}</p>
+                </div>
+                    <div class="dashboard-note-card staff-soft-card">
+                    <span class="dashboard-info-label">Medicamentos</span>
+                    <p class="staff-copy-sm">{{getMedicalNotes()}}</p>
+                </div>
+            </div>
+
+            <div *ngIf="isEditingProfile" class="dashboard-form-grid staff-grid-2">
+                <label class="dashboard-form-field dashboard-form-field-full">
+                    <span class="dashboard-info-label">Alergias</span>
+                    <textarea [(ngModel)]="editableProfile.allergies" [ngModelOptions]="{standalone: true}" rows="4"
+                        class="dashboard-input dashboard-textarea form-control"></textarea>
+                </label>
+                <label class="dashboard-form-field dashboard-form-field-full">
+                    <span class="dashboard-info-label">Medicamentos</span>
+                    <textarea [(ngModel)]="editableProfile.medications" [ngModelOptions]="{standalone: true}" rows="4"
+                        class="dashboard-input dashboard-textarea form-control"></textarea>
+                </label>
+            </div>
+        </article>
+
+        <article class="dashboard-panel dashboard-panel-wide staff-surface staff-panel">
+            <div class="dashboard-panel-head staff-section-split">
+                <div>
+                    <p class="staff-section-kicker">Actividad</p>
+                    <h2 class="staff-title-sm">Historial de inscripciones</h2>
+                </div>
+                <div class="dashboard-panel-kicker staff-pill staff-pill-neutral">{{getHistoricalRegistrationCount()}} en historial</div>
+            </div>
+
+            <div *ngIf="loadingProfile" class="dashboard-empty-state staff-soft-card">Cargando historial de eventos...</div>
+
+            <div *ngIf="!loadingProfile && !profileErrorMessage && getHistoricalRegistrations().length > 0"
+                class="dashboard-history-list">
+                <article class="dashboard-history-card staff-soft-card"
+                    *ngFor="let registration of getHistoricalRegistrations(); trackBy: trackRegistration">
+                    <div class="dashboard-history-head staff-section-split">
+                        <div>
+                            <h3 class="staff-title-xs">{{getEventLabel(registration)}}</h3>
+                            <p class="staff-copy-xs">{{getEventMeta(registration)}}</p>
+                        </div>
+                        <span
+                            [class]="getRegistrationStatusClass(registration)">{{getRegistrationStatusLabel(registration.registration_status)}}</span>
+                    </div>
+                </article>
+            </div>
+
+            <div *ngIf="!loadingProfile && !profileErrorMessage && getHistoricalRegistrations().length === 0"
+                class="dashboard-empty-state staff-soft-card">No hay historial de inscripciones anterior para esta cuenta.</div>
+        </article>
+    </section>
 </div>
-<app-footer-seguimiento></app-footer-seguimiento>

@@ -27,6 +27,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
     }
 
     if ($correcto) {
+        // Acepta id_campamento desde JSON body o query string (?id_campamento=)
+        $id_campamento = null;
+        if (isset($input['id_campamento'])) {
+            $tmp = filter_var($input['id_campamento'], FILTER_VALIDATE_INT);
+            $id_campamento = $tmp !== false ? $tmp : null;
+        } elseif (isset($_GET['id_campamento'])) {
+            $tmp = filter_var($_GET['id_campamento'], FILTER_VALIDATE_INT);
+            $id_campamento = $tmp !== false ? $tmp : null;
+        }
         $id = !empty($input['id']) ? $input['id'] : null;
         $nombre = !empty($input['nombre']) ? $input['nombre'] : null;
         $nick = !empty($input['nick']) ? $input['nick'] : null;
@@ -70,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
         if (!empty($busqueda)) {
             if ($datos->actualizar($id, $nombre, $nick, $fechaNacimiento, $edad, $sexo, $talla, $vienesDe, $alergias, $razones, $tutorNombre, $tutorTelefono, $iglesia, $email, $whatsapp, $facebook, $instagram, $aceptaPoliticas, $medicamentos, $telefono, NULL)) {
 
-                $busqueda2 = $datos->getGuerreroById($id);
+                $busqueda2 = $datos->getGuerreroById($id, $id_campamento);
                 if (!empty($busqueda2)) {
                     $response["mensaje"] = "Se actualizaron tus datos, ya estás registrado al campamento actual";
                     $response["error"] = false;
@@ -78,7 +87,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                     http_response_code(200);
                     echo json_encode($response);
                 } else {
-                    if ($datos->insertarCampamentoGuerreros($id, $hospedaje)) {
+                    $campamento = $datos->consultarCampamentoActivoById($id_campamento);
+                    if ($datos->insertarCampamentoGuerreros($id, $hospedaje, $id_campamento, $campamento[0]["year"])) {
                         $variables = array();
                         $variables["nombre"] = $nombre;
                         $variables["nick"] = $nick;
@@ -100,11 +110,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["medicamentos"] = $medicamentos;
                         $variables["telefono"] = $telefono;
                         $variables["hospedaje"] = $hospedaje;
-                        $variables["reporte"] = $datos->recorrerArray($datos->getIndicadoresArray());
+                        $indicadores = $datos->getIndicadoresArray($id_campamento);
+                        $variables["reporteResumen"] = $datos->generarResumenIndicadores($indicadores);
+                        $variables["reporte"] = $datos->recorrerArray($indicadores);
 
-                        $campamento = $datos->consultarCampamentoActivo();
-
-                        $variables["year"] = $campamento[0]["id_campamento"];
+                        $variables["year"] = $campamento[0]["year"];
                         $variables["titulo"] = $campamento[0]["titulo"];
                         $variables["costoMX"] = $campamento[0]["costoMX"];
                         $variables["costoUSD"] = $campamento[0]["costoUSD"];
@@ -114,15 +124,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'PUT') {
                         $variables["contacto1"] = $campamento[0]["contacto1"];
                         $variables["contacto2"] = $campamento[0]["contacto2"];
                         $variables["pago_minimoMX"] = $campamento[0]["pago_minimoMX"];
+                        $variables["ciudad"] = $datos->consultarCiudadById($campamento[0]["id_ciudad"])[0]["nombre"];
 
                         $templateName = "inscripcion.html";
                         $template = $emailDao->getTemplate($variables, $templateName);
-                        $emailEnviado = $emailDao->enviarEmail($email, 'Te reinscribiste a Reto Urbano', $template, false);
+                        $emailEnviado = $emailDao->enviarEmail($email, 'Te reinscribiste a Reto Urbano', $template, false, $campamento[0]["email_contacto"]);
 
                         if ($emailEnviado) {
                             $templateName = "inscripcion-staff.html";
                             $message = $emailDao->getTemplate($variables, $templateName);
-                            $emailDao->reportarStaff('Reinscripción Reto Urbano', $message);
+                            $emailDao->reportarStaff('[' . $variables["ciudad"] . '] Reinscripción Reto Urbano', $message, $campamento[0]["email_contacto"]);
                         }
 
                         $response["mensaje"] = "Hola ' . $nombre . ', Tu registro fue realizado de manera correcta. Se envió un correo al email ($email) que nos proporcionaste con información de pago y demás cosas que deberías saber.";

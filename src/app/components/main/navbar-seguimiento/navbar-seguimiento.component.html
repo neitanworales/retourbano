@@ -1,28 +1,161 @@
 <header class="mb-auto header-staff">
-    <div class="container-fluid">
-        <nav class="nav nav-masthead justify-content-center">
-            <a class="nav-link" aria-current="page" routerLink="/"> <i class="bi bi-box-arrow-left"></i> Regresar</a>
-            <a class="nav-link" routerLink="/staff"><i class="bi bi-house"></i></a>
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/inscripciones"><i class="bi bi-card-checklist"></i> Inscripciones</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/hospedaje"><i class="bi bi-h-square"></i> Hospedaje</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/contabilidad"><i class="bi bi-wallet"></i> Contabilidad</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/campamentos"><i class="bi bi-tornado"></i> Campamentos</a>
-            }
-            @if(hasRole(['super', 'admin'])){
-            <a class="nav-link" routerLink="/staff/usuarios"><i class="bi bi-people-fill"></i> Usuarios</a>
-            }   
-            <a class="nav-link d-flex" routerLink="/staff/cuenta">
-                <app-user-info></app-user-info>
-            </a>
-            <a class="nav-link" (click)="cerrarSesion()"><i class="bi bi-door-closed"></i> Salir</a>
-        </nav>
-    </div>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary nav-masthead">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav staff-tabs mb-2 mb-lg-0">
+                    <li class="nav-item nav-item-featured dropdown" routerLinkActive="active-parent">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
+                            routerLinkActive="active"
+                            aria-expanded="false">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-compass"></i></span>
+                                <span class="nav-label">Menú</span>
+                            </span>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" routerLink="/" routerLinkActive="active"
+                                    [routerLinkActiveOptions]="{ exact: true }">
+                                    <span class="nav-link-content">
+                                        <span class="nav-icon-shell"><i class="bi bi-house-door"></i></span>
+                                        <span class="nav-label">Home</span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item" *ngFor="let c of eventos">
+                                <a class="nav-link" routerLink="/info" routerLinkActive="active"
+                                    [queryParams]="{ event_id: c.id }">
+                                    <span class="nav-link-content">
+                                        <span class="nav-icon-shell"><i class="bi bi-geo-alt"></i></span>
+                                        <span class="nav-label">{{ c.city_label }}</span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" routerLink="/registro" routerLinkActive="active">
+                                    <span class="nav-link-content">
+                                        <span class="nav-icon-shell"><i class="bi bi-pencil-square"></i></span>
+                                        <span class="nav-label">Inscripción / Register</span>
+                                    </span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" routerLink="/reinscripcion" routerLinkActive="active">
+                                    <span class="nav-link-content">
+                                        <span class="nav-icon-shell"><i class="bi bi-arrow-repeat"></i></span>
+                                        <span class="nav-label">Reinscripción</span>
+                                    </span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="nav-item nav-item-tab">
+                        <a class="nav-link" routerLink="/staff" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-grid-1x2"></i></span>
+                                <span class="nav-label">Panel</span>
+                            </span>
+                        </a>
+                    </li>
+
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item nav-item-tab">
+                        <a class="nav-link" routerLink="/staff/inscripciones" routerLinkActive="active">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-card-checklist"></i></span>
+                                <span class="nav-label">Inscripciones</span>
+                            </span>
+                        </a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item nav-item-tab">
+                        <a class="nav-link" routerLink="/staff/historico" routerLinkActive="active">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-clock-history"></i></span>
+                                <span class="nav-label">Histórico</span>
+                            </span>
+                        </a>
+                    </li>
+                    }
+                    <!--@if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/hospedaje"><i class="bi bi-h-square"></i> Hospedaje</a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item">
+                        <a class="nav-link" routerLink="/staff/contabilidad"><i class="bi bi-wallet"></i>
+                            Contabilidad</a>
+                    </li>
+                    }-->
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item nav-item-tab">
+                        <a class="nav-link" routerLink="/staff/eventos" routerLinkActive="active">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-calendar-event"></i></span>
+                                <span class="nav-label">Eventos</span>
+                            </span>
+                        </a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item nav-item-tab">
+                        <a class="nav-link" routerLink="/staff/usuarios" routerLinkActive="active">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-people"></i></span>
+                                <span class="nav-label">Usuarios</span>
+                            </span>
+                        </a>
+                    </li>
+                    }
+                    @if(hasRole(['super', 'admin'])){
+                    <li class="nav-item nav-item-tab">
+                        <a class="nav-link" routerLink="/staff/bitacora" routerLinkActive="active">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-journal-text"></i></span>
+                                <span class="nav-label">Bitácora</span>
+                            </span>
+                        </a>
+                    </li>
+                    }
+                </ul>
+
+                <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                    <li class="nav-item nav-item-account">
+                        <a class="nav-link d-flex" routerLink="/staff/cuenta" routerLinkActive="active"
+                            [routerLinkActiveOptions]="{ exact: true }">
+                            <span class="nav-link-content">
+                                <span class="nav-avatar">{{getCurrentUserInitials()}}</span>
+                                <span class="nav-account-user">{{getCurrentUserName()}}</span>
+                            </span>
+                        </a>
+                    </li>
+                    <!--li class="nav-item">
+                        <select class="form-select"
+                                [(ngModel)]="selectedCampamentoId"
+                                (ngModelChange)="onCampamentoChange($event)"
+                                [compareWith]="compareIds">
+                            <option [ngValue]="null">Selecciona campamento</option>
+                            <option *ngFor="let c of campamentos" [ngValue]="(+c.id_campamento!)">{{c.titulo}} {{c.ciudad?.nombre}} {{c.year}}</option>
+                        </select>
+                    </li-->
+                    <li class="nav-item nav-item-logout">
+                        <a class="nav-link" (click)="cerrarSesion()">
+                            <span class="nav-link-content">
+                                <span class="nav-icon-shell"><i class="bi bi-box-arrow-right"></i></span>
+                                <span class="nav-label">Salir</span>
+                            </span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 </header>
-<hr>

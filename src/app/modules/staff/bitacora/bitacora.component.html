@@ -1,0 +1,107 @@
+<section class="container bitacora-shell staff-page container-fluid">
+    <div class="bitacora-hero staff-page-header">
+        <div>
+            <p class="bitacora-kicker staff-page-kicker">Auditoria</p>
+            <h1 class="staff-page-title">Bitacora general</h1>
+            <p class="bitacora-subtitle staff-page-subtitle">
+                Consulta cambios de acceso, usuarios, inscripciones, roles y pagos con fecha, hora y responsables.
+            </p>
+        </div>
+        <div class="bitacora-stats">
+            <div class="stat-card staff-metric-card">
+                <span class="stat-label staff-metric-label">Resultados</span>
+                <strong class="staff-metric-value">{{total}}</strong>
+            </div>
+            <div class="stat-card staff-metric-card">
+                <span class="stat-label staff-metric-label">Pagina actual</span>
+                <strong class="staff-metric-value">{{getStartIndex()}} - {{getEndIndex()}}</strong>
+            </div>
+        </div>
+    </div>
+
+    <div class="bitacora-panel staff-surface staff-panel">
+        <div class="bitacora-toolbar">
+            <div class="toolbar-field toolbar-search">
+                <label for="bitacora-search">Busqueda</label>
+                <div class="input-group">
+                    <input id="bitacora-search" type="text" class="form-control" [(ngModel)]="searchTerm"
+                        placeholder="Buscar por usuario, accion, evento o detalle" (keyup.enter)="applyFilters()">
+                    <button class="btn btn-dark" type="button" (click)="applyFilters()">Buscar</button>
+                </div>
+            </div>
+
+            <div class="toolbar-field toolbar-select">
+                <label for="bitacora-action">Accion</label>
+                <select id="bitacora-action" class="form-select" [(ngModel)]="selectedAction" (change)="applyFilters()">
+                    <option value="">Todas las acciones</option>
+                    <option *ngFor="let option of actionOptions" [value]="option.value">
+                        {{option.label}}
+                    </option>
+                </select>
+            </div>
+
+            <div class="toolbar-actions">
+                <button class="btn btn-outline-secondary" type="button" (click)="clearFilters()">Limpiar</button>
+                <button class="btn btn-outline-primary" type="button" (click)="loadActivityLog()">Recargar</button>
+            </div>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert alert-danger mb-3">
+            {{errorMessage}}
+        </div>
+
+        <div *ngIf="loading" class="bitacora-state staff-soft-card muted-block">
+            Cargando bitacora...
+        </div>
+
+        <div *ngIf="!loading && items.length === 0" class="bitacora-state staff-soft-card muted-block">
+            No se encontraron movimientos con los filtros actuales.
+        </div>
+
+        <div *ngIf="!loading && items.length > 0" class="bitacora-table-wrap staff-table-shell">
+            <table class="table align-middle mb-0">
+                <thead>
+                    <tr>
+                        <th>Fecha y hora</th>
+                        <th>Accion</th>
+                        <th>Actor</th>
+                        <th>Afectado</th>
+                        <th>Contexto</th>
+                        <th>Detalle</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of items; trackBy: trackByIndex">
+                        <td>
+                            <div class="timestamp-cell">{{item.timestampLabel}}</div>
+                            <small>{{item.sourceLabel}}</small>
+                        </td>
+                        <td>
+                            <span class="action-pill staff-pill staff-pill-info">{{item.actionLabel}}</span>
+                        </td>
+                        <td>{{item.actorLabel}}</td>
+                        <td>{{item.affectedLabel}}</td>
+                        <td>{{item.contextLabel}}</td>
+                        <td>{{item.summaryLabel}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="bitacora-pagination">
+            <span class="pagination-copy">
+                Mostrando {{getStartIndex()}} a {{getEndIndex()}} de {{total}} movimientos
+            </span>
+            <div class="pagination-actions">
+                <button class="btn btn-outline-secondary" type="button" [disabled]="!hasPreviousPage() || loading"
+                    (click)="goToPreviousPage()">
+                    Anterior
+                </button>
+                <button class="btn btn-outline-secondary" type="button" [disabled]="!hasNextPage() || loading"
+                    (click)="goToNextPage()">
+                    Siguiente
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

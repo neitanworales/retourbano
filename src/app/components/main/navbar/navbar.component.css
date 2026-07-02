@@ -1,11 +1,9 @@
-.nav-link-tittle {
-    color: white;
+#mainNav {
+    background-color: rgb(255, 255, 255);
 }
 
-.nav-link{
-    color: orange;
-}
-
-.nav-link-dark{
-    font-size: large;
+.nav-link {
+    color: var(--rb-dark) !important;
+    font-weight: 500;
+    font-size: 0.95rem;
 }

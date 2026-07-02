@@ -2,25 +2,32 @@ import { Component, OnInit } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
-    selector: 'app-inscripciones',
-    templateUrl: './inscripciones.component.html',
-    styleUrls: ['./inscripciones.component.css'],
-    animations: [
-        trigger('detailExpand', [
-            state('collapsed', style({ height: '0px', minHeight: '0' })),
-            state('expanded', style({ height: '*' })),
-            transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
-        ]),
-    ],
-    providers: [DatePipe],
-    standalone: false
+  selector: 'app-inscripciones',
+  templateUrl: './inscripciones.component.html',
+  styleUrls: ['./inscripciones.component.css'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({ height: '0px', minHeight: '0' })),
+      state('expanded', style({ height: '*' })),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
+  providers: [DatePipe],
+  standalone: false
 })
 export class InscripcionesComponent implements OnInit {
+
+  tabsCampas?: boolean[] = [false, false];
+  events?: Event[]
+  selectedEventoId?: number;
+  selectedEvento?: Event;
 
   pageResumenActive = true;
   pageInscritosActive = false;
@@ -28,12 +35,13 @@ export class InscripcionesComponent implements OnInit {
   pageAdminsActive = false;
   pageBajasActive = false;
   pageSeguimientoActive = false;
-  pageHistoricoActive = false;
+  pageHospedajeActive = false;
+  pageContabilidadActive = false;
 
   displayStyle: string = "none";
   chartsDisplayStyle = "";
 
-  dataSource?: Guerrero[];
+  dataSource?: EventRegistration[];
   columnsToDisplay = [
     'ID',
     'numero',
@@ -44,7 +52,7 @@ export class InscripcionesComponent implements OnInit {
     'talla',
     'confirmado',
     'asistencia',
-    'pagado', 
+    'pagado',
     'emailenviado'
   ];
 
@@ -55,16 +63,37 @@ export class InscripcionesComponent implements OnInit {
     'email'
   ];
 
-  expandedGuerrero?: Guerrero;
+  expandedGuerrero?: EventRegistration;
   searchByName?: string = "";
   years = [
-    2015,2016,2017,2018,2019,2021,2022,2023
+    2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023
   ];
 
-  constructor(public registroDao: RegistroDao, private datePipe: DatePipe) { }
+  constructor(
+    public registroDao: RegistroDao,
+    private datePipe: DatePipe,
+    private eventDao: EventDao) { }
 
   ngOnInit(): void {
     this.cargarDatos();
+    this.loadCampamentos();
+  }
+
+  loadCampamentos() {
+    this.eventDao.getEventActivo('BASIC').subscribe({
+      next: (result) => {
+        console.log("Eventos cargados: ", result.data?.events);
+        this.events = result.data?.events;
+        console.log("Tabs eventos asignados: ", this.tabsCampas);
+
+        if (this.events?.length === 1) {
+          this.tabCampamentos(0);
+        }
+      },
+      error: (error) => {
+        console.error('Error al cargar eventos:', error);
+      }
+    });
   }
 
   activarPageResumen() {
@@ -74,7 +103,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -85,7 +115,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -96,18 +127,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
-    this.cargarDatos();
-  }
-
-  activarPageAdmins() {
-    this.pageResumenActive = false;
-    this.pageInscritosActive = false;
-    this.pageStaffActive = false;
-    this.pageAdminsActive = true;
-    this.pageBajasActive = false;
-    this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -118,7 +139,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = true;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -129,7 +151,8 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = true;
-    this.pageHistoricoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
     this.cargarDatos();
   }
 
@@ -140,7 +163,32 @@ export class InscripcionesComponent implements OnInit {
     this.pageAdminsActive = false;
     this.pageBajasActive = false;
     this.pageSeguimientoActive = false;
-    this.pageHistoricoActive = true;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = false;
+    this.cargarDatos();
+  }
+
+  activarPageHospedaje() {
+    this.pageResumenActive = false;
+    this.pageInscritosActive = false;
+    this.pageStaffActive = false;
+    this.pageAdminsActive = false;
+    this.pageBajasActive = false;
+    this.pageSeguimientoActive = false;
+    this.pageHospedajeActive = true;
+    this.pageContabilidadActive = false;
+    this.cargarDatos();
+  }
+
+  activarPageContabilidad() {
+    this.pageResumenActive = false;
+    this.pageInscritosActive = false;
+    this.pageStaffActive = false;
+    this.pageAdminsActive = false;
+    this.pageBajasActive = false;
+    this.pageSeguimientoActive = false;
+    this.pageHospedajeActive = false;
+    this.pageContabilidadActive = true;
     this.cargarDatos();
   }
 
@@ -149,24 +197,18 @@ export class InscripcionesComponent implements OnInit {
     let opcion: number = 0;
     let activo: boolean = false;
     let staff: boolean = false;
-    let admin: boolean = false;
     let seg: boolean = false;
 
     if (this.pageResumenActive) {
       this.dataSource = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "";
-    }
-    else if (this.pageHistoricoActive) {
-      this.displayStyle = "";
+    } else if (this.pageHospedajeActive) {
+      this.displayStyle = "none";
       this.chartsDisplayStyle = "none";
-
-      this.registroDao.consultarHistorico(this.year).subscribe(
-        respuesta => {
-          this.dataSource = respuesta.resultado;
-        }
-      );
-
+    } else if (this.pageContabilidadActive) {
+      this.displayStyle = "none";
+      this.chartsDisplayStyle = "none";
     } else {
       this.chartsDisplayStyle = "none";
       this.displayStyle = "";
@@ -175,7 +217,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = true;
         staff = false;
-        admin = false;
         seg = false;
       }
 
@@ -183,7 +224,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = true;
         staff = true;
-        admin = false;
         seg = false;
       }
 
@@ -191,7 +231,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = true;
         staff = true;
-        admin = true;
         seg = false;
       }
 
@@ -199,7 +238,6 @@ export class InscripcionesComponent implements OnInit {
         opcion = 1;
         activo = false;
         staff = false;
-        admin = false;
         seg = false;
       }
 
@@ -209,16 +247,16 @@ export class InscripcionesComponent implements OnInit {
         seg = true;
       }
 
-      this.registroDao.consultarGuerreros(opcion, activo, staff, admin, this.searchByName!, seg).subscribe(
+      this.registroDao.consultarInscritos(opcion, activo, staff, this.searchByName!, seg, this.selectedEventoId).subscribe(
         respuesta => {
-          this.dataSource = respuesta.resultado;
+          this.dataSource = respuesta.data?.registrations || [];
         }
       );
     }
   }
 
-  actualizarStaff(isStaff: boolean, id: number) {
-    this.registroDao.actualizarStaff(isStaff, id).subscribe(
+  actualizarStaff(eventRegistration: EventRegistration) {
+    this.registroDao.actualizarEventRol(eventRegistration.user!.id!, this.selectedEventoId!, !eventRegistration.is_staff!, eventRegistration.is_admin!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -227,8 +265,8 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  actualizarAdmin(isAdmin: boolean, id: number) {
-    this.registroDao.actualizarAdmin(isAdmin, id).subscribe(
+  actualizarAdmin(eventRegistration: EventRegistration) {
+    this.registroDao.actualizarEventRol(eventRegistration.user!.id!, this.selectedEventoId!, true, !eventRegistration.is_admin!).subscribe(
       result => {
         if (!result.error) {
           this.cargarDatos();
@@ -237,73 +275,86 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  actualizarStatus(isActive: boolean, id: number) {
-    this.registroDao.actualizarStatus(isActive, id).subscribe(
+  actualizarStatus(isActive: boolean, registrationId: number, eventRegistration: EventRegistration) {
+    this.registroDao.actualizarStatus(isActive, registrationId).subscribe(
       result => {
         if (!result.error) {
-          this.cargarDatos();
+
+          if(!isActive){
+            this.registroDao.actualizarEventRol(eventRegistration.user!.id!, this.selectedEventoId!, false, false).subscribe(
+              result => {
+                if (!result.error) {
+                  this.cargarDatos();
+                }
+              }
+            );
+          } else {
+            this.cargarDatos();
+          }
         }
       }
     );
   }
 
-  agregarPago(pagos: Pago[]) {
+  agregarPago(element: EventRegistration) {
+    if (element.pagos == null) {
+      element.pagos = [];
+    }
     let nuevoPago = new Pago();
     nuevoPago.nuevo = true;
     nuevoPago.actualizar = false;
-    nuevoPago.divisa = "MXN"
-    pagos.push(nuevoPago);
+    nuevoPago.currency = "MXN"
+    element.pagos.push(nuevoPago);
   }
 
-  guardarPago(pago: Pago, guerrero: Guerrero) {
-    this.registroDao.guardarPago(pago, guerrero.id!).subscribe(
+  guardarPago(pago: Pago, reg: EventRegistration) {
+    this.registroDao.guardarPago(pago, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
           pago.actualizar = false;
           pago.nuevo = false;
-          if (guerrero.pagado == null) {
-            guerrero.pagado = 0;
+          if (reg.pagado == null) {
+            reg.pagado = 0;
           }
-          guerrero.pagado = Number(guerrero.pagado) + Number(pago.cantidad!);
+          reg.pagado = Number(reg.pagado) + Number(pago.amount!);
         }
       }
     );
   }
 
-  confirmar(guerrero: Guerrero, confirma: boolean) {
-    this.registroDao.guardarConfirmacion(confirma, guerrero.id!).subscribe(
+  confirmar(reg: EventRegistration, confirma: boolean) {
+    this.registroDao.guardarConfirmacion(confirma, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar la confirmacion");
         } else {
-          guerrero.confirmado = confirma;
+          reg.is_confirmed = confirma;
         }
       }
     );
   }
 
-  asistir(guerrero: Guerrero, asiste: boolean) {
-    this.registroDao.guardarAsistencia(asiste, guerrero.id!).subscribe(
+  asistir(reg: EventRegistration, asiste: boolean) {
+    this.registroDao.guardarAsistencia(asiste, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          guerrero.asistencia = asiste;
+          reg.attendance_confirmed = asiste;
         }
       }
     );
   }
 
-  enviarConfirmarEmail(guerrero: Guerrero, enviar: boolean, confirmar: boolean) {
-    this.registroDao.enviarConfirmarEmail(enviar, confirmar, guerrero.id!).subscribe(
+  enviarConfirmarEmail(reg: EventRegistration) {
+    this.registroDao.enviarConfirmarEmail(reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          guerrero.emailEnviado = enviar;
-          guerrero.emailConfirmado = confirmar;
+          reg.email_confirmed = this.extractConfirmationEmailCount(reg, result);
         }
       }
     );
@@ -318,20 +369,20 @@ export class InscripcionesComponent implements OnInit {
     this.cargarDatos();
   }
 
-  seguimiento(guerrero: Guerrero, seguimiento: boolean) {
-    this.registroDao.guardarSeguimiento(seguimiento, guerrero.id!).subscribe(
+  seguimiento(reg: EventRegistration, seg: boolean) {
+    this.registroDao.guardarSeguimiento(seg, reg.id!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el pago");
         } else {
-          guerrero.seguimiento = seguimiento;
+          reg.seguimiento = seg;
         }
       }
     );
   }
 
-  cambiarContrasena(guerrero: Guerrero) {
-    this.registroDao.cambiarContrasena(guerrero.password!, guerrero.id!).subscribe(
+  cambiarContrasena(reg: EventRegistration) {
+    this.registroDao.cambiarContrasena(reg.user?.password!, reg.user?.id!, this.selectedEventoId!).subscribe(
       result => {
         if (result.error) {
           console.log("erro al guardar el cambio de contraseña");
@@ -340,12 +391,12 @@ export class InscripcionesComponent implements OnInit {
     );
   }
 
-  editarContrasena(guerrero: Guerrero) {
-    guerrero.updatePassword = true;
+  editarContrasena(reg: EventRegistration) {
+    reg.user!.updatePassword = true;
   }
 
-  cancelarContrasena(guerrero: Guerrero) {
-    guerrero.updatePassword = false;
+  cancelarContrasena(reg: EventRegistration) {
+    reg.user!.updatePassword = false;
   }
 
   changeYear(y: number) {
@@ -353,22 +404,236 @@ export class InscripcionesComponent implements OnInit {
     this.cargarTodos();
   }
 
-  exportToExcel(){
+  exportToExcel() {
     let myDate = new Date();
     let dateString = this.datePipe.transform(myDate, 'YYYY_MM_dd_HHmmss');
-    let fileName= 'INSCRIPCIONES-RETO-URBANO-2025_'+dateString+'.xlsx';
+    let fileName = 'INSCRIPCIONES-RETO-URBANO-' + this.year + '_' + dateString + '.xlsx';
     /* pass here the table id */
     //let element = document.getElementById('excel-table');
     //const ws: XLSX.WorkSheet =XLSX.utils.table_to_sheet(element);
- 
-    const ws: XLSX.WorkSheet =XLSX.utils.json_to_sheet(this.dataSource!);
+
+    const excelData = (this.dataSource || []).map((registro) => ({
+      id: registro.id,
+      numero: registro.numero,
+      event_id: registro.event_id,
+      user_id: registro.user_id,
+      nombre: registro.user?.nombre || registro.user?.full_name,
+      nick: registro.user?.nick || registro.user?.display_name,
+      edad: registro.user?.edad || registro.user?.age,
+      sexo: registro.user?.sexo || registro.user?.gender,
+      talla: registro.user?.talla || registro.user?.shirt_size,
+      email: registro.user?.email,
+      telefono: registro.user?.telefono || registro.user?.phone,
+      iglesia: registro.user?.iglesia || registro.user?.church,
+      vienesDe: registro.user?.vienesDe || registro.user?.coming_from,
+      alergias: registro.user?.alergias || registro.user?.allergies,
+      medicamentos: registro.user?.medicamentos || registro.user?.medications,
+      tutorNombre: registro.user?.tutorNombre || registro.user?.guardian_name,
+      tutorTelefono: registro.user?.tutorTelefono || registro.user?.guardian_phone,
+      confirmado: registro.is_confirmed ?? registro.is_confirmed,
+      asistencia: registro.attendance_confirmed ?? registro.attendance_confirmed,
+      staff: registro.is_staff ?? registro.is_staff,
+      admin: registro.is_admin ?? registro.is_admin,
+      seguimiento: registro.is_followup ?? registro.is_followup,
+      emailEnviado: registro.welcome_email_sent ?? registro.welcome_email_sent,
+      emailConfirmado: registro.email_confirmed ?? 0,
+      hospedaje: registro.requires_lodging ?? registro.requires_lodging,
+      habitacion: registro.room_code,
+      statusRegistro: registro.registration_status,
+      razones: registro.reasons || registro.razones,
+      pagado: registro.pagado,
+    }));
+
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(excelData);
 
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Guerreros');
- 
-    /* save to file */  
+
+    /* save to file */
     XLSX.writeFile(wb, fileName);
+  }
+
+  isAdminRegistration(registration: EventRegistration): boolean {
+    return registration.is_admin === true || registration.roles?.includes('admin') === true;
+  }
+
+  tabCampamentos(arg0: number) {
+    this.tabsCampas = [false, false];
+    this.tabsCampas[arg0] = true;
+    this.selectedEventoId = this.events![arg0].id;
+    this.selectedEvento = this.events![arg0];
+    console.log("Evento seleccionado: ", this.events![arg0]);
+    console.log("ID evento seleccionado: ", this.selectedEventoId);
+    this.cargarDatos();
+  }
+
+  confirmarAsistencia(reg: EventRegistration) {
+    this.confirmar(reg, !reg.is_confirmed);
+  }
+
+  enviarWelcomeEmail(reg: EventRegistration) {
+    this.registroDao.reenviarWelcomeEmail(reg.id!).subscribe(
+      result => {
+        if (result.error) {
+          console.log('error al enviar el welcome email');
+        } else {
+          reg.welcome_email_sent = this.extractSentEmailCount(reg, result);
+        }
+      }
+    );
+  }
+
+  getSentEmailCount(reg?: EventRegistration): number {
+    const parsed = Number(reg?.welcome_email_sent ?? 0);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  }
+
+  getSentEmailCountConfirmacion(reg?: EventRegistration): number {
+    const parsed = Number(reg?.email_confirmed ?? 0);
+    return Number.isFinite(parsed) && parsed > 0 ? parsed : 0;
+  }
+
+  hasSentEmails(reg?: EventRegistration): boolean {
+    return this.getSentEmailCount(reg) > 0;
+  }
+
+  getEmailButtonClass(reg?: EventRegistration): string {
+    return this.hasSentEmails(reg) ? 'success' : 'purple';
+  }
+
+  hasSentEmailsConfirmacion(reg?: EventRegistration): boolean {
+    return this.getSentEmailCountConfirmacion(reg) > 0;
+  }
+
+  getEmailButtonClassConfirmacion(reg?: EventRegistration): string {
+    return this.hasSentEmailsConfirmacion(reg) ? 'success' : 'purple';
+  }
+
+  private extractSentEmailCount(reg: EventRegistration, result: any): number {
+    const sentCount = Number(result?.data?.welcome_email_sent);
+    if (Number.isFinite(sentCount) && sentCount >= 0) {
+      return sentCount;
+    }
+
+    return this.getSentEmailCount(reg) + 1;
+  }
+
+  private extractConfirmationEmailCount(reg: EventRegistration, result: any): number {
+    const sentCount = Number(result?.data?.email_confirmed ?? result?.data?.confirmation_email_sent);
+    if (Number.isFinite(sentCount) && sentCount >= 0) {
+      return sentCount;
+    }
+
+    return this.getSentEmailCountConfirmacion(reg) + 1;
+  }
+
+  imprimirPDF(reg: EventRegistration) {
+    const printWindow = window.open('', '_blank', 'width=900,height=1200');
+    if (!printWindow) {
+      return;
+    }
+
+    const fullName = reg.user?.nombre || reg.user?.full_name || 'Sin nombre';
+    const nick = reg.user?.nick || reg.user?.display_name || '';
+    const rows = [
+      ['Nombre', fullName],
+      ['Gafete', nick],
+      ['Edad', reg.user?.edad || reg.user?.age || ''],
+      ['Sexo', reg.user?.sexo || reg.user?.gender || ''],
+      ['Talla', reg.user?.talla || reg.user?.shirt_size || ''],
+      ['Email', reg.user?.email || ''],
+      ['Teléfono', reg.user?.telefono || reg.user?.phone || ''],
+      ['Iglesia', reg.user?.iglesia || reg.user?.church || ''],
+      ['Procedencia', reg.user?.vienesDe || reg.user?.coming_from || ''],
+      ['Alergias', reg.user?.alergias || reg.user?.allergies || ''],
+      ['Medicamentos', reg.user?.medicamentos || reg.user?.medications || ''],
+      ['Tutor', reg.user?.tutorNombre || reg.user?.guardian_name || ''],
+      ['Teléfono tutor', reg.user?.tutorTelefono || reg.user?.guardian_phone || ''],
+      ['Hospedaje', reg.requires_lodging ? 'Sí' : 'No'],
+      ['Habitación', reg.room_code || ''],
+      ['Razones', reg.reasons || reg.razones || ''],
+      ['Pagado', `$${reg.pagado || 0}`],
+    ];
+
+    const tableRows = rows.map(([label, value]) => `<tr><th>${label}</th><td>${value ?? ''}</td></tr>`).join('');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Ficha de inscripción</title>
+          <style>
+            body { font-family: Arial, sans-serif; padding: 24px; color: #222; }
+            h1, h2 { margin: 0 0 12px; }
+            table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+            th, td { border: 1px solid #d0d0d0; padding: 10px; text-align: left; vertical-align: top; }
+            th { width: 220px; background: #f3f3f3; }
+          </style>
+        </head>
+        <body>
+          <h1>Reto Urbano ${this.year}</h1>
+          <h2>${fullName}</h2>
+          <table>${tableRows}</table>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  imprimirGafete(reg: EventRegistration) {
+    const printWindow = window.open('', '_blank', 'width=600,height=400');
+    if (!printWindow) {
+      return;
+    }
+
+    const fullName = reg.user?.nombre || reg.user?.full_name || 'Sin nombre';
+    const nick = reg.user?.nick || reg.user?.display_name || '';
+    const room = reg.room_code || '';
+
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Gafete</title>
+          <style>
+            body { font-family: Arial, sans-serif; margin: 0; padding: 24px; }
+            .badge { width: 320px; border: 3px solid #222; border-radius: 16px; padding: 24px; text-align: center; }
+            .event { font-size: 18px; font-weight: 700; margin-bottom: 16px; }
+            .nick { font-size: 36px; font-weight: 700; margin-bottom: 8px; }
+            .name { font-size: 20px; margin-bottom: 10px; }
+            .room { font-size: 16px; color: #555; }
+          </style>
+        </head>
+        <body>
+          <div class="badge">
+            <div class="event">Reto Urbano ${this.year}</div>
+            <div class="nick">${nick}</div>
+            <div class="name">${fullName}</div>
+            <div class="room">${room ? `Habitación: ${room}` : ''}</div>
+          </div>
+        </body>
+      </html>
+    `);
+    printWindow.document.close();
+    printWindow.focus();
+    printWindow.print();
+  }
+
+  borrarDefinitivamente(reg: EventRegistration) {
+    if (!reg.id || !window.confirm('Esta acción borrará definitivamente la inscripción y sus pagos. ¿Deseas continuar?')) {
+      return;
+    }
+
+    this.registroDao.borrarRegistro(reg.id).subscribe(
+      result => {
+        if (result.error) {
+          console.log('error al borrar la inscripción');
+        } else {
+          this.expandedGuerrero = undefined;
+          this.dataSource = (this.dataSource || []).filter((item) => item.id !== reg.id);
+        }
+      }
+    );
   }
 
 }

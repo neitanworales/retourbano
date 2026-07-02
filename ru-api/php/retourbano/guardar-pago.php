@@ -20,8 +20,9 @@ $inputJSON = file_get_contents('php://input');
 $input = json_decode($inputJSON, TRUE);
 
 $id_guerrero = $_REQUEST["idguerrero"];
+$id_campamento = $_REQUEST["idcampamento"];
 
-$busqueda = $datos->getGuerreroById($id_guerrero);
+$busqueda = $datos->getGuerreroById($id_guerrero, 11);
 
 if(empty($busqueda)){
     echo '{ "error": 1 , "mensaje" : "guerrero no encontrado" }';

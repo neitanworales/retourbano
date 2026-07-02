@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
-import { CampamentoDao } from 'src/app/core/api/dao/CampamentoDao';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { EventDao } from 'src/app/core/api/dao/EventDao';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
   selector: 'app-home',
@@ -10,22 +10,32 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 })
 export class HomeComponent implements OnInit {
 
+  events?: Event[];
+  isLoading: boolean = true;
+
   constructor(
-    private campamentoDao: CampamentoDao
-  ) { }
-
-  campamento: Campamento = new Campamento();
-
-  ngOnInit(): void {
-    this.loadCampamento();
+    private eventDao: EventDao
+  ) { 
+    this.loadEvents();
   }
 
-  private loadCampamento() {
-    this.campamentoDao.getCampamentoActivo().subscribe(
-      result => {
-        this.campamento = result.resultado![0];
+  ngOnInit(): void {
+    
+  }
+
+  private loadEvents() {
+    this.eventDao.getEventActivo('BASIC').subscribe({
+      next: (result) => {
+        console.log("Eventos cargados: ", result.data?.events);
+        this.events = result.data?.events!;
+        console.log("Eventos asignados: ", this.events);
+        this.isLoading = false;
+      },
+      error: (error) => {
+        console.error('Error al cargar eventos:', error);
+        this.isLoading = false;
       }
-    );
+    });
   }
 
 }

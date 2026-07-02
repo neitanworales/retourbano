@@ -1,58 +1,102 @@
-<div class="container" style="margin-top: 2em;">
+<div class="container section main-section">
     <div class="row">
         <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
             <h1>Reinscripción!</h1>
         </div>
     </div>
-    <hr *ngIf="!guerrero"/>
-    <div class="row" *ngIf="!guerrero">
-        <h3>Si no tienes un código, escribe tu correo con el que ya te habías inscrito en Reto Urbano y se te enviará un
-            código a tu correo que debes ingresar en la caja de abajo</h3>
-        <div class="col">
-            <form (ngSubmit)="validarEmail()" [formGroup]="registerFormEmail">
-                <div class="input-group mb-3">
-                    <input type="email" class="form-control form-control-lg" formControlName="email"
-                        placeholder="Escribe tu e-mail" [ngClass]="{'is-invalid': formEmail['email'].errors }"
-                        [(ngModel)]="email" />
-                    <button type="submit" class="btn btn-success" [disabled]="registerFormEmail.invalid">Buscar</button>
+
+    <div *ngIf="event != null; else botones">
+
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                        Reinscripción al campamento {{event.title}}
+                    </div>
+                    <div class="card-body">
+                        <p>Este campamento se llevará a cabo en {{event.city_label}}</p>
+                    </div>
+                    <div class="card-footer" *ngIf="events!.length > 1">
+                        ¿Deseas reinscribirte a otro campamento?
+                        <a *ngFor="let event of events" class="btn btn-sm btn-outline-info"
+                            routerLink="/reinscripcion"
+                            [queryParams]="{ id_event: event.id }">{{event.city_label +' -'+event.title}}</a>
+                    </div>
                 </div>
-                <div *ngIf="formEmail['email'].errors" class="invalid-feedback">
-                    <div *ngIf="formEmail['email'].errors">El e-mail es obligatorio</div>
-                </div>
-            </form>
+            </div>
         </div>
-        <div class="alert alert-warning" role="alert">
-            <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> ¡¡Recuerda revisar tu
-            bandeja de SPAM o Correo no deseado!! <i class="bi bi-exclamation-triangle-fill"></i>
+
+        <hr *ngIf="!user" />
+        <div class="card" *ngIf="!user">
+            <div class="card-body">
+                <p>Si no tienes un código, escribe tu correo con el que ya te habías inscrito en Reto Urbano y se te
+                    enviará un
+                    código a tu correo que debes ingresar en la caja de abajo</p>
+                <div class="col">
+                    <form (ngSubmit)="validarEmail()" [formGroup]="registerFormEmail">
+                        <div class="input-group mb-3">
+                            <input type="email" class="form-control form-control-sm" formControlName="email"
+                                placeholder="Escribe tu e-mail" [ngClass]="{'is-invalid': formEmail['email'].errors }"
+                                [(ngModel)]="email" />
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="registerFormEmail.invalid">Buscar</button>
+                        </div>
+                        <div *ngIf="formEmail['email'].errors" class="invalid-feedback">
+                            <div *ngIf="formEmail['email'].errors">El e-mail es obligatorio</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="alert alert-warning" role="alert">
+                    <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> ¡¡Recuerda revisar
+                    tu
+                    bandeja de SPAM o Correo no deseado!! <i class="bi bi-exclamation-triangle-fill"></i>
+                </div>
+            </div>
+        </div>
+        <hr *ngIf="!user" />
+        <div class="card" *ngIf="!user">
+            <div class="card-body">
+                <p>Si ya tienes un código, ingresa el código que recibiste en tu correo.</p>
+                <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
+                    <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm">
+                        <div class="input-group mb-3">
+                            <input #codigoInput class="form-control" type="text" placeholder="Ingresa el código"
+                                formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
+                                [(ngModel)]="codigo" />
+                            <button type="submit" class="btn btn-success"
+                                [disabled]="registerForm.invalid">Validar</button>
+                        </div>
+                        <div *ngIf="form['codigo'].errors" class="invalid-feedback">
+                            <div *ngIf="form['codigo'].errors">El e-mail es obligatorio</div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="row" *ngIf="user">
+            <div class="col-1"></div>
+            <div class="col-10">
+                <div class="alert" [ngClass]="alreadyRegisteredInEvent ? 'alert-info' : 'alert-success'" role="alert" *ngIf="registrationNotice">
+                    {{registrationNotice}}
+                </div>
+                <h3>Guerrero encontrado:</h3>
+                <app-registro-form [saveInMemory]="false" [userToEdit]="user"
+                    [registrationToEdit]="existingRegistration" [event]="event!"></app-registro-form>
+            </div>
+            <div class="col-1"></div>
         </div>
     </div>
-    <hr *ngIf="!guerrero"/>
-    <div class="row" *ngIf="!guerrero">
-        <h3>Si ya tienes un código, ingresa el código que recibiste en tu correo.</h3>
-        <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
-            <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm">
-                <div class="input-group mb-3">
-                    <input class="form-control form-control-lg" type="text" placeholder="Ingresa el código"
-                        formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
-                        [(ngModel)]="codigo" />
-                    <button type="submit" class="btn btn-success"
-                        [disabled]="registerForm.invalid">Validar</button>
-                </div>
-                <div *ngIf="form['codigo'].errors" class="invalid-feedback">
-                    <div *ngIf="form['codigo'].errors">El e-mail es obligatorio</div>
-                </div>
-            </form>
+    <ng-template #botones>
+        <div class="row">
+            <div class="col text-center">
+                <h2>¿A cual campamento quieres registrarte?</h2>
+                <a *ngFor="let event of events" class="btn btn-primary" routerLink="/reinscripcion"
+                    [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -
+                    '+event.titulo}}</a>
+            </div>
         </div>
-    </div>
-    <hr />
-    <div class="row" *ngIf="guerrero">
-        <div class="col-1"></div>
-        <div class="col-10">
-            <h3>Guerrero encontrado:</h3>
-            <app-registro-form [saveInMemory]="false" [guerreroToEdit]="guerrero"></app-registro-form>
-        </div>
-        <div class="col-1"></div>
-    </div>
+    </ng-template>
 </div>
 
 <div id="modal-validar-email" class="modal supermodal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}"

@@ -1,0 +1,286 @@
+<div class="staff-page container" style="margin-top: 2em;">
+    <div class="staff-page-header">
+        <div>
+            <p class="staff-page-kicker">Consulta</p>
+            <h1 class="staff-page-title">Histórico de asistencia</h1>
+            <p class="staff-page-subtitle">Trayectoria por persona y consulta puntual por evento con una presentación más limpia.</p>
+        </div>
+    </div>
+
+    <div class="staff-surface staff-panel mb-5">
+        <ul class="nav nav-tabs staff-tabs mb-4">
+            <li class="nav-item">
+                <button type="button" class="nav-link" [class.active]="activeTab === 'history'" (click)="changeTab('history')">
+                    Ranking e historial
+                </button>
+            </li>
+            <li class="nav-item">
+                <button type="button" class="nav-link" [class.active]="activeTab === 'event'" (click)="changeTab('event')">
+                    Consulta por evento
+                </button>
+            </li>
+        </ul>
+
+        <div *ngIf="activeTab === 'history'">
+        <div class="history-hero staff-surface staff-panel staff-section-split mb-4">
+            <div>
+                <p class="history-kicker staff-section-kicker mb-1">Vista por trayectoria</p>
+                <h2 class="history-title staff-section-title mb-2">Quien ha asistido a mas eventos y en cuales</h2>
+                <p class="staff-section-copy mb-0">La lista se construye desde <strong>event_registrations</strong> y <strong>events</strong>. Prioriza historial completo y ranking de asistencia.</p>
+            </div>
+            <div class="history-metrics staff-metric-grid">
+                <div class="history-metric-card staff-metric-card">
+                    <span class="history-metric-value staff-metric-value">{{allUsers?.length || 0}}</span>
+                    <span class="history-metric-label staff-metric-label">personas con historial</span>
+                </div>
+                <div class="history-metric-card staff-metric-card">
+                    <span class="history-metric-value staff-metric-value">{{getTotalAttendanceRecords()}}</span>
+                    <span class="history-metric-label staff-metric-label">registros historicos</span>
+                </div>
+                <div class="history-metric-card staff-metric-card">
+                    <span class="history-metric-value staff-metric-value">{{getUniqueHistoricalEvents()}}</span>
+                    <span class="history-metric-label staff-metric-label">eventos distintos</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="leaderboard-panel staff-surface staff-panel mb-4">
+            <div class="leaderboard-header staff-section-split">
+                <div>
+                    <p class="history-kicker staff-section-kicker mb-1">Ranking rapido</p>
+                    <h3 class="staff-section-title mb-0">Personas que mas han asistido</h3>
+                </div>
+            </div>
+            <div class="leaderboard-list">
+                <div class="leaderboard-item staff-soft-card" *ngFor="let user of getTopAttendees(); let i = index">
+                    <div class="leaderboard-rank">#{{user.attendance_rank || (i + 1)}}</div>
+                    <div class="leaderboard-body">
+                        <div class="leaderboard-name">{{getUserDisplayName(user)}}</div>
+                        <div class="leaderboard-meta">{{user.attendance_count || 0}} eventos · {{getCurrentCampLabel(user)}}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="title-table mat-elevation-z8">
+                <div class="row d-flex">
+                    <div class="col elevado">
+                        <p>Personas {{users?.length}}</p>
+                    </div>
+                    <div class="col elevado">
+                        <div class="input-group input-group-sm mb-2">
+                            <input type="text" class="form-control" [(ngModel)]="searchUsers"
+                                placeholder="Buscar por nombre, nick o email" (keyup.enter)="buscarUsuarios()">
+                            <button class="btn btn-outline-secondary btn-sm" type="button" (click)="buscarUsuarios()">
+                                <i class="bi bi-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col elevado">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedYear" (change)="onYearFilterChange()">
+                            <option value="">Todos los anios</option>
+                            <option *ngFor="let year of getAvailableYears()" [value]="year">{{year}}</option>
+                        </select>
+                    </div>
+                    <div class="col elevado">
+                        <select class="form-select form-select-sm" [(ngModel)]="selectedEventId" (change)="onEventFilterChange()">
+                            <option [ngValue]="null">Todos los eventos</option>
+                            <option *ngFor="let event of filteredEvents" [ngValue]="event.id">{{getEventLabel(event)}}</option>
+                        </select>
+                    </div>
+                    <div class="col elevado">
+                        <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                            <i class="bi bi-arrow-clockwise"></i> Cargar todos
+                        </button>
+                    </div>
+                    <div class="col elevado"></div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-lg-12">
+                <table mat-table [dataSource]="users!" multiTemplateDataRows class="mat-elevation-z8">
+
+                    <ng-container matColumnDef="rank">
+                        <th mat-header-cell *matHeaderCellDef> Rank </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="ranking-pill">#{{getDisplayRank(element)}}</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="persona">
+                        <th mat-header-cell *matHeaderCellDef> Persona </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="person-cell">
+                                <div class="person-name">{{getUserDisplayName(element)}}</div>
+                                <div class="person-meta">ID {{element.id}}<span *ngIf="element.nick"> · {{element.nick}}</span></div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="email">
+                        <th mat-header-cell *matHeaderCellDef> Email </th>
+                        <td mat-cell *matCellDef="let element"> {{element.email}}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="asistencias">
+                        <th mat-header-cell *matHeaderCellDef> Asistencias </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span class="attendance-count">{{element.attendance_count || 0}}</span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="ultimoEvento">
+                        <th mat-header-cell *matHeaderCellDef> Ultimo evento </th>
+                        <td mat-cell *matCellDef="let element">
+                            <span [class]="getCurrentCampBadgeClass(element)">
+                                {{getCurrentCampLabel(element)}}
+                            </span>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="historial">
+                        <th mat-header-cell *matHeaderCellDef> Historial </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="role-badge-list">
+                                <span *ngFor="let eventLabel of getHistoryPreview(element)" class="role-badge role-badge-history staff-pill staff-pill-info">
+                                    {{eventLabel}}
+                                </span>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="expandedDetail">
+                        <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                            <div class="example-element-detail"
+                                [@detailExpand]="element == expandedUsers ? 'expanded' : 'collapsed'">
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <label class="form-label"><strong>Historial por eventos</strong></label>
+                                                <div class="mb-3 d-flex flex-column gap-2">
+                                                    <div>
+                                                        <span class="role-badge role-badge-history-count staff-pill staff-pill-info">
+                                                            {{element.attendance_count || 0}} eventos registrados
+                                                        </span>
+                                                    </div>
+                                                    <div *ngIf="element.latest_event" class="small text-muted">
+                                                        Ultimo inscrito: {{getEventLabel(element.latest_event)}}
+                                                        <span [class]="getRegistrationStatusBadgeClass(element.latest_event.registration_status)">
+                                                            {{getRegistrationStatusLabel(element.latest_event.registration_status)}}
+                                                        </span>
+                                                    </div>
+                                                    <div class="history-stack" *ngIf="(element.event_history || []).length > 0">
+                                                        <div class="history-event-row" *ngFor="let historicalEvent of element.event_history">
+                                                            <div>
+                                                                <div class="history-event-title">{{getEventLabel(historicalEvent)}}</div>
+                                                                <div class="history-event-meta">Registro #{{historicalEvent.registration_id || '-'}}<span *ngIf="historicalEvent.registration_created_at"> · {{historicalEvent.registration_created_at | date:'mediumDate'}}</span></div>
+                                                            </div>
+                                                            <span [class]="getRegistrationStatusBadgeClass(historicalEvent.registration_status)">
+                                                                {{getRegistrationStatusLabel(historicalEvent.registration_status)}}
+                                                            </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
+                    <tr mat-row *matRowDef="let element; columns: columnsToDisplay;" class="example-element-row"
+                        [class.example-expanded-row]="expandedUsers === element"
+                        (click)="expandedUsers = expandedUsers === element ? null : element">
+                    </tr>
+                    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="example-detail-row"></tr>
+                </table>
+            </div>
+        </div>
+        </div>
+
+        <div *ngIf="activeTab === 'event'" class="event-query-view">
+            <div class="history-hero staff-surface staff-panel staff-section-split mb-4">
+                <div>
+                    <p class="history-kicker staff-section-kicker mb-1">Consulta puntual</p>
+                    <h2 class="history-title staff-section-title mb-2">Inscritos por evento</h2>
+                    <p class="staff-section-copy mb-0">Selecciona un evento para ver la lista completa de personas inscritas, sin limitarlo a eventos activos.</p>
+                </div>
+            </div>
+
+            <div class="row g-3 align-items-end mb-4">
+                <div class="col-md-4">
+                    <label class="form-label">Anio</label>
+                    <select class="form-select" [(ngModel)]="selectedYear" (change)="onYearFilterChange()">
+                        <option value="">Todos los anios</option>
+                        <option *ngFor="let year of getAvailableYears()" [value]="year">{{year}}</option>
+                    </select>
+                </div>
+                <div class="col-md-5">
+                    <label class="form-label">Evento</label>
+                    <select class="form-select" [(ngModel)]="selectedEventForRosterId" (change)="onRosterEventChange()">
+                        <option [ngValue]="null">Selecciona un evento</option>
+                        <option *ngFor="let event of filteredEvents" [ngValue]="event.id">{{getEventLabel(event)}}</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Buscar inscrito</label>
+                    <div class="input-group">
+                        <input class="form-control" [(ngModel)]="eventRosterSearch" placeholder="Nombre o email" (keyup.enter)="buscarEnEvento()">
+                        <button class="btn btn-outline-secondary" type="button" (click)="buscarEnEvento()">
+                            <i class="bi bi-search"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-roster-summary mb-3" *ngIf="selectedEventForRosterId">
+                <span class="role-badge role-badge-history-count staff-pill staff-pill-info">{{eventRegistrations.length}} inscritos visibles</span>
+            </div>
+
+            <div *ngIf="loadingEventRoster" class="alert alert-info">Consultando inscritos del evento...</div>
+            <div *ngIf="!loadingEventRoster && selectedEventForRosterId && eventRegistrations.length === 0" class="alert alert-light border">
+                No se encontraron inscritos para este evento con el filtro actual.
+            </div>
+
+            <div class="table-responsive staff-table-shell" *ngIf="!loadingEventRoster && eventRegistrations.length > 0">
+                <table class="table table-striped table-hover align-middle">
+                    <thead>
+                        <tr>
+                            <th>Persona</th>
+                            <th>Email</th>
+                            <th>Estatus</th>
+                            <th>Rol en evento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let registration of eventRegistrations">
+                            <td>
+                                <div class="person-name">{{getEventRosterName(registration)}}</div>
+                                <div class="person-meta">ID {{registration.user_id}}</div>
+                            </td>
+                            <td>{{registration.user?.email}}</td>
+                            <td>
+                                <span [class]="getRegistrationStatusBadgeClass(registration.registration_status)">
+                                    {{getRegistrationStatusLabel(registration.registration_status)}}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="role-badge-list">
+                                    <span *ngFor="let role of getEventRosterRoleBadges(registration)" [class]="role === 'admin' ? 'role-badge role-badge-admin' : role === 'staff' ? 'role-badge role-badge-staff' : 'role-badge role-badge-empty'">
+                                        {{role}}
+                                    </span>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

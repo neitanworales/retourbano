@@ -2,6 +2,7 @@ import { HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { Session } from "../models/login/Session";
 import { Router } from "@angular/router";
+import { environment } from "src/environments/environment";
 
 @Injectable()
 export class Utils {
@@ -29,6 +30,10 @@ export class Utils {
         }
     }
 
+    public v1(path: string): string {
+        const base = (environment.apiUrl || '').replace(/\/+$/, '');
+        return `${base}${path}`;
+    }
 }
 
 export type UserRole = 'admin' | 'staff' | 'super';

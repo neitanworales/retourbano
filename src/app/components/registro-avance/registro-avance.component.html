@@ -15,7 +15,7 @@
 
 <div *ngIf="cerradas && abiertas; else fechaVencida">
     <div class="alert alert-danger" role="alert">
-        Las inscripciones se cerrarón el {{avance?.fecha_maxima | date:'dd/MM/yyyy h:mm:ss a'}} :(
+        Las inscripciones se cerraron el {{avance?.fecha_maxima | date:'dd/MM/yyyy h:mm:ss a'}} :(
     </div>
 </div>
 
@@ -29,11 +29,11 @@
             <hr>
             <div class="section row">
                 <div class="col-lg-12 col-md-12">
-                    <app-registro-dinamico></app-registro-dinamico>
+                    <app-registro-dinamico [event]="event"></app-registro-dinamico>
                 </div>
             </div>
         </div>
     </div>
 </ng-template>
 
-<h1 *ngIf="!lugaresDisponibles" class="text-center">Ya no hay lugares lugares disponibles</h1>
+<h1 *ngIf="!lugaresDisponibles" class="text-center">Ya no hay lugares disponibles</h1>

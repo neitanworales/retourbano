@@ -1,5 +1,6 @@
 export class DefaultResponse{
-    error!: boolean;
-    mensaje!: string;
-    code!: number;
+    code?: number;
+    error?: boolean;
+    success!: boolean;
+    message!: string;
 }

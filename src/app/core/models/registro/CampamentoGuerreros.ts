@@ -5,6 +5,7 @@ export class CampamentoGuerreros {
     count?: Number;
     campamentos?: AsistenciaCampamentos[];
     tutoria?: AsistenciaCampamentos[];
+    tutorias?: AsistenciaCampamentos[];
 }
 
 export class AsistenciaCampamentos {
@@ -19,5 +20,8 @@ export class AsistenciaCampamentos {
 }
 
 export class CampamentoGuerrerosResponse extends DefaultResponse {
-    resultado?: CampamentoGuerreros[];
+    data?: {
+        duplicates?: CampamentoGuerreros[];
+    };
 }
+

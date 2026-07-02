@@ -1,26 +1,28 @@
-<div class="row" id="generic_price_table">
-    <div *ngFor="let costo of campamento.costos" class="col-md-4">
-        <div class="generic_content clearfix">
-            <div class="generic_head_price clearfix">
-                <div class="generic_head_content clearfix">
-                    <div class="head_bg"></div>
-                    <div class="head">
-                        <span>{{costo.descripcion}}</span>
-                    </div>
-                </div>
-                <div class="generic_price_tag clearfix">
-                    <span class="price">
-                        <span class="currency">{{costo.cantidad | currency }}</span>
-                        <span class="month">/{{costo.divisa}}</span>
-                    </span>
-                </div>
+<section class="costs-shell">
+    <div class="costs-grid" *ngIf="event.costos?.length; else emptyCosts">
+        <article class="costs-card staff-surface" *ngFor="let costo of event.costos">
+            <div class="costs-card__head">
+                <h3>{{costo.descripcion}}</h3>
+                <span class="costs-pill staff-pill staff-pill-info">/{{getEventDurationDays()}} días</span>
             </div>
-            <div class="generic_feature_list">
-                <ul>
-                    <li *ngFor="let incluye of costo.incluye"><span>{{incluye}}</span></li>
-                </ul>
-            </div>
-        </div>
+
+            <p class="costs-price">{{costo.cantidad | currency:(costo.divisa || 'MXN') }}</p>
+
+            <ul class="costs-list" *ngIf="costo.incluye?.length; else noIncludes">
+                <li *ngFor="let incluye of costo.incluye">{{incluye}}</li>
+            </ul>
+
+            <ng-template #noIncludes>
+                <p class="costs-copy">Sin conceptos adicionales listados.</p>
+            </ng-template>
+        </article>
     </div>
 
-</div>
+    <ng-template #emptyCosts>
+        <div class="costs-empty staff-soft-card">Aún no hay costos publicados para este evento.</div>
+    </ng-template>
+
+    <div class="costs-note staff-soft-card" *ngIf="event.notas_costos">
+        {{event.notas_costos}}
+    </div>
+</section>

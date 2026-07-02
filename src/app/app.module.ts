@@ -1,4 +1,6 @@
 import { NgModule } from '@angular/core';
+import { LOCALE_ID } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
 import { AuthService } from './core/services/auth.service';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './modules/home/home.component';
@@ -42,7 +44,7 @@ import { Router } from '@angular/router';
 import { PieChartComponent } from "./components/pie-chart/pie-chart.component";
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { CampamentosComponent } from './modules/staff/campamentos/campamentos.component';
-import { CampamentoDao } from './core/api/dao/CampamentoDao';
+import { EventDao } from './core/api/dao/EventDao';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations'
 import { AppComponent } from './app.component';
 import { ReinscripcionComponent } from './modules/reinscripcion/reinscripcion.component';
@@ -50,8 +52,14 @@ import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.compo
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { AuthInterceptor } from './core/services/ auth.interceptor';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
+import { BitacoraComponent } from './modules/staff/bitacora/bitacora.component';
+import { HistoricoComponent } from './modules/staff/historico/historico.component';
 import { TumbaService } from './core/services/tumbaService';
 import { QueTraerComponent } from "./components/que-traer/que-traer.component";
+import { EventSummaryDashboardComponent } from "./components/event-summary-dashboard/event-summary-dashboard.component";
+import localeEsMx from '@angular/common/locales/es-MX';
+
+registerLocaleData(localeEsMx);
 
 @NgModule({
     declarations: [
@@ -81,6 +89,8 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         HospedajesComponent,
         CuentaComponent,
         UsuariosComponent,
+        BitacoraComponent,
+        HistoricoComponent,
         QueTraerComponent
     ],
     bootstrap: [AppComponent],
@@ -89,6 +99,7 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         FormsModule,
         ReactiveFormsModule,
         PieChartComponent,
+        EventSummaryDashboardComponent,
         MatTableModule,
         MatNativeDateModule,
         MatFormFieldModule,
@@ -103,6 +114,7 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         },
         { provide: HTTP_INTERCEPTORS, useClass: LoadingInterceptor, multi: true },
         { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        { provide: LOCALE_ID, useValue: 'es-MX' },
         provideCharts(withDefaultRegisterables()),
         LoadingService,
         Utils,
@@ -110,7 +122,7 @@ import { QueTraerComponent } from "./components/que-traer/que-traer.component";
         PagoDao,
         LoginDao,
         RetoDao,
-        CampamentoDao,
+        EventDao,
         AuthService,
         HorarioDao,
         provideAnimationsAsync(),

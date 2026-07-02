@@ -1,36 +1,65 @@
-<div class="container">
-    <div class="row">
-        <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
-            <h1>Registro</h1>
-            <h2>¿Estás listo para aceptar el Reto?</h2>
-        </div>
-        <div class="col-xs-12 col-md-12 col-lg-12">
-            <img alt="..." class="img-fluid" src="assets/img/media/megs.4d73356b.jpg" style="width: 100%;">
-        </div>
-    </div>
-    <hr>
-    <div class="row">
-        <div class="col">
-            <h1>{{campamento.titulo}}</h1>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-tabla-costos [campamento]="campamento"></app-tabla-costos>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <div class="alert alert-primary" role="alert">
-                Primeros 50  en registrarse recibirán un regalo sorpresa al comenzar el campamento
+<section class="section main-section">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
+                <h1>Registro</h1>
+                <h2>¿Estás listo para aceptar el Reto?</h2>
             </div>
         </div>
-    </div>
-    <div class="row">
-        <div class="col">
-            <app-registro-avance [showForm]="true"></app-registro-avance>
+        <div *ngIf="event != null; else botones">
+            <div class="row">
+                <div class="col-xs-12 col-md-12 col-lg-12">
+                    <img alt="..." class="img-fluid"
+                        [src]="'assets/img/flyers/ru_flyer_' + event!.id + '.jpg'"
+                        style="width: 100%;">
+                </div>
+            </div>
+            <hr>
+            <div class="row">
+                <div class="col">
+                    <h1>{{event!.titulo}}</h1>
+                    <div class="card">
+                        <div class="card-header">
+                            Registro al campamento {{event!.title}}
+                        </div>
+                        <div class="card-body">
+                            <p>Este campamento se llevará a cabo en {{event!.city_label}}</p>
+                        </div>
+                        <div class="card-footer" *ngIf="events!.length > 1">
+                            ¿Deseas registrarte a otro campamento?
+                            <button *ngFor="let item of events" type="button" class="btn btn-sm btn-outline-info"
+                                (click)="selectEvent(item)">{{item.city_label +' -'+item.title}}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <app-tabla-costos [event]="event!"></app-tabla-costos>
+                </div>
+            </div>
+            <!--div class="row">
+                <div class="col">
+                    <div class="alert alert-primary" role="alert">
+                        Primeros 50 en registrarse recibirán un regalo sorpresa al comenzar el campamento
+                    </div>
+                </div>
+            </div-->
+            <div class="row">
+                <div class="col">
+                    <app-registro-avance [showForm]="true" [event]="event!"></app-registro-avance>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
+        <ng-template #botones>
+            <div class="row">
+                <div class="col text-center">
+                    <h2>¿A cual campamento quieres registrarte?</h2>
+                    <button *ngFor="let item of events" type="button" class="btn btn-primary"
+                        (click)="selectEvent(item)">{{item.city_label +' -'+item.title}}</button>
+                </div>
 
-<app-footer></app-footer>
+            </div>
+        </ng-template>
+    </div>
+</section>

@@ -1,4 +1,4 @@
-<div class="container section">
+<div class="container section main-section">
     <div class="row">
         <div class="col-md-6 col-lg-6">
             <h1>Staff Reto Urbano - LogIn</h1>
@@ -14,22 +14,29 @@
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control" formControlName="password" [(ngModel)]="password"
-                        [ngClass]="{'is-invalid': form['password'].errors }">
+                    <div class="input-group">
+                        <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password" [(ngModel)]="password"
+                            [ngClass]="{'is-invalid': form['password'].errors }">
+                        <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()"
+                            [attr.aria-label]="showPassword ? 'Ocultar password' : 'Mostrar password'">
+                            <i [ngClass]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                        </button>
+                    </div>
                     <div *ngIf="form['username'].errors" class="invalid-feedback">
                         <div *ngIf="form['username'].errors">El password es obligatorio</div>
                     </div>
                 </div>
+                <div *ngIf="loginError" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
+                    {{ loginErrorMessage }}
+                    <button type="button" class="btn-close" (click)="loginError = false" aria-label="Cerrar"></button>
+                </div>
                 <div class="row mb-3">
                     <div class="col">
                         <button type="submit" class="btn btn-primary">Entrar</button>
-                        <div *ngIf="loginError">
-                            Usuario y/o contraseña son incorrectos
-                        </div>
                     </div>
                     <div class="col">
                         <p class="text-right">
-                            <a routerLink="/recovery-password">He olvidado mi contraseña...</a>
+                            <a routerLink="/forgot-password">He olvidado mi contraseña...</a>
                         </p>
                     </div>
                 </div>
@@ -38,5 +45,3 @@
         </div>
     </div>
 </div>
-
-<app-footer></app-footer>

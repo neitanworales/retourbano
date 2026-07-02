@@ -1,7 +1,5 @@
-<app-navbar-seguimiento></app-navbar-seguimiento>
-<div class="container">
-    <h1>Contabilidad RU</h1>
-    <ul class="nav nav-tabs">
+<div class="staff-page container" style="margin-top: 1em;">
+    <ul class="nav nav-tabs staff-tabs">
         <li class="nav-item">
             <a class="nav-link {{pageResumenActive?'active':''}}" (click)="activarPageResumen()"><i class="bi bi-coin"></i> Resumen</a>
         </li>
@@ -10,6 +8,15 @@
         </li>
         <li class="nav-item">
             <a class="nav-link {{pagePrCamperoActive?'active':''}}" (click)="activarPagePorGuerrero()"><i class="bi bi-wallet-fill"></i> Por guerrero</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageMetodosActive?'active':''}}" (click)="activarPageMetodos()"><i class="bi bi-credit-card"></i> Metodos</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pagePendientesActive?'active':''}}" (click)="activarPagePendientes()"><i class="bi bi-hourglass-split"></i> Pendientes</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{pageFlujoActive?'active':''}}" (click)="activarPageFlujo()"><i class="bi bi-graph-up"></i> Flujo</a>
         </li>
     </ul>
 
@@ -40,7 +47,7 @@
                     </button>
                 </div>
                 <div class="col elevado">
-                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel(false)">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel('entradas')">
                         <i class="bi bi-cloud-download"></i> Export to Excel
                     </button>
                 </div>
@@ -95,7 +102,7 @@
                     </button>
                 </div>
                 <div class="col elevado">
-                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel(true)">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel('porGuerrero')">
                         <i class="bi bi-arrow-clockwise" class="green"></i> Export to Excel
                     </button>
                 </div>
@@ -124,5 +131,136 @@
             <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplayPorGuerrero"></tr>
         </table>
     </div>
+
+    <div [ngStyle]="{'display':pageMetodosActive ? '' : 'none'}">
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSourceMetodos?.length}}</p>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                        <i class="bi bi-arrow-clockwise"></i> Actualizar
+                    </button>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel('metodos')">
+                        <i class="bi bi-cloud-download"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSourceMetodos!" class="mat-elevation-z8">
+            <ng-container matColumnDef="metodo">
+                <th mat-header-cell *matHeaderCellDef> Metodo </th>
+                <td mat-cell *matCellDef="let element"> {{element.payment_method}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="cantidad">
+                <th mat-header-cell *matHeaderCellDef> Pagos </th>
+                <td mat-cell *matCellDef="let element"> {{element.count}} </td>
+            </ng-container>
+
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.total_amount | currency:"$ "}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayMetodos"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplayMetodos"></tr>
+        </table>
+    </div>
+
+    <div [ngStyle]="{'display':pagePendientesActive ? '' : 'none'}">
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSourcePendientes?.length}}</p>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                        <i class="bi bi-arrow-clockwise"></i> Actualizar
+                    </button>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel('pendientes')">
+                        <i class="bi bi-cloud-download"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSourcePendientes!" class="mat-elevation-z8">
+            <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                <td mat-cell *matCellDef="let element"> {{element.nombre}} </td>
+            </ng-container>
+            <ng-container matColumnDef="tipo">
+                <th mat-header-cell *matHeaderCellDef> Tipo </th>
+                <td mat-cell *matCellDef="let element"> {{element.is_staff==1?'Staff':'Guerrero'}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pagado">
+                <th mat-header-cell *matHeaderCellDef> Pagado </th>
+                <td mat-cell *matCellDef="let element"> {{element.total_paid | currency:"$ "}} </td>
+            </ng-container>
+            <ng-container matColumnDef="esperado">
+                <th mat-header-cell *matHeaderCellDef> Esperado </th>
+                <td mat-cell *matCellDef="let element"> {{element.expected_amount | currency:"$ "}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pendiente">
+                <th mat-header-cell *matHeaderCellDef> Pendiente </th>
+                <td mat-cell *matCellDef="let element"> {{element.pending_amount | currency:"$ "}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pagos">
+                <th mat-header-cell *matHeaderCellDef> Pagos </th>
+                <td mat-cell *matCellDef="let element"> {{element.payment_count}} </td>
+            </ng-container>
+            <ng-container matColumnDef="ultimo_pago">
+                <th mat-header-cell *matHeaderCellDef> Ultimo pago </th>
+                <td mat-cell *matCellDef="let element"> {{element.last_payment_at | date:"yyyy-MM-dd"}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayPendientes"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplayPendientes"></tr>
+        </table>
+    </div>
+
+    <div [ngStyle]="{'display':pageFlujoActive ? '' : 'none'}">
+        <div class="title-table mat-elevation-z8">
+            <div class="row d-flex">
+                <div class="col elevado">
+                    <p>Registros {{dataSourceFlujo?.length}}</p>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="cargarTodos()">
+                        <i class="bi bi-arrow-clockwise"></i> Actualizar
+                    </button>
+                </div>
+                <div class="col elevado">
+                    <button class="btn btn-outline-secondary btn-sm" type="button" (click)="exportToExcel('flujo')">
+                        <i class="bi bi-cloud-download"></i> Export to Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <table mat-table [dataSource]="dataSourceFlujo!" class="mat-elevation-z8">
+            <ng-container matColumnDef="fecha">
+                <th mat-header-cell *matHeaderCellDef> Fecha </th>
+                <td mat-cell *matCellDef="let element"> {{element.fecha}} </td>
+            </ng-container>
+            <ng-container matColumnDef="pagos">
+                <th mat-header-cell *matHeaderCellDef> Pagos </th>
+                <td mat-cell *matCellDef="let element"> {{element.payments_count}} </td>
+            </ng-container>
+            <ng-container matColumnDef="total">
+                <th mat-header-cell *matHeaderCellDef> Total </th>
+                <td mat-cell *matCellDef="let element"> {{element.total_amount | currency:"$ "}} </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="columnsToDisplayFlujo"></tr>
+            <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplayFlujo"></tr>
+        </table>
+    </div>
 </div>
-<app-footer-seguimiento></app-footer-seguimiento>

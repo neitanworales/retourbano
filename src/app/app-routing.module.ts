@@ -18,14 +18,19 @@ import { authGuard } from './core/guards/auth.guard';
 import { HospedajesComponent } from './modules/staff/hospedajes/hospedajes.component';
 import { CuentaComponent } from './modules/staff/cuenta/cuenta.component';
 import { UsuariosComponent } from './modules/staff/usuarios/usuarios.component';
+import { BitacoraComponent } from './modules/staff/bitacora/bitacora.component';
 import { TerminosYCondicionesComponent } from './modules/terminos-y-condiciones/terminos-y-condiciones.component';
+import { HistoricoComponent } from './modules/staff/historico/historico.component';
+import { ForgotPasswordComponent } from './modules/forgot-password/forgot-password.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
   { path: 'registro', component: RegistroComponent },
+  { path: 'registro/:id_event', component: RegistroComponent },
   { path: 'registro-puro', component: RegistroFormComponent },
   { path: 'login', component: LoginComponent },
+  { path: 'forgot-password', component: ForgotPasswordComponent },
   { path: 'recovery-password', component: RecoveryPasswordComponent },
   { path: 'info', component: InfoCampaComponent },
   { path: 'horario', component: HorarioComponent },
@@ -37,8 +42,10 @@ const routes: Routes = [
   { path: 'staff/hospedaje', component: HospedajesComponent, canActivate: [hasRoleGuard(['super', 'admin', 'staff'])] },
   { path: 'staff/asistencia', component: AsistenciaComponent, canActivate: [hasRoleGuard(['super', 'admin', 'staff'])] },
   { path: 'staff/contabilidad', component: ContabilidadComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
-  { path: 'staff/campamentos', component: CampamentosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/eventos', component: CampamentosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
   { path: 'staff/usuarios', component: UsuariosComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/bitacora', component: BitacoraComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
+  { path: 'staff/historico', component: HistoricoComponent, canActivate: [hasRoleGuard(['super', 'admin'])] },
 ];
 
 @NgModule({

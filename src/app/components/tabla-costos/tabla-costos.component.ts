@@ -1,5 +1,5 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Campamento } from 'src/app/core/models/registro/Campamento';
+import { Event } from 'src/app/core/models/registro/Event';
 
 @Component({
     selector: 'app-tabla-costos',
@@ -10,11 +10,24 @@ import { Campamento } from 'src/app/core/models/registro/Campamento';
 export class TablaCostosComponent implements OnInit {
 
   @Input()
-  campamento!: Campamento;
+  event!: Event;
 
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  getEventDurationDays(): number {
+    if (!this.event?.start_at || !this.event?.end_at) {
+      return 0;
+    }
+
+    const startDate = new Date(this.event.start_at);
+    const endDate = new Date(this.event.end_at);
+    const millisecondsPerDay = 1000 * 60 * 60 * 24;
+    const durationInDays = Math.ceil((endDate.getTime() - startDate.getTime()) / millisecondsPerDay);
+
+    return durationInDays > 0 ? durationInDays : 0;
   }
 
 }

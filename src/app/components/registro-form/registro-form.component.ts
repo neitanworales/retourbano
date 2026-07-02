@@ -1,10 +1,12 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
-import { Guerrero } from 'src/app/core/models/registro/Guerrero';
+import { User } from 'src/app/core/models/registro/User';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ToRegister } from 'src/app/core/models/registro/ToRegister';
 import { Tutor } from 'src/app/core/models/registro/Tutor';
+import { Event } from 'src/app/core/models/registro/Event';
+import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 
 @Component({
   selector: 'app-registro-form',
@@ -15,17 +17,24 @@ import { Tutor } from 'src/app/core/models/registro/Tutor';
 export class RegistroFormComponent implements OnInit {
 
   @Input()
-  guerreroToEdit!: Guerrero;
+  userToEdit!: User;
 
   @Input()
+  registrationToEdit?: EventRegistration;
+
+  @Input({ required: true })
   saveInMemory!: boolean;
+
+  @Input({ required: true })
+  event!: Event;
 
   registerForm!: FormGroup;
 
   actualizar: boolean = false;
-  model = new Guerrero();
+  model = new EventRegistration();
 
   submitted = false;
+  birthDateInvalid = false;
 
   displayStyle?: String = "none";
   displayCommentsStyle?: String = "block";
@@ -33,7 +42,7 @@ export class RegistroFormComponent implements OnInit {
   errorRegistro?: boolean;
   mensajesRegistros!: String[];
 
-  paraRegistrar!: Guerrero[];
+  paraRegistrar!: User[];
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,50 +52,76 @@ export class RegistroFormComponent implements OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if (this.guerreroToEdit != undefined) {
+    this.ensureUserModel();
+    if (this.userToEdit != undefined) {
       this.actualizar = true;
-      this.model = this.guerreroToEdit;
-      const dateString = this.guerreroToEdit.fechaNac + "";
-      this.model.year = Number(dateString?.substring(0, 4));
-      this.model.month = Number(dateString?.substring(5).substring(0, 2));
-      this.model.day = Number(dateString?.substring(8));
-      this.model.aceptaPoliticas = false;
+      if (this.registrationToEdit) {
+        this.model = { ...this.registrationToEdit };
+      }
+
+      this.model.user = this.userToEdit;
+      this.ensureUserModel();
+
+      if (this.registrationToEdit) {
+        this.model.razones = this.registrationToEdit.razones ?? this.registrationToEdit.reasons ?? this.model.razones;
+        this.model.reasons = this.model.razones;
+        const requires_lodging = this.registrationToEdit.requires_lodging ?? this.registrationToEdit.requires_lodging ?? this.registrationToEdit.requires_lodging;
+        this.model.requires_lodging = typeof requires_lodging === 'boolean' ? requires_lodging : !!requires_lodging;
+      }
+
+      const dateString = this.userToEdit.fechaNac + "";
+      this.model.user!.year = Number(dateString?.substring(0, 4));
+      this.model.user!.month = Number(dateString?.substring(5).substring(0, 2));
+      this.model.user!.day = Number(dateString?.substring(8));
+      this.model.user!.aceptaPoliticas = false;
+      this.calculateEdad();
     }
   }
 
   ngOnInit(): void {
+    this.ensureUserModel();
     if (!this.actualizar) {
-      this.model.sexo = "";      
-      this.model.hospedaje = true;
-      this.model.year = 0;
-      this.model.month = 0;
-      this.model.day = 0;
+      this.model.user!.sexo = "";      
+      this.model.requires_lodging = true;
+      this.model.user!.year = 0;
+      this.model.user!.month = 0;
+      this.model.user!.day = 0;
     } 
-    this.model.talla = "";
-    this.model.alergias = "";
-    this.model.medicamentos = "";
-    this.model.razones = "";
+    if (!this.model.user!.talla) {
+      this.model.user!.talla = "";
+    }
+    if (!this.model.user!.alergias) {
+      this.model.user!.alergias = "";
+    }
+    if (!this.model.user!.medicamentos) {
+      this.model.user!.medicamentos = "";
+    }
+    if (!this.model.razones) {
+      this.model.razones = "";
+    }
 
-    /*this.model.nombre = "Jesús de Veracruz";
-    this.model.nick = "Mr. Corleone";
-    this.model.sexo = "M";
-    this.model.year = 2001;
-    this.model.month = 1;
-    this.model.day = 1;
-    this.model.talla = "XL";
-    this.model.vienesDe = "CMDX";
-    this.model.razones = "El Rich me obliga";
-    this.model.tutorNombre = "Carlos Nopal";
-    this.model.tutorTelefono = "759783493";
-    this.model.email = "neitan.morales@gmail.com";
-    this.model.whatsapp = "2423423423423";
-    this.model.telefono = "2423423423423";
-    this.model.alergias = "A las bombas atómicas";
-    this.model.medicamentos = "Una pastilla de besos cada 2 horas";
-    this.model.aceptaPoliticas = true;
-    this.model.facebook = "No tengo brother";
-    this.model.instagram = "Para que o que?";
-    this.model.iglesia = "La sagrada familia"*/
+   /* 
+    this.model.user!.nombre = "Jesús de Veracruz";
+    this.model.user!.nick = "Mr. Corleone";
+    this.model.user!.sexo = "M";
+    this.model.user!.year = 2001;
+    this.model.user!.month = 1;
+    this.model.user!.day = 1;
+    this.model.user!.talla = "XL";
+    this.model.user!.vienesDe = "CMDX";
+    this.model.razones = "Por mandato divino del yich";
+    this.model.user!.tutorNombre = "Carlos Nopal";
+    this.model.user!.tutorTelefono = "759783493";
+    this.model.user!.email = "prueba.registro_1118@yopmail.com";
+    this.model.user!.whatsapp = "2423423423423";
+    this.model.user!.telefono = "2423423423423";
+    this.model.user!.alergias = "A las bombas atómicas";
+    this.model.user!.medicamentos = "Una pastilla de besos cada 2 horas";
+    this.model.user!.aceptaPoliticas = true;
+    this.model.user!.facebook = "No tengo brother";
+    this.model.user!.instagram = "Para que o que?";
+    this.model.user!.iglesia = "La sagrada familia";
+    */
 
     this.registerForm = this.formBuilder.group({
       nombre: ["", Validators.required],
@@ -138,22 +173,51 @@ export class RegistroFormComponent implements OnInit {
   }
 
   calculateEdad() {
-    let now = new Date();
+    this.ensureUserModel();
 
-    if (this.model.year !== undefined) {
-      this.model.edad = now.getFullYear() - this.model.year;
+    const year = Number(this.model.user!.year);
+    const month = Number(this.model.user!.month);
+    const day = Number(this.model.user!.day);
+
+    if (!year || !month || !day) {
+      this.birthDateInvalid = false;
+      this.model.user!.edad = undefined;
+      this.model.user!.fechaNac = undefined;
+      return;
     }
 
-    if (this.model.month !== undefined) {
-      if (this.model.month < now.getMonth()) {
-        this.model.edad = (this.model.edad!) - 1;
-      }
+    const birthDate = new Date(year, month - 1, day);
+    const isValidDate =
+      birthDate.getFullYear() === year &&
+      birthDate.getMonth() === month - 1 &&
+      birthDate.getDate() === day;
+
+    if (!isValidDate) {
+      this.birthDateInvalid = true;
+      this.model.user!.edad = undefined;
+      this.model.user!.fechaNac = undefined;
+      return;
     }
 
-    if (this.model.year !== undefined && this.model.month !== undefined && this.model.day !== undefined) {
-      this.model.fechaNac = new Date(this.model.year + '/' + this.model.month + '/' + this.model.day);
+    this.birthDateInvalid = false;
+
+    const today = new Date();
+    let age = today.getFullYear() - year;
+    const currentMonth = today.getMonth() + 1;
+    const hasNotHadBirthday = month > currentMonth || (month === currentMonth && day > today.getDate());
+
+    if (hasNotHadBirthday) {
+      age -= 1;
     }
 
+    this.model.user!.edad = age;
+    this.model.user!.fechaNac = birthDate;
+  }
+
+  private ensureUserModel() {
+    if (!this.model.user) {
+      this.model.user = new User();
+    }
   }
 
   newGuerrero() {
@@ -167,9 +231,9 @@ export class RegistroFormComponent implements OnInit {
       localStorage.setItem('toRegister', JSON.stringify(objectRegister));
       console.log(localStorage.getItem('toRegister'));
       var tutor = new Tutor();
-      tutor.tutorEmail = this.model.email;
-      tutor.tutorNombre = this.model.tutorNombre;
-      tutor.tutorTelefono = this.model.tutorTelefono;
+      tutor.tutorEmail = this.model.user!.email;
+      tutor.tutorNombre = this.model.user!.tutorNombre;
+      tutor.tutorTelefono = this.model.user!.tutorTelefono;
       this.submitted = false;
       this.registerForm?.reset();
       this.registerForm.controls['email'].setValue(tutor.tutorEmail);
@@ -177,10 +241,10 @@ export class RegistroFormComponent implements OnInit {
       this.registerForm.controls['tutorTelefono'].setValue(tutor.tutorTelefono);
       this.loadListaParaRegistrar();
     } else {
-      this.registroDao.agregarGuerrero(this.model, this.saveInMemory).subscribe(
+      this.registroDao.agregarGuerrero(this.model, this.saveInMemory, this.event.id!).subscribe(
         result => {
           this.errorRegistro = result.error;
-          this.mensajesRegistros.push(result.mensaje!);
+          this.mensajesRegistros.push(result.message!);
           this.openPopup();
         }
       );
@@ -189,10 +253,10 @@ export class RegistroFormComponent implements OnInit {
 
   registrarBatch() {
     this.paraRegistrar.forEach(async (warrior) => {
-      this.registroDao.agregarGuerrero(warrior, this.saveInMemory).subscribe(
+      this.registroDao.agregarGuerrero(warrior, this.saveInMemory, this.event.id!).subscribe(
         result => {
           this.errorRegistro = result.error;
-          this.mensajesRegistros.push(result.mensaje!);
+          this.mensajesRegistros.push(result.message!);
         }
       );
     });
@@ -203,10 +267,10 @@ export class RegistroFormComponent implements OnInit {
   }
 
   updateGuerrero() {
-    this.registroDao.updateGuerrero(this.model).subscribe(
+    this.registroDao.updateGuerrero(this.model, this.event.id!).subscribe(
       result => {
         this.errorRegistro = result.error;
-        this.mensajesRegistros.push(result.mensaje!);
+        this.mensajesRegistros.push(result.message!);
         this.openPopup();
       }
     );
@@ -218,6 +282,12 @@ export class RegistroFormComponent implements OnInit {
 
   onSubmit() {
     this.submitted = true;
+    this.calculateEdad();
+
+    if (this.birthDateInvalid) {
+      return;
+    }
+
     if (this.actualizar) {
       this.updateGuerrero();
     } else {
@@ -248,7 +318,7 @@ export class RegistroFormComponent implements OnInit {
     this.displayBackgroudStyle = "";
     this.mensajesRegistros = new Array();
     if (!this.errorRegistro && !this.actualizar) {
-      this.router.navigate(['/info']);
+      this.router.navigate(['/info'], { queryParams: { id_event: this.event.id } });
     } else {
       // ??
     }

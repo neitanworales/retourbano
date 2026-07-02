@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Informaci&oacute;n del Campamento - Reto Urbano {{year}}</title>
+</head>
+
+<body style="margin:0;padding:0;background-color:#F0F4F8;font-family:Arial,Helvetica,sans-serif;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F0F4F8;padding:30px 0;">
+        <tr>
+            <td align="center">
+                <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+                    <tr>
+                        <td
+                            style="background:linear-gradient(135deg,#1A3A5C 0%,#2E6DA4 100%);border-radius:10px 10px 0 0;padding:36px 40px;text-align:center;">
+                            <p
+                                style="margin:0 0 4px 0;font-size:12px;color:#A8C8E8;letter-spacing:3px;text-transform:uppercase;">
+                                CAMPAMENTO</p>
+                            <h1 style="margin:0;font-size:28px;color:#FFFFFF;font-weight:700;letter-spacing:1px;">RETO
+                                URBANO {{year}}</h1>
+                            <p style="margin:8px 0 0 0;font-size:16px;color:#A8C8E8;">{{titulo}} &bull; {{ciudad}}</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="background-color:#2E6DA4;padding:16px 40px;text-align:center;">
+                            <p style="margin:0;font-size:15px;color:#E8F4FF;"><strong>{{nick}}</strong>, aqu&iacute;
+                                tienes la informaci&oacute;n importante para tu campamento.</p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td style="background-color:#FFFFFF;padding:36px 40px;">
+                            <p style="margin:0 0 20px 0;font-size:14px;color:#4A5568;">Hola {{nombre}}, este correo
+                                resume la informaci&oacute;n principal de la p&aacute;gina del evento para que la tengas
+                                a la mano.</p>
+
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                style="border-collapse:collapse;font-size:14px;">
+                                <tr style="background-color:#EBF4FF;">
+                                    <td
+                                        style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;width:38%;">
+                                        Duraci&oacute;n</td>
+                                    <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">
+                                        {{durationDays}} d&iacute;as</td>
+                                </tr>
+                                <tr>
+                                    <td
+                                        style="padding:10px 14px;color:#2D3748;font-weight:700;border-bottom:1px solid #E2E8F0;">
+                                        Anticipo m&iacute;nimo</td>
+                                    <td style="padding:10px 14px;color:#4A5568;border-bottom:1px solid #E2E8F0;">
+                                        ${{minimumPaymentMxn}} MXN</td>
+                                </tr>
+                            </table>
+
+                            <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+                            <h2 style="margin:0 0 10px 0;font-size:18px;color:#1A3A5C;">1. Informaci&oacute;n de pago
+                            </h2>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Para asegurar tu lugar es
+                                importante realizar tu anticipo.</p>
+                            <table width="100%" cellpadding="0" cellspacing="0"
+                                style="margin-top:10px;background-color:#F7FAFC;border:1px solid #E2E8F0;border-radius:8px;">
+                                <tr>
+                                    <td style="padding:18px 20px;">
+                                        <p style="margin:0 0 6px 0;font-size:14px;color:#2E6DA4;font-weight:700;">
+                                            {{bankName}}</p>
+                                        <p style="margin:0 0 6px 0;font-size:14px;color:#4A5568;">Titular:
+                                            <strong>{{accountHolder}}</strong></p>
+                                        <p style="margin:0 0 6px 0;font-size:14px;color:#4A5568;">Tarjeta / Cuenta:
+                                            <strong>{{bankAccount}}</strong></p>
+                                        <p style="margin:0;font-size:14px;color:#4A5568;">CLABE:
+                                            <strong>{{bankClabe}}</strong></p>
+                                    </td>
+                                </tr>
+                            </table>
+                            <p style="margin:14px 0 0 0;font-size:14px;color:#4A5568;">Una vez realizado tu pago
+                                notif&iacute;calo a <strong>{{contactEmail}}</strong> o por WhatsApp al
+                                <strong>{{contactPhone1}}</strong> y/o <strong>{{contactPhone2}}</strong>.</p>
+
+                            <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+                            <h2 style="margin:0 0 10px 0;font-size:18px;color:#1A3A5C;">2. D&iacute;a de llegada</h2>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Fecha:
+                                <strong>{{startDate}}</strong></p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Apertura de registro:
+                                <strong>{{startTime}}</strong></p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Cierre de registro:
+                                <strong>{{lobbyEndTime}}</strong></p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Punto de encuentro:
+                                <strong>{{arrivalPlace}}</strong></p>
+                            <div
+                                style="margin-top:12px;font-size:14px;color:#744210;background:#FFF8DB;border-left:4px solid #D69E2E;padding:12px 14px;">
+                                {{arrivalNoteHtml}}</div>
+
+                            <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+                            <h2 style="margin:0 0 10px 0;font-size:18px;color:#1A3A5C;">3. Viaje misionero</h2>
+                            <p style="margin:0;font-size:14px;color:#4A5568;line-height:1.7;">Durante el campamento se
+                                realizar&aacute; un peque&ntilde;o viaje misionero. Este a&ntilde;o se contempla en
+                                <strong>Puebla</strong> y forma parte importante de la experiencia del
+                                campamento.</p>
+
+                            <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+                            <h2 style="margin:0 0 10px 0;font-size:18px;color:#1A3A5C;">4. D&iacute;a de salida</h2>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Fecha:
+                                <strong>{{departureDate}}</strong></p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Hora:
+                                <strong>{{departureTime}}</strong></p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Lugar de entrega:
+                                <strong>{{departurePlace}}</strong></p>
+                            <div
+                                style="margin-top:12px;font-size:14px;color:#1A202C;background:#EDF2F7;border-left:4px solid #4A5568;padding:12px 14px;">
+                                {{departureNoteHtml}}</div>
+
+                            <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+                            <h2 style="margin:0 0 10px 0;font-size:18px;color:#1A3A5C;">5. Qué llevar</h2>
+                            <ul style="margin:0;padding-left:20px;font-size:14px;color:#4A5568;line-height:1.8;">
+                                <li>Biblia, cuaderno y lapiceros (obligatorios)</li>
+                                <li>Mochila pequeña o cangurera.</li>
+                                <li>Ropa cómoda para 6 días (tendremos algunas actividades al aire libre)</li>
+                                <li>Chamarra para el frío y la lluvia; el clima tiende a ser frío por las noches</li>
+                                <li>Accesorios para el sol, como gorra, sombrero tipo bucket, bloqueador, etc.</li>
+                                <li>Artículos de uso personal: todo lo que necesitas para bañarte y arreglarte</li>
+                                <li>Calzado cómodo que te permita hacer ejercicio y actividades al aire libre</li>
+                                <li>Dinero extra para la tienda</li>
+                                <li>Botella de agua reutilizable</li>
+                                <li>No es necesario que traigas almohada ni cobijas</li>
+                                <li>Te recomendamos NO TRAER dispositivos electrónicos adicionales (iPad, computadora,
+                                    Nintendo Switch, laptop, etc.). Reto Urbano no podrá hacerse responsable de la
+                                    pérdida o el daño de cualquiera de estos dispositivos.</li>
+                                <li>* Recuerda que no se permite traer bebidas alcohólicas, drogas, armas o cualquier
+                                    objeto que pueda poner en riesgo la seguridad de los participantes.</li>
+                            </ul>
+
+                            <hr style="border:none;border-top:2px solid #E2E8F0;margin:30px 0;">
+
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Por favor responde este email mencionando que has recibido y entendido la información proporcionada y eso nos sirve como confirmación de tu asistencia</p>
+
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Si tienes alguna duda, puedes
+                                escribirnos a <strong>{{contactEmail}}</strong> o por WhatsApp al
+                                <strong>{{contactPhone1}}</strong> y/o <strong>{{contactPhone2}}</strong>.</p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">¡Nos vemos pronto en el
+                                campamento!</p>
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">El equipo de Reto Urbano {{year}}
+                            </p>
+                            
+                            <p style="margin:0 0 8px 0;font-size:14px;color:#4A5568;">Para mas información visita nuestra página web: <a href="https://www.ywampachuca.org/info?event_id=11" target="_blank">Reto Urbano {{year}}</a></p>
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td
+                            style="background-color:#1A3A5C;border-radius:0 0 10px 10px;padding:24px 40px;text-align:center;">
+                            <p style="margin:0 0 6px 0;font-size:13px;color:#A8C8E8;">Staff de</p>
+                            <p style="margin:0;font-size:16px;font-weight:700;color:#FFFFFF;">Reto Urbano {{year}}</p>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+
+</html>

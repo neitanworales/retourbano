@@ -1,0 +1,114 @@
+<div class="summary-dashboard" *ngIf="hasData; else emptyState">
+  <div class="summary-dashboard__hero staff-surface staff-panel staff-section-split">
+    <div>
+      <p class="summary-dashboard__eyebrow staff-section-kicker">Resumen del evento</p>
+      <h3 class="staff-section-title">{{ eventTitle || 'Evento seleccionado' }}</h3>
+      <p class="summary-dashboard__meta" *ngIf="eventDate">{{ eventDate | date:'dd/MM/yyyy' }}</p>
+    </div>
+    <div class="summary-dashboard__badges">
+      <span class="summary-badge summary-badge--primary staff-pill staff-pill-neutral">Inscritos {{ eventDashboard?.data?.summary?.registered ?? 0 }}</span>
+      <span class="summary-badge summary-badge--success staff-pill staff-pill-info">Ocupación {{ formatValue('Ocupacion %', occupancy) }}</span>
+      <span class="summary-badge summary-badge--warning staff-pill staff-pill-info">Cobertura {{ formatValue('Cobertura pagos %', coverage) }}</span>
+    </div>
+  </div>
+
+  <div class="summary-dashboard__grid">
+    <section class="summary-panel summary-panel--operations staff-surface staff-panel">
+      <div class="summary-panel__header">
+        <h4>Operacion</h4>
+        <p>Lectura rapida del estado del evento</p>
+      </div>
+
+      <div class="summary-kpi-grid">
+        <article *ngFor="let card of cardsOperacion" class="summary-kpi summary-kpi--{{ card.tone }} staff-soft-card">
+          <span class="summary-kpi__label">{{ card.label }}</span>
+          <span class="summary-kpi__value">{{ formatValue(card.label, card.value) }}</span>
+        </article>
+      </div>
+
+      <div class="summary-list-card" *ngIf="indicadoresOperacion.length > 0">
+        <ol class="list-group list-group-numbered summary-list">
+          <li *ngFor="let indicador of indicadoresOperacion" class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ indicador.valor }}</div>
+            </div>
+            <span class="badge bg-primary rounded-pill">{{ formatValue(indicador.valor || '', indicador.count) }}</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+
+    <section class="summary-panel summary-panel--finances staff-surface staff-panel">
+      <div class="summary-panel__header">
+        <h4>Finanzas</h4>
+        <p>Pagos, cobertura y saldo</p>
+      </div>
+
+      <div class="summary-kpi-grid">
+        <article *ngFor="let card of cardsFinanzas" class="summary-kpi summary-kpi--{{ card.tone }} staff-soft-card">
+          <span class="summary-kpi__label">{{ card.label }}</span>
+          <span class="summary-kpi__value">{{ formatValue(card.label, card.value) }}</span>
+        </article>
+      </div>
+
+      <div class="summary-list-card" *ngIf="indicadoresFinanzas.length > 0">
+        <ol class="list-group list-group-numbered summary-list">
+          <li *ngFor="let indicador of indicadoresFinanzas" class="list-group-item d-flex justify-content-between align-items-start">
+            <div class="ms-2 me-auto">
+              <div class="fw-bold">{{ indicador.valor }}</div>
+            </div>
+            <span class="badge bg-primary rounded-pill">{{ formatValue(indicador.valor || '', indicador.count) }}</span>
+          </li>
+        </ol>
+      </div>
+    </section>
+  </div>
+
+  <section class="summary-panel summary-panel--birthdays staff-surface staff-panel">
+    <div class="summary-panel__header">
+      <h4>Cumpleanos durante el evento</h4>
+      <p>Participantes que cumplen anos entre la fecha de inicio y fin del evento</p>
+    </div>
+
+    <div class="summary-list-card" *ngIf="birthdaysDuringEvent.length > 0; else noBirthdays">
+      <ol class="list-group list-group-numbered summary-list">
+        <li *ngFor="let item of birthdaysDuringEvent" class="list-group-item d-flex justify-content-between align-items-start">
+          <div class="ms-2 me-auto">
+            <div class="fw-bold">{{ item.name || item.full_name || 'Sin nombre' }}</div>
+            <small class="text-muted">Cumple: {{ item.birthday_on | date:'dd/MM/yyyy' }}</small>
+          </div>
+          <span class="badge bg-success rounded-pill">{{ item.age_turning }} anios</span>
+        </li>
+      </ol>
+    </div>
+
+    <ng-template #noBirthdays>
+      <div class="summary-empty-note">
+        No hay cumpleanos registrados durante las fechas del evento.
+      </div>
+    </ng-template>
+  </section>
+
+  <div class="summary-dashboard__charts staff-surface staff-panel">
+    <div class="summary-dashboard__charts-header">
+      <h4>Graficas</h4>
+      <p>Distribucion y comportamiento del evento</p>
+    </div>
+    <div class="row g-3">
+      <div class="col-md-4 col-lg-3" *ngFor="let chart of paquetes">
+        <app-pie-chart [opcion]="chart.option" [eventSelectedId]="eventId" [title]="chart.title"></app-pie-chart>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #emptyState>
+  <div class="summary-dashboard summary-dashboard--empty">
+    <div class="summary-dashboard__hero staff-surface staff-panel">
+      <div>
+        <p class="summary-dashboard__eyebrow staff-section-kicker">Resumen del evento</p>
+        <h3 class="staff-section-title">Selecciona un evento para ver los indicadores</h3>
+      </div>
+    </div>
+  </div>
+</ng-template>

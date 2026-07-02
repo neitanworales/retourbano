@@ -1,10 +1,102 @@
-<app-navbar-seguimiento></app-navbar-seguimiento>
-<div class="container" style="margin-top: 1em;">
-    <h1>Cuenta {{session.id}}</h1>
-    <h2>Datos Generales</h2>
-    <p>Nombre: {{session.guerrero?.nombre}}</p>
-    <p>Email: {{session.guerrero?.email}}</p>
-    <p>Sexo: {{session.guerrero?.sexo}}</p>
-    <p>Fecha de Nacimiento: {{session.guerrero?.fechaNac}}</p>
-    <p>Edad: {{session.guerrero?.edad}}</p>
+<div class="staff-page container account-shell">
+    <section class="account-hero staff-surface staff-panel">
+        <div class="account-avatar">{{getInitials()}}</div>
+        <div>
+            <p class="account-eyebrow staff-section-kicker">Cuenta</p>
+            <h1>{{getProfileName()}}</h1>
+            <p class="account-copy staff-copy-sm">Esta vista ahora se enfoca en acceso, seguridad y futura bitacora de movimientos.</p>
+            <div class="account-meta">
+                <span class="account-pill staff-pill staff-pill-neutral">{{getPrimaryEmail()}}</span>
+                <span class="account-pill staff-pill staff-pill-neutral">{{getAcceptedPoliciesLabel()}}</span>
+                <span class="account-pill staff-pill staff-pill-neutral">Registro {{getRegisteredAt()}}</span>
+            </div>
+            <div class="account-status-row">
+                <span *ngIf="loadingProfile" class="account-status-chip account-status-chip-loading staff-pill">Actualizando sesion...</span>
+                <span *ngIf="profileErrorMessage" class="account-status-chip account-status-chip-error staff-pill">{{profileErrorMessage}}</span>
+            </div>
+        </div>
+    </section>
+
+    <section class="account-grid staff-grid-2">
+        <article class="account-card staff-surface staff-panel">
+            <p class="account-eyebrow staff-section-kicker">Acceso</p>
+            <h2 class="staff-title-sm">Sesion actual</h2>
+            <div class="account-info-list">
+                <div>
+                    <span class="account-label">Nombre</span>
+                    <strong>{{getProfileName()}}</strong>
+                </div>
+                <div>
+                    <span class="account-label">Correo</span>
+                    <strong>{{getPrimaryEmail()}}</strong>
+                </div>
+                <div>
+                    <span class="account-label">Roles</span>
+                    <div class="account-role-row" *ngIf="getRoles().length; else noRoles">
+                        <span class="account-role-chip staff-pill staff-pill-neutral" *ngFor="let role of getRoles()">{{role}}</span>
+                    </div>
+                    <ng-template #noRoles>
+                        <strong>Sin roles asignados</strong>
+                    </ng-template>
+                </div>
+                <div>
+                    <span class="account-label">Contrasena</span>
+                    <strong>{{hasPassword ? 'Configurada' : 'Pendiente'}}</strong>
+                </div>
+            </div>
+        </article>
+
+        <article class="account-card staff-surface staff-panel">
+            <p class="account-eyebrow staff-section-kicker">Seguridad</p>
+            <h2 class="staff-title-sm">Cambiar contrasena</h2>
+            <div class="account-form">
+                <label>
+                    <span class="account-label">Nueva contrasena</span>
+                    <input [(ngModel)]="newPassword" [ngModelOptions]="{standalone: true}" type="password" class="account-input form-control">
+                </label>
+                <label>
+                    <span class="account-label">Confirmar contrasena</span>
+                    <input [(ngModel)]="confirmPassword" [ngModelOptions]="{standalone: true}" type="password" class="account-input form-control">
+                </label>
+                <button type="button" class="btn btn-primary account-button" (click)="savePassword()" [disabled]="isSavingPassword">
+                    {{isSavingPassword ? 'Guardando...' : 'Actualizar contrasena'}}
+                </button>
+            </div>
+            <div class="account-status-row">
+                <span *ngIf="passwordMessage" class="account-status-chip account-status-chip-success staff-pill">{{passwordMessage}}</span>
+                <span *ngIf="passwordErrorMessage" class="account-status-chip account-status-chip-error staff-pill">{{passwordErrorMessage}}</span>
+            </div>
+        </article>
+
+        <article class="account-card account-card-wide staff-surface staff-panel">
+            <div class="account-card-head staff-section-split">
+                <div>
+                    <p class="account-eyebrow staff-section-kicker">Movimientos</p>
+                    <h2 class="staff-title-sm">Ultimos movimientos</h2>
+                </div>
+                <span class="account-note-pill staff-pill staff-pill-info">Bitacora activa</span>
+            </div>
+
+            <div class="account-status-row">
+                <span *ngIf="loadingMovements" class="account-status-chip account-status-chip-loading staff-pill">Cargando movimientos...</span>
+                <span *ngIf="movementErrorMessage" class="account-status-chip account-status-chip-error staff-pill">{{movementErrorMessage}}</span>
+            </div>
+
+            <div class="account-movement-list" *ngIf="movements.length > 0; else noMovements">
+                <article class="account-movement-item staff-soft-card" *ngFor="let movement of movements">
+                    <div>
+                        <strong>{{movement.title}}</strong>
+                        <p class="staff-copy-sm">{{movement.detail}}</p>
+                    </div>
+                    <span>{{movement.dateLabel}}</span>
+                </article>
+            </div>
+
+            <ng-template #noMovements>
+                <p class="account-footnote staff-copy-sm">Aun no hay movimientos registrados para esta cuenta.</p>
+            </ng-template>
+
+            <p class="account-footnote staff-copy-sm">La bitacora ya registra inicios de sesion, cambios de perfil, cambios de contrasena y pagos registrados al usuario.</p>
+        </article>
+    </section>
 </div>

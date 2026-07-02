@@ -7,32 +7,16 @@ import { SessionResponse } from '../models/login/SessionResponse';
 
 @Injectable()
 export class AuthService {
-  constructor(private loginDao: LoginDao) { }
+  constructor(private loginDao: LoginDao) {}
 
-  private _currentUser = new BehaviorSubject<Session | null>(this.getSession());
+  private _currentUser = new BehaviorSubject<Session | null>(this.readStoredSession());
   currentUser$ = this._currentUser.asObservable();
   authorized: Session | null = null;
   router = inject(Router);
+  private sessionValidationStarted = false;
 
   getSession(): Session | null {
-    const session = JSON.parse(localStorage.getItem('session')!);
-    console.log(session);
-    if (session) {
-      this.loginDao.getSession().subscribe(
-        result => {
-          console.log("SE OBTIENE SESSIÓN DESDE EL BACKEND");
-          localStorage.setItem('session', JSON.stringify(result.session));
-        }, error => {
-          console.log("ERROR AL HACER REQUEST: " + error);
-          this.setSession(null);
-          localStorage.clear();
-        }
-      );
-      console.log('se devuelve la sesión ' + JSON.parse(localStorage.getItem('session')!))
-      return JSON.parse(localStorage.getItem('session')!);
-    } else {
-      return null;
-    }
+    return this.readStoredSession();
   }
 
   getSessionValida(): Session {
@@ -40,6 +24,55 @@ export class AuthService {
   }
 
   setSession(session: Session | null) {
+    if (session) {
+      localStorage.setItem('session', JSON.stringify(session));
+    } else {
+      localStorage.removeItem('session');
+    }
     this._currentUser.next(session);
+  }
+
+  clearSession() {
+    this.setSession(null);
+  }
+
+  private readStoredSession(): Session | null {
+    const raw = localStorage.getItem('session');
+    if (!raw) {
+      return null;
+    }
+
+    try {
+      return JSON.parse(raw) as Session;
+    } catch {
+      localStorage.removeItem('session');
+      return null;
+    }
+  }
+
+  initializeSessionValidation() {
+    if (this.sessionValidationStarted) {
+      return;
+    }
+
+    this.sessionValidationStarted = true;
+
+    this.validateStoredSession();
+  }
+
+  private validateStoredSession() {
+    const session = this.readStoredSession();
+    if (!session?.token) {
+      return;
+    }
+
+    this.loginDao.getSession().subscribe({
+      next: (result) => {
+        this.setSession(result.session || null);
+      },
+      error: () => {
+        this.clearSession();
+      }
+    });
   }
 }
