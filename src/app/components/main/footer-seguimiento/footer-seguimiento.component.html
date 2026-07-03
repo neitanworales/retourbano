@@ -1,9 +1,48 @@
-<hr>
-<footer class="footer footer-black footer-white">
+<footer class="site-footer" aria-label="Pie de página staff">
     <div class="container">
-        <div class="row">
-            <div class="credits ml-auto"><span class="copyright">© 2024, made with <i class="bi bi-heart-fill"></i>
-                by Neitan Worales <i class="bi bi-code-slash"></i></span></div>
+        <div class="site-footer__inner">
+            <div class="site-footer__top">
+                <div class="site-footer__brand-block">
+                    <a class="site-footer__brand" href="http://www.ywampachuca.org" target="_blank" rel="noreferrer">
+                        YWAM Pachuca
+                    </a>
+                    <p class="site-footer__copy">Panel interno de seguimiento, operación y administración del evento.</p>
+                </div>
+
+                <nav class="site-footer__nav" aria-label="Enlaces staff">
+                    <a href="http://www.ywampachuca.org" target="_blank" rel="noreferrer">YWAM Pachuca</a>
+                    <a href="https://www.facebook.com/jucumpachuca" target="_blank" rel="noreferrer">Facebook</a>
+                </nav>
+            </div>
+
+            <div class="site-footer__map" aria-label="Mapa del sitio staff">
+                <div class="site-footer__map-block">
+                    <span class="site-footer__map-title">Mapa del sitio</span>
+                    <div class="site-footer__map-links">
+                        <a routerLink="/staff">Dashboard</a>
+                        <a routerLink="/staff/cuenta">Cuenta</a>
+                        <a routerLink="/staff/inscripciones">Inscripciones</a>
+                        <a routerLink="/staff/hospedaje">Hospedaje</a>
+                        <a routerLink="/staff/asistencia">Asistencia</a>
+                        <a routerLink="/staff/contabilidad">Contabilidad</a>
+                        <a routerLink="/staff/eventos">Eventos</a>
+                        <a routerLink="/staff/usuarios">Usuarios</a>
+                        <a routerLink="/staff/bitacora">Bitácora</a>
+                        <a routerLink="/staff/historico">Histórico</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="site-footer__bottom">
+                <div class="site-footer__legal">
+                    <a routerLink="/terminos-y-condiciones">Términos y condiciones</a>
+                </div>
+
+                <div class="site-footer__credits">
+                    <span>© {{ currentYear }} YWAM Pachuca</span>
+                    <span>made with <i class="bi bi-heart-fill"></i> by Neitan Worales <i class="bi bi-code-slash"></i></span>
+                </div>
+            </div>
         </div>
     </div>
 </footer>

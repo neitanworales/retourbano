@@ -1,0 +1,134 @@
+ :host {
+	display: block;
+}
+
+.site-footer {
+	margin-top: 2rem;
+	padding: 1.5rem 0 1.7rem;
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.985), rgba(249, 250, 251, 0.99));
+	border-top: 1px solid rgba(19, 41, 61, 0.08);
+}
+
+.site-footer__inner {
+	display: grid;
+	gap: 1.1rem;
+}
+
+.site-footer__top,
+.site-footer__bottom {
+	display: flex;
+	justify-content: space-between;
+	align-items: flex-start;
+	gap: 1rem 1.5rem;
+}
+
+.site-footer__top {
+	padding-bottom: 0.95rem;
+	border-bottom: 1px solid rgba(19, 41, 61, 0.07);
+}
+
+.site-footer__brand-block {
+	max-width: 25rem;
+}
+
+.site-footer__brand {
+	color: #223344;
+	font-family: Georgia, "Times New Roman", serif;
+	font-size: 1rem;
+	font-weight: 700;
+	letter-spacing: 0.03em;
+	text-decoration: none;
+}
+
+.site-footer__copy {
+	margin: 0.4rem 0 0;
+	color: #758391;
+	font-size: 0.88rem;
+	line-height: 1.6;
+}
+
+.site-footer__nav,
+.site-footer__legal {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem 0.95rem;
+}
+
+.site-footer__nav {
+	justify-content: flex-end;
+}
+
+.site-footer__nav a,
+	.site-footer__legal a,
+	.site-footer__map-links a {
+	color: #5b6977;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.08em;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+.site-footer__nav a:hover,
+.site-footer__legal a:hover,
+.site-footer__map-links a:hover,
+.site-footer__brand:hover {
+	color: #13293d;
+}
+
+.site-footer__map {
+	display: grid;
+	gap: 0.65rem;
+	padding: 0.05rem 0 0.1rem;
+}
+
+.site-footer__map-block {
+	display: grid;
+	gap: 0.65rem;
+}
+
+.site-footer__map-title {
+	color: #7a8794;
+	font-size: 0.72rem;
+	font-weight: 700;
+	letter-spacing: 0.14em;
+	text-transform: uppercase;
+}
+
+.site-footer__map-links {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+}
+
+.site-footer__bottom {
+	align-items: center;
+	padding-top: 0.1rem;
+}
+
+.site-footer__credits {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+	gap: 0.35rem 0.9rem;
+	color: #7a8793;
+	font-size: 0.82rem;
+}
+
+.site-footer__credits i {
+	color: #8a97a4;
+}
+
+@media (max-width: 767.98px) {
+	.site-footer__top,
+	.site-footer__bottom {
+		flex-direction: column;
+		align-items: flex-start;
+	}
+
+	.site-footer__nav,
+	.site-footer__credits,
+	.site-footer__map-links {
+		justify-content: flex-start;
+	}
+}
