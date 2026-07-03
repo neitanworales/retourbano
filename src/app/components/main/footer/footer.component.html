@@ -1,16 +1,46 @@
-<hr>
-<footer class="footer footer-black footer-white">
+<footer class="site-footer" aria-label="Pie de página público">
     <div class="container">
-        <div class="row">
-            <nav class="footer-nav">
-                <ul>
-                    <li><a routerLink="/terminos-y-condiciones">Terminos y condiciones</a></li>
-                    <li><a href="http://www.ywampachuca.org" target="_blank">YWAM Pachuca</a></li>
-                    <li><a href="https://www.facebook.com/jucumpachuca" target="_blank">Facebook</a></li>
-                </ul>
-            </nav>
-            <div class="credits ml-auto"><span class="copyright">© 2024, made with <i class="bi bi-heart-fill"></i>
-                    by Neitan Worales <i class="bi bi-code-slash"></i></span></div>
+        <div class="site-footer__inner">
+            <div class="site-footer__top">
+                <div class="site-footer__brand-block">
+                    <a class="site-footer__brand" href="http://www.ywampachuca.org" target="_blank" rel="noreferrer">
+                        YWAM Pachuca
+                    </a>
+                    <p class="site-footer__copy">Campamento, registro e información en una presentación clara, ligera y ordenada.</p>
+                </div>
+
+                <nav class="site-footer__nav" aria-label="Enlaces del sitio">
+                    <a routerLink="/terminos-y-condiciones">Términos y condiciones</a>
+                    <a href="http://www.ywampachuca.org" target="_blank" rel="noreferrer">YWAM Pachuca</a>
+                    <a href="https://www.facebook.com/jucumpachuca" target="_blank" rel="noreferrer">Facebook</a>
+                </nav>
+            </div>
+
+            <div class="site-footer__map" aria-label="Mapa del sitio">
+                <div class="site-footer__map-block">
+                    <span class="site-footer__map-title">Mapa del sitio</span>
+                    <div class="site-footer__map-links">
+                        <a routerLink="/home">Home</a>
+                        <a routerLink="/info">Info</a>
+                        <a routerLink="/registro">Registro</a>
+                        <a routerLink="/reinscripcion">Reinscripción</a>
+                        <a routerLink="/horario">Horario</a>
+                        <a routerLink="/login">Staff</a>
+                        <a routerLink="/terminos-y-condiciones">Términos</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="site-footer__bottom">
+                <div class="site-footer__legal">
+                    
+                </div>
+
+                <div class="site-footer__credits">
+                    <span>© {{ currentYear }} YWAM Pachuca</span>
+                    <span>made with <i class="bi bi-heart-fill"></i> by Neitan Worales <i class="bi bi-code-slash"></i></span>
+                </div>
+            </div>
         </div>
     </div>
 </footer>

@@ -1,47 +1,54 @@
-<div class="container section main-section">
-    <div class="row">
-        <div class="col-md-6 col-lg-6">
-            <h1>Staff Reto Urbano - LogIn</h1>
-            <form (ngSubmit)="onSubmit()" [formGroup]="registerForm">
-                <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email address</label>
-                    <input type="email" class="form-control" formControlName="username" [(ngModel)]="username"
-                        [ngClass]="{'is-invalid': form['username'].errors }">
-                    <div *ngIf="form['username'].errors" class="invalid-feedback">
-                        <div *ngIf="form['username'].errors">El username es obligatorio</div>
-                    </div>
-                    <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
-                </div>
-                <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <div class="input-group">
-                        <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password" [(ngModel)]="password"
-                            [ngClass]="{'is-invalid': form['password'].errors }">
-                        <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()"
-                            [attr.aria-label]="showPassword ? 'Ocultar password' : 'Mostrar password'">
-                            <i [ngClass]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
-                        </button>
-                    </div>
-                    <div *ngIf="form['username'].errors" class="invalid-feedback">
-                        <div *ngIf="form['username'].errors">El password es obligatorio</div>
-                    </div>
-                </div>
-                <div *ngIf="loginError" class="alert alert-danger alert-dismissible fade show mb-3" role="alert">
-                    {{ loginErrorMessage }}
-                    <button type="button" class="btn-close" (click)="loginError = false" aria-label="Cerrar"></button>
-                </div>
-                <div class="row mb-3">
-                    <div class="col">
-                        <button type="submit" class="btn btn-primary">Entrar</button>
-                    </div>
-                    <div class="col">
-                        <p class="text-right">
-                            <a routerLink="/forgot-password">He olvidado mi contraseña...</a>
-                        </p>
-                    </div>
-                </div>
+<div class="login-frontpage">
+    <div class="container">
+        <header class="login-paper-head text-center">
+            <p class="login-kicker">+ Staff</p>
+            <h1>Staff Reto Urbano</h1>
+            <h2>Accede al panel para administrar registros, seguimiento y operación del campamento.</h2>
+        </header>
 
-            </form>
+        <div class="row g-4 align-items-stretch login-paper-grid justify-content-center">
+            <div class="col-xl-8 col-lg-9 d-flex">
+                <article class="login-paper-panel login-form-panel w-100">
+                    <h3>Iniciar sesión</h3>
+
+                    <form (ngSubmit)="onSubmit()" [formGroup]="registerForm" class="login-form-stack">
+                        <div class="login-field">
+                            <label for="login-username" class="form-label">Email address</label>
+                            <input id="login-username" type="email" class="form-control" formControlName="username" [(ngModel)]="username"
+                                [ngClass]="{'is-invalid': form['username'].errors }">
+                            <div *ngIf="form['username'].errors" class="invalid-feedback d-block">
+                                <div *ngIf="form['username'].errors">El username es obligatorio</div>
+                            </div>
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+
+                        <div class="login-field">
+                            <label for="login-password" class="form-label">Password</label>
+                            <div class="input-group">
+                                <input id="login-password" [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password" [(ngModel)]="password"
+                                    [ngClass]="{'is-invalid': form['password'].errors }">
+                                <button class="btn btn-outline-secondary" type="button" (click)="togglePasswordVisibility()"
+                                    [attr.aria-label]="showPassword ? 'Ocultar password' : 'Mostrar password'">
+                                    <i [ngClass]="showPassword ? 'bi bi-eye-slash' : 'bi bi-eye'"></i>
+                                </button>
+                            </div>
+                            <div *ngIf="form['password'].errors" class="invalid-feedback d-block">
+                                <div *ngIf="form['password'].errors">El password es obligatorio</div>
+                            </div>
+                        </div>
+
+                        <div *ngIf="loginError" class="alert alert-danger alert-dismissible fade show mb-0" role="alert">
+                            {{ loginErrorMessage }}
+                            <button type="button" class="btn-close" (click)="loginError = false" aria-label="Cerrar"></button>
+                        </div>
+
+                        <div class="login-actions">
+                            <button type="submit" class="btn btn-primary">Entrar</button>
+                            <a routerLink="/forgot-password" class="login-link">He olvidado mi contraseña...</a>
+                        </div>
+                    </form>
+                </article>
+            </div>
         </div>
     </div>
 </div>

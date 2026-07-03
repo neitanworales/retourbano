@@ -125,7 +125,8 @@ class RegistrationService
             isset($registration->requires_lodging) ? (int) $registration->requires_lodging : 0,
             isset($registration->reasons) ? $registration->reasons : null,
             isset($registration->reinscription) ? (int) $registration->reinscription === 1 : false,
-            $dashboardData
+            $dashboardData,
+            false
         );
 
         if (!$sent) {

@@ -50,7 +50,7 @@ class EmailService
      * Sends the registration confirmation email to the user
      * and a staff notification to the event contact email.
      */
-    public function sendRegistrationEmail($user, $event, $requiresLodging = 0, $reasons = null, $reinscription = false, $dashboard = null)
+    public function sendRegistrationEmail($user, $event, $requiresLodging = 0, $reasons = null, $reinscription = false, $dashboard = null, $notifyStaff = true)
     {
         $to = isset($user->email) ? trim((string) $user->email) : '';
         if ($to === '') {
@@ -103,7 +103,7 @@ class EmailService
         $sent = $this->send($to, $subject, $html);
 
         $staffEmail = isset($event->contact_email) ? trim((string) $event->contact_email) : '';
-        if ($staffEmail !== '') {
+        if ($notifyStaff && $staffEmail !== '') {
             $staffHtml = $this->renderTemplate('inscripcion-staff.html', $variables);
             $this->send($staffEmail, '[REPORTE A STAFF][' . $variables['ciudad'] . '] '. ($reinscription ? 'Reinscripción' : 'Inscripción') . ' a Reto Urbano ' . $variables['year'] . ' - ' . $variables['ciudad'], $staffHtml);
         }

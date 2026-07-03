@@ -52,7 +52,6 @@ tr.example-element-row:not(.example-expanded-row):active {
 
 .list-group{
     padding-top: 1em !important;
-    padding-bottom: 1em !important;
 }
 
 .mat-column-expandedDetail {
@@ -60,7 +59,7 @@ tr.example-element-row:not(.example-expanded-row):active {
 }
 
 .tabla-pagos{
-    margin-top: 1em;
+    /* margin-top: 1em; */
 }
 
 
@@ -76,7 +75,7 @@ tr.example-element-row:not(.example-expanded-row):active {
     color: #1b2b3a;
     background: #f8fafc;
     border: 1px solid rgba(27, 43, 58, 0.08);
-    border-radius: 14px;
+    /* border-radius: 14px; */
 }
 
 .profile-card-3 h1,

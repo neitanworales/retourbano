@@ -1,169 +1,212 @@
-<section class="container section main-section">
-    <h1>+ Info - {{event.city_label}}</h1>
-    <h1>{{event.title}}</h1>
-    <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{event.event_year}} está por comenzar!</h2>
-    <p class="duration-info" *ngIf="getEventDurationDays() > 0">
-        <i class="bi bi-calendar-check"></i> <strong>Duración:</strong> {{getEventDurationDays()}} días
-    </p>
-    <hr>
-    <ul>
-        <li>
-            <h3>Costos</h3>
-            <app-tabla-costos [event]="event"></app-tabla-costos>
-        </li>
-        <li>
-            <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
-            <p><i class="bi bi-lock"></i>Para asegurar tu lugar debes realizar un anticipo de
-                <b>${{event.minimum_payment_mxn}}
-                    MXN</b>
+<div class="info-frontpage">
+    <section class="container">
+        <header class="home-paper-head info-paper-head">
+            <p>+ Info - {{event.city_label}}</p>
+            <h1>{{event.titulo || event.title}}</h1>
+            <h2><i class="bi bi-balloon-fill"></i> ¡Reto Urbano {{event.event_year}} está por comenzar!</h2>
+            <p class="duration-info" *ngIf="getEventDurationDays() > 0">
+                <i class="bi bi-calendar-check"></i>
+                <strong>Duración:</strong> {{getEventDurationDays()}} días
             </p>
-            <p>Realiza tu depósito a:</p>
-            <p *ngIf="event.bank_name">
-                <i class="bi bi-bank"></i> {{event.bank_name}}
-            </p>
-            <p *ngIf="event.account_holder">
-                <i class="bi bi-file-person"></i> {{event.account_holder}}
-            </p>
-            <p *ngIf="event.bank_account">
-                <i class="bi bi-credit-card-2-front"></i> No. de tarjeta: {{event.bank_account}}
-            </p>
-            <p *ngIf="event.bank_clabe">
-                <i class="bi bi-credit-card-2-back"></i> CLABE: {{event.bank_clabe}}
-            </p>
-            <p *ngIf="event.contact_email">
-                <i class="bi bi-envelope-at"></i> Una vez realizado tu pago, Es importante que nos notifiques tus
-                dep&oacute;sitos en
-                <b>{{event.contact_email}}</b> o al los whatsapps <b><a href="https://wa.me/52{{event.contact_phone_1}}"
-                        target="_blank">{{event.contact_phone_1}}</a></b>
-                y/o
-                <b>{{event.contact_phone_2}}</b> enviando tus
-                fichas de depósito y el nombre de la persona inscrita.
-            </p>
-            <p><b><i class="bi bi-exclamation-triangle-fill"></i> Sin anticipo, tu lugar no está garantizado. Tienes
-                    como fecha
-                    límite el 5 de julio para poder realizarlo</b>
-            </p>
-        </li>
-        <li>
-            <h3>2. <i class="bi bi-car-front-fill"></i> Día de llegada:</h3>
-            <p *ngIf="event.start_at"><i class="bi bi-calendar-event"></i> {{event.start_at | date}}</p>
-            <p *ngIf="event.start_at"><i class="bi bi-clock"></i> Apertura de registro: {{event.start_at |
-                date:'shortTime'}}</p>
-            <p *ngIf="event.lobby_end_at"><i class="bbi bi-clock-history"></i> Cierre de registro:
-                {{formatLobbyTime(event.lobby_end_at)}}</p>
+        </header>
 
-            <div class="alert alert-warning" role="alert" *ngIf="event.arrival_note" style="white-space: pre-line;">
-                {{ formatNoteText(event.arrival_note) }}
+        <div class="row g-4 align-items-stretch info-paper-grid" *ngIf="!isLoading; else infoLoading">
+            <div class="col-xl-4 d-flex">
+                <article class="home-paper-panel info-paper-panel info-paper-panel-accent w-100">
+                    <h3>Costos</h3>
+                    <app-tabla-costos [event]="event"></app-tabla-costos>
+
+                    <div class="info-paper-actions mt-auto">
+                        <a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a>
+                    </div>
+                </article>
             </div>
 
-            <p *ngIf="event.arrival_place"><i class="bi bi-geo"></i> <b>Punto de encuentro:</b>
-                {{event.arrival_place}}</p>
-            <iframe *ngIf="event.arrival_coordinates" [src]="getSafeUrl(event.arrival_coordinates)" width="600"
-                height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
+            <div class="col-xl-8 d-flex">
+                <article class="home-paper-panel info-paper-panel w-100">
+                    <h3>1. ¡Recuerda la importancia de asegurar tu lugar!</h3>
 
-        </li>
-        <li>
-            <h3>3. <i class="bi bi-backpack2"></i> Viaje Misionero:</h3>
-            <p>Durante este tiempo se llevará acabo un pequeño viaje misionero.</p>
-            <p>Es importante mencionar que este viaje es una parte fundamental del campamento, ya que es el momento en
-                el que los participantes pueden poner en práctica lo aprendido y vivir una experiencia de servicio y
-                amor hacia los demás.</p>
-            <p *ngIf="event.cruzada_lugar">Este año el viaje misionero se realizará en {{event.cruzada_lugar}}</p>
-            <p>* El viaje misionero es un viaje de ida y vuelta y los costos están dentro del costo total del
-                campamento.</p>
-            <p>** El día de llegada se podrá firmar una forma de autorización para menores de edad.</p>
-        </li>
-        <li>
-            <h3>4. <i class="bi bi-car-front-fill"></i> Día de salida:</h3>
-            <p *ngIf="event.end_at"><i class="bi bi-calendar-event"></i> {{event.end_at | date}}</p>
-            <p *ngIf="event.end_at"><i class="bi bi-clock"></i> {{event.end_at | date:'shortTime'}}
-            </p>
-            <p *ngIf="event.departure_place"><i class="bi bi-geo"></i> <b>Lugar de entrega:</b>
-                {{event.departure_place}}</p>
-            <iframe *ngIf="event.departure_coordinates" [src]="getSafeUrl(event.departure_coordinates)" width="600"
-                height="450" style="border:0;" allowfullscreen="" loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"></iframe>
-            <p *ngIf="event.departure_note">{{event.departure_note}}</p>
-            <p><a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a></p>
-        </li>
-        <li>
-            <h3>5. <i class="bi bi-clipboard2-check-fill"></i> Qué llevar: (Puedes ir marcando esta lista)</h3>
+                    <div class="info-detail-list">
+                        <p class="info-line">
+                            <i class="bi bi-lock"></i>
+                            <span>Para asegurar tu lugar debes realizar un anticipo de <b>${{event.minimum_payment_mxn}} MXN</b></span>
+                        </p>
 
-            <p style="white-space: pre-line;">Estas son algunas cosas que debes traer al campamento:</p>
+                        <p>Realiza tu depósito a:</p>
 
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck2">
-                <label class="form-check-label" for="switchCheck2">Biblia, cuaderno y lapiceros (obligatorios)</label>
+                        <p class="info-line" *ngIf="event.bank_name">
+                            <i class="bi bi-bank"></i>
+                            <span>{{event.bank_name}}</span>
+                        </p>
+
+                        <p class="info-line" *ngIf="event.account_holder">
+                            <i class="bi bi-file-person"></i>
+                            <span>{{event.account_holder}}</span>
+                        </p>
+
+                        <p class="info-line" *ngIf="event.bank_account">
+                            <i class="bi bi-credit-card-2-front"></i>
+                            <span>No. de tarjeta: {{event.bank_account}}</span>
+                        </p>
+
+                        <p class="info-line" *ngIf="event.bank_clabe">
+                            <i class="bi bi-credit-card-2-back"></i>
+                            <span>CLABE: {{event.bank_clabe}}</span>
+                        </p>
+
+                        <p class="info-line" *ngIf="event.contact_email">
+                            <i class="bi bi-envelope-at"></i>
+                            <span>
+                                Una vez realizado tu pago, Es importante que nos notifiques tus depósitos en
+                                <b>{{event.contact_email}}</b> o al los whatsapps
+                                <b><a href="https://wa.me/52{{event.contact_phone_1}}" target="_blank">{{event.contact_phone_1}}</a></b>
+                                <ng-container *ngIf="event.contact_phone_2"> y/o <b>{{event.contact_phone_2}}</b></ng-container>
+                                enviando tus fichas de depósito y el nombre de la persona inscrita.
+                            </span>
+                        </p>
+
+                        <p class="info-line info-line-alert">
+                            <i class="bi bi-exclamation-triangle-fill"></i>
+                            <span><b>Sin anticipo, tu lugar no está garantizado. Tienes como fecha límite el 5 de julio para poder realizarlo</b></span>
+                        </p>
+                    </div>
+                </article>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-stretch info-paper-grid" *ngIf="!isLoading">
+            <div class="col-lg-6 d-flex">
+                <article class="home-paper-panel info-paper-panel w-100">
+                    <h3>2. <i class="bi bi-car-front-fill"></i> Día de llegada:</h3>
+
+                    <div class="info-detail-list">
+                        <p class="info-line" *ngIf="event.start_at"><i class="bi bi-calendar-event"></i><span>{{event.start_at | date}}</span></p>
+                        <p class="info-line" *ngIf="event.start_at"><i class="bi bi-clock"></i><span>Apertura de registro: {{event.start_at | date:'shortTime'}}</span></p>
+                        <p class="info-line" *ngIf="event.lobby_end_at"><i class="bi bi-clock-history"></i><span>Cierre de registro: {{formatLobbyTime(event.lobby_end_at)}}</span></p>
+
+                        <div class="alert alert-warning info-preserve-lines" role="alert" *ngIf="event.arrival_note">
+                            {{ formatNoteText(event.arrival_note) }}
+                        </div>
+
+                        <p class="info-line" *ngIf="event.arrival_place"><i class="bi bi-geo"></i><span><b>Punto de encuentro:</b> {{event.arrival_place}}</span></p>
+                    </div>
+
+                    <div class="info-map" *ngIf="event.arrival_coordinates">
+                        <iframe [src]="getSafeUrl(event.arrival_coordinates)" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+                </article>
             </div>
 
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck3">
-                <label class="form-check-label" for="switchCheck3">Mochila pequeña o cangurera</label>
+            <div class="col-lg-6 d-flex">
+                <article class="home-paper-panel info-paper-panel w-100">
+                    <h3>3. <i class="bi bi-backpack2"></i> Viaje Misionero:</h3>
+
+                    <p>Durante este tiempo se llevará acabo un pequeño viaje misionero.</p>
+                    <p>Es importante mencionar que este viaje es una parte fundamental del campamento, ya que es el momento en el que los participantes pueden poner en práctica lo aprendido y vivir una experiencia de servicio y amor hacia los demás.</p>
+                    <p *ngIf="event.cruzada_lugar">Este año el viaje misionero se realizará en {{event.cruzada_lugar}}</p>
+                    <p>* El viaje misionero es un viaje de ida y vuelta y los costos están dentro del costo total del campamento.</p>
+                    <p>** El día de llegada se podrá firmar una forma de autorización para menores de edad.</p>
+                </article>
+            </div>
+        </div>
+
+        <div class="row g-4 align-items-stretch info-paper-grid" *ngIf="!isLoading">
+            <div class="col-lg-7 d-flex">
+                <article class="home-paper-panel info-paper-panel w-100">
+                    <h3>4. <i class="bi bi-car-front-fill"></i> Día de salida:</h3>
+
+                    <div class="info-detail-list">
+                        <p class="info-line" *ngIf="event.end_at"><i class="bi bi-calendar-event"></i><span>{{event.end_at | date}}</span></p>
+                        <p class="info-line" *ngIf="event.end_at"><i class="bi bi-clock"></i><span>{{event.end_at | date:'shortTime'}}</span></p>
+                        <p class="info-line" *ngIf="event.departure_place"><i class="bi bi-geo"></i><span><b>Lugar de entrega:</b> {{event.departure_place}}</span></p>
+                        <p *ngIf="event.departure_note">{{event.departure_note}}</p>
+                    </div>
+
+                    <div class="info-map" *ngIf="event.departure_coordinates">
+                        <iframe [src]="getSafeUrl(event.departure_coordinates)" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                    </div>
+
+                    <div class="info-paper-actions">
+                        <a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a>
+                    </div>
+                </article>
             </div>
 
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck4">
-                <label class="form-check-label" for="switchCheck4">
-                    Ropa cómoda para 6 días (tendremos algunas actividades al aire libre)
-                </label>
+            <div class="col-lg-5 d-flex">
+                <article class="home-paper-panel info-paper-panel info-paper-panel-note w-100">
+                    <h3>5. <i class="bi bi-clipboard2-check-fill"></i> Qué llevar: (Puedes ir marcando esta lista)</h3>
+
+                    <p class="info-preserve-lines">Estas son algunas cosas que debes traer al campamento:</p>
+
+                    <div class="info-checklist">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck2">
+                            <label class="form-check-label" for="switchCheck2">Biblia, cuaderno y lapiceros (obligatorios)</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck3">
+                            <label class="form-check-label" for="switchCheck3">Mochila pequeña o cangurera</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck4">
+                            <label class="form-check-label" for="switchCheck4">Ropa cómoda para 6 días (tendremos algunas actividades al aire libre)</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck5">
+                            <label class="form-check-label" for="switchCheck5">Chamarra para el frío y la lluvia; el clima tiende a ser frío por las noches</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck6">
+                            <label class="form-check-label" for="switchCheck6">Accesorios para el sol, como gorra, sombrero tipo bucket, bloqueador, etc.</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck7">
+                            <label class="form-check-label" for="switchCheck7">Artículos de uso personal: todo lo que necesitas para bañarte y arreglarte</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck8">
+                            <label class="form-check-label" for="switchCheck8">Calzado cómodo que te permita hacer ejercicio y actividades al aire libre</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck9">
+                            <label class="form-check-label" for="switchCheck9">Dinero extra para la tienda</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck10">
+                            <label class="form-check-label" for="switchCheck10">Botella de agua reutilizable</label>
+                        </div>
+
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="switchCheck11">
+                            <label class="form-check-label" for="switchCheck11">No es necesario que traigas almohada ni cobijas</label>
+                        </div>
+                    </div>
+
+                    <p class="info-preserve-lines">Te recomendamos NO TRAER dispositivos electrónicos adicionales (iPad, computadora, Nintendo Switch, laptop, etc.). Reto Urbano no podrá hacerse responsable de la pérdida o el daño de cualquiera de estos dispositivos.</p>
+
+                    <p class="info-preserve-lines">* Recuerda que no se permite traer bebidas alcohólicas, drogas, armas o cualquier objeto que pueda poner en riesgo la seguridad de los participantes.</p>
+                </article>
             </div>
+        </div>
 
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck5">
-                <label class="form-check-label" for="switchCheck5">
-                    Chamarra para el frío y la lluvia; el clima tiende a ser frío por las noches
-                </label>
+        <ng-template #infoLoading>
+            <div class="row g-4 info-paper-grid">
+                <div class="col-12">
+                    <article class="home-paper-panel info-paper-panel info-loading-panel text-center">
+                        <div class="spinner-border text-secondary" role="status">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </article>
+                </div>
             </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck6">
-                <label class="form-check-label" for="switchCheck6">
-                    Accesorios para el sol, como gorra, sombrero tipo bucket, bloqueador, etc.
-                </label>
-            </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck7">
-                <label class="form-check-label" for="switchCheck7">
-                    Artículos de uso personal: todo lo que necesitas para bañarte y arreglarte
-                </label>
-            </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck8">
-                <label class="form-check-label" for="switchCheck8">
-                    Calzado cómodo que te permita hacer ejercicio y actividades al aire libre
-                </label>
-            </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck9">
-                <label class="form-check-label" for="switchCheck9">Dinero extra para la tienda</label>
-            </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck10">
-                <label class="form-check-label" for="switchCheck10">Botella de agua reutilizable</label>
-            </div>
-
-            <div class="form-check form-switch">
-                <input class="form-check-input" type="checkbox" role="switch" id="switchCheck11">
-                <label class="form-check-label" for="switchCheck11">No es necesario que traigas almohada ni
-                    cobijas</label>
-            </div>
-
-            <p style="white-space: pre-line;">
-                Te recomendamos NO TRAER dispositivos electrónicos adicionales (iPad, computadora, Nintendo Switch,
-                laptop, etc.). Reto Urbano no podrá hacerse responsable de la pérdida o el daño de cualquiera de estos
-                dispositivos.
-            </p>
-
-            <p style="white-space: pre-line;">
-                * Recuerda que no se permite traer bebidas alcohólicas, drogas, armas o cualquier objeto que pueda poner
-                en riesgo la seguridad de los participantes.
-            </p>
-        </li>
-    </ul>
-    <p><a routerLink="/registro" class="btn btn-primary">Click aquí para registrarte</a></p>
-</section>
+        </ng-template>
+    </section>
+</div>

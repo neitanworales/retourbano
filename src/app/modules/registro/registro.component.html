@@ -1,65 +1,68 @@
-<section class="section main-section">
+<div class="register-frontpage">
     <div class="container">
-        <div class="row">
-            <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
-                <h1>Registro</h1>
-                <h2>¿Estás listo para aceptar el Reto?</h2>
-            </div>
-        </div>
-        <div *ngIf="event != null; else botones">
+        <header class="register-paper-head text-center">
+            <p class="register-kicker">+ Registro</p>
+            <h1>Registro</h1>
+            <h2>¿Estás listo para aceptar el Reto?</h2>
+        </header>
+
+        <div *ngIf="event; else botones" class="register-event-layout">
             <div class="row">
-                <div class="col-xs-12 col-md-12 col-lg-12">
-                    <img alt="..." class="img-fluid"
-                        [src]="'assets/img/flyers/ru_flyer_' + event!.id + '.jpg'"
-                        style="width: 100%;">
-                </div>
-            </div>
-            <hr>
-            <div class="row">
-                <div class="col">
-                    <h1>{{event!.titulo}}</h1>
-                    <div class="card">
-                        <div class="card-header">
-                            Registro al campamento {{event!.title}}
-                        </div>
-                        <div class="card-body">
-                            <p>Este campamento se llevará a cabo en {{event!.city_label}}</p>
-                        </div>
-                        <div class="card-footer" *ngIf="events!.length > 1">
-                            ¿Deseas registrarte a otro campamento?
-                            <button *ngFor="let item of events" type="button" class="btn btn-sm btn-outline-info"
-                                (click)="selectEvent(item)">{{item.city_label +' -'+item.title}}</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <app-tabla-costos [event]="event!"></app-tabla-costos>
-                </div>
-            </div>
-            <!--div class="row">
-                <div class="col">
-                    <div class="alert alert-primary" role="alert">
-                        Primeros 50 en registrarse recibirán un regalo sorpresa al comenzar el campamento
-                    </div>
-                </div>
-            </div-->
-            <div class="row">
-                <div class="col">
-                    <app-registro-avance [showForm]="true" [event]="event!"></app-registro-avance>
-                </div>
-            </div>
-        </div>
-        <ng-template #botones>
-            <div class="row">
-                <div class="col text-center">
-                    <h2>¿A cual campamento quieres registrarte?</h2>
-                    <button *ngFor="let item of events" type="button" class="btn btn-primary"
-                        (click)="selectEvent(item)">{{item.city_label +' -'+item.title}}</button>
+                <div class="col-xl-7 d-flex" style="margin-bottom: 0.5rem;">
+                    <figure class="register-paper-panel register-flyer-panel mb-0 w-100">
+                        <img alt="Flyer del evento" class="img-fluid register-flyer-image"
+                            [src]="'assets/img/flyers/ru_flyer_' + event!.id + '.jpg'">
+                    </figure>
                 </div>
 
+                <div class="col-xl-5 d-flex flex-column gap-4">
+                    <article class="register-paper-panel register-summary-panel w-100">
+                        <p class="register-city">{{event!.city_label}}</p>
+                        <h3>{{event!.titulo}}</h3>
+                        <p class="register-copy">Registro al campamento {{event!.title}}</p>
+                        <p class="register-copy">Este campamento se llevará a cabo en {{event!.city_label}}</p>
+
+                        <div class="register-switcher" *ngIf="events && events.length > 1">
+                            <p>¿Deseas registrarte a otro campamento?</p>
+                            <div class="register-switcher-actions">
+                                <button *ngFor="let item of events" type="button" class="btn btn-sm btn-outline-dark"
+                                    (click)="selectEvent(item)">{{item.city_label + ' - ' + item.title}}</button>
+                            </div>
+                        </div>
+                    </article>
+                    <article class="register-paper-panel register-costs-panel w-100">
+                        <h3>Costos</h3>
+                        <app-tabla-costos [event]="event!"></app-tabla-costos>
+                    </article>
+                </div>
+            </div>
+
+            <div class="row g-4 align-items-stretch register-paper-grid">
+
+                <div class="col-lg-12 d-flex">
+                    <article class="register-paper-panel register-progress-panel w-100">
+                        <h3>Inscripción</h3>
+                        <app-registro-avance [showForm]="true" [event]="event!"></app-registro-avance>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <ng-template #botones>
+            <div class="row justify-content-center register-paper-grid">
+                <div class="col-lg-8 d-flex">
+                    <article class="register-paper-panel register-picker-panel w-100 text-center">
+                        <h3>¿A cuál campamento quieres registrarte?</h3>
+                        <p class="register-copy">Selecciona tu sede para entrar al formulario y revisar costos, fechas y
+                            disponibilidad.</p>
+
+                        <div class="register-picker-actions">
+                            <button *ngFor="let item of events" type="button" class="btn btn-primary"
+                                (click)="selectEvent(item)">{{item.city_label + ' - ' + item.title}}</button>
+                        </div>
+                    </article>
+                </div>
             </div>
         </ng-template>
     </div>
-</section>
+</div>
