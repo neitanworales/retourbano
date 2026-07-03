@@ -1,14 +1,155 @@
-.img-main{
-    height: 35em;
+.reins-frontpage {
+    padding: 2.5rem 0 4.5rem;
+    background:
+        linear-gradient(#f7f1e8, #fcfaf7 20%, #f8f5ef),
+        repeating-linear-gradient(90deg, rgba(22, 50, 74, 0.024) 0, rgba(22, 50, 74, 0.024) 1px, transparent 1px, transparent 26px);
 }
 
-.section{
+:host-context(.app-shell-auth) .reins-frontpage {
+    padding-top: 1.9rem;
+}
+
+.main-section {
     margin-top: 0;
 }
 
-.cover-container{
-    color: white;
-    background: black;
+.reins-event-layout {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.reins-paper-head {
+    margin-bottom: 2.2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(22, 50, 74, 0.18);
+}
+
+.reins-kicker,
+.reins-city {
+    margin: 0;
+    color: #b1522b;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.reins-paper-head h1,
+.reins-paper-panel h3 {
+    margin: 0;
+    color: #13293d;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    line-height: 1.08;
+}
+
+.reins-paper-head h1 {
+    font-size: clamp(2.4rem, 4.5vw, 4.8rem);
+}
+
+.reins-paper-head h2 {
+    margin: 0.55rem 0 0;
+    color: #435565;
+    font-family: Georgia, serif;
+    font-size: clamp(1.15rem, 2vw, 1.55rem);
+    font-weight: 600;
+}
+
+.reins-paper-panel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem;
+    background: linear-gradient(rgba(255, 252, 247, 0.96), rgba(247, 241, 232, 0.92));
+    border: 1px solid rgba(22, 50, 74, 0.12);
+    border-radius: 1.35rem;
+    box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+}
+
+.reins-flyer-panel {
+    padding: 0;
+    overflow: hidden;
+}
+
+.reins-flyer-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.reins-summary-panel,
+.reins-help-panel,
+.reins-action-panel,
+.reins-form-panel,
+.reins-picker-panel {
+    height: 100%;
+}
+
+.reins-summary-panel h3,
+.reins-help-panel h3,
+.reins-action-panel h3,
+.reins-form-panel h3,
+.reins-picker-panel h3 {
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+}
+
+.reins-copy,
+.reins-switcher p,
+.reins-picker-panel p {
+    margin: 0;
+    color: #314454;
+    line-height: 1.68;
+}
+
+.reins-switcher {
+    display: grid;
+    gap: 0.85rem;
+    margin-top: auto;
+    padding-top: 0.4rem;
+    border-top: 1px solid rgba(22, 50, 74, 0.1);
+}
+
+.reins-switcher-actions,
+.reins-picker-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.reins-picker-actions {
+    justify-content: center;
+}
+
+.reins-form-stack {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.reins-picker-panel {
+    align-items: center;
+    text-align: center;
+    padding: 1.6rem;
+}
+
+.reins-action-panel .alert,
+.reins-form-panel .alert {
+    margin-bottom: 0;
+}
+
+.reins-form-panel ::ng-deep h1,
+.reins-form-panel ::ng-deep h3,
+.reins-form-panel ::ng-deep h4,
+.reins-form-panel ::ng-deep legend {
+    color: #13293d;
+    font-family: Georgia, serif;
+}
+
+.reins-form-panel ::ng-deep .card,
+.reins-form-panel ::ng-deep .staff-soft-card,
+.reins-form-panel ::ng-deep fieldset {
+    border-color: rgba(22, 50, 74, 0.12);
+    border-radius: 1rem;
 }
 
 .loading {
@@ -27,4 +168,35 @@
 
 .supermodal {
     z-index: 7000;
+}
+
+@media (max-width: 991px) {
+    .reins-frontpage {
+        padding-top: 2.5rem;
+    }
+
+    :host-context(.app-shell-auth) .reins-frontpage {
+        padding-top: 1.4rem;
+    }
+}
+
+@media (max-width: 575px) {
+    .reins-frontpage {
+        padding-top: 2.5rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .reins-paper-head h1 {
+        font-size: 2.25rem;
+    }
+
+    .reins-switcher-actions,
+    .reins-picker-actions {
+        flex-direction: column;
+    }
+
+    .reins-switcher-actions .btn,
+    .reins-picker-actions .btn {
+        width: 100%;
+    }
 }

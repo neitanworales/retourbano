@@ -1,102 +1,122 @@
-<div class="container section main-section">
-    <div class="row">
-        <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
-            <h1>Reinscripción!</h1>
+<div class="reins-frontpage">
+    <div class="container">
+        <header class="reins-paper-head text-center">
+            <p class="reins-kicker">+ Reinscripción</p>
+            <h1>Reinscripción</h1>
+            <h2>Vuelve al campamento con tus datos listos y tu lugar actualizado.</h2>
+        </header>
+
+        <div *ngIf="event != null; else botones" class="reins-event-layout">
+            <div class="row g-4 align-items-stretch reins-paper-grid">
+                <div class="col-lg-6 d-flex">
+                    <article class="reins-paper-panel reins-summary-panel w-100">
+                        <p class="reins-city">{{event.city_label}}</p>
+                        <h3>{{event.title}}</h3>
+                        <p class="reins-copy">Reinscripción al campamento {{event.title}}</p>
+                        <p class="reins-copy">Este campamento se llevará a cabo en {{event.city_label}}</p>
+
+                        <div class="reins-switcher" *ngIf="events!.length > 1">
+                            <p>¿Deseas reinscribirte a otro campamento?</p>
+                            <div class="reins-switcher-actions">
+                                <a *ngFor="let event of events" class="btn btn-sm btn-outline-dark"
+                                    routerLink="/reinscripcion"
+                                    [queryParams]="{ id_event: event.id }">{{event.city_label + ' - ' +
+                                    event.title}}</a>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+                <div class="col-lg-6 d-flex">
+                    <article class="reins-paper-panel reins-help-panel w-100" *ngIf="!user">
+                        <h3>¿Cómo funciona?</h3>
+                        <p class="reins-copy">Primero puedes pedir un código con el correo que usaste antes. Si ya lo
+                            tienes, ingrésalo para cargar tus datos y completar la reinscripción.</p>
+                    </article>
+                </div>
+            </div>
+
+            <div class="row g-4 align-items-stretch reins-paper-grid" *ngIf="!user">
+                <div class="col-lg-12 d-flex">
+                    <article class="reins-paper-panel reins-action-panel w-100">
+                        <h3>1. Solicita tu código</h3>
+                        <p class="reins-copy">Si no tienes un código, escribe tu correo con el que ya te habías inscrito
+                            en Reto Urbano y se te enviará un código a tu correo que debes ingresar en la caja de abajo.
+                        </p>
+
+                        <form (ngSubmit)="validarEmail()" [formGroup]="registerFormEmail" class="reins-form-stack">
+                            <div class="input-group mb-0">
+                                <input type="email" class="form-control form-control-sm" formControlName="email"
+                                    placeholder="Escribe tu e-mail"
+                                    [ngClass]="{'is-invalid': formEmail['email'].errors }" [(ngModel)]="email" />
+                                <button type="submit" class="btn btn-success"
+                                    [disabled]="registerFormEmail.invalid">Buscar</button>
+                            </div>
+                            <div *ngIf="formEmail['email'].errors" class="invalid-feedback d-block">
+                                <div *ngIf="formEmail['email'].errors">El e-mail es obligatorio</div>
+                            </div>
+                        </form>
+
+                        <div class="alert alert-warning mb-0" role="alert">
+                            <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> ¡¡Recuerda
+                            revisar tu bandeja de SPAM o Correo no deseado!! <i
+                                class="bi bi-exclamation-triangle-fill"></i>
+                        </div>
+                    </article>
+                </div>
+
+                <div class="col-lg-12 d-flex">
+                    <article class="reins-paper-panel reins-action-panel w-100">
+                        <h3>2. Valida tu código</h3>
+                        <p class="reins-copy">Si ya tienes un código, ingresa el código que recibiste en tu correo.</p>
+
+                        <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm" class="reins-form-stack">
+                            <div class="input-group mb-0">
+                                <input #codigoInput class="form-control" type="text" placeholder="Ingresa el código"
+                                    formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
+                                    [(ngModel)]="codigo" />
+                                <button type="submit" class="btn btn-success"
+                                    [disabled]="registerForm.invalid">Validar</button>
+                            </div>
+                            <div *ngIf="form['codigo'].errors" class="invalid-feedback d-block">
+                                <div *ngIf="form['codigo'].errors">El código es obligatorio</div>
+                            </div>
+                        </form>
+                    </article>
+                </div>
+            </div>
+
+            <div class="row g-4 align-items-stretch reins-paper-grid" *ngIf="user">
+                <div class="col-12 d-flex">
+                    <article class="reins-paper-panel reins-form-panel w-100">
+                        <div class="alert mb-0" [ngClass]="alreadyRegisteredInEvent ? 'alert-info' : 'alert-success'"
+                            role="alert" *ngIf="registrationNotice">
+                            {{registrationNotice}}
+                        </div>
+                        <h3>Guerrero encontrado</h3>
+                        <app-registro-form [saveInMemory]="false" [userToEdit]="user"
+                            [registrationToEdit]="existingRegistration" [event]="event!"></app-registro-form>
+                    </article>
+                </div>
+            </div>
         </div>
+
+        <ng-template #botones>
+            <div class="row justify-content-center reins-paper-grid">
+                <div class="col-lg-8 d-flex">
+                    <article class="reins-paper-panel reins-picker-panel w-100 text-center">
+                        <h3>¿A cuál campamento quieres reinscribirte?</h3>
+                        <p class="reins-copy">Selecciona tu sede para recuperar tu registro anterior y actualizar tus
+                            datos.</p>
+                        <div class="reins-picker-actions">
+                            <a *ngFor="let event of events" class="btn btn-primary" routerLink="/reinscripcion"
+                                [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre + ' - ' +
+                                event.titulo}}</a>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </ng-template>
     </div>
-
-    <div *ngIf="event != null; else botones">
-
-        <div class="row">
-            <div class="col">
-                <div class="card">
-                    <div class="card-header">
-                        Reinscripción al campamento {{event.title}}
-                    </div>
-                    <div class="card-body">
-                        <p>Este campamento se llevará a cabo en {{event.city_label}}</p>
-                    </div>
-                    <div class="card-footer" *ngIf="events!.length > 1">
-                        ¿Deseas reinscribirte a otro campamento?
-                        <a *ngFor="let event of events" class="btn btn-sm btn-outline-info"
-                            routerLink="/reinscripcion"
-                            [queryParams]="{ id_event: event.id }">{{event.city_label +' -'+event.title}}</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <hr *ngIf="!user" />
-        <div class="card" *ngIf="!user">
-            <div class="card-body">
-                <p>Si no tienes un código, escribe tu correo con el que ya te habías inscrito en Reto Urbano y se te
-                    enviará un
-                    código a tu correo que debes ingresar en la caja de abajo</p>
-                <div class="col">
-                    <form (ngSubmit)="validarEmail()" [formGroup]="registerFormEmail">
-                        <div class="input-group mb-3">
-                            <input type="email" class="form-control form-control-sm" formControlName="email"
-                                placeholder="Escribe tu e-mail" [ngClass]="{'is-invalid': formEmail['email'].errors }"
-                                [(ngModel)]="email" />
-                            <button type="submit" class="btn btn-success"
-                                [disabled]="registerFormEmail.invalid">Buscar</button>
-                        </div>
-                        <div *ngIf="formEmail['email'].errors" class="invalid-feedback">
-                            <div *ngIf="formEmail['email'].errors">El e-mail es obligatorio</div>
-                        </div>
-                    </form>
-                </div>
-                <div class="alert alert-warning" role="alert">
-                    <strong>HOLA GUERRERO! </strong> <i class="bi bi-exclamation-triangle-fill"></i> ¡¡Recuerda revisar
-                    tu
-                    bandeja de SPAM o Correo no deseado!! <i class="bi bi-exclamation-triangle-fill"></i>
-                </div>
-            </div>
-        </div>
-        <hr *ngIf="!user" />
-        <div class="card" *ngIf="!user">
-            <div class="card-body">
-                <p>Si ya tienes un código, ingresa el código que recibiste en tu correo.</p>
-                <div class="col-xs-12 col-md-12 col-lg-12 align-self-center">
-                    <form (ngSubmit)="validarCodigo()" [formGroup]="registerForm">
-                        <div class="input-group mb-3">
-                            <input #codigoInput class="form-control" type="text" placeholder="Ingresa el código"
-                                formControlName="codigo" [ngClass]="{'is-invalid': form['codigo'].errors }"
-                                [(ngModel)]="codigo" />
-                            <button type="submit" class="btn btn-success"
-                                [disabled]="registerForm.invalid">Validar</button>
-                        </div>
-                        <div *ngIf="form['codigo'].errors" class="invalid-feedback">
-                            <div *ngIf="form['codigo'].errors">El e-mail es obligatorio</div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <hr />
-        <div class="row" *ngIf="user">
-            <div class="col-1"></div>
-            <div class="col-10">
-                <div class="alert" [ngClass]="alreadyRegisteredInEvent ? 'alert-info' : 'alert-success'" role="alert" *ngIf="registrationNotice">
-                    {{registrationNotice}}
-                </div>
-                <h3>Guerrero encontrado:</h3>
-                <app-registro-form [saveInMemory]="false" [userToEdit]="user"
-                    [registrationToEdit]="existingRegistration" [event]="event!"></app-registro-form>
-            </div>
-            <div class="col-1"></div>
-        </div>
-    </div>
-    <ng-template #botones>
-        <div class="row">
-            <div class="col text-center">
-                <h2>¿A cual campamento quieres registrarte?</h2>
-                <a *ngFor="let event of events" class="btn btn-primary" routerLink="/reinscripcion"
-                    [queryParams]="{ id_event: event.id }">{{event.ciudad?.nombre +' -
-                    '+event.titulo}}</a>
-            </div>
-        </div>
-    </ng-template>
 </div>
 
 <div id="modal-validar-email" class="modal supermodal" tabindex="-1" role="dialog" [ngStyle]="{'display':displayStyle}"

@@ -1,19 +1,288 @@
-.section {
-    margin-bottom: 3em;
+.home-frontpage {
+    padding-top: 2.5rem;
+    padding-bottom: 4.5rem;
+    background:
+        linear-gradient(#f7f1e8, #fcfaf7 18%, #f8f5ef),
+        repeating-linear-gradient(90deg, rgba(22, 50, 74, 0.03) 0, rgba(22, 50, 74, 0.03) 1px, transparent 1px, transparent 24px);
 }
 
-.mensaje-section {
-    padding: 4em 0;
+:host-context(.app-shell-auth) .home-frontpage {
+    padding-top: 1.9rem;
 }
 
-.blockquote-footer{
+.home-frontpage .section {
+    margin-bottom: 0;
+}
+
+.home-frontpage section + section {
+    margin-top: 2.5rem;
+}
+
+.home-paper-head {
+    margin-bottom: 1.6rem;
+    padding-bottom: 1rem;
+    text-align: center;
+    border-bottom: 1px solid rgba(22, 50, 74, 0.18);
+}
+
+.home-paper-head h1,
+.home-event-head h1,
+.home-copy-card h1,
+.home-paper-panel h4 {
+    margin: 0;
+    color: #13293d;
+    font-family: Georgia, serif;
+    font-weight: 700;
+    line-height: 1.08;
+}
+
+.home-paper-head h1 {
+    font-size: clamp(2.4rem, 4.5vw, 4.8rem);
+    letter-spacing: -0.04em;
+}
+
+.home-paper-head p {
+    margin: 0.8rem auto 0;
+    max-width: 42rem;
+    color: #435565;
+    font-size: 1rem;
+}
+
+.home-paper-head-section {
+    margin-bottom: 2rem;
+}
+
+.home-side-title {
+    margin: 0 0 0.8rem;
+    color: #b1522b;
+    font-family: Georgia, serif;
+    font-size: clamp(1.25rem, 2.2vw, 1.8rem);
+    font-weight: 600;
+}
+
+.home-paper-panel {
+    height: 100%;
+    padding: 1.4rem;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(22, 50, 74, 0.12);
+    border-radius: 1.35rem;
+    box-shadow: 0 18px 40px rgba(17, 24, 39, 0.08);
+}
+
+.home-flyer-panel,
+.home-history-feature,
+.home-gallery-panel {
+    padding: 0;
+    overflow: hidden;
+}
+
+.home-flyer-image,
+.home-camp-image,
+.home-history-feature img,
+.home-archive-card img,
+.home-gallery-panel .carousel-item img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+}
+
+.home-side-panel,
+.home-copy-card,
+.home-camp-card,
+.home-event-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.home-portrait {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.home-portrait-image {
+    width: 100%;
+    border-radius: 1rem;
+}
+
+.home-portrait figcaption,
+.home-history-feature figcaption,
+.home-archive-card figcaption {
+    color: #566677;
+    font-size: 0.95rem;
+}
+
+.home-side-copy,
+.home-event-head,
+.home-event-actions {
+    display: grid;
+    gap: 0.9rem;
+}
+
+.home-side-copy p,
+.home-letter-copy p,
+.home-copy-card p,
+.home-camp-card p,
+.home-paper-panel h3,
+.home-paper-panel h4,
+.home-event-city,
+.home-event-head p {
+    margin: 0;
+}
+
+.home-side-copy p,
+.home-letter-copy,
+.home-copy-card p,
+.home-camp-card p,
+.home-event-head h3,
+.home-gallery-panel .carousel-caption p {
+    color: #314454;
+    line-height: 1.72;
+}
+
+.home-cta-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.home-cta-row .btn,
+.home-event-actions .btn {
+    min-width: 12rem;
+}
+
+.home-letter-panel {
+    padding: 1.8rem;
+}
+
+.home-letter-copy {
+    font-size: 1.02rem;
+    column-count: 2;
+    column-gap: 2rem;
+}
+
+.home-letter-copy p {
+    break-inside: avoid;
+}
+
+.home-letter-copy .blockquote-footer,
+.home-side-copy .blockquote-footer,
+.home-inline-quote .blockquote-footer {
+    margin-top: 0.9rem;
     text-align: right;
 }
 
-.margintop {
-    padding-top: 4.5rem;
+.home-letter-copy .blockquote-footer {
+    display: block;
+    column-span: all;
 }
 
-:host-context(.app-shell-auth) .margintop {
-    padding-top: 1.5rem;
+.home-inline-quote {
+    margin: 0;
+    color: #314454;
+}
+
+.home-event-card {
+    justify-content: space-between;
+}
+
+.home-event-head {
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(22, 50, 74, 0.12);
+}
+
+.home-event-head h1 {
+    font-size: clamp(1.8rem, 3vw, 2.7rem);
+}
+
+.home-event-head h3 {
+    font-size: 1rem;
+}
+
+.home-event-city {
+    color: #b1522b;
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+}
+
+.home-camp-card {
+    text-align: center;
+}
+
+.home-camp-card h4 {
+    font-size: 1.45rem;
+}
+
+.home-camp-image {
+    border-radius: 1rem;
+}
+
+.home-camp-card-wide h3 {
+    margin-top: 0.35rem;
+    color: #13293d;
+    font-family: Georgia, serif;
+}
+
+.home-archive-grid {
+    margin-top: 2rem;
+}
+
+.home-archive-card {
+    overflow: visible;
+}
+
+.home-archive-card figcaption,
+.home-history-feature figcaption {
+    padding: 1rem 1.1rem 1.1rem;
+    border-top: 0;
+}
+
+@media (max-width: 991px) {
+    .home-frontpage {
+        padding-top: 2.5rem;
+    }
+
+    :host-context(.app-shell-auth) .home-frontpage {
+        padding-top: 1.4rem;
+    }
+
+    .home-frontpage section + section {
+        margin-top: 2rem;
+    }
+
+    .home-paper-panel,
+    .home-letter-panel {
+        padding: 1.2rem;
+    }
+
+    .home-cta-row .btn,
+    .home-event-actions .btn {
+        width: 100%;
+        min-width: 0;
+    }
+
+}
+
+@media (max-width: 767px) {
+    .home-letter-copy {
+        column-count: 1;
+        column-gap: 0;
+    }
+}
+
+@media (max-width: 575px) {
+    .home-frontpage {
+        padding-top: 2.5rem;
+        padding-bottom: 3.5rem;
+    }
+
+    .home-paper-head h1 {
+        font-size: 2.25rem;
+    }
+
+    .home-side-title {
+        font-size: 1.15rem;
+    }
 }
