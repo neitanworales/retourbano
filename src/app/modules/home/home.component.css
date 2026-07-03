@@ -11,5 +11,9 @@
 }
 
 .margintop {
-    padding-top: 5em;
+    padding-top: 4.5rem;
+}
+
+:host-context(.app-shell-auth) .margintop {
+    padding-top: 1.5rem;
 }

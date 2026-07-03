@@ -6,7 +6,7 @@
     </i>
   </ng-container>
 
-  <div class="app-shell">
+  <div class="app-shell" [class.app-shell-public]="!vm.currentUser" [class.app-shell-auth]="!!vm.currentUser">
     <app-navbar *ngIf="!vm.currentUser"></app-navbar>
     <app-navbar-seguimiento *ngIf="vm.currentUser"></app-navbar-seguimiento>
     <main class="app-main">

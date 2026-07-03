@@ -13528,6 +13528,15 @@ body {
 }
 
 .main-section {
-  padding-top: 5rem;
+  padding-top: 3rem;
   padding-bottom: 5rem;
+}
+
+.app-shell-public .main-section {
+  padding-top: 4.75rem;
+}
+
+.app-shell-auth .main-section {
+  padding-top: 1.75rem;
+  padding-bottom: 4rem;
 }
