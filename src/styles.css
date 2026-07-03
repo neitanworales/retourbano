@@ -2506,7 +2506,9 @@ progress {
   border-color: var(--bs-table-border-color);
 }
 
-.table> :not(caption)>*>* {
+.table>thead>tr>*,
+.table>tbody>tr>*,
+.table>tfoot>tr>* {
   padding: 0.5rem 0.5rem;
   background-color: var(--bs-table-bg);
   border-bottom-width: 1px;
@@ -2529,19 +2531,27 @@ progress {
   caption-side: top;
 }
 
-.table-sm> :not(caption)>*>* {
+.table-sm>thead>tr>*,
+.table-sm>tbody>tr>*,
+.table-sm>tfoot>tr>* {
   padding: 0.25rem 0.25rem;
 }
 
-.table-bordered> :not(caption)>* {
+.table-bordered>thead,
+.table-bordered>tbody,
+.table-bordered>tfoot {
   border-width: 1px 0;
 }
 
-.table-bordered> :not(caption)>*>* {
+.table-bordered>thead>tr>*,
+.table-bordered>tbody>tr>*,
+.table-bordered>tfoot>tr>* {
   border-width: 0 1px;
 }
 
-.table-borderless> :not(caption)>*>* {
+.table-borderless>thead>tr>*,
+.table-borderless>tbody>tr>*,
+.table-borderless>tfoot>tr>* {
   border-bottom-width: 0;
 }
 
@@ -4573,7 +4583,8 @@ fieldset:disabled .btn {
   border-radius: 0.375rem;
 }
 
-.btn-group> :not(.btn-check:first-child)+.btn,
+.btn-group>.btn+.btn,
+.btn-group>.btn-group+.btn,
 .btn-group>.btn-group:not(:first-child) {
   margin-left: -1px;
 }
@@ -4586,7 +4597,8 @@ fieldset:disabled .btn {
 }
 
 .btn-group>.btn:nth-child(n+3),
-.btn-group> :not(.btn-check)+.btn,
+.btn-group>.btn+.btn,
+.btn-group>.btn-group+.btn,
 .btn-group>.btn-group:not(:first-child)>.btn {
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
