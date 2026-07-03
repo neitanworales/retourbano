@@ -11,7 +11,8 @@
         <div>
             <p class="staff-page-kicker">Operación</p>
             <h1 class="staff-page-title">Inscripciones</h1>
-            <p class="staff-page-subtitle">Resumen, seguimiento, hospedaje y contabilidad del evento activo desde una misma vista.</p>
+            <p class="staff-page-subtitle">Resumen, seguimiento, hospedaje y contabilidad del evento activo desde una
+                misma vista.</p>
         </div>
     </div>
     <ul class="nav nav-tabs staff-tabs">
@@ -79,7 +80,7 @@
             <ng-container matColumnDef="ID">
                 <th mat-header-cell *matHeaderCellDef> ID </th>
                 <td mat-cell *matCellDef="let element">
-                    {{element.user?.id}} 
+                    {{element.user?.id}}
                 </td>
             </ng-container>
 
@@ -183,7 +184,7 @@
 
             <!-- Expanded Content Column - The detail row is made up of this one column that spans across all columns -->
             <ng-container matColumnDef="expandedDetail">
-                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length">
+                <td mat-cell *matCellDef="let element" [attr.colspan]="columnsToDisplay.length" style="background-color: #c5d7e7;">
                     <div class="example-element-detail"
                         [@detailExpand]="element == expandedGuerrero ? 'expanded' : 'collapsed'">
                         <div class="row">
@@ -193,65 +194,87 @@
                                         <div class="d-flex w-100 justify-content-between">
                                             <div class="btn-group btn-group-sm" role="group">
                                                 <button type="button"
-                                                    class="btn btn-{{getEmailButtonClass(element)}} btn-sm"
+                                                    class="btn btn-sm btn dashboard-action-button btn-{{getEmailButtonClass(element)}} btn-sm"
                                                     (click)="enviarWelcomeEmail(element)">
-                                                    <i
-                                                        class="bi-envelope-{{hasSentEmails(element)?'check':'x'}}"></i>
+                                                    <i class="bi-envelope-{{hasSentEmails(element)?'check':'x'}}"></i>
                                                     Welcome Email ({{getSentEmailCount(element)}})
                                                 </button>
                                                 <button type="button"
                                                     class="btn btn-{{getEmailButtonClassConfirmacion(element)}} btn-sm"
                                                     (click)="enviarConfirmarEmail(element)">
-                                                    <i class="bi-envelope-{{hasSentEmailsConfirmacion(element)?'check':'x'}}"></i>
+                                                    <i
+                                                        class="bi-envelope-{{hasSentEmailsConfirmacion(element)?'check':'x'}}"></i>
                                                     Enviar confirmación ({{getSentEmailCountConfirmacion(element)}})
                                                 </button>
                                                 <button type="button"
-                                                    class="btn btn-{{element.is_confirmed?'success':'secondary'}} btn-sm"
+                                                    class="btn btn-{{element.is_confirmed?'primary':'purple'}} btn-sm"
                                                     (click)="confirmarAsistencia(element)">
                                                     <i class="bi-envelope-{{element.is_confirmed?'check':'x'}}"></i>
                                                     {{element.is_confirmed?'Confirmado':'Sin confirmar'}}
                                                 </button>
                                                 <button type="button"
-                                                    class="btn btn-{{element.attendance_confirmed?'success':'secondary'}} btn-sm"
+                                                    class="btn btn-{{element.attendance_confirmed?'primary':'purple'}} btn-sm"
                                                     (click)="asistir(element, !element.attendance_confirmed)">
                                                     <i class="bi-{{element.attendance_confirmed?'check-all':'x'}}"></i>
                                                     Asistencia
                                                 </button>
                                                 <button type="button"
-                                                    class="btn btn-{{element.seguimiento?'success':'secondary'}} btn-sm"
+                                                    class="btn btn-{{element.seguimiento?'primary':'purple'}} btn-sm"
                                                     (click)="seguimiento(element, !element.seguimiento)">
                                                     <i
-                                                        class="bi bi-bookmark-{{element.attendance_confirmed?'bi bi-bookmark-':'plus'}}"></i>
+                                                        class="bi bi-bookmark-{{element.seguimiento?'check':'plus'}}"></i>
                                                     Seguimiento
                                                 </button>
                                             </div>
 
 
                                             <div class="dropdown-center">
-                                                <button class="btn btn-secondary dropdown-toggle" type="button"
+                                                <button class="btn dropdown-toggle" type="button"
                                                     data-bs-toggle="dropdown" aria-expanded="false">
                                                     <i class="bi bi-three-dots-vertical"></i>
                                                 </button>
                                                 <ul class="dropdown-menu">
 
-                                                    <li *ngIf="!element.is_staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarStaff(element);"> Convertir Staff</a></li>
+                                                    <li
+                                                        *ngIf="!element.is_staff && !element.is_admin && element.registration_status==='A'">
+                                                        <a class="dropdown-item" (click)="actualizarStaff(element);">
+                                                            Convertir Staff</a>
+                                                    </li>
 
-                                                    <li *ngIf="element.is_staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarAdmin(element);"> Convertir a Administrador</a></li>
-                                                    <li *ngIf="element.is_staff && !element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarStaff(element);"> Convertir a Campero</a></li>
+                                                    <li
+                                                        *ngIf="element.is_staff && !element.is_admin && element.registration_status==='A'">
+                                                        <a class="dropdown-item" (click)="actualizarAdmin(element);">
+                                                            Convertir a Administrador</a>
+                                                    </li>
+                                                    <li
+                                                        *ngIf="element.is_staff && !element.is_admin && element.registration_status==='A'">
+                                                        <a class="dropdown-item" (click)="actualizarStaff(element);">
+                                                            Convertir a Campero</a>
+                                                    </li>
 
-                                                    <li *ngIf="element.is_admin && element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarAdmin(element);"> Convertir Staff</a></li>
-                                                    
-                                                    <li *ngIf="element.registration_status==='A'"><hr class="dropdown-divider"></li>  
+                                                    <li *ngIf="element.is_admin && element.registration_status==='A'"><a
+                                                            class="dropdown-item" (click)="actualizarAdmin(element);">
+                                                            Convertir Staff</a></li>
 
-                                                    <li *ngIf="element.registration_status==='A'"><a class="dropdown-item" (click)="actualizarStatus(false,element.id!, element)"><i
-                                                        class="bi bi-person-dash"></i> Dar de Baja</a></li>
-                                                
-                                                    <li *ngIf="element.registration_status==='B'"><a class="dropdown-item" (click)="actualizarStatus(true,element.id!, element)"><i
-                                                        class="bi bi-person-add"></i> Dar de Alta</a></li>
+                                                    <li *ngIf="element.registration_status==='A'">
+                                                        <hr class="dropdown-divider">
+                                                    </li>
 
-                                                    <li *ngIf="element.registration_status==='B'"><a class="dropdown-item" (click)="borrarDefinitivamente(element)"><i
-                                                        class="bi bi-trash-fill"></i> Borrar definitivamente</a></li>
+                                                    <li *ngIf="element.registration_status==='A'"><a
+                                                            class="dropdown-item"
+                                                            (click)="actualizarStatus(false,element.id!, element)"><i
+                                                                class="bi bi-person-dash"></i> Dar de Baja</a></li>
 
+                                                    <li *ngIf="element.registration_status==='B'"><a
+                                                            class="dropdown-item"
+                                                            (click)="actualizarStatus(true,element.id!, element)"><i
+                                                                class="bi bi-person-add"></i> Dar de Alta</a></li>
+
+                                                    <li *ngIf="element.registration_status==='B'"><a
+                                                            class="dropdown-item"
+                                                            (click)="borrarDefinitivamente(element)"><i
+                                                                class="bi bi-trash-fill"></i> Borrar definitivamente</a>
+                                                    </li>
                                                 </ul>
                                             </div>
                                         </div>
@@ -279,7 +302,8 @@
                                                     <small>Sexo:</small> {{element.user?.sexo}}
                                                     <small>Edad:</small> {{element.user?.edad}}
                                                     <small>Talla:</small> {{element.user?.talla}}
-                                                    <small><i class="bi bi-h-square"></i></small> {{element.room_code ?? 'No asignada'}}
+                                                    <small><i class="bi bi-h-square"></i></small> {{element.room_code ??
+                                                    'No asignada'}}
                                                 </h2>
                                             </div>
                                             <div class="col-md-5">
@@ -292,14 +316,6 @@
                                                     <p><i class="bi bi-telephone"></i>{{element.user?.telefono}}</p>
                                                     <p><i class="bi bi-geo-alt"></i>{{element.user?.vienesDe}}</p>
                                                 </div>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                    (click)="imprimirPDF(element)">
-                                                    <i class="bi bi-printer"></i> Imprimir PDF
-                                                </button>
-                                                <button type="button" class="btn btn-sm btn-outline-secondary"
-                                                    (click)="imprimirGafete(element)">
-                                                    <i class="bi bi-printer"></i> Imprimir Gafete
-                                                </button>
                                             </div>
                                             <div class="col-md-5">
                                                 <div class="icon-block">
@@ -313,103 +329,26 @@
                                                     <p><i class="bi bi-person-check"></i>{{element.user?.tutorNombre}}
                                                     </p>
                                                     <p><i class="bi bi-phone"></i>{{element.user?.tutorTelefono}}</p>
-                                                    <div class="row">
-                                                        <div *ngIf="element.user?.updatePassword; else updatePasss">
-                                                            <div class="input-group input-group-sm mb-3">
-                                                                <input type="text" class="form-control"
-                                                                    [(ngModel)]="element.user!.password"
-                                                                    placeholder="Password" aria-label="Password"
-                                                                    aria-describedby="button-addon2">
-                                                                <button class="btn btn-warning" type="button"
-                                                                    id="button-addon2"
-                                                                    (click)="cambiarContrasena(element);"><i
-                                                                        class="bi bi-sd-card"></i></button>
-                                                                <button class="btn btn-danger" type="button"
-                                                                    id="button-addon2"
-                                                                    (click)="cancelarContrasena(element);"><i
-                                                                        class="bi bi-x-square-fill"></i></button>
-                                                            </div>
-                                                        </div>
-                                                        <ng-template #updatePasss>
-                                                            <div class="input-group input-group-sm mb-3">
-                                                                <button class="btn btn-info" type="button"
-                                                                    id="button-addon1"
-                                                                    (click)="editarContrasena(element);"><i
-                                                                        class="bi bi-pen"></i></button>
-                                                                <input type="text" class="form-control"
-                                                                    placeholder="Password"
-                                                                    value="{{element.user?.password}}" disabled
-                                                                    readonly>
-                                                            </div>
-                                                        </ng-template>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="card-footer">
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            (click)="imprimirPDF(element)">
+                                            <i class="bi bi-printer"></i> Imprimir PDF
+                                        </button>
+                                        <button type="button" class="btn btn-sm btn-outline-secondary"
+                                            (click)="imprimirGafete(element)">
+                                            <i class="bi bi-printer"></i> Imprimir Gafete
+                                        </button>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
                         <div class="row">
-                            <div class="col">
-                                <table class="table tabla-pagos staff-table-shell">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>
-                                                Hospedaje
-                                            </th>
-                                            <th>
-                                                Habitación
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                {{element.requires_lodging ? 'Sí' : 'No'}}
-                                            </td>
-                                            <td>
-                                                {{element.room_code || 'No asignada'}}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col">
-                                <table class="table tabla-pagos staff-table-shell">
-                                    <thead class="thead-dark">
-                                        <tr>
-                                            <th>
-                                                Campamentos Anteriores
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr *ngFor="let previousEvent of element.previous_events || []">
-                                            <td>
-                                                <div class="btn position-relative">
-                                                    {{ previousEvent.title || previousEvent.titulo || 'Campamento sin
-                                                    título' }}
-                                                    <span
-                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                                        {{ previousEvent.event_year || previousEvent.year || '-' }}
-                                                    </span>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                        <tr *ngIf="!(element.previous_events?.length)">
-                                            <td>
-                                                Sin campamentos anteriores
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col">
+                            <div class="col-12">
                                 <table class="table tabla-pagos staff-table-shell">
                                     <thead class="thead-dark">
                                         <tr>
@@ -485,6 +424,59 @@
                                                 <button type="button" (click)="agregarPago(element)" class="btn">
                                                     <i class="bi bi-plus-circle"></i>
                                                 </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table tabla-pagos staff-table-shell">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Hospedaje
+                                            </th>
+                                            <th>
+                                                Habitación
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {{element.requires_lodging ? 'Sí' : 'No'}}
+                                            </td>
+                                            <td>
+                                                {{element.room_code || 'No asignada'}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col">
+                                <table class="table tabla-pagos staff-table-shell">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th>
+                                                Campamentos Anteriores
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let previousEvent of element.previous_events || []">
+                                            <td>
+                                                <div class="btn position-relative">
+                                                    {{ previousEvent.title || previousEvent.titulo || 'Campamento sin título' }}
+                                                    <span
+                                                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                                        {{ previousEvent.event_year || previousEvent.year || '-' }}
+                                                    </span>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        <tr *ngIf="!(element.previous_events?.length)">
+                                            <td>
+                                                Sin campamentos anteriores
                                             </td>
                                         </tr>
                                     </tbody>

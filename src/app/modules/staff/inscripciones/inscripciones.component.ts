@@ -499,7 +499,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   getEmailButtonClass(reg?: EventRegistration): string {
-    return this.hasSentEmails(reg) ? 'success' : 'purple';
+    return this.hasSentEmails(reg) ? 'primary' : 'purple';
   }
 
   hasSentEmailsConfirmacion(reg?: EventRegistration): boolean {
@@ -507,7 +507,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   getEmailButtonClassConfirmacion(reg?: EventRegistration): string {
-    return this.hasSentEmailsConfirmacion(reg) ? 'success' : 'purple';
+    return this.hasSentEmailsConfirmacion(reg) ? 'primary' : 'purple';
   }
 
   private extractSentEmailCount(reg: EventRegistration, result: any): number {
