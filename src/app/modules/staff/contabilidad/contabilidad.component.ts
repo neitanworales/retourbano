@@ -5,6 +5,8 @@ import { Pago } from 'src/app/core/models/registro/Pago';
 import { DatePipe } from '@angular/common';
 import * as XLSX from 'xlsx';
 import { Event } from 'src/app/core/models/registro/Event';
+import { RegistroDao } from 'src/app/core/api/dao/RegistroDao';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
     selector: 'app-contabilidad',
@@ -15,7 +17,12 @@ import { Event } from 'src/app/core/models/registro/Event';
 })
 export class ContabilidadComponent {
 
-  constructor(public pagoDao: PagoDao, private datePipe: DatePipe) { }
+  constructor(
+    public pagoDao: PagoDao,
+    private datePipe: DatePipe,
+    private registroDao: RegistroDao,
+    private authService: AuthService
+  ) { }
 
   @Input() selectedEvento?: Event;
 
@@ -271,6 +278,21 @@ export class ContabilidadComponent {
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Pagos');
+
+    const actorUserId = this.authService.getSessionValida()?.id;
+    this.registroDao.registrarActividadStaff({
+      action: 'exports.accounting_excel',
+      summary: 'Exportacion de contabilidad a Excel',
+      affected_user_id: actorUserId,
+      entity_type: 'report',
+      related_event_id: this.selectedEvento?.id,
+      metadata: {
+        file_name: fileName,
+        dataset,
+        rows: rows.length,
+        event_title: this.selectedEvento?.titulo || this.selectedEvento?.title || null,
+      }
+    }).subscribe({ error: () => undefined });
  
     /* save to file */  
     XLSX.writeFile(wb, fileName);

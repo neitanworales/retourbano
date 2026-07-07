@@ -7,6 +7,7 @@ import { HospedajeTable } from 'src/app/core/models/hospedaje/HospedajeTable';
 import { EventRegistration } from 'src/app/core/models/registro/EventRegistration';
 import { Event } from 'src/app/core/models/registro/Event';
 import * as XLSX from 'xlsx';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-hospedajes',
@@ -54,7 +55,8 @@ export class HospedajesComponent implements OnInit {
   constructor(
     private registroDao: RegistroDao,
     private datePipe: DatePipe, 
-    private eventDao: EventDao
+    private eventDao: EventDao,
+    private authService: AuthService
   ) {
 
   }
@@ -240,6 +242,20 @@ export class HospedajesComponent implements OnInit {
     /* generate workbook and add the worksheet */
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Guerreros');
+
+    const actorUserId = this.authService.getSessionValida()?.id;
+    this.registroDao.registrarActividadStaff({
+      action: 'exports.lodging_excel',
+      summary: 'Exportacion de hospedaje a Excel',
+      affected_user_id: actorUserId,
+      entity_type: 'report',
+      related_event_id: this.selectedEvento?.id,
+      metadata: {
+        file_name: fileName,
+        rows: this.hospedajes?.length || 0,
+        event_title: this.selectedEvento?.titulo || this.selectedEvento?.title || null,
+      }
+    }).subscribe({ error: () => undefined });
 
     /* save to file */
     XLSX.writeFile(wb, fileName);

@@ -123,6 +123,22 @@ class UserController extends BaseController
             $payload[] = $userData;
         }
 
+        $actorId = isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null;
+        if ($actorId) {
+            $this->activityLog->createEntry($actorId, 'queries.users_history', null, 'Consulta de historico de usuarios', array(
+                'actor_user_id' => $actorId,
+                'entity_type' => 'query',
+                'entity_id' => null,
+                'source' => 'api.v1.users',
+                'metadata' => array(
+                    'limit' => $limit,
+                    'offset' => $offset,
+                    'search' => $search,
+                    'result_count' => count($payload),
+                ),
+            ));
+        }
+
         return $this->ok(array(
             'users' => $payload,
             'pagination' => array(
@@ -144,6 +160,16 @@ class UserController extends BaseController
         $user = $this->users->findModelById($userId);
         if (!$user) {
             return $this->fail('user not found', 404);
+        }
+
+        $actorId = isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null;
+        if ($actorId) {
+            $this->activityLog->createEntry($userId, 'queries.user_detail', null, 'Consulta de detalle de usuario', array(
+                'actor_user_id' => $actorId,
+                'entity_type' => 'user',
+                'entity_id' => $userId,
+                'source' => 'api.v1.users',
+            ));
         }
 
         return $this->ok(array('user' => $user->toArray()), 'user found');
@@ -334,6 +360,53 @@ class UserController extends BaseController
                 'action' => $action,
             ),
         ), 'activity log listed');
+    }
+
+    public function recordActivity($request)
+    {
+        if (!isset($request['auth_user']) || !$request['auth_user']) {
+            return $this->fail('unauthorized', 401);
+        }
+
+        $action = isset($request['action']) ? strtolower(trim((string) $request['action'])) : '';
+        if ($action === '') {
+            return $this->fail('action is required', 422);
+        }
+
+        if (!$this->isAllowedClientActivityAction($action)) {
+            return $this->fail('action is not allowed for client activity logging', 422);
+        }
+
+        $affectedUserId = isset($request['affected_user_id']) ? (int) $request['affected_user_id'] : 0;
+        $actorUserId = isset($request['auth_user']->id) ? (int) $request['auth_user']->id : 0;
+        if ($affectedUserId <= 0) {
+            $affectedUserId = $actorUserId;
+        }
+
+        $entityType = isset($request['entity_type']) ? trim((string) $request['entity_type']) : 'staff_activity';
+        $entityId = isset($request['entity_id']) && $request['entity_id'] !== '' ? (int) $request['entity_id'] : null;
+        $relatedEventId = isset($request['related_event_id']) && $request['related_event_id'] !== '' ? (int) $request['related_event_id'] : null;
+        $relatedRegistrationId = isset($request['related_registration_id']) && $request['related_registration_id'] !== '' ? (int) $request['related_registration_id'] : null;
+        $summary = isset($request['summary']) ? trim((string) $request['summary']) : '';
+        $metadata = isset($request['metadata']) ? $request['metadata'] : null;
+
+        $this->activityLog->createEntry(
+            $affectedUserId,
+            $action,
+            null,
+            $summary !== '' ? $summary : null,
+            array(
+                'actor_user_id' => $actorUserId > 0 ? $actorUserId : null,
+                'entity_type' => $entityType !== '' ? $entityType : 'staff_activity',
+                'entity_id' => $entityId,
+                'related_event_id' => $relatedEventId,
+                'related_registration_id' => $relatedRegistrationId,
+                'source' => 'ui.staff',
+                'metadata' => is_array($metadata) ? $metadata : null,
+            )
+        );
+
+        return $this->ok(array('action' => $action), 'activity recorded');
     }
 
     public function updateRoles($request)
@@ -594,6 +667,19 @@ class UserController extends BaseController
             );
         }
 
+        $actorId = isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null;
+        if ($actorId) {
+            $this->activityLog->createEntry($actorId, 'queries.users_duplicates', null, 'Consulta de registros duplicados', array(
+                'actor_user_id' => $actorId,
+                'entity_type' => 'query',
+                'entity_id' => null,
+                'source' => 'api.v1.users',
+                'metadata' => array(
+                    'result_count' => count($payload),
+                ),
+            ));
+        }
+
         return $this->ok(array('duplicates' => $payload), 'duplicate registrations listed');
     }
 
@@ -824,6 +910,24 @@ class UserController extends BaseController
         return 'Sistema';
     }
 
+    private function isAllowedClientActivityAction($action)
+    {
+        $allowedPrefixes = array(
+            'exports.',
+            'downloads.',
+            'prints.',
+            'emails.',
+        );
+
+        foreach ($allowedPrefixes as $prefix) {
+            if (strpos($action, $prefix) === 0) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     private function getActivityActionLabel($action)
     {
         switch (trim((string) $action)) {
@@ -861,6 +965,34 @@ class UserController extends BaseController
                 return 'Pago actualizado';
             case 'payments.delete':
                 return 'Pago eliminado';
+            case 'emails.welcome.resend':
+                return 'Welcome email reenviado';
+            case 'emails.confirmation.resend':
+                return 'Correo de confirmacion reenviado';
+            case 'emails.password_recovery.staff':
+                return 'Correo de recuperacion enviado por staff';
+            case 'queries.users_history':
+                return 'Consulta de historico de usuarios';
+            case 'queries.users_duplicates':
+                return 'Consulta de registros duplicados';
+            case 'queries.user_detail':
+                return 'Consulta de detalle de usuario';
+            case 'queries.registration_detail':
+                return 'Consulta de detalle de inscripcion';
+            case 'prints.registration_sheet':
+                return 'Impresion de ficha de inscripcion';
+            case 'prints.name_badge':
+                return 'Impresion de gafete';
+            case 'exports.inscriptions_excel':
+                return 'Exportacion de inscripciones a Excel';
+            case 'exports.accounting_excel':
+                return 'Exportacion de contabilidad a Excel';
+            case 'exports.lodging_excel':
+                return 'Exportacion de hospedaje a Excel';
+            case 'lodging.room_assignment.update':
+                return 'Asignacion de habitacion actualizada';
+            case 'lodging.lodging_requirement.update':
+                return 'Hospedaje actualizado';
             default:
                 return trim((string) $action) !== '' ? trim((string) $action) : 'Movimiento';
         }

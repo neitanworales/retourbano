@@ -7,6 +7,7 @@ import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { Event } from 'src/app/core/models/registro/Event';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-inscripciones',
@@ -72,7 +73,8 @@ export class InscripcionesComponent implements OnInit {
   constructor(
     public registroDao: RegistroDao,
     private datePipe: DatePipe,
-    private eventDao: EventDao) { }
+    private eventDao: EventDao,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -450,6 +452,21 @@ export class InscripcionesComponent implements OnInit {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Guerreros');
 
+    const actorUserId = this.authService.getSessionValida()?.id;
+    this.registroDao.registrarActividadStaff({
+      action: 'exports.inscriptions_excel',
+      summary: 'Exportacion de inscripciones a Excel',
+      affected_user_id: actorUserId,
+      entity_type: 'report',
+      related_event_id: this.selectedEventoId,
+      metadata: {
+        file_name: fileName,
+        rows: excelData.length,
+        year: this.year,
+        event_title: this.selectedEvento?.titulo || this.selectedEvento?.title || null,
+      }
+    }).subscribe({ error: () => undefined });
+
     /* save to file */
     XLSX.writeFile(wb, fileName);
   }
@@ -528,11 +545,33 @@ export class InscripcionesComponent implements OnInit {
     return this.getSentEmailCountConfirmacion(reg) + 1;
   }
 
+  private registrarImpresion(action: 'prints.registration_sheet' | 'prints.name_badge', summary: string, reg: EventRegistration): void {
+    const actorUserId = this.authService.getSessionValida()?.id;
+    this.registroDao.registrarActividadStaff({
+      action,
+      summary,
+      affected_user_id: actorUserId,
+      entity_type: 'report',
+      entity_id: reg.id,
+      related_event_id: this.selectedEventoId,
+      related_registration_id: reg.id,
+      metadata: {
+        registration_id: reg.id,
+        user_id: reg.user?.id || reg.user_id || null,
+        full_name: reg.user?.nombre || reg.user?.full_name || null,
+        nick: reg.user?.nick || reg.user?.display_name || null,
+        room_code: reg.room_code || null,
+      }
+    }).subscribe({ error: () => undefined });
+  }
+
   imprimirPDF(reg: EventRegistration) {
     const printWindow = window.open('', '_blank', 'width=900,height=1200');
     if (!printWindow) {
       return;
     }
+
+    this.registrarImpresion('prints.registration_sheet', 'Impresion de ficha de inscripcion', reg);
 
     const fullName = reg.user?.nombre || reg.user?.full_name || 'Sin nombre';
     const nick = reg.user?.nick || reg.user?.display_name || '';
@@ -586,6 +625,8 @@ export class InscripcionesComponent implements OnInit {
     if (!printWindow) {
       return;
     }
+
+    this.registrarImpresion('prints.name_badge', 'Impresion de gafete', reg);
 
     const fullName = reg.user?.nombre || reg.user?.full_name || 'Sin nombre';
     const nick = reg.user?.nick || reg.user?.display_name || '';

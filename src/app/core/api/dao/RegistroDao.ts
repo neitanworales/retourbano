@@ -84,6 +84,17 @@ interface StaffActivityLogResponse extends DefaultResponse {
     };
 }
 
+interface StaffClientActivityPayload {
+    action: string;
+    summary?: string;
+    affected_user_id?: number;
+    entity_type?: string;
+    entity_id?: number;
+    related_event_id?: number;
+    related_registration_id?: number;
+    metadata?: Record<string, unknown>;
+}
+
 interface UserProfileUpdatePayload {
     full_name?: string;
     display_name?: string;
@@ -999,6 +1010,24 @@ export class RegistroDao {
                 },
                 pagination: response?.data?.pagination || {},
             } as StaffActivityLogResponse))
+        );
+    }
+
+    public registrarActividadStaff(payload: StaffClientActivityPayload): Observable<DefaultResponse> {
+        const session = this.autho.getSessionValida();
+        const token = encodeURIComponent(String(session?.token || ''));
+
+        return this.http.post<any>(
+            this.utils.v1('/users/activity-log') + '?token=' + token,
+            payload,
+            { headers: this.utils.getHeaders() }
+        ).pipe(
+            map((response) => ({
+                success: !!response?.success,
+                error: !response?.success,
+                message: response?.message || 'Actividad registrada',
+                code: response?.code || 200,
+            } as DefaultResponse))
         );
     }
 
