@@ -41,12 +41,17 @@
                     </div>
                 </div>
             </div>
+            <div *ngIf="getConflictingRoomsCount()" class="alert alert-warning room-conflict-alert" role="alert">
+                <strong>Conflicto de hospedaje:</strong> hay hombres y mujeres mezclados en
+                {{getConflictingRoomsCount()}} habitacion(es):
+                {{getConflictingRoomNames()}}.
+            </div>
             <div class="row">
                 <div class="col-lg-3">
                     <ul class="list-group">
                         <li *ngFor="let person of personasSinHabitacion"
                             class="list-group-item d-flex justify-content-between align-items-start"
-                            ngClass="{{person.user?.gender=='M'?'persona-blue':'persona-pink'}}">
+                            [ngClass]="getGenderClass(person.user?.gender || person.user?.sexo?.toString())">
                             <div class="ms-2 me-auto">
                                 <div class="fw-bold"><strong>{{person.user?.nombre}}</strong></div>
                                 <strong>{{person.is_staff==true?'STAFF':'Campero'}} <i
@@ -59,17 +64,21 @@
                 </div>
                 <div class="col-lg-9 flex">
                     <div class="row">
-                        <div class="card card-habitacion" style="width: 16rem;" *ngFor="let item of habitaciones;">
+                        <div class="card card-habitacion" style="width: 16rem;" *ngFor="let item of habitaciones;"
+                            [ngClass]="{'room-conflict-card': hasMixedGenderRoom(item)}">
                             <div class="card-body">
                                 <div class="ms-2 me-auto">
                                     <h5 class="card-title">{{item.habitacion}} <span
                                             class="badge text-bg-secondary">{{item.count}}</span></h5>
+                                    <span *ngIf="hasMixedGenderRoom(item)" class="badge text-bg-warning room-conflict-badge">
+                                        Mezcla H / M
+                                    </span>
                                 </div>
                             </div>
                             <ul class="list-group list-group">
                                 <li *ngFor="let person of item.personas"
                                     class="list-group-item d-flex justify-content-between align-items-start"
-                                    ngClass="{{person.user?.gender=='M'?'persona-blue':'persona-pink'}}">
+                                    [ngClass]="[getGenderClass(person.user?.gender || person.user?.sexo?.toString()), hasMixedGenderRoom(item) ? 'room-conflict-item' : '']">
                                     <div class="ms-2 me-auto">
                                         <div class="fw-bold"><strong>{{person.user?.nombre}}</strong></div>
                                         <strong>{{person.is_staff==true?'STAFF':'Campero'}} <i
@@ -114,6 +123,48 @@
                             <i class="bi bi-cloud-download"></i> Export to Excel
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <div class="staff-filter-grid mb-3">
+                <div>
+                    <label class="staff-filter-label" for="room-filter">Habitacion</label>
+                    <input id="room-filter" type="text" class="form-control form-control-sm" [(ngModel)]="roomFilter"
+                        (input)="applyHospedajeFilters()" placeholder="Buscar habitacion">
+                </div>
+                <div>
+                    <label class="staff-filter-label" for="gender-filter">Sexo</label>
+                    <select id="gender-filter" class="form-select form-select-sm" [(ngModel)]="genderFilter"
+                        (change)="applyHospedajeFilters()">
+                        <option value="">Todos</option>
+                        <option value="F">Mujeres</option>
+                        <option value="M">Hombres</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="staff-filter-label" for="age-min-filter">Edad minima</label>
+                    <input id="age-min-filter" type="number" class="form-control form-control-sm" [(ngModel)]="ageMin"
+                        (input)="applyHospedajeFilters()" placeholder="Min">
+                </div>
+                <div>
+                    <label class="staff-filter-label" for="age-max-filter">Edad maxima</label>
+                    <input id="age-max-filter" type="number" class="form-control form-control-sm" [(ngModel)]="ageMax"
+                        (input)="applyHospedajeFilters()" placeholder="Max">
+                </div>
+                <div>
+                    <label class="staff-filter-label" for="sort-by-filter">Ordenar por</label>
+                    <select id="sort-by-filter" class="form-select form-select-sm" [(ngModel)]="sortBy"
+                        (change)="applyHospedajeFilters()">
+                        <option *ngFor="let option of hospedajeSortOptions" [value]="option.value">{{option.label}}</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="staff-filter-label" for="sort-direction-filter">Direccion</label>
+                    <select id="sort-direction-filter" class="form-select form-select-sm" [(ngModel)]="sortDirection"
+                        (change)="applyHospedajeFilters()">
+                        <option value="asc">Ascendente</option>
+                        <option value="desc">Descendente</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -176,7 +227,8 @@
                     </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="columnsToDisplay"></tr>
-                    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="example-element-row"></tr>
+                    <tr mat-row *matRowDef="let myRowData; columns: columnsToDisplay" class="example-element-row"
+                        [ngClass]="[getGenderClass(myRowData.sexo), hasMixedGenderByRoomCode(myRowData.habitacion) ? 'room-conflict-row' : '']"></tr>
                 </table>
             </div>
         </div>

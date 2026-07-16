@@ -7,6 +7,7 @@ import { Pago } from 'src/app/core/models/registro/Pago';
 import * as XLSX from 'xlsx';
 import { EventDao } from 'src/app/core/api/dao/EventDao';
 import { Event } from 'src/app/core/models/registro/Event';
+import { AuthService } from 'src/app/core/services/auth.service';
 
 @Component({
   selector: 'app-inscripciones',
@@ -23,6 +24,16 @@ import { Event } from 'src/app/core/models/registro/Event';
   standalone: false
 })
 export class InscripcionesComponent implements OnInit {
+
+  readonly fullPaymentAmount = 1950;
+  readonly sortOptions = [
+    { value: '', label: 'Ordenar por' },
+    { value: 'nombre', label: 'Nombre' },
+    { value: 'edad', label: 'Edad' },
+    { value: 'sexo', label: 'Sexo' },
+    { value: 'talla', label: 'Talla' },
+    { value: 'pagado', label: 'Pagado' },
+  ];
 
   tabsCampas?: boolean[] = [false, false];
   events?: Event[]
@@ -65,6 +76,19 @@ export class InscripcionesComponent implements OnInit {
 
   expandedGuerrero?: EventRegistration;
   searchByName?: string = "";
+  appliedSearchByName = '';
+  selectedGender = '';
+  shirtSizeFilter = '';
+  ageMin?: number | null = null;
+  ageMax?: number | null = null;
+  confirmedFilter = '';
+  attendanceFilter = '';
+  followupFilter = '';
+  lodgingFilter = '';
+  paidFilter = '';
+  sortBy = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  private loadedRegistrations: EventRegistration[] = [];
   years = [
     2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023
   ];
@@ -72,7 +96,8 @@ export class InscripcionesComponent implements OnInit {
   constructor(
     public registroDao: RegistroDao,
     private datePipe: DatePipe,
-    private eventDao: EventDao) { }
+    private eventDao: EventDao,
+    private authService: AuthService) { }
 
   ngOnInit(): void {
     this.cargarDatos();
@@ -200,13 +225,16 @@ export class InscripcionesComponent implements OnInit {
     let seg: boolean = false;
 
     if (this.pageResumenActive) {
+      this.loadedRegistrations = [];
       this.dataSource = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "";
     } else if (this.pageHospedajeActive) {
+      this.loadedRegistrations = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "none";
     } else if (this.pageContabilidadActive) {
+      this.loadedRegistrations = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "none";
     } else {
@@ -247,9 +275,27 @@ export class InscripcionesComponent implements OnInit {
         seg = true;
       }
 
-      this.registroDao.consultarInscritos(opcion, activo, staff, this.searchByName!, seg, this.selectedEventoId).subscribe(
+      this.registroDao.consultarInscritos(
+        opcion,
+        activo,
+        staff,
+        this.searchByName!,
+        seg,
+        this.selectedEventoId,
+        {
+          gender: this.selectedGender,
+          shirtSize: this.shirtSizeFilter,
+          ageMin: this.ageMin,
+          ageMax: this.ageMax,
+          isConfirmed: this.confirmedFilter,
+          attendanceConfirmed: this.attendanceFilter,
+          isFollowup: this.followupFilter,
+          requiresLodging: this.lodgingFilter,
+        }
+      ).subscribe(
         respuesta => {
-          this.dataSource = respuesta.data?.registrations || [];
+          this.loadedRegistrations = respuesta.data?.registrations || [];
+          this.applyLoadedData();
         }
       );
     }
@@ -361,12 +407,124 @@ export class InscripcionesComponent implements OnInit {
   }
 
   search() {
+    this.appliedSearchByName = (this.searchByName || '').trim();
     this.cargarDatos();
+  }
+
+  applySorting() {
+    this.applyLoadedData();
   }
 
   cargarTodos() {
     this.searchByName = "";
+    this.appliedSearchByName = '';
+    this.selectedGender = '';
+    this.shirtSizeFilter = '';
+    this.ageMin = null;
+    this.ageMax = null;
+    this.confirmedFilter = '';
+    this.attendanceFilter = '';
+    this.followupFilter = '';
+    this.lodgingFilter = '';
+    this.paidFilter = '';
+    this.sortBy = '';
+    this.sortDirection = 'asc';
     this.cargarDatos();
+  }
+
+  getHighlightedName(name?: string | null): string {
+    const displayName = name || '';
+    const searchTerm = this.appliedSearchByName;
+
+    if (!displayName) {
+      return '';
+    }
+
+    if (!searchTerm) {
+      return this.escapeHtml(displayName);
+    }
+
+    const escapedName = this.escapeHtml(displayName);
+    const matcher = new RegExp(`(${this.escapeRegExp(searchTerm)})`, 'ig');
+
+    return escapedName.replace(matcher, '<span class="search-highlight">$1</span>');
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  private escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  private applyLoadedData() {
+    const filtered = this.applyPaidFilter(this.loadedRegistrations);
+    this.dataSource = this.sortRegistrations(filtered);
+  }
+
+  private applyPaidFilter(registrations: EventRegistration[]): EventRegistration[] {
+    if (!this.paidFilter) {
+      return [...registrations];
+    }
+
+    return registrations.filter((registration) => {
+      const totalPaid = Number(registration.pagado || 0);
+
+      if (this.paidFilter === 'paid') {
+        return totalPaid >= this.fullPaymentAmount;
+      }
+
+      if (this.paidFilter === 'pending') {
+        return totalPaid < this.fullPaymentAmount;
+      }
+
+      return true;
+    });
+  }
+
+  private sortRegistrations(registrations: EventRegistration[]): EventRegistration[] {
+    if (!this.sortBy) {
+      return [...registrations];
+    }
+
+    const direction = this.sortDirection === 'desc' ? -1 : 1;
+
+    return [...registrations].sort((left, right) => {
+      const leftValue = this.getSortableValue(left, this.sortBy);
+      const rightValue = this.getSortableValue(right, this.sortBy);
+
+      if (leftValue < rightValue) {
+        return -1 * direction;
+      }
+
+      if (leftValue > rightValue) {
+        return 1 * direction;
+      }
+
+      return 0;
+    });
+  }
+
+  private getSortableValue(registration: EventRegistration, field: string): number | string {
+    switch (field) {
+      case 'edad':
+        return Number(registration.user?.edad || 0);
+      case 'pagado':
+        return Number(registration.pagado || 0);
+      case 'sexo':
+        return String(registration.user?.sexo || '').toLowerCase();
+      case 'talla':
+        return String(registration.user?.talla || '').toLowerCase();
+      case 'nombre':
+      default:
+        return String(registration.user?.nombre || '').toLowerCase();
+    }
   }
 
   seguimiento(reg: EventRegistration, seg: boolean) {
@@ -450,6 +608,21 @@ export class InscripcionesComponent implements OnInit {
     const wb: XLSX.WorkBook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(wb, ws, 'Guerreros');
 
+    const actorUserId = this.authService.getSessionValida()?.id;
+    this.registroDao.registrarActividadStaff({
+      action: 'exports.inscriptions_excel',
+      summary: 'Exportacion de inscripciones a Excel',
+      affected_user_id: actorUserId,
+      entity_type: 'report',
+      related_event_id: this.selectedEventoId,
+      metadata: {
+        file_name: fileName,
+        rows: excelData.length,
+        year: this.year,
+        event_title: this.selectedEvento?.titulo || this.selectedEvento?.title || null,
+      }
+    }).subscribe({ error: () => undefined });
+
     /* save to file */
     XLSX.writeFile(wb, fileName);
   }
@@ -528,11 +701,33 @@ export class InscripcionesComponent implements OnInit {
     return this.getSentEmailCountConfirmacion(reg) + 1;
   }
 
+  private registrarImpresion(action: 'prints.registration_sheet' | 'prints.name_badge', summary: string, reg: EventRegistration): void {
+    const actorUserId = this.authService.getSessionValida()?.id;
+    this.registroDao.registrarActividadStaff({
+      action,
+      summary,
+      affected_user_id: actorUserId,
+      entity_type: 'report',
+      entity_id: reg.id,
+      related_event_id: this.selectedEventoId,
+      related_registration_id: reg.id,
+      metadata: {
+        registration_id: reg.id,
+        user_id: reg.user?.id || reg.user_id || null,
+        full_name: reg.user?.nombre || reg.user?.full_name || null,
+        nick: reg.user?.nick || reg.user?.display_name || null,
+        room_code: reg.room_code || null,
+      }
+    }).subscribe({ error: () => undefined });
+  }
+
   imprimirPDF(reg: EventRegistration) {
     const printWindow = window.open('', '_blank', 'width=900,height=1200');
     if (!printWindow) {
       return;
     }
+
+    this.registrarImpresion('prints.registration_sheet', 'Impresion de ficha de inscripcion', reg);
 
     const fullName = reg.user?.nombre || reg.user?.full_name || 'Sin nombre';
     const nick = reg.user?.nick || reg.user?.display_name || '';
@@ -586,6 +781,8 @@ export class InscripcionesComponent implements OnInit {
     if (!printWindow) {
       return;
     }
+
+    this.registrarImpresion('prints.name_badge', 'Impresion de gafete', reg);
 
     const fullName = reg.user?.nombre || reg.user?.full_name || 'Sin nombre';
     const nick = reg.user?.nick || reg.user?.display_name || '';

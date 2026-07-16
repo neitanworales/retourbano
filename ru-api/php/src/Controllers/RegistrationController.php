@@ -267,10 +267,27 @@ class RegistrationController extends BaseController
             return $this->fail('registration_id is required', 422);
         }
 
+        $registration = $this->eventRegistrations->findModelById($registrationId);
+        if (!$registration) {
+            return $this->fail('registration not found', 404);
+        }
+
         $result = $this->registrationService->sendWelcomeEmail($registrationId);
         if (isset($result['error'])) {
             return $this->fail($result['error'], 400, $result);
         }
+
+        $this->activityLog->createEntry((int) $registration->user_id, 'emails.welcome.resend', null, 'Welcome email reenviado', array(
+            'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null,
+            'entity_type' => 'registration',
+            'entity_id' => $registrationId,
+            'related_event_id' => isset($registration->event_id) ? (int) $registration->event_id : null,
+            'related_registration_id' => $registrationId,
+            'source' => 'api.v1.registrations',
+            'metadata' => array(
+                'welcome_email_sent' => isset($result['welcome_email_sent']) ? (int) $result['welcome_email_sent'] : null,
+            ),
+        ));
 
         return $this->ok($result, 'welcome email sent');
     }
@@ -282,10 +299,28 @@ class RegistrationController extends BaseController
             return $this->fail('registration_id is required', 422);
         }
 
+        $registration = $this->eventRegistrations->findModelById($registrationId);
+        if (!$registration) {
+            return $this->fail('registration not found', 404);
+        }
+
         $result = $this->registrationService->sendConfirmationInfoEmail($registrationId);
         if (isset($result['error'])) {
             return $this->fail($result['error'], 400, $result);
         }
+
+        $this->activityLog->createEntry((int) $registration->user_id, 'emails.confirmation.resend', null, 'Correo de confirmacion reenviado', array(
+            'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null,
+            'entity_type' => 'registration',
+            'entity_id' => $registrationId,
+            'related_event_id' => isset($registration->event_id) ? (int) $registration->event_id : null,
+            'related_registration_id' => $registrationId,
+            'source' => 'api.v1.registrations',
+            'metadata' => array(
+                'email_confirmed' => isset($result['email_confirmed']) ? (int) $result['email_confirmed'] : null,
+                'confirmation_email_sent' => isset($result['confirmation_email_sent']) ? (int) $result['confirmation_email_sent'] : null,
+            ),
+        ));
 
         return $this->ok($result, 'confirmation info email sent');
     }
@@ -406,6 +441,20 @@ class RegistrationController extends BaseController
 
         $item = $this->attachUserToItem($registration->toArray());
         $item = $this->attachPaymentsToItem($item);
+
+        $actorId = isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null;
+        $affectedUserId = isset($item['user_id']) ? (int) $item['user_id'] : null;
+        if ($actorId && $affectedUserId) {
+            $this->activityLog->createEntry($affectedUserId, 'queries.registration_detail', null, 'Consulta de detalle de inscripcion', array(
+                'actor_user_id' => $actorId,
+                'entity_type' => 'registration',
+                'entity_id' => $registrationId,
+                'related_event_id' => isset($item['event_id']) ? (int) $item['event_id'] : null,
+                'related_registration_id' => $registrationId,
+                'source' => 'api.v1.registrations',
+            ));
+        }
+
         return $this->ok(array('registration' => $item), 'registration found');
     }
 
@@ -422,7 +471,15 @@ class RegistrationController extends BaseController
         $filters = array(
             'is_staff' => $this->parseOptionalBoolean($request, 'is_staff'),
             'is_followup' => $this->parseOptionalBoolean($request, 'is_followup'),
+            'is_confirmed' => $this->parseOptionalBoolean($request, 'is_confirmed'),
+            'attendance_confirmed' => $this->parseOptionalBoolean($request, 'attendance_confirmed'),
+            'requires_lodging' => $this->parseOptionalBoolean($request, 'requires_lodging'),
             'registration_status' => isset($request['registration_status']) ? trim((string) $request['registration_status']) : null,
+            'search' => isset($request['search']) ? trim((string) $request['search']) : '',
+            'gender' => isset($request['gender']) ? trim((string) $request['gender']) : '',
+            'shirt_size' => isset($request['shirt_size']) ? trim((string) $request['shirt_size']) : '',
+            'age_min' => isset($request['age_min']) ? (int) $request['age_min'] : null,
+            'age_max' => isset($request['age_max']) ? (int) $request['age_max'] : null,
         );
 
         $registrations = $this->registrationService->getByEvent($eventId, $limit, $offset, $filters);

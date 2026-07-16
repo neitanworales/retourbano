@@ -217,6 +217,19 @@ export class UsuariosComponent implements OnInit {
 
     this.loginDao.recoveryPassword(email).subscribe({
       next: () => {
+        this.registroDao.registrarActividadStaff({
+          action: 'emails.password_recovery.staff',
+          summary: 'Correo de recuperacion enviado por staff',
+          affected_user_id: user.id,
+          entity_type: 'user',
+          entity_id: user.id,
+          metadata: {
+            email,
+            target_user_id: user.id,
+            roles: user.roles || [],
+          }
+        }).subscribe({ error: () => undefined });
+
         user.isSendingRecoveryEmail = false;
         user.actionError = false;
         user.actionMessage = 'Se envió el correo de recuperación si la cuenta existe.';

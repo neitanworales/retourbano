@@ -204,6 +204,12 @@ $router->add('GET', '/api/v1/users/activity-log', function ($request) use ($user
     });
 });
 
+$router->add('POST', '/api/v1/users/activity-log', function ($request) use ($userController, $authGuard) {
+    return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
+        return $userController->recordActivity($securedRequest);
+    });
+});
+
 $router->add('GET', '/api/v1/users/history', function ($request) use ($userController, $authGuard) {
     return $authGuard->protectWithRoles($request, array('staff', 'admin'), function ($securedRequest) use ($userController) {
         return $userController->history($securedRequest);

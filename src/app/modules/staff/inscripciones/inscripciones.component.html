@@ -75,6 +75,98 @@
             </div>
         </div>
 
+        <div class="staff-filter-grid mb-3">
+            <div>
+                <label class="staff-filter-label" for="gender-filter">Sexo</label>
+                <select id="gender-filter" class="form-select form-select-sm" [(ngModel)]="selectedGender"
+                    (change)="search()">
+                    <option value="">Todos</option>
+                    <option value="F">Mujeres</option>
+                    <option value="M">Hombres</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="shirt-size-filter">Talla</label>
+                <input id="shirt-size-filter" type="text" class="form-control form-control-sm"
+                    [(ngModel)]="shirtSizeFilter" (keyup.enter)="search()" placeholder="Ej. M, L, XL">
+            </div>
+            <div>
+                <label class="staff-filter-label" for="age-min-filter">Edad mínima</label>
+                <input id="age-min-filter" type="number" class="form-control form-control-sm" [(ngModel)]="ageMin"
+                    (keyup.enter)="search()" placeholder="Min">
+            </div>
+            <div>
+                <label class="staff-filter-label" for="age-max-filter">Edad máxima</label>
+                <input id="age-max-filter" type="number" class="form-control form-control-sm" [(ngModel)]="ageMax"
+                    (keyup.enter)="search()" placeholder="Max">
+            </div>
+            <div>
+                <label class="staff-filter-label" for="confirmed-filter">Confirmación</label>
+                <select id="confirmed-filter" class="form-select form-select-sm" [(ngModel)]="confirmedFilter"
+                    (change)="search()">
+                    <option value="">Todos</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="attendance-filter">Asistencia</label>
+                <select id="attendance-filter" class="form-select form-select-sm" [(ngModel)]="attendanceFilter"
+                    (change)="search()">
+                    <option value="">Todos</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="followup-filter">Seguimiento</label>
+                <select id="followup-filter" class="form-select form-select-sm" [(ngModel)]="followupFilter"
+                    (change)="search()">
+                    <option value="">Todos</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="lodging-filter">Hospedaje</label>
+                <select id="lodging-filter" class="form-select form-select-sm" [(ngModel)]="lodgingFilter"
+                    (change)="search()">
+                    <option value="">Todos</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="paid-filter">Pagado</label>
+                <select id="paid-filter" class="form-select form-select-sm" [(ngModel)]="paidFilter"
+                    (change)="applySorting()">
+                    <option value="">Todos</option>
+                    <option value="paid">Pagado completo</option>
+                    <option value="pending">Con adeudo</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="sort-by-filter">Ordenar por</label>
+                <select id="sort-by-filter" class="form-select form-select-sm" [(ngModel)]="sortBy"
+                    (change)="applySorting()">
+                    <option *ngFor="let option of sortOptions" [value]="option.value">{{option.label}}</option>
+                </select>
+            </div>
+            <div>
+                <label class="staff-filter-label" for="sort-direction-filter">Dirección</label>
+                <select id="sort-direction-filter" class="form-select form-select-sm" [(ngModel)]="sortDirection"
+                    (change)="applySorting()">
+                    <option value="asc">Ascendente</option>
+                    <option value="desc">Descendente</option>
+                </select>
+            </div>
+            <div class="staff-filter-actions">
+                <button class="btn btn-outline-secondary btn-sm" type="button" (click)="search()">
+                    <i class="bi bi-funnel"></i> Aplicar filtros
+                </button>
+            </div>
+        </div>
+
         <table mat-table [dataSource]="dataSource!" multiTemplateDataRows class="mat-elevation-z8" id="excel-table">
 
             <ng-container matColumnDef="ID">
@@ -96,6 +188,7 @@
                     Nombre
                     <div class="input-group input-group-sm mb-3">
                         <input type="text" class="form-control form-control-sm" [(ngModel)]="searchByName"
+                            (keyup.enter)="search()"
                             placeholder="Buscar por nombre">
                         <div class="input-group-append">
                             <button class="btn btn-outline-secondary btn-sm" type="button" (click)="search()">
@@ -104,7 +197,7 @@
                         </div>
                     </div>
                 </th>
-                <td mat-cell *matCellDef="let element"> {{element.user?.nombre}} </td>
+                <td mat-cell *matCellDef="let element"> <span [innerHTML]="getHighlightedName(element.user?.nombre)"></span> </td>
             </ng-container>
 
             <ng-container matColumnDef="nick">
@@ -154,7 +247,7 @@
             <ng-container matColumnDef="pagado">
                 <th mat-header-cell *matHeaderCellDef> Pagado </th>
                 <td mat-cell *matCellDef="let element">
-                    <div *ngIf="element.pagado>=1950; else pagocompletado">
+                    <div *ngIf="element.pagado>=fullPaymentAmount; else pagocompletado">
                         <i class="bi bi-check2-circle"></i> {{element.pagado | currency:"$ "}}
                     </div>
                     <ng-template #pagocompletado>

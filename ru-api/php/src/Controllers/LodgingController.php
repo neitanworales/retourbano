@@ -1,6 +1,9 @@
 <?php
 
 require_once __DIR__ . '/../Services/LodgingService.php';
+require_once __DIR__ . '/../Repository/ActivityLogRepository.php';
+require_once __DIR__ . '/../Repository/EventRegistrationRepository.php';
+require_once __DIR__ . '/../Repository/UserRepository.php';
 
 class LodgingController extends BaseController
 {
@@ -8,10 +11,16 @@ class LodgingController extends BaseController
 
     private $users;
 
+    private $eventRegistrations;
+
+    private $activityLog;
+
     public function __construct()
     {
         $this->lodgingService = new LodgingService();
         $this->users = new UserRepository();
+        $this->eventRegistrations = new EventRegistrationRepository();
+        $this->activityLog = new ActivityLogRepository();
     }
 
     /**
@@ -122,11 +131,31 @@ class LodgingController extends BaseController
                 return $this->fail('room_code cannot exceed 50 characters', 422);
             }
 
+            $registration = $this->eventRegistrations->findModelById($registrationId);
+            if (!$registration) {
+                return $this->fail('registration not found', 404);
+            }
+
+            $previousRoomCode = isset($registration->room_code) ? $registration->room_code : null;
+
             $success = $this->lodgingService->updateRoomAssignment($registrationId, $roomCode);
 
             if (!$success) {
                 return $this->fail('Failed to update room assignment', 500);
             }
+
+            $this->activityLog->createEntry((int) $registration->user_id, 'lodging.room_assignment.update', $previousRoomCode, $roomCode, array(
+                'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null,
+                'entity_type' => 'registration',
+                'entity_id' => $registrationId,
+                'related_event_id' => isset($registration->event_id) ? (int) $registration->event_id : null,
+                'related_registration_id' => $registrationId,
+                'source' => 'api.v1.lodging',
+                'metadata' => array(
+                    'old_room_code' => $previousRoomCode,
+                    'new_room_code' => $roomCode,
+                ),
+            ));
 
             return $this->ok(array(), 'Room assignment updated successfully');
         } catch (Exception $e) {
@@ -154,11 +183,31 @@ class LodgingController extends BaseController
                 return $this->fail('requires_lodging is required and must be a boolean', 422);
             }
 
+            $registration = $this->eventRegistrations->findModelById($registrationId);
+            if (!$registration) {
+                return $this->fail('registration not found', 404);
+            }
+
+            $previousRequiresLodging = isset($registration->requires_lodging) ? (int) $registration->requires_lodging : null;
+
             $success = $this->lodgingService->updateLodgingRequirement($registrationId, $requiresLodging);
 
             if (!$success) {
                 return $this->fail('Failed to update lodging requirement', 500);
             }
+
+            $this->activityLog->createEntry((int) $registration->user_id, 'lodging.lodging_requirement.update', $previousRequiresLodging, (int) $requiresLodging, array(
+                'actor_user_id' => isset($request['auth_user']) && isset($request['auth_user']->id) ? (int) $request['auth_user']->id : null,
+                'entity_type' => 'registration',
+                'entity_id' => $registrationId,
+                'related_event_id' => isset($registration->event_id) ? (int) $registration->event_id : null,
+                'related_registration_id' => $registrationId,
+                'source' => 'api.v1.lodging',
+                'metadata' => array(
+                    'old_requires_lodging' => $previousRequiresLodging,
+                    'new_requires_lodging' => (int) $requiresLodging,
+                ),
+            ));
 
             return $this->ok(array(), 'Lodging requirement updated successfully');
         } catch (Exception $e) {
