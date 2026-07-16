@@ -756,6 +756,36 @@ paths:
             type: string
           description: Ej. active, inactive, dropped.
         - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+          description: Filtra por nombre, gafete, email o whatsapp.
+        - in: query
+          name: gender
+          required: false
+          schema:
+            type: string
+          description: Filtra por sexo, por ejemplo F o M.
+        - in: query
+          name: shirt_size
+          required: false
+          schema:
+            type: string
+          description: Filtra por talla exacta.
+        - in: query
+          name: age_min
+          required: false
+          schema:
+            type: integer
+          description: Edad mínima.
+        - in: query
+          name: age_max
+          required: false
+          schema:
+            type: integer
+          description: Edad máxima.
+        - in: query
           name: token
           required: false
           schema:

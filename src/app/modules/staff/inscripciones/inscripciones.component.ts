@@ -25,6 +25,16 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class InscripcionesComponent implements OnInit {
 
+  readonly fullPaymentAmount = 1950;
+  readonly sortOptions = [
+    { value: '', label: 'Ordenar por' },
+    { value: 'nombre', label: 'Nombre' },
+    { value: 'edad', label: 'Edad' },
+    { value: 'sexo', label: 'Sexo' },
+    { value: 'talla', label: 'Talla' },
+    { value: 'pagado', label: 'Pagado' },
+  ];
+
   tabsCampas?: boolean[] = [false, false];
   events?: Event[]
   selectedEventoId?: number;
@@ -66,6 +76,19 @@ export class InscripcionesComponent implements OnInit {
 
   expandedGuerrero?: EventRegistration;
   searchByName?: string = "";
+  appliedSearchByName = '';
+  selectedGender = '';
+  shirtSizeFilter = '';
+  ageMin?: number | null = null;
+  ageMax?: number | null = null;
+  confirmedFilter = '';
+  attendanceFilter = '';
+  followupFilter = '';
+  lodgingFilter = '';
+  paidFilter = '';
+  sortBy = '';
+  sortDirection: 'asc' | 'desc' = 'asc';
+  private loadedRegistrations: EventRegistration[] = [];
   years = [
     2015, 2016, 2017, 2018, 2019, 2021, 2022, 2023
   ];
@@ -202,13 +225,16 @@ export class InscripcionesComponent implements OnInit {
     let seg: boolean = false;
 
     if (this.pageResumenActive) {
+      this.loadedRegistrations = [];
       this.dataSource = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "";
     } else if (this.pageHospedajeActive) {
+      this.loadedRegistrations = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "none";
     } else if (this.pageContabilidadActive) {
+      this.loadedRegistrations = [];
       this.displayStyle = "none";
       this.chartsDisplayStyle = "none";
     } else {
@@ -249,9 +275,27 @@ export class InscripcionesComponent implements OnInit {
         seg = true;
       }
 
-      this.registroDao.consultarInscritos(opcion, activo, staff, this.searchByName!, seg, this.selectedEventoId).subscribe(
+      this.registroDao.consultarInscritos(
+        opcion,
+        activo,
+        staff,
+        this.searchByName!,
+        seg,
+        this.selectedEventoId,
+        {
+          gender: this.selectedGender,
+          shirtSize: this.shirtSizeFilter,
+          ageMin: this.ageMin,
+          ageMax: this.ageMax,
+          isConfirmed: this.confirmedFilter,
+          attendanceConfirmed: this.attendanceFilter,
+          isFollowup: this.followupFilter,
+          requiresLodging: this.lodgingFilter,
+        }
+      ).subscribe(
         respuesta => {
-          this.dataSource = respuesta.data?.registrations || [];
+          this.loadedRegistrations = respuesta.data?.registrations || [];
+          this.applyLoadedData();
         }
       );
     }
@@ -363,12 +407,124 @@ export class InscripcionesComponent implements OnInit {
   }
 
   search() {
+    this.appliedSearchByName = (this.searchByName || '').trim();
     this.cargarDatos();
+  }
+
+  applySorting() {
+    this.applyLoadedData();
   }
 
   cargarTodos() {
     this.searchByName = "";
+    this.appliedSearchByName = '';
+    this.selectedGender = '';
+    this.shirtSizeFilter = '';
+    this.ageMin = null;
+    this.ageMax = null;
+    this.confirmedFilter = '';
+    this.attendanceFilter = '';
+    this.followupFilter = '';
+    this.lodgingFilter = '';
+    this.paidFilter = '';
+    this.sortBy = '';
+    this.sortDirection = 'asc';
     this.cargarDatos();
+  }
+
+  getHighlightedName(name?: string | null): string {
+    const displayName = name || '';
+    const searchTerm = this.appliedSearchByName;
+
+    if (!displayName) {
+      return '';
+    }
+
+    if (!searchTerm) {
+      return this.escapeHtml(displayName);
+    }
+
+    const escapedName = this.escapeHtml(displayName);
+    const matcher = new RegExp(`(${this.escapeRegExp(searchTerm)})`, 'ig');
+
+    return escapedName.replace(matcher, '<span class="search-highlight">$1</span>');
+  }
+
+  private escapeHtml(value: string): string {
+    return value
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+  }
+
+  private escapeRegExp(value: string): string {
+    return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  private applyLoadedData() {
+    const filtered = this.applyPaidFilter(this.loadedRegistrations);
+    this.dataSource = this.sortRegistrations(filtered);
+  }
+
+  private applyPaidFilter(registrations: EventRegistration[]): EventRegistration[] {
+    if (!this.paidFilter) {
+      return [...registrations];
+    }
+
+    return registrations.filter((registration) => {
+      const totalPaid = Number(registration.pagado || 0);
+
+      if (this.paidFilter === 'paid') {
+        return totalPaid >= this.fullPaymentAmount;
+      }
+
+      if (this.paidFilter === 'pending') {
+        return totalPaid < this.fullPaymentAmount;
+      }
+
+      return true;
+    });
+  }
+
+  private sortRegistrations(registrations: EventRegistration[]): EventRegistration[] {
+    if (!this.sortBy) {
+      return [...registrations];
+    }
+
+    const direction = this.sortDirection === 'desc' ? -1 : 1;
+
+    return [...registrations].sort((left, right) => {
+      const leftValue = this.getSortableValue(left, this.sortBy);
+      const rightValue = this.getSortableValue(right, this.sortBy);
+
+      if (leftValue < rightValue) {
+        return -1 * direction;
+      }
+
+      if (leftValue > rightValue) {
+        return 1 * direction;
+      }
+
+      return 0;
+    });
+  }
+
+  private getSortableValue(registration: EventRegistration, field: string): number | string {
+    switch (field) {
+      case 'edad':
+        return Number(registration.user?.edad || 0);
+      case 'pagado':
+        return Number(registration.pagado || 0);
+      case 'sexo':
+        return String(registration.user?.sexo || '').toLowerCase();
+      case 'talla':
+        return String(registration.user?.talla || '').toLowerCase();
+      case 'nombre':
+      default:
+        return String(registration.user?.nombre || '').toLowerCase();
+    }
   }
 
   seguimiento(reg: EventRegistration, seg: boolean) {

@@ -19,6 +19,17 @@ import { SinHabitacionResponse } from "../../models/hospedaje/SinHabitacionRespo
 import { EventResponse } from "../../models/registro/EventResponse";
 import { CampamentoGuerreros, CampamentoGuerrerosResponse } from "../../models/registro/CampamentoGuerreros";
 
+interface RegistrationEventFilters {
+    gender?: string | null;
+    shirtSize?: string | null;
+    ageMin?: number | null;
+    ageMax?: number | null;
+    isConfirmed?: string | null;
+    attendanceConfirmed?: string | null;
+    isFollowup?: string | null;
+    requiresLodging?: string | null;
+}
+
 interface UserProfileResponse extends DefaultResponse {
     user?: User;
     roles?: UserRole[];
@@ -204,8 +215,15 @@ export class RegistroDao {
         );
     }
 
-    public consultarInscritos(opcion: number, activo: boolean, staff: boolean, byName: string, seg: boolean, event_id?: number): Observable<EventRegistrationResponse> {
+    public consultarInscritos(opcion: number, activo: boolean, staff: boolean, byName: string, seg: boolean, event_id?: number, filters?: RegistrationEventFilters): Observable<EventRegistrationResponse> {
         const user = this.autho.getSessionValida();
+        const normalizedSearch = (byName || '').trim();
+        const normalizedGender = (filters?.gender || '').trim();
+        const normalizedShirtSize = (filters?.shirtSize || '').trim();
+        const normalizedConfirmed = (filters?.isConfirmed || '').trim();
+        const normalizedAttendance = (filters?.attendanceConfirmed || '').trim();
+        const normalizedFollowup = (filters?.isFollowup || '').trim();
+        const normalizedLodging = (filters?.requiresLodging || '').trim();
         const params: string[] = [
             'event_id=' + encodeURIComponent(String(event_id || '')),
             'token=' + encodeURIComponent(String(user?.token || '')),
@@ -213,9 +231,43 @@ export class RegistroDao {
 
         // Keep legacy UX behavior: only send positive boolean filters.
         params.push('is_staff=' + (staff ? '1' : '0'));
-        // Do not filter by follow-up unless the seguimiento view explicitly requests it.
-        if (seg) {
+        if (normalizedFollowup === '1' || normalizedFollowup === '0') {
+            params.push('is_followup=' + normalizedFollowup);
+        } else if (seg) {
+            // Do not filter by follow-up unless the seguimiento view explicitly requests it.
             params.push('is_followup=1');
+        }
+
+        if (normalizedSearch !== '') {
+            params.push('search=' + encodeURIComponent(normalizedSearch));
+        }
+
+        if (normalizedGender !== '') {
+            params.push('gender=' + encodeURIComponent(normalizedGender));
+        }
+
+        if (normalizedShirtSize !== '') {
+            params.push('shirt_size=' + encodeURIComponent(normalizedShirtSize));
+        }
+
+        if (filters?.ageMin != null) {
+            params.push('age_min=' + encodeURIComponent(String(filters.ageMin)));
+        }
+
+        if (filters?.ageMax != null) {
+            params.push('age_max=' + encodeURIComponent(String(filters.ageMax)));
+        }
+
+        if (normalizedConfirmed === '1' || normalizedConfirmed === '0') {
+            params.push('is_confirmed=' + normalizedConfirmed);
+        }
+
+        if (normalizedAttendance === '1' || normalizedAttendance === '0') {
+            params.push('attendance_confirmed=' + normalizedAttendance);
+        }
+
+        if (normalizedLodging === '1' || normalizedLodging === '0') {
+            params.push('requires_lodging=' + normalizedLodging);
         }
 
         // Legacy "activo=false" maps to "baja" in UI, represented as inactive status.

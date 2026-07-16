@@ -213,30 +213,96 @@ class EventRegistrationRepository extends BaseRepository
     public function findByEvent($eventId, $limit = 100, $offset = 0, $filters = array())
     {
         $filters = is_array($filters) ? $filters : array();
+        $search = isset($filters['search']) ? trim((string) $filters['search']) : '';
+        $gender = isset($filters['gender']) ? strtoupper(trim((string) $filters['gender'])) : '';
+        $shirtSize = isset($filters['shirt_size']) ? strtoupper(trim((string) $filters['shirt_size'])) : '';
+        $ageMin = isset($filters['age_min']) && $filters['age_min'] !== null ? (int) $filters['age_min'] : null;
+        $ageMax = isset($filters['age_max']) && $filters['age_max'] !== null ? (int) $filters['age_max'] : null;
+        $hasSearch = $search !== '';
+        $searchLike = '%' . $search . '%';
 
-        $sql = 'SELECT * FROM event_registrations WHERE event_id = ?';
+        $sql = 'SELECT er.*
+                FROM event_registrations er
+                LEFT JOIN users u ON u.id = er.user_id
+                WHERE er.event_id = ?';
         $types = 'i';
         $params = array((int) $eventId);
 
         if (array_key_exists('is_staff', $filters) && $filters['is_staff'] !== null) {
-            $sql .= ' AND is_staff = ?';
+            $sql .= ' AND er.is_staff = ?';
             $types .= 'i';
             $params[] = (int) $filters['is_staff'];
         }
 
         if (array_key_exists('is_followup', $filters) && $filters['is_followup'] !== null) {
-            $sql .= ' AND is_followup = ?';
+            $sql .= ' AND er.is_followup = ?';
             $types .= 'i';
             $params[] = (int) $filters['is_followup'];
         }
 
+        if (array_key_exists('is_confirmed', $filters) && $filters['is_confirmed'] !== null) {
+            $sql .= ' AND er.is_confirmed = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['is_confirmed'];
+        }
+
+        if (array_key_exists('attendance_confirmed', $filters) && $filters['attendance_confirmed'] !== null) {
+            $sql .= ' AND er.attendance_confirmed = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['attendance_confirmed'];
+        }
+
+        if (array_key_exists('requires_lodging', $filters) && $filters['requires_lodging'] !== null) {
+            $sql .= ' AND er.requires_lodging = ?';
+            $types .= 'i';
+            $params[] = (int) $filters['requires_lodging'];
+        }
+
         if (array_key_exists('registration_status', $filters) && $filters['registration_status'] !== null && $filters['registration_status'] !== '') {
-            $sql .= ' AND registration_status = ?';
+            $sql .= ' AND er.registration_status = ?';
             $types .= 's';
             $params[] = trim((string) $filters['registration_status']);
         }
 
-        $sql .= ' ORDER BY created_at DESC LIMIT ? OFFSET ?';
+        if ($hasSearch) {
+            $sql .= ' AND (
+                u.full_name LIKE ?
+                OR u.display_name LIKE ?
+                OR u.email LIKE ?
+                OR u.whatsapp LIKE ?
+            )';
+            $types .= 'ssss';
+            $params[] = $searchLike;
+            $params[] = $searchLike;
+            $params[] = $searchLike;
+            $params[] = $searchLike;
+        }
+
+        if ($gender !== '') {
+            $sql .= ' AND UPPER(TRIM(COALESCE(u.gender, ""))) = ?';
+            $types .= 's';
+            $params[] = $gender;
+        }
+
+        if ($shirtSize !== '') {
+            $sql .= ' AND UPPER(TRIM(COALESCE(u.shirt_size, ""))) = ?';
+            $types .= 's';
+            $params[] = $shirtSize;
+        }
+
+        if ($ageMin !== null) {
+            $sql .= ' AND COALESCE(u.age, 0) >= ?';
+            $types .= 'i';
+            $params[] = $ageMin;
+        }
+
+        if ($ageMax !== null) {
+            $sql .= ' AND COALESCE(u.age, 0) <= ?';
+            $types .= 'i';
+            $params[] = $ageMax;
+        }
+
+        $sql .= ' ORDER BY er.created_at DESC LIMIT ? OFFSET ?';
         $types .= 'ii';
         $params[] = (int) $limit;
         $params[] = (int) $offset;

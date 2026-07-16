@@ -471,7 +471,15 @@ class RegistrationController extends BaseController
         $filters = array(
             'is_staff' => $this->parseOptionalBoolean($request, 'is_staff'),
             'is_followup' => $this->parseOptionalBoolean($request, 'is_followup'),
+            'is_confirmed' => $this->parseOptionalBoolean($request, 'is_confirmed'),
+            'attendance_confirmed' => $this->parseOptionalBoolean($request, 'attendance_confirmed'),
+            'requires_lodging' => $this->parseOptionalBoolean($request, 'requires_lodging'),
             'registration_status' => isset($request['registration_status']) ? trim((string) $request['registration_status']) : null,
+            'search' => isset($request['search']) ? trim((string) $request['search']) : '',
+            'gender' => isset($request['gender']) ? trim((string) $request['gender']) : '',
+            'shirt_size' => isset($request['shirt_size']) ? trim((string) $request['shirt_size']) : '',
+            'age_min' => isset($request['age_min']) ? (int) $request['age_min'] : null,
+            'age_max' => isset($request['age_max']) ? (int) $request['age_max'] : null,
         );
 
         $registrations = $this->registrationService->getByEvent($eventId, $limit, $offset, $filters);
