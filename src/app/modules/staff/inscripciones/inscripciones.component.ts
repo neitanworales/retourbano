@@ -25,7 +25,8 @@ import { AuthService } from 'src/app/core/services/auth.service';
 })
 export class InscripcionesComponent implements OnInit {
 
-  readonly fullPaymentAmount = 1950;
+  readonly legacyFullPaymentAmount = 1950;
+  
   readonly sortOptions = [
     { value: '', label: 'Ordenar por' },
     { value: 'nombre', label: 'Nombre' },
@@ -105,7 +106,7 @@ export class InscripcionesComponent implements OnInit {
   }
 
   loadCampamentos() {
-    this.eventDao.getEventActivo('BASIC').subscribe({
+    this.eventDao.getEventActivo('FULL').subscribe({
       next: (result) => {
         console.log("Eventos cargados: ", result.data?.events);
         this.events = result.data?.events;
@@ -468,6 +469,47 @@ export class InscripcionesComponent implements OnInit {
     this.dataSource = this.sortRegistrations(filtered);
   }
 
+  isRegistrationPaid(registration: EventRegistration): boolean {
+    return Number(registration.pagado || 0) >= this.getRequiredPaymentAmount(registration);
+  }
+
+  getRequiredPaymentAmount(registration: EventRegistration): number {
+    const eventCosts = (this.selectedEvento?.costos || [])
+      .filter((costo) => this.isMxnCost(costo))
+      .map((costo) => ({ ...costo, cantidad: Number(costo.cantidad || 0) }))
+      .filter((costo) => Number.isFinite(costo.cantidad) && costo.cantidad > 0);
+
+    if (eventCosts.length === 0) {
+      const fallbackPrice = Number(this.selectedEvento?.price_mxn);
+      if (Number.isFinite(fallbackPrice) && fallbackPrice > 0) {
+        return fallbackPrice;
+      }
+
+      return this.legacyFullPaymentAmount;
+    }
+
+    if (eventCosts.length === 1) {
+      return eventCosts[0].cantidad;
+    }
+
+    const requiresLodging = registration.requires_lodging === true;
+    const matchedCost = requiresLodging
+      ? eventCosts.find((costo) => this.isLodgingIncludedCost(costo))
+      : eventCosts.find((costo) => this.isNoLodgingCost(costo));
+
+    if (matchedCost) {
+      return matchedCost.cantidad;
+    }
+
+    const sortedAmounts = eventCosts
+      .map((costo) => costo.cantidad)
+      .sort((left, right) => left - right);
+
+    return requiresLodging
+      ? sortedAmounts[sortedAmounts.length - 1]
+      : sortedAmounts[0];
+  }
+
   private applyPaidFilter(registrations: EventRegistration[]): EventRegistration[] {
     if (!this.paidFilter) {
       return [...registrations];
@@ -475,17 +517,50 @@ export class InscripcionesComponent implements OnInit {
 
     return registrations.filter((registration) => {
       const totalPaid = Number(registration.pagado || 0);
+      const requiredAmount = this.getRequiredPaymentAmount(registration);
 
       if (this.paidFilter === 'paid') {
-        return totalPaid >= this.fullPaymentAmount;
+        return totalPaid >= requiredAmount;
       }
 
       if (this.paidFilter === 'pending') {
-        return totalPaid < this.fullPaymentAmount;
+        return totalPaid < requiredAmount;
       }
 
       return true;
     });
+  }
+
+  private isMxnCost(costo: { divisa?: string }): boolean {
+    const currency = String(costo.divisa || 'MXN').trim().toUpperCase();
+    return currency === 'MXN';
+  }
+
+  private isLodgingIncludedCost(costo: { descripcion?: string; incluye?: string[] }): boolean {
+    const normalizedDescription = this.normalizeCostText(costo.descripcion);
+    const includesHospedaje = (costo.incluye || []).some((item) => this.normalizeCostText(item).includes('hospedaje'));
+
+    return normalizedDescription.includes('con hospedaje')
+      || normalizedDescription.includes('todo incluido')
+      || includesHospedaje;
+  }
+
+  private isNoLodgingCost(costo: { descripcion?: string; incluye?: string[] }): boolean {
+    const normalizedDescription = this.normalizeCostText(costo.descripcion);
+    const includesHospedaje = (costo.incluye || []).some((item) => this.normalizeCostText(item).includes('hospedaje'));
+
+    return normalizedDescription.includes('sin hospedaje')
+      || normalizedDescription.includes('hospedaje aparte')
+      || normalizedDescription.includes('sin alojamiento')
+      || !includesHospedaje;
+  }
+
+  private normalizeCostText(value?: string): string {
+    return String(value || '')
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .toLowerCase()
+      .trim();
   }
 
   private sortRegistrations(registrations: EventRegistration[]): EventRegistration[] {
